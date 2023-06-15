@@ -1,0 +1,9 @@
+.gamefloor-wrapper{
+  width: 70%;
+  height: 70%;
+  position: absolute;
+  left: 0px;
+  top: 75px;
+  border: white solid 1px;
+  
+}

@@ -1,0 +1,53 @@
+* {
+  user-select: none;
+}
+
+
+.signup-form-page-container {
+  z-index: 1;
+  position: absolute;
+  border: 1px solid rgb(0, 0, 0);
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 450px;
+}
+
+.signupHeader{
+  position: relative;
+  left: 65%;
+  transform: scale(1.5);
+}
+
+.signupDiv label {
+  display: relative;
+  left: 100px;
+  margin-bottom: 10px;
+}
+
+.signupDiv input {
+  width: 95%;
+  padding: 5px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+
+.signup-login-link{
+  position: relative;
+  left: 0px;
+}
+
+.usernameField-invalid,
+.emailField-invalid{
+  color: red;
+}
+
+.signupDiv-button {
+  display: relative;
+  width: 98%;
+  padding: 10px;
+  font-size: 15px;
+}
+
+

@@ -1,0 +1,82 @@
+* {
+  user-select: none;
+}
+
+
+
+.signin-form-page-container {
+  z-index: 1000;
+  position: absolute;
+  border: 1px solid rgb(0, 0, 0);
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 450px;
+}
+
+
+
+.signinHeader {
+  position: relative;
+  left: 65%;
+  transform: scale(1.5);
+}
+
+.signinDiv label {
+  position: relative;
+  left: 1%;
+
+  display: block;
+  margin-bottom: 10px;
+}
+
+.signinDiv input {
+  position: relative;
+  width: 95%;
+  padding: 5px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+
+
+.signinDiv-button {
+
+  width: 99%;
+  padding: 10px;
+  font-size: 15px;
+}
+
+
+
+.altLinks{
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content:space-around;
+  left: 0%;
+}
+
+
+.login-signup-link {
+  position: relative;
+  right: 21px;
+
+}
+
+
+.login-forgot-password-link {
+  position: relative;
+  right: 21px;
+}
+
+.demo-user-singin{
+  left: 14px;
+  display: block;
+}
+
+
+
+
+
+

@@ -1,0 +1,19 @@
+[
+  {
+    "betAmount": 1,
+    "imgSrc": "./red-chip.jpeg"
+  },
+  {
+    "betAmount": 5,
+    "imgSrc": "path/to/5-bet-image.png"
+  },
+  {
+    "betAmount": 10,
+    "imgSrc": "path/to/10-bet-image.png"
+  },
+  {
+    "betAmount": 25,
+    "imgSrc": "./red-chip.jpeg"
+  }
+]
+

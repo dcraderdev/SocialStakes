@@ -1,0 +1,54 @@
+.nav-bar {
+  position: fixed;
+  display: flex;
+  justify-content: space-between;
+  top: 0px;
+  left: 0px;
+  height: 95px;
+  width: 100%;
+  z-index: 1000000;
+}
+
+
+
+
+.nav-user-buttons{
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 200px;
+  height: 50px;
+  right: 10px;
+  top: 10px;
+  border: black 1px solid;
+}
+
+
+.nav-buttons{
+  z-index: 100;
+}
+.nav-signinout-container{
+  position: absolute;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 150px;
+  height: 20px;
+}
+
+
+.logo{
+  font-size: 40px;
+  color: whitesmoke;
+  display: flex;
+  height: fit-content;
+  position: absolute;
+  top: 40px;
+}
+
+.nav-signout-button,
+.nav-signinout-container,
+.navLink {
+  color: white;
+}

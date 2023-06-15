@@ -15,6 +15,7 @@ Explore and enjoy Social Stake directly from our [live site](http://social-stake
  - [Schema](https://github.com/dcraderdev/Social-Stake/wiki/Schema)
  - [API Docs](https://github.com/dcraderdev/Social-Stake/wiki/API-Routes)
  - [Terms of Service](https://github.com/dcraderdev/Social-Stake/wiki/Terms-of-Service)
+ - [Fairness Policy](https://github.com/dcraderdev/Social-Stake/wiki/Fairness-Policy)
 ## Features
 
 Social Stake boasts a number of exciting features, including:

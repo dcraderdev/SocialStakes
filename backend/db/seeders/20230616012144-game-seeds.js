@@ -1,5 +1,4 @@
 'use strict';
-const bcrypt = require('bcryptjs');
 
 let options = {};
 if (process.env.NODE_ENV === 'production') {
@@ -14,8 +13,8 @@ module.exports = {
       [
         {
           id: 'blackjack1',
-          gameType: 'blackjack_1deck',
-          variant: 'blackjack',
+          gameType: 'blackjack',
+          variant: '1_deck',
           decksUsed: 1,
           active: true,
           minNumPlayers: 1,
@@ -27,8 +26,8 @@ module.exports = {
         },
         {
           id: 'blackjack8',
-          gameType: 'blackjack_8deck',
-          variant: 'blackjack',
+          gameType: 'blackjack',
+          variant: '8_deck',
           decksUsed: 8,
           active: false,
           minNumPlayers: 1,
@@ -40,8 +39,8 @@ module.exports = {
         },
         {
           id: 'blackjack4',
-          gameType: 'blackjack_4deck',
-          variant: 'blackjack',
+          gameType: 'blackjack',
+          variant: '4_deck',
           decksUsed: 4,
           active: true,
           minNumPlayers: 1,
@@ -53,8 +52,8 @@ module.exports = {
         },
         {
           id: 'blackjack6',
-          gameType: 'blackjack_6deck',
-          variant: 'blackjack',
+          gameType: 'blackjack',
+          variant: '6_deck',
           decksUsed: 6,
           active: true,
           minNumPlayers: 1,

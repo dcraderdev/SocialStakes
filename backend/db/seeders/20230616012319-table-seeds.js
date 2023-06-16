@@ -1,5 +1,4 @@
 'use strict';
-const bcrypt = require("bcryptjs");
 
 let options = {};
 if (process.env.NODE_ENV === 'production') {
@@ -12,19 +11,13 @@ module.exports = {
     return queryInterface.bulkInsert(options, [
 
      {
-      id: 'blackjack1-table1',
+      id: 'e10d8de4-f4c2-4d28-9324-56aa9c920801',
       gameId: 'blackjack1',
       cutPoint: 40,
       shufflePoint: 35,
      },
      {
-      id: 'blackjack1-table2',
-      gameId: 'blackjack1',
-      cutPoint: 40,
-      shufflePoint: 35,
-     },
-     {
-      id: 'blackjack8-table1',
+      id: 'e10d8de4-f4c2-4d28-9324-56aa9c920802',
       gameId: 'blackjack8',
       cutPoint: 40,
       shufflePoint: 35,

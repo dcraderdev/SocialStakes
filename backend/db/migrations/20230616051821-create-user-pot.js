@@ -1,40 +1,39 @@
 'use strict';
-/** @type {import('sequelize-cli').Migration} */
-
 
 let options = {};
 if (process.env.NODE_ENV === 'production') {
-  options.schema = process.env.SCHEMA;  // define your schema in options object
+  options.schema = process.env.SCHEMA;
 }
 
 module.exports = {
-  async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('UserTables', {
+  up: async (queryInterface, Sequelize) => {
+    await queryInterface.createTable('UserPots', {
       id: {
         allowNull: false,
         primaryKey: true,
         type: Sequelize.UUID
       },
       userId: {
+        allowNull: false,
         type: Sequelize.UUID,
         references: {
           model: 'Users',
-          key: 'id',
+          key: 'id'
         },
-        onUpdate: 'CASCADE',
-        onDelete: 'SET NULL',
+        onDelete: 'CASCADE'
       },
-      tableId: {
+      potId: {
+        allowNull: false,
         type: Sequelize.UUID,
         references: {
-          model: 'Tables',
-          key: 'id',
+          model: 'Pots',
+          key: 'id'
         },
-        onUpdate: 'CASCADE',
-        onDelete: 'SET NULL',
+        onDelete: 'CASCADE'
       },
-      seat:{
-        type: Sequelize.INTEGER
+      won: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
       },
       createdAt: {
         allowNull: false,
@@ -46,9 +45,9 @@ module.exports = {
         type: Sequelize.DATE,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       }
-    },options);
+    }, options);
   },
-  async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('UserTables',options);
+  down: async (queryInterface, Sequelize) => {
+    await queryInterface.dropTable('UserPots', options);
   }
 };

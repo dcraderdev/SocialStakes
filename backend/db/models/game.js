@@ -12,9 +12,8 @@ module.exports = (sequelize, DataTypes) => {
   }
   Game.init({
     id: {
-      type: DataTypes.UUID,
-      primaryKey: true,
-      defaultValue: () => uuid.v4(), 
+      type: DataTypes.STRING,
+      primaryKey: true
     },
     gameType: DataTypes.STRING,
     variant: DataTypes.STRING,

@@ -1,6 +1,4 @@
 'use strict';
-/** @type {import('sequelize-cli').Migration} */
-
 
 let options = {};
 if (process.env.NODE_ENV === 'production') {
@@ -9,39 +7,41 @@ if (process.env.NODE_ENV === 'production') {
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Tables', {
+    await queryInterface.createTable('GameSessions', {
       id: {
         allowNull: false,
         primaryKey: true,
         type: Sequelize.UUID
       },
-      gameId: {
+      userId: {
         allowNull: false,
-        type: Sequelize.STRING,
+        type: Sequelize.UUID,
         references: {
-          model: 'Games',
+          model: 'Users',
           key: 'id'
         },
         onDelete: 'CASCADE'
       },
-      cutPoint: {
+      tableId: {
         allowNull: false,
-        type: Sequelize.INTEGER,
+        type: Sequelize.UUID,
+        references: {
+          model: 'Tables',
+          key: 'id'
+        },
+        onDelete: 'CASCADE'
       },
-      shufflePoint: {
-        allowNull: false,
-        type: Sequelize.INTEGER,
+      serverSeed: {
+        type: Sequelize.STRING
       },
-      passCode: {
-        type: Sequelize.STRING,
+      clientSeed: {
+        type: Sequelize.STRING
       },
-      private: {
-        type: Sequelize.BOOLEAN,
+      blockHash: {
+        type: Sequelize.STRING
       },
-      endedAt: {
-        allowNull: true,
-        type: Sequelize.DATE,
-        defaultValue: null
+      nonce: {
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,
@@ -53,9 +53,9 @@ module.exports = {
         type: Sequelize.DATE,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       }
-    },options);
+    }, options);
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Tables',options);
+    await queryInterface.dropTable('GameSessions', options);
   }
 };

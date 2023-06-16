@@ -9,53 +9,45 @@ if (process.env.NODE_ENV === 'production') {
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Tables', {
+    await queryInterface.createTable('Hands', {
       id: {
         allowNull: false,
         primaryKey: true,
         type: Sequelize.UUID
       },
-      gameId: {
-        allowNull: false,
-        type: Sequelize.STRING,
+      userTableId: {
+        allowNull: true,
+        type: Sequelize.UUID,
         references: {
-          model: 'Games',
+          model: 'UserTables',
           key: 'id'
         },
         onDelete: 'CASCADE'
       },
-      cutPoint: {
+      roundId: {
         allowNull: false,
         type: Sequelize.INTEGER,
+        references: {
+          model: 'Rounds',
+          key: 'id'
+        },
+        onDelete: 'CASCADE'
       },
-      shufflePoint: {
-        allowNull: false,
-        type: Sequelize.INTEGER,
-      },
-      passCode: {
+      cards:{
         type: Sequelize.STRING,
-      },
-      private: {
-        type: Sequelize.BOOLEAN,
-      },
-      endedAt: {
-        allowNull: true,
-        type: Sequelize.DATE,
-        defaultValue: null
+        defaultValue: ''
       },
       createdAt: {
-        allowNull: false,
         type: Sequelize.DATE,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       },
       updatedAt: {
-        allowNull: false,
         type: Sequelize.DATE,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       }
     },options);
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Tables',options);
+    await queryInterface.dropTable('Hands',options);
   }
 };

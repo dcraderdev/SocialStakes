@@ -9,39 +9,25 @@ if (process.env.NODE_ENV === 'production') {
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Tables', {
+    await queryInterface.createTable('Rounds', {
       id: {
         allowNull: false,
+        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.UUID
+        type: Sequelize.INTEGER
       },
-      gameId: {
+      tableId: {
         allowNull: false,
-        type: Sequelize.STRING,
+        type: Sequelize.UUID,
         references: {
-          model: 'Games',
+          model: 'Tables',
           key: 'id'
         },
         onDelete: 'CASCADE'
       },
-      cutPoint: {
-        allowNull: false,
-        type: Sequelize.INTEGER,
-      },
-      shufflePoint: {
-        allowNull: false,
-        type: Sequelize.INTEGER,
-      },
-      passCode: {
-        type: Sequelize.STRING,
-      },
-      private: {
+      active: {
         type: Sequelize.BOOLEAN,
-      },
-      endedAt: {
-        allowNull: true,
-        type: Sequelize.DATE,
-        defaultValue: null
+        defaultValue: false
       },
       createdAt: {
         allowNull: false,
@@ -56,6 +42,6 @@ module.exports = {
     },options);
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Tables',options);
+    await queryInterface.dropTable('Rounds',options);
   }
 };

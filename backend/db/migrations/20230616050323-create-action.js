@@ -1,6 +1,4 @@
 'use strict';
-/** @type {import('sequelize-cli').Migration} */
-
 
 let options = {};
 if (process.env.NODE_ENV === 'production') {
@@ -9,39 +7,38 @@ if (process.env.NODE_ENV === 'production') {
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Tables', {
+    await queryInterface.createTable('Actions', {
       id: {
         allowNull: false,
         primaryKey: true,
         type: Sequelize.UUID
       },
-      gameId: {
+      userId: {
         allowNull: false,
-        type: Sequelize.STRING,
+        type: Sequelize.UUID,
         references: {
-          model: 'Games',
+          model: 'Users',
           key: 'id'
         },
         onDelete: 'CASCADE'
       },
-      cutPoint: {
+      roundId: {
         allowNull: false,
-        type: Sequelize.INTEGER,
+        type: Sequelize.UUID,
+        references: {
+          model: 'GameSessions',
+          key: 'id'
+        },
+        onDelete: 'CASCADE'
       },
-      shufflePoint: {
-        allowNull: false,
-        type: Sequelize.INTEGER,
+      type: {
+        type: Sequelize.STRING
       },
-      passCode: {
-        type: Sequelize.STRING,
+      card: {
+        type: Sequelize.STRING
       },
-      private: {
-        type: Sequelize.BOOLEAN,
-      },
-      endedAt: {
-        allowNull: true,
-        type: Sequelize.DATE,
-        defaultValue: null
+      betSize: {
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,
@@ -53,9 +50,9 @@ module.exports = {
         type: Sequelize.DATE,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       }
-    },options);
+    }, options);
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Tables',options);
+    await queryInterface.dropTable('Actions', options);
   }
 };

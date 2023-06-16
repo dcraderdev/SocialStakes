@@ -12,9 +12,9 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Table.belongsToMany(models.User, { through: 'UserTables', foreignKey: 'tableId', as: 'players' });
       Table.belongsTo(models.Game, {foreignKey:'gameId'})
-
     }
   }
+
   Table.init({
     id: {
       type: DataTypes.UUID,
@@ -27,8 +27,10 @@ module.exports = (sequelize, DataTypes) => {
     shufflePoint: DataTypes.INTEGER,
     passCode: DataTypes.STRING,
     private: DataTypes.BOOLEAN,
+  }, {
     sequelize,
     modelName: 'Table',
   });
+
   return Table;
 };

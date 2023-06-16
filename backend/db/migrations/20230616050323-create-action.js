@@ -14,7 +14,6 @@ module.exports = {
         type: Sequelize.UUID
       },
       userId: {
-        allowNull: false,
         type: Sequelize.UUID,
         references: {
           model: 'Users',
@@ -24,9 +23,9 @@ module.exports = {
       },
       roundId: {
         allowNull: false,
-        type: Sequelize.UUID,
+        type: Sequelize.INTEGER,
         references: {
-          model: 'GameSessions',
+          model: 'Rounds',
           key: 'id'
         },
         onDelete: 'CASCADE'

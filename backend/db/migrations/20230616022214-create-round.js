@@ -29,6 +29,14 @@ module.exports = {
         type: Sequelize.BOOLEAN,
         defaultValue: false
       },
+      cards:{
+        type: Sequelize.STRING,
+        defaultValue: ''
+      },
+      phase:{
+        type: Sequelize.STRING,
+        defaultValue: 'pre_deal'
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

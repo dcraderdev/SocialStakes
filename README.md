@@ -4,8 +4,7 @@
 
 ## Live Site
 
-Explore and enjoy Social Stake directly from our [live site](http://social-stake.onrender.com). Start your gaming journey right away!
-
+Explore and enjoy Social Stake directly from our [live site](http://social-stake.onrender.com). 
 
 ## Table of Contents
  - [Live Site](http://social-stake.onrender.com)

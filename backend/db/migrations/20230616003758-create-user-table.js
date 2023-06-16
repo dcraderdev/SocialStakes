@@ -36,6 +36,9 @@ module.exports = {
       seat:{
         type: Sequelize.INTEGER
       },
+      tableBalance:{
+        type: Sequelize.INTEGER
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

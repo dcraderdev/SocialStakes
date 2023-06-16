@@ -21,12 +21,8 @@ module.exports = {
         roundId: 1,
         cards: '2d 13s 7c'
       },
-      {
-        id: 'e87a6a96-6ebc-4ef3-b6a1-3058b1366fffc',
-        userTableId: 'e87a6a96-6ebc-4ef3-b6a1-3058b136fbbc', // Oak Branch
-        roundId: 1,
-        cards: '10h 10s'
-      },
+
+
 
     ], {});
   },

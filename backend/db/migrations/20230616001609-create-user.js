@@ -38,12 +38,9 @@ module.exports = {
         type: Sequelize.STRING.BINARY,
         allowNull: false
       },
-      chips: {
+      balance: {
         type: Sequelize.INTEGER,
         defaultValue: 1000
-      },
-      userRoom: {
-        type: Sequelize.STRING,
       },
       isMuted: {
         type: Sequelize.BOOLEAN,

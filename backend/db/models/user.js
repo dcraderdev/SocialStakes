@@ -98,11 +98,8 @@ module.exports = (sequelize, DataTypes) => {
           len: [60, 360],
         },
       },
-      chips: {
+      balance: {
         type: DataTypes.INTEGER,
-      },
-      userRoom: {
-        type: DataTypes.STRING,
       },
       isMuted: {
         type: DataTypes.BOOLEAN,

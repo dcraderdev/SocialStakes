@@ -24,11 +24,12 @@ module.exports = {
 
     const allEntries = Array.from({ length: 10 }, generateSeed);
 
-    await queryInterface.bulkInsert(options.tableName, allEntries);
+    await queryInterface.bulkInsert(options.tableName, allEntries, {});
 
   },
 
   down: async (queryInterface, Sequelize) => {
-    return queryInterface.bulkDelete('ServerSeeds', null, {});
+    options.tableName = 'ServerSeeds';
+    return queryInterface.bulkDelete(options, {});
   }
 };

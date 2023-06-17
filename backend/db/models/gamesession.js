@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: () => uuid.v4(), 
     },
     tableId: DataTypes.UUID,
-    serverSeed: DataTypes.STRING,
+    serverSeedId: DataTypes.UUID,
     blockHash: DataTypes.STRING,
     clientSeed: DataTypes.STRING,
     nonce: DataTypes.STRING

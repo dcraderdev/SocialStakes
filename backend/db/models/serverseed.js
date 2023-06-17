@@ -10,8 +10,7 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      ServerSeed.hasOne(models.GameSession, { foreignKey: 'serverSeedId' });
-
+      ServerSeed.belongsTo(models.GameSession, { foreignKey: 'serverSeedId' });
     }
   }
   ServerSeed.init({

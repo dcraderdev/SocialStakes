@@ -75,7 +75,7 @@ module.exports = {
         betSize: null,
       },
       {
-        id: 'ea0a6a96-7abc-4ef-b6a1-3058b1322a09',
+        id: 'ea0a6a96-7abc-4ef3-b6a1-3058b1322a09',
         userId: null, // Dealer (init)
         roundId: 1,
         type: 'initial_cards_deal',

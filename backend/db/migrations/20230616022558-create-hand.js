@@ -20,7 +20,6 @@ module.exports = {
         type: Sequelize.UUID,
         references: {
           model: 'UserTables',
-          key: 'id'
         },
         onDelete: 'CASCADE'
       },
@@ -29,7 +28,6 @@ module.exports = {
         type: Sequelize.INTEGER,
         references: {
           model: 'Rounds',
-          key: 'id'
         },
         onDelete: 'CASCADE'
       },

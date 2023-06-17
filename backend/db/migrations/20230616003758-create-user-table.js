@@ -19,7 +19,6 @@ module.exports = {
         type: Sequelize.UUID,
         references: {
           model: 'Users',
-          key: 'id',
         },
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL',
@@ -28,7 +27,6 @@ module.exports = {
         type: Sequelize.UUID,
         references: {
           model: 'Tables',
-          key: 'id',
         },
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL',

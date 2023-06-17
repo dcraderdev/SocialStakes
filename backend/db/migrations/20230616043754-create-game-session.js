@@ -18,7 +18,6 @@ module.exports = {
         type: Sequelize.UUID,
         references: {
           model: 'Tables',
-          key: 'id'
         },
         onDelete: 'CASCADE'
       },
@@ -26,7 +25,6 @@ module.exports = {
         type: Sequelize.UUID,
         references: {
           model: 'ServerSeeds',
-          key: 'id'
         },
         onDelete: 'CASCADE'
       },

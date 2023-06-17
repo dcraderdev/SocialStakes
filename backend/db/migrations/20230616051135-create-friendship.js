@@ -18,7 +18,6 @@ module.exports = {
         references: {
           model: 'Users',
           as: 'user1Id',
-          key: 'id'
         },
         onDelete: 'CASCADE',
       },
@@ -28,7 +27,6 @@ module.exports = {
         references: {
           model: 'Users',
           as: 'user2Id',
-          key: 'id'
         },
         onDelete: 'CASCADE',
       },
@@ -38,7 +36,6 @@ module.exports = {
         references: {
           model: 'Users',
           as: 'actionUser',
-          key: 'id'
         },
         onDelete: 'CASCADE',
       },

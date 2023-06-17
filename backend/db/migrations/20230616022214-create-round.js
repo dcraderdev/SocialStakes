@@ -21,7 +21,6 @@ module.exports = {
         type: Sequelize.UUID,
         references: {
           model: 'Tables',
-          key: 'id'
         },
         onDelete: 'CASCADE'
       },

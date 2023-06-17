@@ -20,7 +20,6 @@ module.exports = {
         type: Sequelize.STRING,
         references: {
           model: 'Games',
-          key: 'id'
         },
         onDelete: 'CASCADE'
       },

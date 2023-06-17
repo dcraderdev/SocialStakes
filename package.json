@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/dcraderdev/SocialStakes#readme",
   "dependencies": {
-    "socket.io-client": "^4.6.1"
+    "socket.io-client": "^4.6.1",
+    "per-env": "^1.0.0"
   }
 }

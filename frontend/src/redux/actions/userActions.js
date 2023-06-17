@@ -1,4 +1,4 @@
-import { REMOVE_USER, SET_USER, ADD_MESSAGE } from './actionTypes'
+import { REMOVE_USER, SET_USER, ADD_MESSAGE, SET_CHAT_ROOM } from './actionTypes'
 
 
 

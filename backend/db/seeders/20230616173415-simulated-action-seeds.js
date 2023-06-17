@@ -78,8 +78,9 @@ module.exports = {
 
 
 
-   // Create Rounds
-   // Since we know the outcome we will put it dealer's cards now
+    // Create Rounds
+    // Since we know the outcome we will put it dealer's cards now
+    options.tableName = 'Rounds';ç
     let roundEntries = [
       {
         tableId: 'e10d8de4-f4c2-4d28-9324-56aa9c920801',
@@ -89,13 +90,14 @@ module.exports = {
       }
     ]
 
-    await queryInterface.bulkInsert('Rounds', roundEntries, {});
+    await queryInterface.bulkInsert(options, roundEntries, {});
 
 
 
 
 
    // Create Actions
+   options.tableName = 'Actions'
 
 
     let actionEntries = [
@@ -187,10 +189,10 @@ module.exports = {
 
 
     ];
-
-    await queryInterface.bulkInsert('Actions', actionEntries, {});
+    await queryInterface.bulkInsert(options, actionEntries, {});
   //  // Create Hands
 
+  options.tableName = 'Hands'
 
    let handEntries = [
      {
@@ -208,11 +210,12 @@ module.exports = {
    ]
 
 
-    await queryInterface.bulkInsert('Hands', handEntries, {});
+    await queryInterface.bulkInsert(options, handEntries, {});
 
 
 
    // Create Pots
+   options.tableName = 'Pots'
 
     const pot1 = {
       id: 'e87a6a96-6ebc-4ef3-b6a1-3058b1000014',
@@ -226,9 +229,11 @@ module.exports = {
       potAmount: 50,
     };
 
-    await queryInterface.bulkInsert('Pots', [pot1, pot2], {});
+    await queryInterface.bulkInsert(options, [pot1, pot2], {});
 
     // Create UserPots
+   options.tableName = 'UserPots'
+
     const userPot1 = {
       id: 'e87a6a96-6ebc-4ef3-b6a1-3058b7770014',
       userId: 'b16f9b4c-9d72-4e21-81ea-8fcf6a7987d7',
@@ -242,13 +247,20 @@ module.exports = {
       won: false
     };
 
-    await queryInterface.bulkInsert('UserPots', [userPot1, userPot2], {});
+    await queryInterface.bulkInsert(options, [userPot1, userPot2], {});
 
 
   },
 
   down: async (queryInterface, Sequelize) => {
+    options.tableName = 'Pots';
+    await queryInterface.bulkDelete(options, {});
+    options.tableName = 'UserPots';
+    await queryInterface.bulkDelete(options, {});
+    options.tableName = 'Hands';
+    await queryInterface.bulkDelete(options, {});
     options.tableName = 'Actions';
-    return queryInterface.bulkDelete(options, {});
+    await queryInterface.bulkDelete(options, {});
+
   },
 };

@@ -28,7 +28,7 @@ module.exports = {
       '9b933ea9aa2ab2124be2caaa0fb91e8fb11f5a1789eb228887d0be9cdf2e7d8b'
     ]  
 
-    await queryInterface.bulkInsert(options.tableName, serverSeeds);
+    await queryInterface.bulkInsert(options, serverSeeds);
 
 
     options.tableName = 'GameSessions';
@@ -49,13 +49,13 @@ module.exports = {
       });
     }
 
-    return queryInterface.bulkInsert(options.tableName, gameSessions);
+    return queryInterface.bulkInsert(options, gameSessions);
   },
 
   down: async (queryInterface, Sequelize) => {
     options.tableName = 'GameSessions';
-    await queryInterface.bulkDelete('GameSessions', null, {});
+    await queryInterface.bulkDelete(options, null, {});
     options.tableName = 'ServerSeeds';
-    return queryInterface.bulkDelete('ServerSeeds', null, {});
+    return queryInterface.bulkDelete(options, null, {});
   }
 };

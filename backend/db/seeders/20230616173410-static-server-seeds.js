@@ -43,7 +43,7 @@ module.exports = {
       gameSessions.push({
         id: uuid.v4(),
         tableId: tableIds[0],
-        serverSeed: serverSeeds[i].id,
+        serverSeedId: serverSeeds[i].id,
         blockHash,
         nonce: '1', 
       });

@@ -10,9 +10,8 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      GameSession.belongsTo(models.User, { foreignKey: 'userId' });
       GameSession.belongsTo(models.Table, { foreignKey: 'tableId' });
-      GameSession.belongsTo(models.ServerSeed, { foreignKey: 'serverSeedId' });
+      GameSession.hasMany(models.ServerSeed, { foreignKey: 'serverSeedId' });
     }
   }
 
@@ -25,6 +24,7 @@ module.exports = (sequelize, DataTypes) => {
     tableId: DataTypes.UUID,
     serverSeed: DataTypes.STRING,
     blockHash: DataTypes.STRING,
+    clientSeed: DataTypes.STRING,
     nonce: DataTypes.STRING
   }, {
     sequelize,

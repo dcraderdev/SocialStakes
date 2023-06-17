@@ -1,17 +1,22 @@
 'use strict';
-
-let options = {};
-if (process.env.NODE_ENV === 'production') {
-  options.schema = process.env.SCHEMA;  // define your schema in options object
-}
-
+/** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('GameSessions', {
+    await queryInterface.createTable('Messages', {
       id: {
         allowNull: false,
+        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.UUID
+        type: Sequelize.INTEGER
+      },
+      userId: {
+        allowNull: false,
+        type: Sequelize.UUID,
+        references: {
+          model: 'Users',
+          key: 'id'
+        },
+        onDelete: 'CASCADE'
       },
       tableId: {
         allowNull: false,
@@ -22,21 +27,7 @@ module.exports = {
         },
         onDelete: 'CASCADE'
       },
-      serverSeedId: {
-        type: Sequelize.STRING,
-        references: {
-          model: 'serverSeeds',
-          key: 'id'
-        },
-        onDelete: 'CASCADE'
-      },
-      clientSeed: {
-        type: Sequelize.STRING
-      },
-      blockHash: {
-        type: Sequelize.STRING
-      },
-      nonce: {
+      content: {
         type: Sequelize.STRING
       },
       createdAt: {
@@ -49,9 +40,9 @@ module.exports = {
         type: Sequelize.DATE,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       }
-    }, options);
+    });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('GameSessions', options);
+    await queryInterface.dropTable('Messages');
   }
 };

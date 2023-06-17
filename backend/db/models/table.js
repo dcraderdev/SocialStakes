@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Table.belongsToMany(models.User, { through: 'UserTables', foreignKey: 'tableId', as: 'players' });
       Table.belongsTo(models.Game, {foreignKey:'gameId'})
+      Table.hasMany(models.Message, {foreignKey:'tableId'})
     }
   }
 

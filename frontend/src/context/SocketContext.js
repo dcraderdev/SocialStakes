@@ -1,7 +1,7 @@
 import React, { createContext, useEffect, useState, useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import io from 'socket.io-client';
-
+import { addMessage } from '../redux/actions/userActions';
 const SocketContext = createContext();
 
 
@@ -45,7 +45,7 @@ const SocketProvider = ({ children }) => {
       
 
 
-  
+      dispatch(ADD_MESSAGE)
 
       socket.on('message', (messageObj) => {
         console.log('receiving message');

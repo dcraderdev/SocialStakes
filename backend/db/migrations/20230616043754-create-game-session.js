@@ -25,7 +25,7 @@ module.exports = {
       serverSeedId: {
         type: Sequelize.STRING,
         references: {
-          model: 'serverSeeds',
+          model: 'ServerSeeds',
           key: 'id'
         },
         onDelete: 'CASCADE'

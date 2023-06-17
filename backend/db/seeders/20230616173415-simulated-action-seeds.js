@@ -170,7 +170,7 @@ module.exports = {
       },
 
       {
-        id: 'eea0a6a96-7abc-4ef3-b6a1-3058aaaaaa09',
+        id: 'ea0a6a96-7abc-4ef3-b6a1-3058aaaaaa09',
         userId: null, // Dealer (round)
         roundId: 2,
         type: 'hit_dealer_deal',
@@ -178,7 +178,7 @@ module.exports = {
         betSize: null,
       },
       {
-        id: 'eea0a6a96-7abc-4ef3-b6a1-3058aaaaaa10',
+        id: 'ea0a6a96-7abc-4ef3-b6a1-3058aaaaaa10',
         userId: null, // Dealer (round)
         roundId: 2,
         type: 'hit_dealer_deal',
@@ -196,13 +196,13 @@ module.exports = {
 
    let handEntries = [
      {
-       id: 'eea0a6a96-7abc-4ef3-b6a1-5555aaaaaa10',
+       id: 'ea0a6a96-7abc-4ef3-b6a1-5555aaaabb10',
        userTableId: 'e87a6a96-6ebc-4ef3-b6a1-3058b136fbba', // Trina Pine
        roundId: 2,
        cards: `${cards1[0]} ${cards1[1]}`
      },
      {
-       id: 'eea0a6a96-7abc-4ef3-b6a1-5556aaaaaa10',
+       id: 'ea0a6a96-7abc-4ef3-b6a1-5556aaaabb11',
        userTableId: 'e87a6a96-6ebc-4ef3-b6a1-3058b136fbbb', // Hazel Forest
        roundId: 2,
        cards: `${cards2[0]} ${cards2[1]}`

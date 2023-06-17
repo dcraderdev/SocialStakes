@@ -10,7 +10,7 @@ if (process.env.NODE_ENV === 'production') {
 
 module.exports = { 
   up: async (queryInterface, Sequelize) => {
-    options.tableName = 'serverSeeds';
+    options.tableName = 'ServerSeeds';
 
     function generateSeed() {
       const randomValue = crypto.randomBytes(64).toString('hex');
@@ -29,6 +29,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    return queryInterface.bulkDelete('serverSeeds', null, {});
+    return queryInterface.bulkDelete('ServerSeeds', null, {});
   }
 };

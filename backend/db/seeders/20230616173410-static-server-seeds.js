@@ -10,7 +10,7 @@ if (process.env.NODE_ENV === 'production') {
 
 module.exports = { 
   up: async (queryInterface, Sequelize) => {
-    options.tableName = 'serverSeeds';
+    options.tableName = 'ServerSeeds';
 
 
     let serverSeeds = [
@@ -54,6 +54,6 @@ module.exports = {
 
   down: async (queryInterface, Sequelize) => {
     await queryInterface.bulkDelete('GameSessions', null, {});
-    return queryInterface.bulkDelete('serverSeeds', null, {});
+    return queryInterface.bulkDelete('ServerSeeds', null, {});
   }
 };

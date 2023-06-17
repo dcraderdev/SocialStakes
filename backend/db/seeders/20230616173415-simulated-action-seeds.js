@@ -80,7 +80,7 @@ module.exports = {
 
     // Create Rounds
     // Since we know the outcome we will put it dealer's cards now
-    options.tableName = 'Rounds';ç
+    options.tableName = 'Rounds';
     let roundEntries = [
       {
         tableId: 'e10d8de4-f4c2-4d28-9324-56aa9c920801',

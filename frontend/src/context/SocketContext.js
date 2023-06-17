@@ -44,9 +44,6 @@ const SocketProvider = ({ children }) => {
       }
       
 
-
-      dispatch(ADD_MESSAGE)
-
       socket.on('message', (messageObj) => {
         console.log('receiving message');
         console.log(messageObj.conversationId);

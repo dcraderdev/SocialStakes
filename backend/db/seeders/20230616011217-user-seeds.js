@@ -27,6 +27,7 @@ module.exports = {
         email: 'needles@user.io',
         username: 'Treeeeenaa',
         hashedPassword: await bcrypt.hash('password', salt),
+        balance: 900
       },
       {
         id:'87d1cb3a-b8e2-4c7e-9d80-462a523b0fcb',
@@ -35,6 +36,7 @@ module.exports = {
         email: 'ownlintree@user.io',
         username: 'Hazel',
         hashedPassword: await bcrypt.hash('password', salt),
+        balance: 900
       },
       {
         id:"2da2c0a2-0de9-4275-a5e5-5d91e8b8533c",

@@ -22,7 +22,6 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       defaultValue: () => uuid.v4(), 
     },
-    userId: DataTypes.UUID,
     tableId: DataTypes.UUID,
     serverSeed: DataTypes.STRING,
     clientSeed: DataTypes.STRING,

@@ -18,7 +18,11 @@ npx sequelize-cli seed:generate --name user-table-seeds
 npx sequelize-cli seed:generate --name round-seeds
 npx sequelize-cli seed:generate --name hand-seeds
 npx sequelize-cli seed:generate --name server-seed-seeds
-npx sequelize-cli seed:generate --name action-seeds
 npx sequelize-cli seed:generate --name friendship-seeds
 npx sequelize-cli seed:generate --name pot-seeds
 npx sequelize-cli seed:generate --name user-pot-seeds
+npx sequelize-cli seed:generate --name action-seeds
+npx sequelize-cli seed:generate --name static-server-seeds
+npx sequelize-cli seed:generate --name simulated-action-seeds
+
+

@@ -27,6 +27,7 @@ module.exports = (sequelize, DataTypes) => {
     shufflePoint: DataTypes.INTEGER,
     passCode: DataTypes.STRING,
     private: DataTypes.BOOLEAN,
+    tableBalance: DataTypes.INTEGER,
   }, {
     sequelize,
     modelName: 'Table',

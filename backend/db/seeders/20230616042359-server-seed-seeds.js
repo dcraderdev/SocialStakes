@@ -46,8 +46,7 @@ module.exports = {
       }
     }
 
-    const tableIds = ['e10d8de4-f4c2-4d28-9324-56aa9c920801', 'e10d8de4-f4c2-4d28-9324-56aa9c920802'];
-    const userIds = ['e87a6a96-6ebc-4ef3-b6a1-3058b136f34b', '87d1cb3a-b8e2-4c7e-9d80-462a523b0fcb']
+    const tableIds = ['e10d8de4-f4c2-4d28-9324-56aa9c920801'];
     const gameSessions = [];
 
     for (let i = 0; i < 2; i++) {
@@ -59,7 +58,6 @@ module.exports = {
         blockHash,
         nonce: '1', 
         clientSeed: null,
-        userId: userIds[i]
       });
     }
 

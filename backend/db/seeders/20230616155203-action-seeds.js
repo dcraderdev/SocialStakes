@@ -96,6 +96,14 @@ module.exports = {
         card: null,
         betSize: null,
       },
+      {
+        id: 'ea0a6a96-7abc-4ef3-b6a1-3058b1322a12',
+        userId: 'e87a6a96-6ebc-4ef3-b6a1-3058b136f34b', // Trina Pine
+        roundId: 1,
+        type: 'win',
+        card: null,
+        betSize: null,
+      },
     ];
 
     await queryInterface.bulkInsert('Actions', actionEntries, {});

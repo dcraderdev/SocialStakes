@@ -24,7 +24,8 @@ module.exports = (sequelize, DataTypes) => {
     smallBlind: DataTypes.INTEGER,
     bigBlind: DataTypes.INTEGER,
     minBet: DataTypes.INTEGER,
-    maxBet: DataTypes.INTEGER
+    maxBet: DataTypes.INTEGER,
+    rake: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Game',

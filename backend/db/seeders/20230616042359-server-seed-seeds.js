@@ -26,46 +26,9 @@ module.exports = {
 
     await queryInterface.bulkInsert(options.tableName, allEntries);
 
-    options.tableName = 'GameSessions';
-
-    async function fetchLatestBlock() {
-      const url = 'https://blockchain.info/latestblock';
-      const options = {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      };
-
-      try {
-        const response = await fetch(url, options);
-        const data = await response.json();
-        return data.hash;
-      } catch (error) {
-        console.error('Error:', error);
-      }
-    }
-
-    const tableIds = ['e10d8de4-f4c2-4d28-9324-56aa9c920801'];
-    const gameSessions = [];
-
-    for (let i = 0; i < 2; i++) {
-      const blockHash = await fetchLatestBlock();
-      gameSessions.push({
-        id: uuid.v4(),
-        tableId: tableIds[0],
-        serverSeed: allEntries[i].id,
-        blockHash,
-        nonce: '1', 
-        clientSeed: null,
-      });
-    }
-
-    return queryInterface.bulkInsert(options.tableName, gameSessions);
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkDelete('GameSessions', null, {});
     return queryInterface.bulkDelete('serverSeeds', null, {});
   }
 };

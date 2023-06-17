@@ -46,7 +46,6 @@ module.exports = {
         serverSeed: serverSeeds[i].id,
         blockHash,
         nonce: '1', 
-        clientSeed: null,
       });
     }
 

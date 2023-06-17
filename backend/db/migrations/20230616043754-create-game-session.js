@@ -23,10 +23,12 @@ module.exports = {
         onDelete: 'CASCADE'
       },
       serverSeed: {
-        type: Sequelize.STRING
-      },
-      clientSeed: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        references: {
+          model: 'serverSeeds',
+          key: 'id'
+        },
+        onDelete: 'CASCADE'
       },
       blockHash: {
         type: Sequelize.STRING

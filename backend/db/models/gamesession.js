@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       GameSession.belongsTo(models.User, { foreignKey: 'userId' });
       GameSession.belongsTo(models.Table, { foreignKey: 'tableId' });
-      GameSession.belongsTo(models.ServerSeed, { foreignKey: 'serverSeed' });
+      GameSession.belongsTo(models.ServerSeed, { foreignKey: 'serverSeedId' });
     }
   }
 
@@ -24,7 +24,6 @@ module.exports = (sequelize, DataTypes) => {
     },
     tableId: DataTypes.UUID,
     serverSeed: DataTypes.STRING,
-    clientSeed: DataTypes.STRING,
     blockHash: DataTypes.STRING,
     nonce: DataTypes.STRING
   }, {

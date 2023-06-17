@@ -9,6 +9,9 @@ if (process.env.NODE_ENV === 'production') {
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
+
+    options.tableName = 'Pots';
+
     // Create pots
     const pot1 = {
       id: 'e87a6a96-6ebc-4ef3-b6a1-3058b1000001',
@@ -21,7 +24,10 @@ module.exports = {
       potAmount: 50,
     };
 
-    await queryInterface.bulkInsert('Pots', [pot1, pot2], {});
+    await queryInterface.bulkInsert(options, [pot1, pot2], {});
+
+
+    options.tableName = 'UserPots';
 
     // Create UserPots
     const userPot1 = {
@@ -38,11 +44,13 @@ module.exports = {
     };
 
 
-    await queryInterface.bulkInsert('UserPots', [userPot1, userPot2], {});
+    await queryInterface.bulkInsert(options, [userPot1, userPot2], {});
   },
 
   down: async (queryInterface, Sequelize) => {
+    options.tableName = 'UserPots';
     await queryInterface.bulkDelete('UserPots', null, {});
+    options.tableName = 'Pots';
     await queryInterface.bulkDelete('Pots', null, {});
   }
 };

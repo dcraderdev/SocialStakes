@@ -24,7 +24,7 @@ module.exports = {
 
     const allEntries = Array.from({ length: 10 }, generateSeed);
 
-    await queryInterface.bulkInsert(options.tableName, allEntries, {});
+    await queryInterface.bulkInsert(options, allEntries, {});
 
   },
 
@@ -33,3 +33,5 @@ module.exports = {
     return queryInterface.bulkDelete(options, {});
   }
 };
+
+

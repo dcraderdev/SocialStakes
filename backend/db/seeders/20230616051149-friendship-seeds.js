@@ -7,6 +7,7 @@ if (process.env.NODE_ENV === 'production') {
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
+    options.tableName = 'Friendships';
 
 
     const userIds = [
@@ -100,7 +101,7 @@ module.exports = {
     ]
 
 
-    await queryInterface.bulkInsert('Friendships', allEntries, {});
+    await queryInterface.bulkInsert(options, allEntries, {});
   },
 
   down: async (queryInterface, Sequelize) => {

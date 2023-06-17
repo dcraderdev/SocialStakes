@@ -53,7 +53,9 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
+    options.tableName = 'GameSessions';
     await queryInterface.bulkDelete('GameSessions', null, {});
+    options.tableName = 'ServerSeeds';
     return queryInterface.bulkDelete('ServerSeeds', null, {});
   }
 };

@@ -29,18 +29,32 @@ body{
   /* background-color: rgba(100, 148, 237, 0.584); */
   background-color: #803a34;
   background-color: #803a34;
+  background-color: #2d2e2c;
+
   width: 100%;
   overflow-x: hidden;
   height: 100%;
 }
 
-.bgcolor1{
+.bg-style1-color1{
   background-color: #803a34;
 }
 
-.bgcolor2{
+.bg-style1-color2{
   background-color: #672f2a;
 }
+
+.bg-style2-color1{
+  background-color: #2d2e2c;
+}
+
+.bg-style2-color2{
+  background-color: #4d672a;
+}
+
+
+
+
 
 *{
   font-family: 'Montserrat', sans-serif;
@@ -57,4 +71,6 @@ body{
 }
 
 
-
+.between{
+  justify-content: space-between;
+}

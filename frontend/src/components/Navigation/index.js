@@ -42,7 +42,7 @@ function Navigation(){
 
   return (
     <>
-      <nav className="nav-bar bgcolor2">
+      <nav className="nav-bar bg-style2-color1">
         <div className='nav-buttons'>
 
           <div className='logo-container flex center' onClick={handleLogoClick}>

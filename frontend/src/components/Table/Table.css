@@ -1,17 +1,101 @@
 .table-wrapper{
-  border: black solid 1px;
   position: absolute;
-  top: 100px;
+  top: 95px;
   left: 0%;
   width: 100%;
-  height: 70%;
-
+  height: 60%;
+  min-height: 400px;
 }
 
 .table-container{
-  border: black solid 1px;
+  max-width: 1000px;
+  width: 100%;
+  height: 60%;
+  max-width: 1000px;
+  margin: 0 auto;
 }
+
+
+
+.table-content{
+  margin: 0 auto;
+  max-width: 1000px;
+  min-width: 800px;
+  border: rgb(46, 34, 34) solid 2px;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 0);
+  width: 100%;
+  height: 100%;
+  border-bottom-left-radius: 320px;
+  border-bottom-right-radius: 320px;
+  overflow: hidden;
+}
+
+
+.table-content img {
+  object-fit: contain;
+  overflow: hidden;
+  position: relative;
+  z-index: -100;
+}
+
 
 .table-content{
   border: black solid 1px;
+}
+
+.top-seats{
+  position: relative;
+  top: 20px;
+  width: 100%;
+}
+.mid-seats{
+  position: relative;
+  top: 40px;
+  width: 100%;
+}
+.bot-seats{
+  position: relative;
+  top: 50px;
+  max-width: 400px;
+  min-width: 250px;
+  width: 40%;
+  margin: auto 0;
+  left: 50%;
+  transform: translate(-50%, 0);
+}
+
+.seat-container{
+  border: white solid 1px;
+  width: 120px;
+  min-width: 120px;
+  height: 120px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+} 
+
+.seat1{
+  left: 20px;
+}
+.seat6{
+  left: -20px;
+}
+
+.seat2{
+  left: 70px;
+}
+.seat5{
+  left: -70px;
+}
+
+
+
+
+@media screen and (min-width: 650px) {
+  .logo-name{
+    font-size: 40px;
+  }
 }

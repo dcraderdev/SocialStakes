@@ -9,7 +9,8 @@ export const GET_USERS = 'users/all';
 export const SET_CSRF_TOKEN = 'set/csrf';
 
 
-//chatBox
+//game
+export const GET_GAMES = 'games/GET_GAMES';
+export const GET_TABLE = 'games/GET_TABLE';
 
-export const ADD_MESSAGE = 'user/ADD_MESSAGE';
-export const SET_CHAT_ROOM = 'user/SET_CHAT_ROOM-message';
+

@@ -9,6 +9,7 @@ import { restoreCSRF, csrfFetch } from './redux/middleware/csrf';
 
 import { ModalProvider } from './context/ModalContext';
 import { SocketProvider } from './context/SocketContext';
+import { WindowProvider } from './context/WindowContext';
 
 const store = configureStore();
 
@@ -28,9 +29,11 @@ function Root(){
     <Provider store={store}>
       <BrowserRouter>
           <SocketProvider> 
+          <WindowProvider> 
             <ModalProvider> 
               <App />
             </ModalProvider> 
+          </WindowProvider> 
           </SocketProvider> 
       </BrowserRouter>
     </Provider>

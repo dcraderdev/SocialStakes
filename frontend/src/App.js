@@ -54,7 +54,7 @@ function App() {
       {loaded && <Navigation />}
 
 
-{/* 
+
       {modal && (
         <div
           className={
@@ -67,7 +67,7 @@ function App() {
           {modal === 'signup' && <SignupModal />}
         </div>
       )}
- */}
+
 
 
 

@@ -1,12 +1,10 @@
 import { createStore, applyMiddleware, compose, combineReducers } from 'redux';
 import thunk from 'redux-thunk';
 import userReducer from '../reducers/userReducer';
-import blackjackReducer from '../reducers/blackjackReducer';
 import gamesReducer from '../reducers/gamesReducer';
 
 const rootReducer = combineReducers({
   users: userReducer,
-  blackjack: blackjackReducer,
   games: gamesReducer,
 });
 

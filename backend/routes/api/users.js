@@ -16,7 +16,6 @@ const router = express.Router();
 // is being sent with each request that requires protection
 router.post('/', validateSignup, async (req, res, next) => {
 
-
   let errors = {}
   const { email, password, username, firstName, lastName } = req.body;
   const verifyEmail = await User.findOne({where:{email:email}})

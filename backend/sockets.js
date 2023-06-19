@@ -18,13 +18,10 @@ module.exports = function (io) {
 
     socket.join(userRoom);
 
-    socket.on('initialize_messages', async () => {
+    socket.on('initialize', async () => {
       console.log('INITIALIZING');
       console.log('INITIALIZING');
 
-        let conversations = await chatController.getConversations(userId);
-        if (conversations) socket.emit('initialize_messages', conversations);
-      
 
     });
 

@@ -1,11 +1,9 @@
 
-import { SET_USER, REMOVE_USER, ADD_MESSAGE } from '../actions/actionTypes'
+import { SET_USER, REMOVE_USER } from '../actions/actionTypes'
 
 const initialState = {
   user: null,
   isAuthenticated: false,
-  chatRoom: null,
-  conversationInvites: {},
   friends: {}
 };
 

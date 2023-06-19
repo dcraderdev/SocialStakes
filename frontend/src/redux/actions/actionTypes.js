@@ -1,16 +1,20 @@
 //users
 
-export const SET_USER = 'session/setUser';
-export const REMOVE_USER = 'session/removeUser';
-export const GET_USERS = 'users/all';
+export const SET_USER = 'session/SET_USER';
+export const REMOVE_USER = 'session/REMOVE_USER';
+export const GET_USERS = 'users/GET_USERS';
 
 
 //csrf
-export const SET_CSRF_TOKEN = 'set/csrf';
+export const SET_CSRF_TOKEN = 'set/SET_CSRF_TOKEN';
 
 
 //game
 export const GET_GAMES = 'games/GET_GAMES';
-export const GET_TABLE = 'games/GET_TABLE';
+export const GET_TABLES = 'game/GET_ACTIVE_TABLES';
+export const GET_GAME_BY_ID = 'games/GET_TABLE_BY_ID';
+export const GET_TABLE_BY_ID = 'games/GET_TABLE_BY_ID';
+
+export const JOIN_TABLE = 'game/JOIN_TABLE';
 
 

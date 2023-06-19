@@ -1,4 +1,4 @@
-import { GET_GAMES, GET_TABLE } from '../actions/actionTypes'
+import { GET_GAMES, GET_TABLES, GET_GAME_BY_ID, GET_TABLE_BY_ID, JOIN_TABLE } from '../actions/actionTypes'
 
 const initialState = {
   games:{},
@@ -10,7 +10,8 @@ const gamesReducer = (state = initialState, action) => {
 
   switch (action.type) {
     case GET_GAMES:{
-
+      console.log(action);
+      return { ...newState, games: action.games};
     }
 
   

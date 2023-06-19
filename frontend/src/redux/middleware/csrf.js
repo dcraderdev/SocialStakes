@@ -18,9 +18,9 @@ export const setCsrfTokenThunk = () => async (dispatch, getState) => {
 // frontend/src/store/csrf.js
 
 export async function csrfFetch(url, options = {}) {
-
-  console.log(options);
   console.log(url);
+  console.log(options);
+
   // set options.method to 'GET' if there is no method
   options.method = options.method || 'GET';
   // set options.headers to an empty object if there is no headers
@@ -50,11 +50,9 @@ export async function csrfFetch(url, options = {}) {
 
     
   if (res.status >= 400) {
+    console.log(url);
     const errorData = await res.json(); 
     const error = new Error('Request failed');
-
-    console.log(errorData);
-    console.log(error);
     error.status = res.status;
     error.data = errorData; 
     throw error;

@@ -1,0 +1,38 @@
+.game-tile-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.game-tile {
+  border: black solid 1px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 14px;
+  cursor: pointer;
+  height: 100%;
+  width: 100%;
+  background: radial-gradient(#ffffff, #68ade5);
+}
+
+
+
+.game-tile:hover {
+  box-shadow: rgba(255, 255, 255, 0.1) 0px 3px 6px, rgba(0, 0, 0, 0.1) 0px 3px 6px;
+  animation: pulse 1s infinite alternate
+}
+
+
+@keyframes pulse {
+
+  95% {
+    font-size: x-large;
+  }
+  100% {
+    font-size: x-large;
+  }
+
+}
+

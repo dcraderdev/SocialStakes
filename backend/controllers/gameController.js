@@ -10,12 +10,13 @@ const gameController = {
       const err = new Error('games not found');
       err.statusCode = 404;
       err.status = 404;
-      return next(err);
+      throw err;
     }
+    return games;
+  },
+
   
-  
-    return res.status(200).json({ Games: games });
-  }
+
 }
 
 module.exports = {

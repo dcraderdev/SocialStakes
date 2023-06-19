@@ -27,32 +27,38 @@
 
 body{
   /* background-color: rgba(100, 148, 237, 0.584); */
-  background-color: #803a34;
-  background-color: #803a34;
+  /* background-color: #803a34;
+  background-color: #803a34;*/
   background-color: #2d2e2c;
-
+  /* background: radial-gradient(circle, rgba(111,112,110,1) 0%, rgba(31,32,30,1) 100%); */
   width: 100%;
   overflow-x: hidden;
   height: 100%;
 }
 
-.bg-style1-color1{
+.style1-color1{
   background-color: #803a34;
 }
 
-.bg-style1-color2{
+.style1-color2{
   background-color: #672f2a;
 }
 
-.bg-style2-color1{
+.style2-color1{
   background-color: #2d2e2c;
 }
 
-.bg-style2-color2{
+.style2-color2{
   background-color: #4d672a;
 }
-
-
+.style-neon-color1{
+  box-shadow: 
+  rgba(240, 46, 170, 0.4) 0 0 50px, 
+  rgba(240, 46, 170, 0.3) 0 0 100px, 
+  rgba(240, 46, 170, 0.2) 0 0 150px, 
+  rgba(240, 46, 170, 0.1) 0 0 200px, 
+  rgba(240, 46, 170, 0.05) 0 0 250px; 
+}
 
 
 

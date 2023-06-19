@@ -2,6 +2,7 @@ import Navigation from './components/Navigation';
 import LoginModal from './components/LoginModal';
 import SignupModal from './components/SignupModal';
 import GameFloor from './components/GameFloor';
+import Game from './components/Game';
 import Table from './components/Table';
 
 import { useDispatch, useSelector } from 'react-redux';
@@ -82,7 +83,7 @@ function App() {
           </Route>
 
           <Route path="/table/:tableId" exact>
-            <Table />
+            <Game />
           </Route>
 
 

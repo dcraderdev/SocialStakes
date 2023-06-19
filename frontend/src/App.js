@@ -2,6 +2,7 @@ import Navigation from './components/Navigation';
 import LoginModal from './components/LoginModal';
 import SignupModal from './components/SignupModal';
 import GameFloor from './components/GameFloor';
+import Table from './components/Table';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { React, useState, useEffect, useContext } from 'react';
@@ -79,6 +80,11 @@ function App() {
           <Route path="/" exact>
             <GameFloor />
           </Route>
+
+          <Route path="/table/:tableId" exact>
+            <Table />
+          </Route>
+
 
           <Route>
             <h1>404:Unknown Route</h1>

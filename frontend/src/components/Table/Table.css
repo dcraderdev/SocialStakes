@@ -1,0 +1,17 @@
+.table-wrapper{
+  border: black solid 1px;
+  position: absolute;
+  top: 100px;
+  left: 0%;
+  width: 100%;
+  height: 70%;
+
+}
+
+.table-container{
+  border: black solid 1px;
+}
+
+.table-content{
+  border: black solid 1px;
+}

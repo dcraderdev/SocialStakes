@@ -8,6 +8,7 @@ import TableTile from '../TableTile';
 
 
 import './GameFloor.css';
+import Game from '../Game';
 
 function GameFloor() {
 
@@ -16,9 +17,7 @@ function GameFloor() {
 
   const user = useSelector(state => state.users.user);
   const allGames = useSelector((state) => state.games.games);
-  const currentTableList = useSelector((state) => state.games.currentTableList);
-
-
+  const openTablesByGameType = useSelector((state) => state.games.openTablesByGameType);
 
 
   const [isLoaded, setIsLoaded] = useState(false);
@@ -28,38 +27,56 @@ function GameFloor() {
 
   const [showGames, setShowGames] = useState(true);
   const [showTables, setShowTables] = useState(false);
-  
-  
-console.log(currentTableList);
-console.log(games);
+  const [showActiveTable, setShowActiveTable] = useState(false);
 
+  
+  const [currentTables, setCurrentTables] = useState(null);
+  const [activeTable, setActiveTable] = useState(null);
+  
+  
+console.log(openTablesByGameType);
+console.log(games);
+console.log(activeTable);
+
+
+  // handle loading active games on component load
   useEffect(() => {
     dispatch(gameActions.getAllGames())
   }, []);
 
 
+  // handle checking active games
   useEffect(() => {
     setIsLoaded(false);
     if(Object.values(allGames).length > 0){
       setIsLoaded(true)
     }
-
   }, [allGames]);
 
 
 
-
+  // handle checking active tables
   useEffect(() => {
     setIsLoaded(false);
-
-    if(currentTableList.length > 0){
-      setGames(currentTableList)
+    if(openTablesByGameType.length > 0){
+      setGames(openTablesByGameType)
       setShowTables(true)
       setShowGames(false)
       setIsLoaded(true)
     }
+  }, [openTablesByGameType]);
 
-  }, [currentTableList]);
+
+
+  // handle active table change
+  useEffect(() => {
+    if(activeTable){
+      setShowTables(false)
+      setShowGames(false)
+      setShowActiveTable(true)
+    }
+  }, [activeTable]);
+
 
 
 
@@ -72,9 +89,37 @@ console.log(games);
     }
   }
 
+  const navToGamesList = () => {
+    setShowGames(true)
+    setShowTables(false)
+    setShowActiveTable(false)
+    setActiveTable(null)
+  }
+
 
   const checkTables = (gameType) =>{
     dispatch(gameActions.getTablesByType(gameType))
+  }
+
+
+
+  const viewTable = (table) =>{
+      //join table's socket
+      setActiveTable(table)
+  }
+  
+  // Take/change seat
+  const takeSeat = (seat) =>{
+    console.log('joining table');
+    let tableId = activeTable?.id
+    dispatch(gameActions.takeSeat(tableId, seat))
+    // then show seat taken, emit to socket
+  }
+
+  const leaveSeat = (table) =>{
+    console.log('leaving seat');
+    dispatch(gameActions.leaveSeat(table.id))
+    navToGamesList()
   }
 
   const startPrivateGame = () =>{
@@ -87,11 +132,12 @@ console.log(games);
 
   return ( 
     <>
-      <div className='gamefloor-wrapper'>     
+      <div className={`gamefloor-wrapper ${activeTable ? 'table-view' : ''}`}>     
         <div className='gamefloor-container'>
           <div className='gamefloor-content'>
 
-
+          {!showActiveTable && (
+            <div>
             <div className='private-game-buttons'>
               <div className='private-game-button' onClick={startPrivateGame}>Start Private Game</div>
               <div className='private-game-button' onClick={joinPrivateGame}>Join Private Game</div>
@@ -100,8 +146,11 @@ console.log(games);
               <div className='gamefloor-back-button flex center' onClick={goBack}>
                 <i className="fa-solid fa-arrow-left-long"></i>
               </div>
+            </div>
 
             </div>
+          )}
+
 
             {!isLoaded && (
               <div className="games-grid">
@@ -133,7 +182,7 @@ console.log(games);
 {/* SHOW AVAILABLE TABLES PER GAME TYPE */}
                 {/* {gameTables && tableInfo && (
                   <div className="available-tables-grid">
-                  {currentTableList.map((table, index) => (
+                  {openTablesByGameType.map((table, index) => (
                     ))}
                     </div>
                   )} */}
@@ -144,12 +193,22 @@ console.log(games);
                 {isLoaded && showTables && (
                   <div>
                       <div className="available-tables-grid">
-                        {currentTableList && currentTableList.map((table, index) => (
-                          <TableTile key={index} table={table}/>
+                        {openTablesByGameType && openTablesByGameType.map((table, index) => (
+                          <TableTile key={index} table={table} viewTable={viewTable}/>
                         ))}
                       </div>
                     </div>
                 )}
+
+{/* SHOW SELECTED TABLE */}
+                {isLoaded && showActiveTable && (
+                  <div>
+                    {activeTable &&  (
+                      <Game table={activeTable} leaveSeat={leaveSeat} takeSeat={takeSeat}/>
+                    )}
+                  </div>
+                )}
+
 
 
 

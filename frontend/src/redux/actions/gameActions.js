@@ -1,4 +1,8 @@
-import { GET_GAMES, GET_TABLES, GET_TABLES_BY_TYPE, GET_GAME_BY_ID, GET_TABLE_BY_ID, JOIN_TABLE} from './actionTypes'
+import { 
+  GET_GAME_BY_ID, GET_GAMES,
+  GET_TABLE_BY_ID, GET_TABLES, GET_TABLES_BY_TYPE,
+  TAKE_SEAT, LEAVE_SEAT, CHANGE_SEAT
+} from './actionTypes'
 
 
 
@@ -23,7 +27,7 @@ export const getAllTablesAction = () => {
   };
 };
 
-
+// Needs backend route
 export const getTableByIdAction = (table) => {
   return {
     type: GET_TABLE_BY_ID,
@@ -32,18 +36,34 @@ export const getTableByIdAction = (table) => {
   };
 };
 
-export const getTablesByTypeAction = (tables) => {
-  console.log(tables);
+export const getTablesByTypeAction = (data) => {
+  console.log(data.tables);
   return {
     type: GET_TABLES_BY_TYPE,
-    payload: tables.tables,
+    payload: data.tables,
  
   };
 };
 
 
-export const joinTableAction = () => {
+export const takeSeatAction = (data) => {
+  console.log(data.table);
   return {
-    type: JOIN_TABLE,
+    type: TAKE_SEAT,
+    payload: data.table,
+  };
+};
+
+export const leaveSeatAction = (table) => {
+  return {
+    type: LEAVE_SEAT,
+    payload: table,
+  };
+};
+
+export const changeSeatAction = (table) => {
+  return {
+    type: CHANGE_SEAT,
+    payload: table,
   };
 };

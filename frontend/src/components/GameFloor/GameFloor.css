@@ -15,9 +15,15 @@
   position: relative;
 }
 
+.table-view{
+
+  top: 50px;
+}
+
 
 .games-grid {
-  position: absolute;
+  position: relative;
+
   left: 50%;
   transform: translate(-50%,0);
 
@@ -28,6 +34,7 @@
   grid-auto-rows: minmax(200px, 1fr);
   grid-gap: 16px;
   transition: all 0.3s ease;
+  margin-bottom: 30px;
 }
 
 .available-tables-grid {
@@ -105,4 +112,17 @@
 
 .gamefloor-back-button .fa-arrow-left-long{
   transform: scale(2.5);
+}
+
+.gamefloor-leave-button{
+  width: fit-content;
+  height: fit-content;
+  position: absolute;
+  left: 40px;
+  bottom: 0px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
 }

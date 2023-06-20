@@ -12,7 +12,7 @@ import './Table.css'
 
 import PlayerBetOptions from '../PlayerBetOptions';
 
-const Table = ({seats}) => {
+const Table = ({seats, takeSeat}) => {
   const {id} = useParams()
   const game = 'blackjack'
   const url = 'https://social-stakes.s3.us-west-1.amazonaws.com/AdobeStock_271559753.jpeg'
@@ -29,24 +29,19 @@ const Table = ({seats}) => {
     {seats === 6 && (
       <div className='seats-container'>
           <div className='top-seats flex between'>
-            <div className='seat-container six-ring seat1'></div>
-            <div className='seat-container six-ring seat6'></div>
+            <div className='seat-container six-ring seat1' onClick={()=>takeSeat(1)}></div>
+            <div className='seat-container six-ring seat6' onClick={()=>takeSeat(6)}></div>
           </div>
           <div className='mid-seats flex between'>
-            <div className='seat-container six-ring seat2'></div>
-            <div className='seat-container six-ring seat5'></div>
+            <div className='seat-container six-ring seat2' onClick={()=>takeSeat(2)}></div>
+            <div className='seat-container six-ring seat5' onClick={()=>takeSeat(5)}></div>
           </div>
           <div className='bot-seats flex between'>
-            <div className='seat-container six-ring seat3'></div>
-            <div className='seat-container six-ring seat4'></div>
+            <div className='seat-container six-ring seat3' onClick={()=>takeSeat(3)}></div>
+            <div className='seat-container six-ring seat4' onClick={()=>takeSeat(4)}></div>
           </div>
       </div>
     )}
-
-
-
-
-
 
 
     </div>

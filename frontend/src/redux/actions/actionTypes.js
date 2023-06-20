@@ -16,6 +16,8 @@ export const GET_GAME_BY_ID = 'games/GET_TABLE_BY_ID';
 export const GET_TABLE_BY_ID = 'games/GET_TABLE_BY_ID';
 export const GET_TABLES_BY_TYPE = 'games/GET_TABLES_BY_TYPE';
 
-export const JOIN_TABLE = 'game/JOIN_TABLE';
+export const LEAVE_SEAT = 'game/LEAVE_TABLE';
+export const TAKE_SEAT = 'game/TAKE_SEAT';
+export const CHANGE_SEAT = 'game/CHANGE_SEAT';
 
 

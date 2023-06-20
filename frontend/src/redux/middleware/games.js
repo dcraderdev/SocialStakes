@@ -1,6 +1,7 @@
 import { 
   getAllGamesAction, getGameByIdAction,
-   getAllTablesAction, getTablesByTypeAction, getTableByIdAction, joinTableAction
+  getAllTablesAction, getTablesByTypeAction, getTableByIdAction,
+  takeSeatAction, leaveSeatAction, changeSeatAction
   } 
   from '../actions/gameActions'
 import { csrfFetch } from './csrf';
@@ -76,6 +77,7 @@ export const getAllGames = () => async (dispatch) => {
   };  
 
   
+  // Needs backend route
   export const getTableById = (tableId) => async (dispatch) => {
 
     try{
@@ -98,8 +100,7 @@ export const getAllGames = () => async (dispatch) => {
 
 
 
-export const joinTable = (tableId, seat) => async (dispatch) => {
-
+export const takeSeat = (tableId, seat) => async (dispatch) => {
   try{
     const response = await csrfFetch(`/api/tables/${tableId}/join`, {
       method: 'POST',
@@ -112,11 +113,55 @@ export const joinTable = (tableId, seat) => async (dispatch) => {
     console.log('-=-=-=-=');
     console.log(data); 
     console.log('-=-=-=-=');
+ 
+    dispatch(takeSeatAction(data));
+    return {data, response};
 
-    dispatch(joinTableAction(data));
+  }catch(error){
+    console.log(error);
+  } 
+};
+
+
+export const changeSeat = (tableId, seat) => async (dispatch) => {
+  try{
+    const response = await csrfFetch(`/api/tables/${tableId}/seat`, {
+      method: 'PUT',
+      body: JSON.stringify({
+        seat
+      })
+    });
+    const data = await response.json();
+
+    console.log('-=-=-=-=');
+    console.log(data); 
+    console.log('-=-=-=-=');
+
+    dispatch(changeSeatAction(data));
     return {data, response};
 
   }catch(error){
     console.log(error);
   }
-};  
+}; 
+
+
+export const leaveSeat= (tableId, seat) => async (dispatch) => {
+
+  try{
+    const response = await csrfFetch(`/api/tables/${tableId}/leave`, {
+      method: 'DELETE',
+    });
+    const data = await response.json();
+
+    console.log('-=-=-=-=');
+    console.log(data); 
+    console.log('-=-=-=-=');
+
+    dispatch(leaveSeatAction(data));
+    return {data, response};
+
+  }catch(error){
+    console.log(error);
+  }
+}; 

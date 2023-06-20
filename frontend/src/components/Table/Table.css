@@ -46,8 +46,8 @@
 
 
 .table-content img {
-  object-fit: contain;
-  overflow: hidden;
+  width: 1000px;
+  height: 100%;
   position: relative;
   z-index: -100;
 }

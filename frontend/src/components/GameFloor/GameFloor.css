@@ -7,9 +7,13 @@
   left: 50%;
   transform: translate(-50%,0);
   top: 270px;
-
 }
 
+.gamefloor-content,
+.gamefloor-container{
+  width: 100%;
+  position: relative;
+}
 
 
 .games-grid {
@@ -27,11 +31,13 @@
 }
 
 .available-tables-grid {
-  border: white solid 10px;
+  border: white solid 1px;
   display: flex;
   flex-direction: column;
   grid-gap: 16px;
-  width: 100%;
+  width: 95%;
+  left: 2.5%;
+  position: relative;
   transition: all 0.3s ease;
 }
 

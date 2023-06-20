@@ -4,7 +4,7 @@ const {User, Game, Table, UserTable, Round, Hand, GameSession, Action, Friendshi
 const gameController = {
 
   async getGames(){
-    const games = await Game.findAll();
+    const games = await Game.findAll({where:{active:true}});
 
     if (!games) {
       const err = new Error('games not found');
@@ -21,8 +21,15 @@ const gameController = {
       include: [{
         model: Game, 
         where: { gameType }
+      }, 
+      {
+        model: User,
+        as: 'players',
+        through: UserTable,
+        attributes: ['id', 'username', 'firstName', 'lastName', 'balance', 'rank'],
       }]
     });
+
     if (!tables) {
       return false
     }

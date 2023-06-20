@@ -13,25 +13,8 @@ const gamesReducer = (state = initialState, action) => {
     case GET_GAMES:{
       console.log(action.payload);
       const games = action.payload.reduce((acc, game) => {
-        if (game.active) {
-          if (game.gameType === 'blackjack') {
-            if (game.maxNumPlayers > 1) {
-              if(!acc['multiPlayerBlackjack']){
-                acc['multiPlayerBlackjack'] = {}
-              }
-              acc['multiPlayerBlackjack'] = game;
-            } else {
-              if(!acc['singlePlayerBlackjack']){
-                acc['singlePlayerBlackjack'] = {}
-              }
-              acc['singlePlayerBlackjack'] = game;
-            }
-          } else {
-            if (!acc[game.gameType]) {
-              acc[game.gameType] = {};
-            }
-            acc[game.gameType] = game;
-          }
+        if (!acc[game.gameType]) {
+          acc[game.gameType] = game;
         }
         return acc;
       }, {});

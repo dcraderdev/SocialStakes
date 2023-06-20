@@ -31,20 +31,16 @@ function GameFloor() {
   
   
 console.log(currentTableList);
+console.log(games);
 
   useEffect(() => {
-    setIsLoaded(false);
     dispatch(gameActions.getAllGames())
-    .then(setIsLoaded(true));
-
-  }, [dispatch]);
+  }, []);
 
 
   useEffect(() => {
     setIsLoaded(false);
-
     if(Object.values(allGames).length > 0){
-      setGames(allGames)
       setIsLoaded(true)
     }
 
@@ -68,8 +64,12 @@ console.log(currentTableList);
 
 
   const goBack = () =>{
+    console.log('goBack');
     setShowGames(true)
     setShowTables(false)
+    if(Object.values(allGames).length > 0){
+      setIsLoaded(true)
+    }
   }
 
 
@@ -122,7 +122,7 @@ console.log(currentTableList);
                 {isLoaded && showGames && (
                   <div>
                       <div className="games-grid">
-                        {games && Object.values(games).map((game, index) => (
+                        {allGames && Object.values(allGames).map((game, index) => (
                           <GameTile key={index} game={game} checkTables={checkTables}/>
                         ))}
                       </div>

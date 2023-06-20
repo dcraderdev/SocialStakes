@@ -15,32 +15,33 @@ function GameFloor() {
   const dispatch = useDispatch();
 
   const user = useSelector(state => state.users.user);
-  const tableInfo = useSelector((state) => state.games.tables);
   const allGames = useSelector((state) => state.games.games);
+  const currentTableList = useSelector((state) => state.games.currentTableList);
 
 
 
-  // const games = ['Single Player Blackjack','Multi Player Blackjack', 'Poker', 'Hi Lo', 'Acey Duecy' ,'Coin Flip']
 
   const [isLoaded, setIsLoaded] = useState(false);
+
   const [games, setGames] = useState({});
+  const [tables, setTables] = useState({});
+
   const [showGames, setShowGames] = useState(true);
-  const [gameTables, setGameTables] = useState(null);
-  const [lastView, setLastView] = useState(null);
-  const [showJoinPrivateTableMenu, setShowJoinPrivateTableMenu] = useState(false);
-  const [showStartPrivateTableMenu, setShowStartPrivateTableMenu] = useState(false);
-  const [showGameSelection, setShowGameSelection] = useState(false);
+  const [showTables, setShowTables] = useState(false);
+  
+  
+console.log(currentTableList);
+
+  useEffect(() => {
+    setIsLoaded(false);
+    dispatch(gameActions.getAllGames())
+    .then(setIsLoaded(true));
+
+  }, [dispatch]);
 
 
   useEffect(() => {
     setIsLoaded(false);
-
-    dispatch(gameActions.getAllGames())
-    // .then(isLoaded(true));
-
-  }, [dispatch]);
-
-  useEffect(() => {
 
     if(Object.values(allGames).length > 0){
       setGames(allGames)
@@ -51,49 +52,37 @@ function GameFloor() {
 
 
 
-  const back = () =>{
-    setShowGames(true)
-    setGameTables(null)
-  }
+
+  useEffect(() => {
+    setIsLoaded(false);
+
+    if(currentTableList.length > 0){
+      setGames(currentTableList)
+      setShowTables(true)
+      setShowGames(false)
+      setIsLoaded(true)
+    }
+
+  }, [currentTableList]);
+
+
 
   const goBack = () =>{
-    setGames(allGames)
+    setShowGames(true)
+    setShowTables(false)
   }
 
 
-  const handleClick = (selection) =>{
-    console.log(games);
-    console.log(selection);
+  const checkTables = (gameType) =>{
+    dispatch(gameActions.getTablesByType(gameType))
+  }
 
+  const startPrivateGame = () =>{
 
-    // dispatch(gameActions.getTablesByType)
-    if(games[selection]){
-      console.log('yes');
-      console.log(games[selection]);
-      
-    }
-    
-    
-    switch (selection) {
-      case 'singlePlayerBlackjack':{
-        if(isLoaded){
-          setGames(allGames.singlePlayerBlackjack)
-        }
-      }
-      case 'multiPlayerBlackjack':{
-        if(isLoaded){
-          setGames(allGames.multiPlayerBlackjack)
-        }
-      }  
-      case '1_deck_low_stakes':{
-        dispatch(gameActions.getTablesByType(games[selection].id))
+  }
 
-      } 
-      default:
-        return
-      }
-      
-      
+  const joinPrivateGame = () =>{
+
   }
 
   return ( 
@@ -104,8 +93,8 @@ function GameFloor() {
 
 
             <div className='private-game-buttons'>
-              <div className='private-game-button' onClick={()=>{handleClick('startPrivateGame')}}>Start Private Game</div>
-              <div className='private-game-button' onClick={()=>{handleClick('joinPrivateGame')}}>Join Private Game</div>
+              <div className='private-game-button' onClick={startPrivateGame}>Start Private Game</div>
+              <div className='private-game-button' onClick={joinPrivateGame}>Join Private Game</div>
             </div>
             <div className='gamefloor-back-button-container'>
               <div className='gamefloor-back-button flex center' onClick={goBack}>
@@ -114,13 +103,27 @@ function GameFloor() {
 
             </div>
 
+            {!isLoaded && (
+              <div className="games-grid">
+                <div className='game-tile'>
+                  <p>{'whaaaaaa'}</p>
+                </div>
+                <div className='game-tile'>
+                  <p>{'aaaaaa'}</p>
+                </div>
+                <div className='game-tile'>
+                  <p>{'aaaaaaat'}</p>
+                </div>
+              </div>
+            )}
+
 
 {/* SHOW GAMES AND PRIVATE TABLE BUTTONS */}
-                {showGames && (
+                {isLoaded && showGames && (
                   <div>
                       <div className="games-grid">
-                        {games && Object.keys(games).map((game, index) => (
-                          <GameTile key={index} game={game} handleClick={handleClick}/>
+                        {games && Object.values(games).map((game, index) => (
+                          <GameTile key={index} game={game} checkTables={checkTables}/>
                         ))}
                       </div>
                     </div>
@@ -128,22 +131,21 @@ function GameFloor() {
 
 
 {/* SHOW AVAILABLE TABLES PER GAME TYPE */}
-                {gameTables && tableInfo && (
+                {/* {gameTables && tableInfo && (
                   <div className="available-tables-grid">
-                  {tableInfo.map((table, index) => (
-                    <TableTile key={index} table={table} back={back} />
+                  {currentTableList.map((table, index) => (
                     ))}
-                </div>
-                )}
+                    </div>
+                  )} */}
 
 
 
 {/* SHOW AVAILABLE TABLES PER GAME TYPE */}
-                {showGameSelection && (
+                {isLoaded && showTables && (
                   <div>
-                      <div className="games-grid">
-                        {games.map((game, index) => (
-                          <GameTile key={index} game={game} setGameTables={setGameTables} handleClick={handleClick}/>
+                      <div className="available-tables-grid">
+                        {currentTableList && currentTableList.map((table, index) => (
+                          <TableTile key={index} table={table}/>
                         ))}
                       </div>
                     </div>

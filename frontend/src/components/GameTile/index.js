@@ -4,12 +4,15 @@ import { Route, Router, Switch, NavLink, useHistory } from 'react-router-dom';
 import './GameTile.css';
 
 
-const GameTile = ({game, handleClick}) => {
+const GameTile = ({game, checkTables}) => {
+
+  console.log(game);
+  console.log(game.gameType);
 
   return (
     <div>
-      <div className='game-tile' onClick={() => handleClick(game)}>
-        <p>{game}</p>
+      <div className='game-tile' onClick={() => checkTables(game.gameType)}>
+        <p>{game.gameType}</p>
       </div>
     </div>
   );

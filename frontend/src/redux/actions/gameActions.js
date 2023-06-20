@@ -36,7 +36,7 @@ export const getTablesByTypeAction = (tables) => {
   console.log(tables);
   return {
     type: GET_TABLES_BY_TYPE,
-    payload: tables,
+    payload: tables.tables,
  
   };
 };

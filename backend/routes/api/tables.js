@@ -10,21 +10,7 @@ const { Table, User, Game } = require('../../db/models');
 router.get('/game/:gameId', async (req, res, next) => {
 
   const {gameId} = req.params
-
-  
-
-  console.log('-=-=-=-=-=-=-=-');
-  console.log('-=-=-=-=-=-=-=-');
-  console.log(gameId);
-  console.log(User);
-  console.log('-=-=-=-=-=-=-=-');
-  console.log('-=-=-=-=-=-=-=-');
-
-  // const tables = await gameController.getTablesByType(gameId)
-
-  const tables = await Table.findOne();
-  
-  console.log(tables);
+  const tables = await gameController.getTablesByType(gameId)
 
   if (!tables) {
     const err = new Error('tables not found');
@@ -36,5 +22,6 @@ router.get('/game/:gameId', async (req, res, next) => {
   return res.status(200).json({ tables });
 });
 
+;
 
 module.exports = router;

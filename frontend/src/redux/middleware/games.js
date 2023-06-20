@@ -57,8 +57,6 @@ export const getAllGames = () => async (dispatch) => {
   }
 
   export const getTablesByType = (gameId) => async (dispatch) => {
-    console.log('here');
-    console.log(gameId);
     try{
       const response = await csrfFetch(`/api/tables/game/${gameId}`, {
         method: 'GET',

@@ -16,7 +16,7 @@ module.exports = {
 
         {
           id: 'blackjack_1_deck_low_stakes_multi',
-          gameType: 'blackjack',
+          gameType: 'multi_blackjack',
           variant: '1_deck_low_stakes',
           decksUsed: 1,
           active: true,
@@ -29,7 +29,7 @@ module.exports = {
         },
         {
           id: 'blackjack_4_deck_low_stakes_multi',
-          gameType: 'blackjack',
+          gameType: 'multi_blackjack',
           variant: '4_deck_low_stakes',
           decksUsed: 4,
           active: true,
@@ -42,7 +42,7 @@ module.exports = {
         },
         {
           id: 'blackjack_6_deck_low_stakes_multi',
-          gameType: 'blackjack',
+          gameType: 'multi_blackjack',
           variant: '6_deck_low_stakes',
           decksUsed: 6,
           active: true,
@@ -56,7 +56,7 @@ module.exports = {
 
         {
           id: 'blackjack_1_deck_mid_stakes_multi',
-          gameType: 'blackjack',
+          gameType: 'multi_blackjack',
           variant: '1_deck_mid_stakes',
           decksUsed: 1,
           active: true,
@@ -69,7 +69,7 @@ module.exports = {
         },
         {
           id: 'blackjack_4_deck_mid_stakes_multi',
-          gameType: 'blackjack',
+          gameType: 'multi_blackjack',
           variant: '4_deck_mid_stakes',
           decksUsed: 4,
           active: true,
@@ -82,7 +82,7 @@ module.exports = {
         },
         {
           id: 'blackjack_6_deck_mid_stakes_multi',
-          gameType: 'blackjack',
+          gameType: 'multi_blackjack',
           variant: '6_deck_mid_stakes',
           decksUsed: 6,
           active: true,
@@ -97,7 +97,7 @@ module.exports = {
 
         {
           id: 'blackjack_1_deck_high_stakes_multi',
-          gameType: 'blackjack',
+          gameType: 'multi_blackjack',
           variant: '1_deck_high_stakes',
           decksUsed: 1,
           active: true,
@@ -110,7 +110,7 @@ module.exports = {
         },
         {
           id: 'blackjack_4_deck_high_stakes_multi',
-          gameType: 'blackjack',
+          gameType: 'multi_blackjack',
           variant: '4_deck_high_stakes',
           decksUsed: 4,
           active: true,
@@ -123,7 +123,7 @@ module.exports = {
         },
         {
           id: 'blackjack_6_deck_high_stakes_multi',
-          gameType: 'blackjack',
+          gameType: 'multi_blackjack',
           variant: '6_deck_high_stakes',
           decksUsed: 6,
           active: true,
@@ -138,7 +138,7 @@ module.exports = {
 // SINGLE PLAYER BLACKJACK
 {
   id: 'blackjack_1_deck_low_stakes_single',
-  gameType: 'blackjack',
+  gameType: 'single_blackjack',
   variant: '1_deck_low_stakes',
   decksUsed: 1,
   active: true,
@@ -151,7 +151,7 @@ module.exports = {
 },
 {
   id: 'blackjack_4_deck_low_stakes_single',
-  gameType: 'blackjack',
+  gameType: 'single_blackjack',
   variant: '4_deck_low_stakes',
   decksUsed: 4,
   active: true,
@@ -164,7 +164,7 @@ module.exports = {
 },
 {
   id: 'blackjack_6_deck_low_stakes_single',
-  gameType: 'blackjack',
+  gameType: 'single_blackjack',
   variant: '6_deck_low_stakes',
   decksUsed: 6,
   active: true,
@@ -178,7 +178,7 @@ module.exports = {
 
 {
   id: 'blackjack_1_deck_mid_stakes_single',
-  gameType: 'blackjack',
+  gameType: 'single_blackjack',
   variant: '1_deck_mid_stakes',
   decksUsed: 1,
   active: true,
@@ -191,7 +191,7 @@ module.exports = {
 },
 {
   id: 'blackjack_4_deck_mid_stakes_single',
-  gameType: 'blackjack',
+  gameType: 'single_blackjack',
   variant: '4_deck_mid_stakes',
   decksUsed: 4,
   active: true,
@@ -204,7 +204,7 @@ module.exports = {
 },
 {
   id: 'blackjack_6_deck_mid_stakes_single',
-  gameType: 'blackjack',
+  gameType: 'single_blackjack',
   variant: '6_deck_mid_stakes',
   decksUsed: 6,
   active: true,
@@ -219,7 +219,7 @@ module.exports = {
 
 {
   id: 'blackjack_1_deck_high_stakes_single',
-  gameType: 'blackjack',
+  gameType: 'single_blackjack',
   variant: '1_deck_high_stakes',
   decksUsed: 1,
   active: true,
@@ -232,7 +232,7 @@ module.exports = {
 },
 {
   id: 'blackjack_4_deck_high_stakes_single',
-  gameType: 'blackjack',
+  gameType: 'single_blackjack',
   variant: '4_deck_high_stakes',
   decksUsed: 4,
   active: true,
@@ -245,7 +245,7 @@ module.exports = {
 },
 {
   id: 'blackjack_6_deck_high_stakes_single',
-  gameType: 'blackjack',
+  gameType: 'single_blackjack',
   variant: '6_deck_high_stakes',
   decksUsed: 6,
   active: true,

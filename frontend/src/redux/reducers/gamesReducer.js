@@ -2,7 +2,8 @@ import { GET_GAMES, GET_TABLES, GET_TABLES_BY_TYPE, GET_GAME_BY_ID, GET_TABLE_BY
 
 const initialState = {
   games:{},
-  tables: {}
+  tables: {},
+  currentTableList: []
 }
 
 const gamesReducer = (state = initialState, action) => {
@@ -18,18 +19,18 @@ const gamesReducer = (state = initialState, action) => {
               if(!acc['multiPlayerBlackjack']){
                 acc['multiPlayerBlackjack'] = {}
               }
-              acc['multiPlayerBlackjack'][game.variant] = game;
+              acc['multiPlayerBlackjack'] = game;
             } else {
               if(!acc['singlePlayerBlackjack']){
                 acc['singlePlayerBlackjack'] = {}
               }
-              acc['singlePlayerBlackjack'][game.variant] = game;
+              acc['singlePlayerBlackjack'] = game;
             }
           } else {
             if (!acc[game.gameType]) {
               acc[game.gameType] = {};
             }
-            acc[game.gameType][game.variant] = game;
+            acc[game.gameType] = game;
           }
         }
         return acc;
@@ -39,7 +40,7 @@ const gamesReducer = (state = initialState, action) => {
 
     case GET_TABLES_BY_TYPE:{
       console.log(action.payload);
-      return newState
+      return {...newState, currentTableList: action.payload}
     }
 
 

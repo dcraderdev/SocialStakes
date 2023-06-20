@@ -51,6 +51,30 @@ const gameController = {
     return tables;
   },
 
+  async getTableById(tableId) {
+    const table = await Table.findByPk(tableId, {
+      include: [
+        {
+          model: Game,
+        },
+        {
+          model: UserTable,
+          as: 'tableUsers',
+        },
+        {
+          model: User,
+          as: 'players',
+          through: UserTable,
+          attributes: ['id', 'username', 'balance', 'rank'],
+        },
+      ],
+    });
+    if (!table) {
+      return false;
+    }
+    return table;
+  },
+
   async takeSeat(tableId, seat, user) {
     console.log(tableId);
     console.log(seat);
@@ -106,30 +130,6 @@ const gameController = {
     }
 
 
-
-    // let ourSeat = false
-    // const seatOccupied = table.tableUsers.some((player) => {
-    //   if (player.seat === seat) {
-    //     if (player.userId === user.id) {
-    //       console.log('we are sitting here already');
-    //       ourSeat = true
-    //       return true;
-    //     } else {
-    //       console.log('someone is sitting here already');
-    //       return true;
-    //     }
-    //   }
-    //   return false;
-    // });
-
-    // // if its our seat return the table to be used by the reducer
-    // if (seatOccupied) {
-    //   if(ourSeat) {
-    //     return table
-    //   }
-    //   return false;
-    // }
-
     if (table.players.length < table.Game.maxNumPlayers) {
       const takeSeat = await UserTable.create({
         userId: user.id,
@@ -158,17 +158,6 @@ const gameController = {
   },
 
   async leaveSeat(tableId, userId) {
-
-    console.log('here');
-    console.log('here');
-    console.log('here');
-    console.log('here');
-    console.log('here');
-    console.log('here');
-    console.log('here');
-    console.log('here');
-    console.log('here');
-    console.log('here');
     const userTable = await UserTable.findOne({ where: { tableId, userId } });
 
     if (!userTable) {
@@ -176,12 +165,8 @@ const gameController = {
     }
 
     await userTable.destroy();
-
     return true;
   },
-
-
-
 
   async changeSeat(tableId, userId, newSeat) {
     const userTable = await UserTable.findOne({ where: { tableId, userId } });

@@ -20,7 +20,7 @@ const Table = ({seats, takeSeat}) => {
   return (
     <div className='table-wrapper'>
     <div className='table-container '>
-      <div className='table-content flex center'>
+      <div className='table-content flex center neon'>
         {/* <img src={feltGreen4} alt='table'></img> */}
         <img src={url} alt='table'></img>
       </div>

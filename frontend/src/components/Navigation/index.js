@@ -2,14 +2,18 @@
 import React, { useEffect, useRef, useContext, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { ModalContext } from '../../context/ModalContext';
 import { Route, Router, Switch, NavLink } from 'react-router-dom';
-import * as sessionActions from '../../redux/middleware/users';
+import './Navigation.css';
+
+
 import socialstakesCards from '../../images/socialstakes-logo-cards.svg'
 import socialstakesCards2 from '../../images/socialstakes-logo-cards2.svg'
-
 // import logo from "./logo.svg";
-import './Navigation.css';
+
+import * as sessionActions from '../../redux/middleware/users';
+import * as gameActions from '../../redux/actions/gameActions';
+
+import { ModalContext } from '../../context/ModalContext';
 
 function Navigation(){
   const history = useHistory()
@@ -34,6 +38,7 @@ function Navigation(){
 
 
   const handleLogoClick = () => {
+    dispatch(gameActions.showGamesAction())
     history.push('/');
   };
 

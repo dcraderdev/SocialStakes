@@ -6,7 +6,7 @@ import PlayerBetOptions from '../PlayerBetOptions';
 import './Game.css'
 
 
-const Game = ({ table, takeSeat, leaveSeat}) => {
+const Game = ({ table, leaveTable, takeSeat, leaveSeat}) => {
   const seats = 6
   const game = 'blackjack'
   return (
@@ -15,7 +15,7 @@ const Game = ({ table, takeSeat, leaveSeat}) => {
  
       <Table seats={seats} takeSeat={takeSeat}/>
       {/* <PlayerBetOptions game={game}/>  */}
-      <div className='gamefloor-leave-button' onClick={()=>leaveSeat(table)}>
+      <div className='gamefloor-leave-button' onClick={()=>leaveTable(table)}>
         <i className="fa-solid fa-arrow-left-long"></i>
         <div>Leave</div>
       </div>

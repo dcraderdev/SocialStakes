@@ -5,12 +5,6 @@ import './GameTile.css';
 
 
 const GameTile = ({game, checkTables}) => {
-
-  console.log(game);
-  console.log(game.gameType);
-
-
-
   return (
     <div>
       <div className='game-tile' onClick={() => checkTables(game.gameType)}>

@@ -5,33 +5,44 @@ import * as gameActions from '../../redux/middleware/games';
 import GameTile from '../GameTile';
 import TableTile from '../TableTile';
 
+import { SocketContext } from '../../context/SocketContext';
 
 
 import './GameFloor.css';
 import Game from '../Game';
 
 function GameFloor() {
-
+  
+  const { socket } = useContext(SocketContext);
   const location = useLocation();
   const dispatch = useDispatch();
 
   const user = useSelector(state => state.users.user);
   const allGames = useSelector((state) => state.games.games);
   const openTablesByGameType = useSelector((state) => state.games.openTablesByGameType);
+  const currentTables = useSelector((state) => state.games.currentTables);
+
+  const showGames = useSelector((state) => state.games.showGames);
+  const showTables = useSelector((state) => state.games.showTables);
+  // const showActiveTable = useSelector((state) => state.games.showActiveTable);
+
+  const activeTable = useSelector((state) => state.games.activeTable);
+
+
+
 
 
   const [isLoaded, setIsLoaded] = useState(false);
 
   const [games, setGames] = useState({});
   const [tables, setTables] = useState({});
+  // const [activeTable, setActiveTable] = useState(null);
 
-  const [showGames, setShowGames] = useState(true);
-  const [showTables, setShowTables] = useState(false);
-  const [showActiveTable, setShowActiveTable] = useState(false);
+  // const [showGames, setShowGames] = useState(true);
+  // const [showTables, setShowTables] = useState(false);
+  // const [showActiveTable, setShowActiveTable] = useState(false);
 
   
-  const [currentTables, setCurrentTables] = useState(null);
-  const [activeTable, setActiveTable] = useState(null);
   
   
 console.log(openTablesByGameType);
@@ -55,27 +66,27 @@ console.log(activeTable);
 
 
 
-  // handle checking active tables
-  useEffect(() => {
-    setIsLoaded(false);
-    if(openTablesByGameType.length > 0){
-      setGames(openTablesByGameType)
-      setShowTables(true)
-      setShowGames(false)
-      setIsLoaded(true)
-    }
-  }, [openTablesByGameType]);
+  // // handle checking active tables
+  // useEffect(() => {
+  //   setIsLoaded(false);
+  //   if(openTablesByGameType.length > 0){
+  //     setGames(openTablesByGameType)
+  //     setShowTables(true)
+  //     setShowGames(false)
+  //     setIsLoaded(true)
+  //   }
+  // }, [openTablesByGameType]);
 
 
 
-  // handle active table change
-  useEffect(() => {
-    if(activeTable){
-      setShowTables(false)
-      setShowGames(false)
-      setShowActiveTable(true)
-    }
-  }, [activeTable]);
+  // // handle active table change
+  // useEffect(() => {
+  //   if(activeTable){
+  //     setShowTables(false)
+  //     setShowGames(false)
+  //     setShowActiveTable(true)
+  //   }
+  // }, [activeTable]);
 
 
 
@@ -89,12 +100,6 @@ console.log(activeTable);
     }
   }
 
-  const navToGamesList = () => {
-    setShowGames(true)
-    setShowTables(false)
-    setShowActiveTable(false)
-    setActiveTable(null)
-  }
 
 
   const checkTables = (gameType) =>{
@@ -104,9 +109,22 @@ console.log(activeTable);
 
 
   const viewTable = (table) =>{
+    console.log('viewing table');
       //join table's socket
-      setActiveTable(table)
+      socket.emit('join_room', table.id);
+      dispatch(gameActions.viewTable(table.id))
   }
+
+
+
+  const leaveTable = (table) =>{
+    console.log('leaving table');
+    //join table's socket
+    socket.emit('leave_room', table.id);
+    dispatch(gameActions.leaveTable(table))
+}
+
+
   
   // Take/change seat
   const takeSeat = (seat) =>{
@@ -119,7 +137,7 @@ console.log(activeTable);
   const leaveSeat = (table) =>{
     console.log('leaving seat');
     dispatch(gameActions.leaveSeat(table.id))
-    navToGamesList()
+    leaveTable(table)
   }
 
   const startPrivateGame = () =>{
@@ -136,7 +154,7 @@ console.log(activeTable);
         <div className='gamefloor-container'>
           <div className='gamefloor-content'>
 
-          {!showActiveTable && (
+          {!activeTable && (
             <div>
             <div className='private-game-buttons'>
               <div className='private-game-button' onClick={startPrivateGame}>Start Private Game</div>
@@ -179,15 +197,6 @@ console.log(activeTable);
                 )}
 
 
-{/* SHOW AVAILABLE TABLES PER GAME TYPE */}
-                {/* {gameTables && tableInfo && (
-                  <div className="available-tables-grid">
-                  {openTablesByGameType.map((table, index) => (
-                    ))}
-                    </div>
-                  )} */}
-
-
 
 {/* SHOW AVAILABLE TABLES PER GAME TYPE */}
                 {isLoaded && showTables && (
@@ -200,11 +209,13 @@ console.log(activeTable);
                     </div>
                 )}
 
+
+
 {/* SHOW SELECTED TABLE */}
-                {isLoaded && showActiveTable && (
+                {isLoaded && activeTable && (
                   <div>
                     {activeTable &&  (
-                      <Game table={activeTable} leaveSeat={leaveSeat} takeSeat={takeSeat}/>
+                      <Game table={activeTable} leaveTable={leaveTable} leaveSeat={leaveSeat} takeSeat={takeSeat}/>
                     )}
                   </div>
                 )}

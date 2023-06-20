@@ -16,8 +16,16 @@ export const GET_GAME_BY_ID = 'games/GET_TABLE_BY_ID';
 export const GET_TABLE_BY_ID = 'games/GET_TABLE_BY_ID';
 export const GET_TABLES_BY_TYPE = 'games/GET_TABLES_BY_TYPE';
 
-export const LEAVE_SEAT = 'game/LEAVE_TABLE';
+
+export const VIEW_TABLE = 'game/VIEW_TABLE';
+export const LEAVE_TABLE = 'game/LEAVE_TABLE';
+
+export const LEAVE_SEAT = 'game/LEAVE_SEAT';
 export const TAKE_SEAT = 'game/TAKE_SEAT';
 export const CHANGE_SEAT = 'game/CHANGE_SEAT';
 
+
+export const SHOW_GAMES = 'game/SHOW_GAMES';
+export const SHOW_TABLES = 'game/SHOW_TABLES';
+export const SHOW_ACTIVE_TABLES = 'game/SHOW_ACTIVE_TABLES';
 

@@ -23,6 +23,25 @@ router.get('/game/:gameId', async (req, res, next) => {
   return res.status(200).json({ tables });
 });
 
+// Get table by tableId
+router.get('/:tableId', requireAuth, async (req, res, next) => {
+
+  const {tableId} = req.params
+
+  console.log(tableId);
+
+  const table = await gameController.getTableById(tableId)
+
+  if (!table) {
+    const err = new Error('table not found');
+    err.statusCode = 404;
+    err.status = 404;
+    return next(err);
+  }
+
+  return res.status(200).json({ table });
+});
+
 // Join table by tableId
 router.post('/:tableId/join', requireAuth, async (req, res, next) => {
 
@@ -88,7 +107,7 @@ router.delete('/:tableId/leave', requireAuth, async (req, res, next) => {
     return next(err);
   }
 
-  return res.status(200).json({ table });
+  return res.status(200).json(true);
 });
 
 

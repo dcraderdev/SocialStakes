@@ -14,16 +14,21 @@ const SocketProvider = ({ children }) => {
 
 
   useEffect(() => {
-    let userId = user ? `${user.id}` : 'null';
-    let userRoom = user ? `${user.userRoom}` : 'null';
-    let username = user ? `${user.username}` : 'Anon';
+    if(!user){
+      return
+    }
+    let userId = user.id
+    let username = user.username
 
     const backendUrl = process.env.NODE_ENV === 'production' ? process.env.REACT_APP_BACKEND_PROD_URL : 'http://localhost:8000';
     const socketConnection = io(backendUrl, {
-      query: { userId, userRoom, username },
+      query: { userId, username },
     });
 
+
+    
     setSocket(socketConnection);
+    
 
 
     return () => {

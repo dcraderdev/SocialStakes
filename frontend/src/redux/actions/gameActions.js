@@ -1,7 +1,9 @@
 import { 
   GET_GAME_BY_ID, GET_GAMES,
   GET_TABLE_BY_ID, GET_TABLES, GET_TABLES_BY_TYPE,
-  TAKE_SEAT, LEAVE_SEAT, CHANGE_SEAT
+  VIEW_TABLE, LEAVE_TABLE,
+  TAKE_SEAT, LEAVE_SEAT, CHANGE_SEAT,
+  SHOW_GAMES, SHOW_TABLES, SHOW_ACTIVE_TABLES
 } from './actionTypes'
 
 
@@ -27,12 +29,11 @@ export const getAllTablesAction = () => {
   };
 };
 
-// Needs backend route
-export const getTableByIdAction = (table) => {
+
+export const getTableByIdAction = (data) => {
   return {
     type: GET_TABLE_BY_ID,
-    payload: table,
-
+    payload: data.table,
   };
 };
 
@@ -45,6 +46,24 @@ export const getTablesByTypeAction = (data) => {
   };
 };
 
+
+
+  export const viewTableAction = (data) => {
+    console.log(data.table);
+    return {
+      type: VIEW_TABLE,
+      payload: data.table,
+    };
+  };
+
+  export const leaveTableAction = (tableId) => {
+  console.log('leaving');
+
+    return {
+      type: LEAVE_TABLE,
+      payload: tableId,
+    };
+  };
 
 export const takeSeatAction = (data) => {
   console.log(data.table);
@@ -65,5 +84,26 @@ export const changeSeatAction = (table) => {
   return {
     type: CHANGE_SEAT,
     payload: table,
+  };
+};
+
+
+
+
+export const showGamesAction = () => {
+  return {
+    type: SHOW_GAMES
+  };
+};
+
+export const showTablesAction = () => {
+  return {
+    type: SHOW_TABLES
+  };
+};
+
+export const changeActiveTablesAction = () => {
+  return {
+    type: SHOW_ACTIVE_TABLES
   };
 };

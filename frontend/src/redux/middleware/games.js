@@ -1,10 +1,13 @@
 import { 
   getAllGamesAction, getGameByIdAction,
   getAllTablesAction, getTablesByTypeAction, getTableByIdAction,
+  viewTableAction, leaveTableAction, 
   takeSeatAction, leaveSeatAction, changeSeatAction
   } 
   from '../actions/gameActions'
 import { csrfFetch } from './csrf';
+
+import { SocketInstance } from '../../context/SocketContext';
 
 
 
@@ -77,7 +80,7 @@ export const getAllGames = () => async (dispatch) => {
   };  
 
   
-  // Needs backend route
+
   export const getTableById = (tableId) => async (dispatch) => {
 
     try{
@@ -97,6 +100,34 @@ export const getAllGames = () => async (dispatch) => {
       console.log(error);
     }
   };  
+
+  export const viewTable = (tableId) => async (dispatch) => {
+    console.log('view table');
+    try{
+      const response = await csrfFetch(`/api/tables/${tableId}`, {
+        method: 'GET'
+      });
+ 
+
+      const data = await response.json();
+  
+      console.log('-=-=-=-=');
+      console.log(data); 
+      console.log('-=-=-=-=');
+   
+      dispatch(viewTableAction(data));
+      return {data, response};
+  
+    }catch(error){
+      console.log(error);
+    } 
+  };
+
+
+  export const leaveTable = (tableId) => async (dispatch) => {
+    console.log('leaving');
+    dispatch(leaveTableAction(tableId));
+  };
 
 
 
@@ -146,7 +177,7 @@ export const changeSeat = (tableId, seat) => async (dispatch) => {
 }; 
 
 
-export const leaveSeat= (tableId, seat) => async (dispatch) => {
+export const leaveSeat = (tableId, seat) => async (dispatch) => {
 
   try{
     const response = await csrfFetch(`/api/tables/${tableId}/leave`, {
@@ -156,12 +187,13 @@ export const leaveSeat= (tableId, seat) => async (dispatch) => {
 
     console.log('-=-=-=-=');
     console.log(data); 
-    console.log('-=-=-=-=');
-
-    dispatch(leaveSeatAction(data));
+    console.log('-=-=-=-='); 
+    if(data){
+      dispatch(leaveSeatAction(tableId, seat));
+    }
     return {data, response};
 
   }catch(error){
     console.log(error);
-  }
+  } 
 }; 

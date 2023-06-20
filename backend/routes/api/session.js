@@ -12,11 +12,6 @@ const router = express.Router();
 // is being sent with each request that requires protection
 router.post('/',validateLogin, async (req, res, next) => {
 
-  console.log('here');
-  console.log('here');
-  console.log('here');
-  console.log('here');
-
   const { credential, password } = req.body;
   const user = await User.login({ credential, password });
 

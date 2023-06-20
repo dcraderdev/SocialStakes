@@ -1,4 +1,8 @@
-import { getAllGamesAction, getAllTablesAction, getGameByIdAction, getTableByIdAction, joinTableAction} from '../actions/gameActions'
+import { 
+  getAllGamesAction, getGameByIdAction,
+   getAllTablesAction, getTablesByTypeAction, getTableByIdAction, joinTableAction
+  } 
+  from '../actions/gameActions'
 import { csrfFetch } from './csrf';
 
 
@@ -51,6 +55,27 @@ export const getAllGames = () => async (dispatch) => {
       console.log(error);
     }
   }
+
+  export const getTablesByType = (gameId) => async (dispatch) => {
+    console.log('here');
+    console.log(gameId);
+    try{
+      const response = await csrfFetch(`/api/tables/game/${gameId}`, {
+        method: 'GET',
+      });
+      const data = await response.json();
+ 
+      console.log('-=-=-=-=');
+      console.log(data); 
+      console.log('-=-=-=-=');
+
+      dispatch(getTablesByTypeAction(data));
+      return {data, response};
+
+    }catch(error){
+      console.log(error);
+    }
+  };  
 
   
   export const getTableById = (tableId) => async (dispatch) => {

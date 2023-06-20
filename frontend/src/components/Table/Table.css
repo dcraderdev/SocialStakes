@@ -30,12 +30,18 @@
   border-bottom-right-radius: 320px;
   overflow: hidden;
 
+  /* box-shadow: rgba(240, 46, 170, 0.4) -5px 5px, rgba(240, 46, 170, 0.3) -10px 10px, rgba(240, 46, 170, 0.2) -15px 15px,
+   rgba(240, 46, 170, 0.1) -20px 20px, rgba(240, 46, 170, 0.05) -25px 25px, rgba(240, 46, 170, 0.4) 5px 5px, rgba(240, 46, 170, 0.3) 10px 10px, rgba(240, 46, 170, 0.2) 15px 15px, rgba(240, 46, 170, 0.1) 20px 20px, rgba(240, 46, 170, 0.05) 25px 25px;; */
+
+
   box-shadow: 
     rgba(113, 112, 113, 0.4) 0 0 50px, 
     rgba(113, 112, 113, 0.3) 0 0 75px, 
     rgba(113, 112, 113, 0.2) 0 0 100px, 
     rgba(113, 112, 113, 0.1) 0 0 150px, 
     rgba(113, 112, 113, 0.05) 0 0 200px;
+  /* animation: neon 600s infinite; */
+
 }
 
 

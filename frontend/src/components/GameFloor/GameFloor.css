@@ -6,7 +6,7 @@
   position: absolute;
   left: 50%;
   transform: translate(-50%,0);
-  top: 250px;
+  top: 270px;
 
 }
 
@@ -58,18 +58,46 @@
   position: absolute;
   left: 50%;
   transform: translate(-50%,0);
-  top: -100px;
+  top: -140px;
   border: white solid 1px;
 }
 
 .private-game-button{
+  cursor: pointer;
   border: rgb(0, 0, 0) solid 1px;
   width: 40%;
   height: 70px;
-
+  display: flex;
+  justify-content: center;
+  align-items: center;
   border-radius: 14px;
   background-color: #fff;
   background: radial-gradient(#ffffff, #68ade5);
 
 
+}
+.gamefloor-back-button-container{
+  width: 95%;
+  height: 40px;
+  max-width: 1200px;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%,0);
+  top: -40px;
+}
+
+.gamefloor-back-button{
+  width: 80px;
+  height: 40px;
+  margin-left: 10px;
+  color: rgb(255, 255, 255);
+  transition: all 1s ease;
+}
+
+.gamefloor-back-button:hover{
+  color: rgb(125, 57, 57);
+}
+
+.gamefloor-back-button .fa-arrow-left-long{
+  transform: scale(2.5);
 }

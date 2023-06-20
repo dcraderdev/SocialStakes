@@ -28,10 +28,10 @@
 @keyframes pulse {
 
   95% {
-    font-size: x-large;
+    font-size: 20px;
   }
   100% {
-    font-size: x-large;
+    font-size: 20px;
   }
 
 }

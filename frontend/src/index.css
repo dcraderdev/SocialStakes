@@ -51,13 +51,35 @@ body{
 .style2-color2{
   background-color: #4d672a;
 }
-.style-neon-color1{
-  box-shadow: 
-  rgba(240, 46, 170, 0.4) 0 0 50px, 
-  rgba(240, 46, 170, 0.3) 0 0 100px, 
-  rgba(240, 46, 170, 0.2) 0 0 150px, 
-  rgba(240, 46, 170, 0.1) 0 0 200px, 
-  rgba(240, 46, 170, 0.05) 0 0 250px; 
+
+.neon{
+  animation: neon 600s infinite;
+}
+
+@keyframes neon {
+  0%, 1%, 2%, 100% {
+    box-shadow:
+      white 0 0 12px,
+      #ff3aad 0 0 24px,
+      #ff3aad 0 0 36px;
+  }
+
+  .9% {
+    box-shadow:
+    white 0 0 20px,
+    #ff3aad 0 0 30px,
+    #ff3aad 0 0 40px;
+  }
+
+  1.9% {
+    box-shadow:
+      /* rgba(255, 255, 255, 0.147) 0 0 12px,
+      #ff3aad28 0 0 24px,
+      #ff3aad2a 0 0 36px; */
+      rgba(255, 255, 255, 0.462) 0 0 8px,
+      #ff3aad 0 0 15px,
+      #ff3aad 0 0 20px;
+  }
 }
 
 

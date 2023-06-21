@@ -3,7 +3,6 @@ import { SET_USER, REMOVE_USER, SET_THEMES, CHANGE_NEON_THEME, CHANGE_TABLE_THEM
 
 const initialState = {
   user: null,
-  isAuthenticated: false,
   friends: {},
   themes: {},
   neonTheme: null,
@@ -22,7 +21,7 @@ const userReducer = (state = initialState, action) => {
       };
 
     case REMOVE_USER:
-      return initialState
+      return {...newState, user: null, friends: {}}
 
     case SET_THEMES:{
       const themes = action.payload.reduce((acc, theme)=>{

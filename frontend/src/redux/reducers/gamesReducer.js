@@ -62,6 +62,8 @@ const gamesReducer = (state = initialState, action) => {
     }
 
     case TAKE_SEAT:{
+      console.log(newState.activeTable);
+
       console.log(action.payload);
       let newCurrentTables = {...newState.currentTables}
       return {...newState}

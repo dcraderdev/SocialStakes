@@ -49,6 +49,8 @@ export const getTablesByTypeAction = (data) => {
 
 
   export const viewTableAction = (data) => {
+    console.log(data);
+
     console.log(data.table);
     return {
       type: VIEW_TABLE,

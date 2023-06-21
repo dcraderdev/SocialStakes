@@ -72,13 +72,33 @@ const gameController = {
     if (!table) {
       return false;
     }
-    return table;
+
+    
+    const returnedTable = table.toJSON();
+    
+    // Add usernames to tableUsers
+    for (let userTable of returnedTable.tableUsers) {
+      for (let player of returnedTable.players) {
+        if (player.id === userTable.userId) {
+          userTable.username = player.username;
+          break;
+        }
+      }
+    }
+    
+    return returnedTable;
   },
+
+
+
+
+
+
 
   async takeSeat(tableId, seat, user) {
     console.log(tableId);
     console.log(seat);
-    console.log(user.id);
+    console.log(user.id); 
     const table = await Table.findByPk(tableId, {
       include: [
         {

@@ -8,7 +8,7 @@ import {changeNeonThemeAction, changeTableThemeAction} from '../../redux/actions
 import TableSeat from '../TableSeat';
 import PlayerBetOptions from '../PlayerBetOptions';
 
-const Table = ({table, takeSeat, leaveSeat, leaveTable}) => {
+const Table = ({table, leaveTable}) => {
 
   const dispatch = useDispatch()
   const game = 'blackjack'
@@ -43,7 +43,6 @@ const Table = ({table, takeSeat, leaveSeat, leaveTable}) => {
 
   const handleTableThemeChange = (tableTheme) =>{
     console.log(tableTheme);
-    console.log('click');
     dispatch(changeTableThemeAction(tableTheme))
   }
 
@@ -61,16 +60,16 @@ const Table = ({table, takeSeat, leaveSeat, leaveTable}) => {
 
         <div className='seats-container'>
           <div className='top-seats flex between'>
-            <TableSeat seatNumber={1} player={seats[0]} onSeatClick={takeSeat} onLeaveClick={leaveSeat}/>
-            <TableSeat seatNumber={6} player={seats[5]} onSeatClick={takeSeat} onLeaveClick={leaveSeat}/>
+            <TableSeat seatNumber={1} player={seats[0]}/>
+            <TableSeat seatNumber={6} player={seats[5]}/>
           </div>
           <div className='mid-seats flex between'>
-            <TableSeat seatNumber={2} player={seats[1]} onSeatClick={takeSeat} onLeaveClick={leaveSeat}/>
-            <TableSeat seatNumber={5} player={seats[4]} onSeatClick={takeSeat} onLeaveClick={leaveSeat}/>
+            <TableSeat seatNumber={2} player={seats[1]}/>
+            <TableSeat seatNumber={5} player={seats[4]}/>
           </div>
           <div className='bot-seats flex between'>
-            <TableSeat seatNumber={3} player={seats[2]} onSeatClick={takeSeat} onLeaveClick={leaveSeat}/>
-            <TableSeat seatNumber={4} player={seats[3]} onSeatClick={takeSeat} onLeaveClick={leaveSeat}/>
+            <TableSeat seatNumber={3} player={seats[2]}/>
+            <TableSeat seatNumber={4} player={seats[3]}/>
           </div>
         </div>
 

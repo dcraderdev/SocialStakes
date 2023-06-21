@@ -24,13 +24,23 @@ router.get('/game/:gameId', async (req, res, next) => {
 });
 
 // Get table by tableId
-router.get('/:tableId', requireAuth, async (req, res, next) => {
+router.get('/:tableId', async (req, res, next) => {
 
   const {tableId} = req.params
 
   console.log(tableId);
 
   const table = await gameController.getTableById(tableId)
+
+  console.log('********');
+  console.log('********');
+  console.log('********');
+console.log(table);
+console.log('********');
+console.log('********');
+console.log('********');
+console.log('********');
+
 
   if (!table) {
     const err = new Error('table not found');
@@ -39,16 +49,14 @@ router.get('/:tableId', requireAuth, async (req, res, next) => {
     return next(err);
   }
 
-  return res.status(200).json({ table });
+  return res.status(200).json({'hi':'hi', table });
 });
 
 // Join table by tableId
 router.post('/:tableId/join', requireAuth, async (req, res, next) => {
-
   const {tableId} = req.params
   const {seat} = req.body
   const {user} = req
-
 
   const table = await gameController.takeSeat(tableId, seat, user)
 

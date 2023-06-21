@@ -1,4 +1,5 @@
 import { setUser, removeUser, setThemes } from '../actions/userActions'
+import { showGamesAction } from '../actions/gameActions'
 import { csrfFetch } from './csrf';
 
 
@@ -51,6 +52,7 @@ export const logout = () => async (dispatch) => {
     method: 'DELETE',
   });
   dispatch(removeUser());
+  dispatch(showGamesAction());
   return response;
 };
 

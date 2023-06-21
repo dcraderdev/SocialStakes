@@ -132,6 +132,10 @@ export const getAllGames = () => async (dispatch) => {
 
 
 export const takeSeat = (tableId, seat) => async (dispatch) => {
+console.log(seat);
+console.log(seat);
+console.log(seat);
+  
   try{
     const response = await csrfFetch(`/api/tables/${tableId}/join`, {
       method: 'POST',

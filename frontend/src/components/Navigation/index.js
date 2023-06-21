@@ -6,6 +6,7 @@ import { Route, Router, Switch, NavLink } from 'react-router-dom';
 import './Navigation.css';
 import ProfileButtonModal from '../ProfileButtonModal'
 
+import { showGamesAction } from '../../redux/actions/gameActions';
 
 import socialstakesCards from '../../images/socialstakes-logo-cards.svg'
 import socialstakesCards2 from '../../images/socialstakes-logo-cards2.svg'
@@ -29,10 +30,15 @@ function Navigation(){
 
   const wideScreen = windowWidth > 600
 
-  console.log(modal);
 
 
-
+  const handleFriendsClick = () => {
+    dispatch(gameActions.showGamesAction())
+    history.push('/');
+  };
+  const handleGameClick = () => {
+    dispatch(showGamesAction())
+  };
 
 
 
@@ -77,8 +83,8 @@ function Navigation(){
           {user && (
           <div className='nav-user-buttons-container'>
 
-            {wideScreen && <div className='nav-user-button '>Games</div>}
-            {wideScreen && <div className='nav-user-button '>Friends</div>}
+            {wideScreen && <div className='nav-user-button' onClick={handleGameClick}>Games</div>}
+            {wideScreen && <div className='nav-user-button' onClick={handleFriendsClick}>Friends</div>}
             <div className='nav-user-button balance'>${user.balance}</div>
             <div ref={profileBtnRef} className='nav-user-button profile' onClick={handleProfileButtonClick}>
               <div className='profile-icon-container flex center'><i className="fa-regular fa-user"></i></div>

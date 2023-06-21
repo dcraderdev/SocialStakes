@@ -30,8 +30,7 @@ router.post('/',validateLogin, async (req, res, next) => {
               lastName: user.lastName,
               email: user.email,
               username: user.username,
-              chips:user.chips,
-              userRoom: user.userRoom
+              balance: user.balance
              });
   }
 

@@ -1,7 +1,7 @@
 .nav-bar {
   position: fixed;
   display: flex;
-  height: 95px;
+  height: 50px;
   width: 100%;
   left: 0px;
   top: 0px;
@@ -21,13 +21,64 @@
 }
 
 .nav-user-buttons-container{
-  border: rgb(142, 147, 160) solid 1px;
-  width: 400px;
+  width: fit-content;
   height: 100%;
   position: relative;
   display: flex;
   flex-direction: row;
 }
+.nav-user-button:last-child{
+  margin-right: 20px;
+}
+.nav-user-button{
+  cursor: pointer;
+  border-left: rgb(142, 147, 160) solid 1px;
+  width: 80px;
+  height: 70%;
+  top: 15%;
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  color: azure;
+  font-weight: 300;
+}
+
+
+.nav-user-button .fa-user:hover,
+.nav-user-button:hover{
+  color: rgb(200, 57, 13);
+}
+
+.nav-user-button:hover > .profile-icon-container{
+  border: rgb(200, 57, 13) 1px solid;
+}
+
+.profile-icon-container:hover > .nav-user-button .fa-user {
+  color: rgb(200, 57, 13);
+}
+
+
+.nav-user-button.balance{
+  width: fit-content;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.profile-icon-container{
+  border: white 1px solid;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+}
+
+.nav-user-button.profile{
+  border-right: rgb(142, 147, 160) solid 1px;
+  width: 60px;
+}
+
+
 
 
 
@@ -40,64 +91,34 @@
 }
 
 .logo-image-container{
-  width: 100px;
-  height: 100px;
+  width: 80px;
+  height: 80px;
   margin-left: 5px;
 }
 
 .logo-image-container img {
   cursor: pointer;
-  width: 80%;
-  height: 80%;
+  width: 48px;
+  height: 48px;
   object-fit: cover;
 }
 
 .logo-name{
+  margin-left: -5px;
+
   cursor: pointer;
-  width: 300px;
-  width: fit-content;
-  font-size: 5.0vh;
+  width: 200px;
+  font-size: 4.0vh;
   text-shadow: -1px 0 black, 0 3px black, 3px 0 black, 0 -1px black;
   font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
 }
-
-.logo-floating-neon-pink {
-  animation: logo-floating-neon-pink  2s infinite ease-in-out;
-}
-
-@keyframes logo-floating-neon-pink {
-  0%, 100%{
-    /* transform: scale(1) translateY(0); */
-    /* transform: scale(1) translateY(0px); */
-    transform: translateY(0px);
-    text-shadow: -1px 0 #ff3aad, 0 3px #ff3aad, 3px 0 #ff3aad, 0 -1px #ff3aad;
-}
-    
-    50% {
-      /* transform: scale(1.05) translateY(-100px); */
-      /* transform: scale(1) translateY(-100px); */
-      transform: translateY(-3px);
-  }
-
-}
-
-
 
 
 @media screen and (min-width: 650px) {
   .logo-name{
     font-size: 40px;
+    width: 270px;
+
   }
 }
 
-
-.a{
-  box-shadow: rgba(240, 46, 170, 0.4) 5px 5px, rgba(240, 46, 170, 0.3) 10px 10px, rgba(240, 46, 170, 0.2) 15px 15px, rgba(240, 46, 170, 0.1) 20px 20px, rgba(240, 46, 170, 0.05) 25px 25px;
-}
-
-
-.b{
-  
-  box-shadow: rgba(240, 46, 170, 0.4) -5px 5px, rgba(240, 46, 170, 0.3) -10px 10px, rgba(240, 46, 170, 0.2) -15px 15px, rgba(240, 46, 170, 0.1) -20px 20px, rgba(240, 46, 170, 0.05) -25px 25px;
-
-}

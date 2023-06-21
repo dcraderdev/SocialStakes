@@ -5,7 +5,6 @@ import './TableSeat.css'
 
 const TableSeat = ({seatNumber, player, onSeatClick, onLeaveClick}) => {
 
-  console.log(player);
 
 return(
 

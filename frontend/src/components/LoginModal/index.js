@@ -103,7 +103,6 @@ function LoginModal() {
   };
   
   useEffect(() => {
-    if(updateObj !== 'noUser'){
     const handleClickOutside = (event) => {
       if (formRef.current && !formRef.current.contains(event.target)) {
         closeModal();
@@ -113,8 +112,7 @@ function LoginModal() {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }
-  }, [updateObj]);
+  }, []);
 
 
 

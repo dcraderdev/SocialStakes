@@ -33,7 +33,7 @@
   grid-template-columns: repeat(3, 1fr);
   grid-auto-rows: minmax(180px, 1fr);
   grid-gap: 40px;
-  /* grid-row-gap: 10px; */
+  grid-row-gap: 30px;
   transition: all 0.3s ease;
   margin-bottom: 30px;
 }

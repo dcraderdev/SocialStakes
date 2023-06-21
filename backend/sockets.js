@@ -23,6 +23,8 @@ module.exports = function (io) {
     socket.on('initialize', async () => {
       console.log('INITIALIZING');
       console.log('INITIALIZING');
+
+      // Load table images
     });
 
 

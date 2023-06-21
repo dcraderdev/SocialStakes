@@ -1,4 +1,4 @@
-import { REMOVE_USER, SET_USER } from './actionTypes'
+import { REMOVE_USER, SET_USER, SET_THEMES } from './actionTypes'
 
 
 
@@ -16,6 +16,11 @@ export const removeUser = () => {
 };
 
 
-
+export const setThemes = (data) => {
+  return {
+    type: SET_THEMES,
+    payload: data.themeUrls
+  };
+};
 
 

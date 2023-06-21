@@ -7,7 +7,7 @@ import './GameTile.css';
 const GameTile = ({game, checkTables}) => {
   return (
     <div>
-      <div className='game-tile' onClick={() => checkTables(game.gameType)}>
+      <div className='game-tile pulse rounded' onClick={() => checkTables(game.gameType)}>
         <p>{game.gameType}</p>
       </div>
     </div>

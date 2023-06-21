@@ -50,18 +50,31 @@ function Navigation(){
       <nav className="nav-bar style2-color1">
         <div className='nav-buttons'>
 
-          <div className='logo-container flex center' onClick={handleLogoClick}>
+          <div className='logo-container flex center'>
 
             <div className='logo-image-container flex center'>
-              <img src={socialstakesCards2} alt="cards"></img>
+              <img src={socialstakesCards2} alt="cards" onClick={handleLogoClick}></img>
             </div>
             
-              <div className='logo-name'>SOCIAL STAKES</div> 
+              <div className='logo-name' onClick={handleLogoClick}>SOCIAL STAKES</div> 
           </div>
 
+          {user && (
           <div className='nav-user-buttons-container'>
-          user buttons
+            <div className='nav-user-button'>Games</div>
+            <div className='nav-user-button'>Balance</div>
+            <div className='nav-user-button'>ProfBtn Modal</div>
           </div>
+          )}
+          {!user && (
+          <div className='nav-user-buttons-container'>
+            <div className='nav-user-button'>Login</div>
+            <div className='nav-user-button'>Signin</div>
+            <div className='nav-user-button'>ProfBtn Modal</div>
+          </div>
+          )}
+
+
         </div>
 
       </nav>

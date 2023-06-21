@@ -10,7 +10,8 @@ npx sequelize-cli model:generate --name Action --attributes userId:string
 npx sequelize-cli model:generate --name Friendship --attributes userId:string
 npx sequelize-cli model:generate --name Pot --attributes userId:string
 npx sequelize-cli model:generate --name UserPot --attributes userId:string
-npx sequelize-cli model:generate --name Messages --attributes userId:string
+npx sequelize-cli model:generate --name Message --attributes userId:string
+npx sequelize-cli model:generate --name Theme --attributes url:string
 
 npx sequelize-cli seed:generate --name user-seeds
 npx sequelize-cli seed:generate --name game-seeds
@@ -25,5 +26,6 @@ npx sequelize-cli seed:generate --name user-pot-seeds
 npx sequelize-cli seed:generate --name action-seeds
 npx sequelize-cli seed:generate --name static-server-seeds
 npx sequelize-cli seed:generate --name simulated-action-seeds
+npx sequelize-cli seed:generate --name theme-seeds
 
 

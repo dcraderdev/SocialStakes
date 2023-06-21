@@ -34,6 +34,7 @@ function App() {
   useEffect(() => {
     isLoaded(false);
 
+    dispatch(sessionActions.loadThemes())
     dispatch(sessionActions.restoreUser())
       .then(() => {
         isLoaded(true);

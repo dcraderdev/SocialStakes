@@ -1,4 +1,4 @@
-import { setUser, removeUser } from '../actions/userActions'
+import { setUser, removeUser, setThemes } from '../actions/userActions'
 import { csrfFetch } from './csrf';
 
 
@@ -56,7 +56,6 @@ export const logout = () => async (dispatch) => {
 
 
 export const restoreUser = () => async (dispatch) => {
-  console.log('attempting restore');
   const response = await csrfFetch("/api/session");
   const data = await response.json();
 
@@ -64,4 +63,23 @@ export const restoreUser = () => async (dispatch) => {
     dispatch(setUser(data.user));
   }
   return response;
+};
+
+export const loadThemes = () => async (dispatch) => {
+
+  try{
+    const response = await csrfFetch("/api/session/themes");
+    const data = await response.json();
+
+    console.log('-=-=-=-=');
+    console.log(data); 
+    console.log('-=-=-=-=');
+  
+    dispatch(setThemes(data));
+    return response;
+    
+  }catch(error){
+    console.log(error);
+  }
+
 };

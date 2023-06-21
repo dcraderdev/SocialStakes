@@ -23,10 +23,10 @@
 .nav-user-buttons-container{
   border: rgb(142, 147, 160) solid 1px;
   width: 400px;
-  height: 80%;
+  height: 100%;
   position: relative;
-  top: 10%;
-
+  display: flex;
+  flex-direction: row;
 }
 
 
@@ -46,20 +46,58 @@
 }
 
 .logo-image-container img {
+  cursor: pointer;
   width: 80%;
   height: 80%;
   object-fit: cover;
 }
 
 .logo-name{
+  cursor: pointer;
   width: 300px;
+  width: fit-content;
   font-size: 5.0vh;
   text-shadow: -1px 0 black, 0 3px black, 3px 0 black, 0 -1px black;
   font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
 }
 
+.logo-floating-neon-pink {
+  animation: logo-floating-neon-pink  2s infinite ease-in-out;
+}
+
+@keyframes logo-floating-neon-pink {
+  0%, 100%{
+    /* transform: scale(1) translateY(0); */
+    /* transform: scale(1) translateY(0px); */
+    transform: translateY(0px);
+    text-shadow: -1px 0 #ff3aad, 0 3px #ff3aad, 3px 0 #ff3aad, 0 -1px #ff3aad;
+}
+    
+    50% {
+      /* transform: scale(1.05) translateY(-100px); */
+      /* transform: scale(1) translateY(-100px); */
+      transform: translateY(-3px);
+  }
+
+}
+
+
+
+
 @media screen and (min-width: 650px) {
   .logo-name{
     font-size: 40px;
   }
+}
+
+
+.a{
+  box-shadow: rgba(240, 46, 170, 0.4) 5px 5px, rgba(240, 46, 170, 0.3) 10px 10px, rgba(240, 46, 170, 0.2) 15px 15px, rgba(240, 46, 170, 0.1) 20px 20px, rgba(240, 46, 170, 0.05) 25px 25px;
+}
+
+
+.b{
+  
+  box-shadow: rgba(240, 46, 170, 0.4) -5px 5px, rgba(240, 46, 170, 0.3) -10px 10px, rgba(240, 46, 170, 0.2) -15px 15px, rgba(240, 46, 170, 0.1) -20px 20px, rgba(240, 46, 170, 0.05) -25px 25px;
+
 }

@@ -54,9 +54,29 @@ body{
 
 .neon{
   animation: neon 600s infinite;
+
+  text-shadow: -1px 0 #ff3aad, 0 3px #ff3aad, 3px 0 #ff3aad, 0 -1px #ff3aad;
+
 }
 
+
+
+.pulse {
+  animation: pulse 600s infinite;
+}
+
+.rounded{
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+
+
+
+}
+
+
 @keyframes neon {
+
+
+
   0%, 1%, 2%, 100% {
     box-shadow:
       white 0 0 12px,
@@ -82,6 +102,65 @@ body{
   }
 }
 
+
+/* @keyframes floating {
+  0% { transform: scale(0,  0px); }
+  50%  { transform: translate(0, 15px); }
+  100%   { transform: translate(0, -0px); }   
+} */
+
+
+.floating-neon-pink-hover:hover{
+  animation: floating-neon-pink  2s infinite ease-in-out;
+
+}
+
+.floating-neon-pink {
+  animation: floating-neon-pink  2s infinite ease-in-out;
+}
+
+@keyframes floating-neon-pink {
+  0%, 100%{
+    /* transform: scale(1) translateY(0); */
+    /* transform: scale(1) translateY(0px); */
+    transform: translateY(0px);
+    /* box-shadow:
+      white 0 0 10px,
+      #ff3aad 0 0 15px,
+      #ff3aad 0 0 20px; */
+      box-shadow:
+      white 0 0 1px,
+      #ff3aad 0 0 2px,
+      #ff3aad 0 0 2px;
+    }
+    
+    50% {
+      /* transform: scale(1.05) translateY(-100px); */
+      /* transform: scale(1) translateY(-100px); */
+      transform: translateY(-4px);
+      box-shadow:
+        rgba(255, 255, 255, 0.297) -2px 2px,
+        rgba(240, 46, 170, 0.2) -7px 7px,
+        rgba(240, 46, 170, 0.1) -8px 8px,
+        rgba(240, 46, 170, 0.05) -6px 6px;
+  }
+
+}
+
+
+
+
+
+@keyframes pulse {
+
+  95% {
+    font-size: 20px;
+  }
+  100% {
+    font-size: 20px;
+  }
+
+}
 
 
 *{

@@ -3,6 +3,7 @@
 export const SET_USER = 'session/SET_USER';
 export const REMOVE_USER = 'session/REMOVE_USER';
 export const GET_USERS = 'users/GET_USERS';
+export const SET_THEMES = 'users/SET_THEMES';
 
 
 //csrf

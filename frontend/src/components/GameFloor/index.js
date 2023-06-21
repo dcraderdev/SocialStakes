@@ -2,6 +2,7 @@ import { React, useState, useRef, useEffect, useContext } from 'react';
 import { Route, Router, Switch, NavLink, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import * as gameActions from '../../redux/middleware/games';
+import { showGamesAction, showTablesAction } from '../../redux/actions/gameActions';
 import GameTile from '../GameTile';
 import TableTile from '../TableTile';
 
@@ -24,29 +25,16 @@ function GameFloor() {
 
   const showGames = useSelector((state) => state.games.showGames);
   const showTables = useSelector((state) => state.games.showTables);
-  // const showActiveTable = useSelector((state) => state.games.showActiveTable);
-
   const activeTable = useSelector((state) => state.games.activeTable);
-
-
-
 
 
   const [isLoaded, setIsLoaded] = useState(false);
 
-  const [games, setGames] = useState({});
   const [tables, setTables] = useState({});
-  // const [activeTable, setActiveTable] = useState(null);
 
-  // const [showGames, setShowGames] = useState(true);
-  // const [showTables, setShowTables] = useState(false);
-  // const [showActiveTable, setShowActiveTable] = useState(false);
-
-  
   
   
 console.log(openTablesByGameType);
-console.log(games);
 console.log(activeTable);
 
 
@@ -65,39 +53,9 @@ console.log(activeTable);
   }, [allGames]);
 
 
-
-  // // handle checking active tables
-  // useEffect(() => {
-  //   setIsLoaded(false);
-  //   if(openTablesByGameType.length > 0){
-  //     setGames(openTablesByGameType)
-  //     setShowTables(true)
-  //     setShowGames(false)
-  //     setIsLoaded(true)
-  //   }
-  // }, [openTablesByGameType]);
-
-
-
-  // // handle active table change
-  // useEffect(() => {
-  //   if(activeTable){
-  //     setShowTables(false)
-  //     setShowGames(false)
-  //     setShowActiveTable(true)
-  //   }
-  // }, [activeTable]);
-
-
-
-
   const goBack = () =>{
     console.log('goBack');
-    setShowGames(true)
-    setShowTables(false)
-    if(Object.values(allGames).length > 0){
-      setIsLoaded(true)
-    }
+    dispatch(showGamesAction())
   }
 
 

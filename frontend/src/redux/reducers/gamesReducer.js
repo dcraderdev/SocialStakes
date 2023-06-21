@@ -55,9 +55,10 @@ const gamesReducer = (state = initialState, action) => {
       
       if (tableIds.length > 0) {
         activeTable = newCurrentTables[tableIds[0]];
+        return { ...newState, currentTables: newCurrentTables, activeTable };
       }
+      return { ...newState, currentTables: newCurrentTables, activeTable, showGames: true, showTables: false };
     
-      return { ...newState, currentTables: newCurrentTables, activeTable };
     }
 
     case TAKE_SEAT:{

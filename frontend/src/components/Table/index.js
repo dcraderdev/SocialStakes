@@ -7,15 +7,53 @@ import { useDispatch, useSelector } from 'react-redux';
 import feltGreen4 from '../../images/felt-green4.jpeg'
 // // import feltRed from '../../images/felt-red.svg'
 // import feltRed from '../../images/felt-red-comp.png'
+import TableSeat from '../TableSeat';
 
 import './Table.css'
 
 import PlayerBetOptions from '../PlayerBetOptions';
 
-const Table = ({seats, takeSeat}) => {
+const Table = ({table, takeSeat, leaveSeat, leaveTable}) => {
   const {id} = useParams()
   const game = 'blackjack'
   const url = 'https://social-stakes.s3.us-west-1.amazonaws.com/AdobeStock_271559753.jpeg'
+
+
+  const initialSeats = Array(6).fill(null);
+  const [seats, setSeats] = useState(initialSeats);
+  const seatOrder = [0, 5, 1, 4, 2, 3];
+  // const orderedSeats = seatOrder.map(i => seats[i]);
+
+  console.log(initialSeats);
+
+  console.log(table);
+
+  useEffect(() => {
+    console.log('hurr');
+    if(table &&  table.tableUsers){
+    console.log('hurr');
+    let newSeats = [...initialSeats];
+      table.tableUsers.forEach(user => {
+        console.log(user);
+        if(user.seat && user.seat <= 6 && user.seat > 0) {
+          newSeats[user.seat - 1] = user;
+        } 
+      });
+      setSeats(newSeats);
+    }
+
+    // Clean up function 
+    return () => {
+      setSeats(initialSeats);
+    };
+  }, [table]);
+
+
+ 
+
+  console.log(table);
+  console.log(table?.Game);
+
 
   return (
     <div className='table-wrapper'>
@@ -25,8 +63,8 @@ const Table = ({seats, takeSeat}) => {
         <img src={url} alt='table'></img>
       </div>
 
-
-    {seats === 6 && (
+{/*  
+    {table && (
       <div className='seats-container'>
           <div className='top-seats flex between'>
             <div className='seat-container six-ring seat1' onClick={()=>takeSeat(1)}></div>
@@ -41,7 +79,23 @@ const Table = ({seats, takeSeat}) => {
             <div className='seat-container six-ring seat4' onClick={()=>takeSeat(4)}></div>
           </div>
       </div>
-    )}
+    )} */}
+
+
+        <div className='seats-container'>
+          <div className='top-seats flex between'>
+            <TableSeat seatNumber={1} player={seats[0]} onSeatClick={takeSeat} onLeaveClick={leaveSeat}/>
+            <TableSeat seatNumber={6} player={seats[5]} onSeatClick={takeSeat} onLeaveClick={leaveSeat}/>
+          </div>
+          <div className='mid-seats flex between'>
+            <TableSeat seatNumber={2} player={seats[1]} onSeatClick={takeSeat} onLeaveClick={leaveSeat}/>
+            <TableSeat seatNumber={5} player={seats[4]} onSeatClick={takeSeat} onLeaveClick={leaveSeat}/>
+          </div>
+          <div className='bot-seats flex between'>
+            <TableSeat seatNumber={3} player={seats[2]} onSeatClick={takeSeat} onLeaveClick={leaveSeat}/>
+            <TableSeat seatNumber={4} player={seats[3]} onSeatClick={takeSeat} onLeaveClick={leaveSeat}/>
+          </div>
+        </div>
 
 
     </div>

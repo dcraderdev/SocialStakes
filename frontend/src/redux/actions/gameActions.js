@@ -4,7 +4,7 @@ import {
   VIEW_TABLE, LEAVE_TABLE,
   TAKE_SEAT, LEAVE_SEAT, CHANGE_SEAT,
   SHOW_GAMES, SHOW_TABLES, SHOW_ACTIVE_TABLES,
-  ADD_MESSAGE
+  ADD_MESSAGE, TOGGLE_SHOW_MESSAGES
 } from './actionTypes'
 
 
@@ -104,6 +104,15 @@ export const showTablesAction = () => {
     type: SHOW_TABLES
   };
 };
+
+export const toggleShowMessages = () => {
+  return {
+    type: TOGGLE_SHOW_MESSAGES
+  };
+};
+
+
+
 
 export const changeActiveTablesAction = () => {
   return {

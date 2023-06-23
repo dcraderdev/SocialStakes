@@ -8,27 +8,24 @@ import {changeNeonThemeAction, changeTableThemeAction} from '../../redux/actions
 import TableSeat from '../TableSeat';
 import PlayerBetOptions from '../PlayerBetOptions';
 
-const Table = ({table, leaveTable}) => {
+const Table = () => {
 
   const dispatch = useDispatch()
   const game = 'blackjack'
   const themes = useSelector(state=>state.users.themes)
   const neonTheme = useSelector(state=>state.users.neonTheme)
   const tableTheme = useSelector(state=>state.users.tableTheme)
+  const activeTable = useSelector(state=>state.games.activeTable)
 
 
   const initialSeats = Array(6).fill(null);
   const [seats, setSeats] = useState(initialSeats);
-  const seatOrder = [0, 5, 1, 4, 2, 3];
 
-// console.log(themes);
-// console.log(tableTheme);
-// console.log(themes[tableTheme]);
 
   useEffect(() => {
-    if(table &&  table.tableUsers){
+    if(activeTable &&  activeTable.tableUsers){
     let newSeats = [...initialSeats];
-      table.tableUsers.forEach(user => {
+    activeTable.tableUsers.forEach(user => {
         if(user.seat && user.seat <= 6 && user.seat > 0) {
           newSeats[user.seat - 1] = user;
         } 
@@ -39,7 +36,7 @@ const Table = ({table, leaveTable}) => {
     return () => {
       setSeats(initialSeats);
     };
-  }, [table]);
+  }, [activeTable]);
 
 
 
@@ -48,7 +45,6 @@ const Table = ({table, leaveTable}) => {
     <div className='table-wrapper'>
     <div className='table-container '>
       <div className='table-content flex center'>
-        {/* <img src={feltGreen4} alt='table'></img> */}
         {themes[tableTheme] && <img src={themes[tableTheme].url} alt='table'></img>}
       </div>
 

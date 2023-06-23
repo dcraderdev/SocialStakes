@@ -34,4 +34,5 @@ export const SHOW_ACTIVE_TABLES = 'game/SHOW_ACTIVE_TABLES';
 
 
 export const ADD_MESSAGE = 'game/ADD_MESSAGE';
+export const TOGGLE_SHOW_MESSAGES = 'game/TOGGLE_SHOW_MESSAGES';
 

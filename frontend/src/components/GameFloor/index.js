@@ -27,7 +27,6 @@ function GameFloor() {
   const showTables = useSelector((state) => state.games.showTables);
   const activeTable = useSelector((state) => state.games.activeTable);
 
-
   const [isLoaded, setIsLoaded] = useState(false);
 
   const [tables, setTables] = useState({});

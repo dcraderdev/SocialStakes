@@ -4,7 +4,7 @@ import {
   VIEW_TABLE, LEAVE_TABLE, 
   LEAVE_SEAT, TAKE_SEAT,
   SHOW_GAMES, SHOW_TABLES, SHOW_ACTIVE_TABLES,
-  ADD_MESSAGE
+  ADD_MESSAGE, TOGGLE_SHOW_MESSAGES
  } from '../actions/actionTypes'
 
 const initialState = {
@@ -15,6 +15,7 @@ const initialState = {
   activeTable: null,
   showGames: true,
   showTables: false,
+  showMessages: true,
 }
 
 const gamesReducer = (state = initialState, action) => {
@@ -50,10 +51,12 @@ const gamesReducer = (state = initialState, action) => {
     
       console.log(action.payload);
       let newCurrentTables = { ...newState.currentTables };
-      delete newCurrentTables[action.payload.id];
-      
+
+      delete newCurrentTables[action.payload];
+        //Check if any tables left, if so switch to the first one
       const tableIds = Object.keys(newCurrentTables);
       let activeTable = null;
+      console.log(newCurrentTables);
       
       if (tableIds.length > 0) {
         activeTable = newCurrentTables[tableIds[0]];
@@ -79,6 +82,10 @@ const gamesReducer = (state = initialState, action) => {
     }
     case SHOW_TABLES:{
       return {...newState, showGames: false, showTables: true, activeTable: null}
+    }
+    case TOGGLE_SHOW_MESSAGES:{
+      let toggle = !newState.showMessages
+      return {...newState, showMessages: toggle}
     }
 
     case ADD_MESSAGE: {

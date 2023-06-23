@@ -118,19 +118,7 @@
   color: rgb(125, 57, 57);
 }
 
-.gamefloor-back-button .fa-arrow-left-long{
+.gamefloor-back-button{
   transform: scale(2.5);
 }
 
-.gamefloor-leave-button{
-  width: fit-content;
-  height: fit-content;
-  position: absolute;
-  left: 40px;
-  bottom: 0px;
-  cursor: pointer;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-
-}

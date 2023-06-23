@@ -5,14 +5,15 @@ import './Chatbox.css';
 import { SocketContext } from '../../context/SocketContext';
 
 import { addMessage} from '../../redux/actions/userActions';
+import { toggleShowMessages } from '../../redux/actions/gameActions';
 
-const Chatbox = () => {
+const Chatbox = ({showMessages}) => {
+  const dispatch = useDispatch()
   const [selectedMessage, setSelectedMessage] = useState(null);
   const [showSettings, setShowSettings] = useState(false);
 
   const [newMessage, setNewMessage] = useState('');
-  const [messages, setMessages] = useState([{content:'hi', user:{id:1, username: 'doug'}}]);
-  const messagess = [{content:'hi', user:{id:1, username: 'doug'}}]
+  const [messages, setMessages] = useState([]);
   const user = useSelector(state => state.users.user);
   const friends = useSelector(state => state.users.friends);
   const activeTable = useSelector(state => state.games.activeTable);
@@ -20,9 +21,6 @@ const Chatbox = () => {
   const { socket } = useContext(SocketContext);
   const bottomRef = useRef(null);
 
-  console.log(activeTable);
-
- 
 
     // Handle Sending Messages
     const handleSubmit = (e) => {
@@ -37,9 +35,16 @@ const Chatbox = () => {
       setNewMessage('');
     }
   
+
+
+
+
     useEffect(()=>{
       if(currentTables && currentTables[activeTable.id]){
         setMessages(currentTables[activeTable.id].messages)
+      }
+      if (bottomRef.current) {
+        bottomRef.current.scrollIntoView({ behavior: 'smooth' });
       }
     },[currentTables])
  
@@ -80,11 +85,9 @@ const Chatbox = () => {
   return(
 
   <div className='chatbox-wrapper'> 
-    <div className='chatbox-container'>
+    <div className={`chatbox-container ${showMessages ? 'open' : 'minimize'}`}>
     <div className="message-container">
-    <div className="active-panel">
-              {messages
-              .map((message, index) => (
+              {messages.map((message, index) => (
                 <div
                   key={index}
                   className="chat-message"
@@ -94,13 +97,7 @@ const Chatbox = () => {
                 >
 
 
-                  {selectedMessage === message &&
-                    user &&
-                    friends &&
-                    message.sender.username !== user.username &&
-                    friends.outgoingRequests[message.sender.username] ===
-                      undefined &&
-                    friends.friends[message.sender.username] === undefined && (
+                  {selectedMessage === message && (
                       <div
                         className="chat-message-add-friend"
                         onClick={sendFriendRequest}
@@ -111,22 +108,19 @@ const Chatbox = () => {
 
                   <div className="username-container">
                     <div className="chat-message-username">
-                      {message?.sender?.username + ':'}
+                      {message?.user?.username + ':'}
                     </div>
                   </div>
 
-                  <div className="chat-message-message">{message?.content}</div>
+                  <div className="chat-message-content">{message?.content}</div>
                 </div>
               ))}
               <div className="chat-bottom-ref" ref={bottomRef}></div>
             </div>
             <div className="new-message-container">
+        
+        
         <div className="new-message-controls">
-
-
-
-
-
           <form onSubmit={handleSubmit}>
             <label>
               <input
@@ -137,12 +131,14 @@ const Chatbox = () => {
                 placeholder=' Type chat message here'
               />
             </label>
-            <button className="send-new-message-button button" onClick={handleSubmit}>
+            <button className="send-new-message-button" onClick={handleSubmit}>
               Send
             </button>
           </form>
         </div>
-      </div>
+
+
+
     </div> 
     </div> 
   </div>

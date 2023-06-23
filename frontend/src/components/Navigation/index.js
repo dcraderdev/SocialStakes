@@ -76,12 +76,6 @@ let b = 'e10d8de4-f4c2-4d28-9324-56aa9c920801'
           </div>
 
 
-          {modal === 'profileModal' && (
-            <div>
-              {modal === 'profileModal' && <ProfileButtonModal />}
-            </div>
-          )}
-
           {user && (
           <div className='nav-user-buttons-container'>
 
@@ -105,9 +99,12 @@ let b = 'e10d8de4-f4c2-4d28-9324-56aa9c920801'
 
           </div>
           )}
-
-
         </div>
+        
+            <div className='profile-modal'>
+              {modal === 'profileModal' && <ProfileButtonModal />}
+            </div>
+        
 
       </nav>
 

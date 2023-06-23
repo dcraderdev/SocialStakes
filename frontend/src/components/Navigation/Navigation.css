@@ -122,3 +122,22 @@
   }
 }
 
+
+
+
+
+.profile-modal {
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  top: 50px;
+  right: 20px;
+}
+
+@media screen and (min-width: 1200px) {
+  .profile-modal {
+    position: absolute;
+    margin: 0 auto;
+    left: 980px;
+  }
+}

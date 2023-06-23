@@ -1,7 +1,7 @@
 .profileMenu {
   cursor: pointer;
-  position: absolute;
-  top: 35px;
+  position: relative;
+  top: -18px;
   right: 5px;
   transform: scale(1);
   border: 1px solid rgb(0, 0, 0,0.1);

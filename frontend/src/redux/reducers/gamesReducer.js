@@ -89,6 +89,8 @@ const gamesReducer = (state = initialState, action) => {
     }
 
     case ADD_MESSAGE: {
+      console.log('adding message');
+      console.log(action.payload);
       const { room, content, user } = action.payload;
       const newCurrentTables = { ...newState.currentTables };
     
@@ -96,6 +98,8 @@ const gamesReducer = (state = initialState, action) => {
         const newMessage = { content, user: {username: user.username, id: user.id} };
         newCurrentTables[room].messages.push(newMessage);
       }
+
+      console.log(newCurrentTables);
     
       return { ...newState, currentTables: newCurrentTables };
     }

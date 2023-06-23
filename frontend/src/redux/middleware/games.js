@@ -209,6 +209,7 @@ export const addMessage = (messageObj) => async (dispatch) => {
   let tableId = room
 
   dispatch(addMessageAction(messageObj));
+  if(user.username === 'Room') return
   try{
     const response = await csrfFetch(`/api/tables/${tableId}/message`, {
       method: 'POST',

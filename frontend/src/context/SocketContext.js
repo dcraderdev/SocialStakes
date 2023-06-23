@@ -49,7 +49,7 @@ const SocketProvider = ({ children }) => {
       }
       
 
-      socket.on('message', (messageObj) => {
+      socket.on('new_message', (messageObj) => {
         console.log('receiving message');
         console.log('receiving message');
         console.log('receiving message');

@@ -31,7 +31,12 @@ module.exports = function (io) {
     socket.on('join_room', async (room) => {
       console.log('--- join_room ---');
       console.log(`${username} is joining room ${room}.`);
+
+      let messageObj = {user: {username: 'Room', id: 1}, content:`${username} has joined the room.`, room}
       socket.join(room);
+
+      io.in(room).emit('new_message', messageObj);
+
       console.log('-=-=-=-=-=-=-=-=-=');
     });
  
@@ -48,7 +53,7 @@ module.exports = function (io) {
     // Broadcast message to specific room
     socket.on('message', async (messageObj) => {
       const {room, message} = messageObj
-      io.in(room).emit('message', messageObj);
+      io.in(room).emit('new_message', messageObj);
       // io.in(userId).emit('message', messageObj);
 
 

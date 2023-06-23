@@ -20,14 +20,14 @@ import { WindowContext } from '../../context/WindowContext';
 function Navigation(){
   const history = useHistory()
   const dispatch = useDispatch();
-  const { modal, openModal, closeModal, needsRerender, setNeedsRerender } = useContext(ModalContext);
 
+  const { modal, openModal, closeModal, needsRerender, setNeedsRerender } = useContext(ModalContext);
   const { windowWidth, profileBtnRef} = useContext(WindowContext);
+
   const [loaded, isLoaded] = useState(false);
 
   const user = useSelector(state=> state.users.user)
-  console.log(windowWidth);
-
+ 
   const wideScreen = windowWidth > 600
 
 
@@ -40,6 +40,8 @@ function Navigation(){
     dispatch(showGamesAction())
   };
 
+let a = 'e10d8de4-f4c2-4d28-9324-56aa9c920801'
+let b = 'e10d8de4-f4c2-4d28-9324-56aa9c920801'
 
 
   const handleLogoClick = () => {

@@ -2,7 +2,8 @@ import {
   getAllGamesAction, getGameByIdAction,
   getAllTablesAction, getTablesByTypeAction, getTableByIdAction,
   viewTableAction, leaveTableAction, 
-  takeSeatAction, leaveSeatAction, changeSeatAction
+  takeSeatAction, leaveSeatAction, changeSeatAction,
+  addMessageAction
   } 
   from '../actions/gameActions'
 import { csrfFetch } from './csrf';
@@ -196,6 +197,33 @@ export const leaveSeat = (tableId, seat) => async (dispatch) => {
       dispatch(leaveSeatAction(tableId, seat));
     }
     return {data, response};
+
+  }catch(error){
+    console.log(error);
+  } 
+}; 
+
+export const addMessage = (messageObj) => async (dispatch) => {
+  console.log(messageObj);
+  const {content, room,  user} = messageObj
+  let tableId = room
+
+  dispatch(addMessageAction(messageObj));
+  try{
+    const response = await csrfFetch(`/api/tables/${tableId}/message`, {
+      method: 'POST',
+      body: JSON.stringify({
+        content
+      })
+    });
+    const data = await response.json();
+
+    console.log('-=-=-=-=');
+    console.log(data); 
+    console.log('-=-=-=-='); 
+    if(data){
+      return data;
+    }
 
   }catch(error){
     console.log(error);

@@ -1,17 +1,17 @@
 import React, { createContext, useEffect, useState, useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import io from 'socket.io-client';
+
+import * as gameActions from '../redux/middleware/games';
+
 const SocketContext = createContext();
 
-
 const SocketProvider = ({ children }) => {
-  const [socket, setSocket] = useState(null);
-  const user = useSelector((state) => state.users.user);
-
   const dispatch = useDispatch()
- 
-  console.log(user);
-
+  
+  const [socket, setSocket] = useState(null);
+  
+  const user = useSelector((state) => state.users.user);
 
   useEffect(() => {
     if(!user){
@@ -37,7 +37,8 @@ const SocketProvider = ({ children }) => {
     };
   }, [user]); 
 
-  
+  console.log(socket);
+
 
 
   useEffect(() => {
@@ -50,10 +51,11 @@ const SocketProvider = ({ children }) => {
 
       socket.on('message', (messageObj) => {
         console.log('receiving message');
-        console.log(messageObj.conversationId);
+        console.log('receiving message');
+        console.log('receiving message');
         console.log(messageObj);
   
-        dispatch(addMessage(messageObj));
+        dispatch(gameActions.addMessage(messageObj));
 
       });
 

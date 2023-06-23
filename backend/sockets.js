@@ -47,18 +47,13 @@ module.exports = function (io) {
 
     // Broadcast message to specific room
     socket.on('message', async (messageObj) => {
-
-      let room = messageObj.conversationId;
-      messageObj.conversation = conversation
-
-      if(conversation){
-        io.in(room).emit('message', messageObj);
-      }
+      const {room, message} = messageObj
+      io.in(room).emit('message', messageObj);
+      // io.in(userId).emit('message', messageObj);
 
 
       console.log('--------------');
-      console.log(`Message received from ${messageObj.sender.username}: ${messageObj.content} `);
-      console.log(`@ Room ${messageObj.conversationId}`);
+      console.log(`Message received from ${room}`);
       console.log('--------------');
     });
 

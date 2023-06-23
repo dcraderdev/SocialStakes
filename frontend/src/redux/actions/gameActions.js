@@ -3,7 +3,8 @@ import {
   GET_TABLE_BY_ID, GET_TABLES, GET_TABLES_BY_TYPE,
   VIEW_TABLE, LEAVE_TABLE,
   TAKE_SEAT, LEAVE_SEAT, CHANGE_SEAT,
-  SHOW_GAMES, SHOW_TABLES, SHOW_ACTIVE_TABLES
+  SHOW_GAMES, SHOW_TABLES, SHOW_ACTIVE_TABLES,
+  ADD_MESSAGE
 } from './actionTypes'
 
 
@@ -107,5 +108,14 @@ export const showTablesAction = () => {
 export const changeActiveTablesAction = () => {
   return {
     type: SHOW_ACTIVE_TABLES
+  };
+};
+export const addMessageAction = (messageObj) => {
+  console.log('here');
+  console.log(messageObj);
+
+  return {
+    type: ADD_MESSAGE,
+    payload: messageObj
   };
 };

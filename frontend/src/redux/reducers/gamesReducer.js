@@ -3,7 +3,8 @@ import {
   GET_TABLES, GET_TABLES_BY_TYPE, GET_TABLE_BY_ID,
   VIEW_TABLE, LEAVE_TABLE, 
   LEAVE_SEAT, TAKE_SEAT,
-  SHOW_GAMES, SHOW_TABLES, SHOW_ACTIVE_TABLES
+  SHOW_GAMES, SHOW_TABLES, SHOW_ACTIVE_TABLES,
+  ADD_MESSAGE
  } from '../actions/actionTypes'
 
 const initialState = {
@@ -41,6 +42,7 @@ const gamesReducer = (state = initialState, action) => {
       console.log(action.payload);
       let newCurrentTables = {...newState.currentTables}
       newCurrentTables[action.payload.id] = action.payload
+      newCurrentTables[action.payload.id].messages = []
       return {...newState, currentTables: newCurrentTables, activeTable:action.payload, showGames: false, showTables: false, showActiveTable: true}
     }
     case LEAVE_TABLE: {
@@ -79,10 +81,17 @@ const gamesReducer = (state = initialState, action) => {
       return {...newState, showGames: false, showTables: true, activeTable: null}
     }
 
-    // myabe HANDLE_SEAT_CHANGE?
-    // case UPDATE_CURRENT_TABLES:{
-    //   return newState
-    // }
+    case ADD_MESSAGE: {
+      const { room, content, user } = action.payload;
+      const newCurrentTables = { ...newState.currentTables };
+    
+      if (newCurrentTables[room]) {
+        const newMessage = { content, user: {username: user.username, id: user.id} };
+        newCurrentTables[room].messages.push(newMessage);
+      }
+    
+      return { ...newState, currentTables: newCurrentTables };
+    }
 
 
 

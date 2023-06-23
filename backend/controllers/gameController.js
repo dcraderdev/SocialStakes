@@ -200,6 +200,19 @@ const gameController = {
 
     return true;
   },
+
+  async addMessage(tableId, userId, content) {
+    const table = await Table.findByPk(tableId)
+    if (!table) {
+      return false;
+    }
+    const newMessage = await Message.create({tableId, userId, content})
+    if(!newMessage){
+      return false
+    }
+
+    return true;
+  },
 };
 
 module.exports = {

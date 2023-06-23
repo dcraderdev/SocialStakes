@@ -32,16 +32,6 @@ router.get('/:tableId', async (req, res, next) => {
 
   const table = await gameController.getTableById(tableId)
 
-  console.log('********');
-  console.log('********');
-  console.log('********');
-console.log(table);
-console.log('********');
-console.log('********');
-console.log('********');
-console.log('********');
-
-
   if (!table) {
     const err = new Error('table not found');
     err.statusCode = 404;
@@ -96,17 +86,29 @@ router.put('/:tableId/seat', requireAuth, async (req, res, next) => {
 router.delete('/:tableId/leave', requireAuth, async (req, res, next) => {
 
   const {tableId} = req.params
-  const {seat} = req.body
   const {user} = req
 
-
-  // console.log('-=-=-==-');
-  // console.log(tableId);
-  // console.log(seat);
-  // console.log(user);
-  // console.log('-=-=-==-');
-
   const table = await gameController.leaveSeat(tableId, user.id)
+
+  if (!table) {
+    const err = new Error('table not found');
+    err.statusCode = 404;
+    err.status = 404;
+    return next(err);
+  }
+
+  return res.status(200).json(true);
+});
+
+// Add message by tableId
+router.post('/:tableId/message', requireAuth, async (req, res, next) => {
+
+  const {tableId} = req.params
+  const {user} = req
+  const {content} = req.body
+
+
+  const table = await gameController.addMessage(tableId, user.id, content)
 
   if (!table) {
     const err = new Error('table not found');

@@ -76,11 +76,6 @@ router.get('/themes', async (_req, res) => {
 
 
   const themeUrls = themes.map((theme) => {
-    console.log('-=-=-=-=');
-    console.log(theme.name);
-    console.log(theme);
-    console.log('-=-=-=-=');
-
     let url = retrievePrivateFile(theme.url);
     let name = theme.name
     return {url, name}

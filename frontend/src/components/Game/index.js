@@ -14,7 +14,7 @@ const Game = ({ table, leaveTable, takeSeat, leaveSeat}) => {
 
  
       <Table table={table} takeSeat={takeSeat}/>
-      {/* <PlayerBetOptions game={game}/>  */}
+      <PlayerBetOptions game={game}/> 
       <div className='gamefloor-leave-button' onClick={()=>leaveTable(table)}>
         <i className="fa-solid fa-arrow-left-long"></i>
         <div>Leave</div>

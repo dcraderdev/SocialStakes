@@ -5,8 +5,9 @@
   max-width: 1200px;
   position: absolute;
   left: 50%;
-  transform: translate(-50%,0);
   top: 270px;
+  transform: translate(-50%,0);
+
 }
 
 .gamefloor-content,
@@ -20,6 +21,12 @@
   top: 50px;
 }
 
+.game-view{
+  position: relative;
+  top: 45px;
+  height: calc(100vh - 100px);
+
+}
 
 .games-grid {
   position: relative;

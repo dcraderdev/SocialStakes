@@ -33,9 +33,6 @@ function GameFloor() {
   const [tables, setTables] = useState({});
 
   
-  
-console.log(openTablesByGameType);
-console.log(activeTable);
 
 
   // handle loading active games on component load
@@ -145,33 +142,29 @@ console.log(activeTable);
 
 {/* SHOW GAMES AND PRIVATE TABLE BUTTONS */}
                 {isLoaded && showGames && (
-                  <div>
                       <div className="games-grid">
                         {allGames && Object.values(allGames).map((game, index) => (
                           <GameTile key={index} game={game} checkTables={checkTables}/>
                         ))}
                       </div>
-                    </div>
                 )}
 
 
 
 {/* SHOW AVAILABLE TABLES PER GAME TYPE */}
                 {isLoaded && showTables && (
-                  <div>
                       <div className="available-tables-grid">
                         {openTablesByGameType && openTablesByGameType.map((table, index) => (
                           <TableTile key={index} table={table} viewTable={viewTable}/>
                         ))}
                       </div>
-                    </div>
                 )}
 
 
 
 {/* SHOW SELECTED TABLE */}
                 {isLoaded && activeTable && (
-                  <div>
+                  <div className='game-view'>
                     {activeTable &&  (
                       <Game table={activeTable} leaveTable={leaveTable} leaveSeat={leaveSeat} takeSeat={takeSeat}/>
                     )}

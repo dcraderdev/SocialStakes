@@ -41,10 +41,6 @@ const Table = ({table, leaveTable}) => {
     };
   }, [table]);
 
-  const handleTableThemeChange = (tableTheme) =>{
-    console.log(tableTheme);
-    dispatch(changeTableThemeAction(tableTheme))
-  }
 
 
 
@@ -73,13 +69,7 @@ const Table = ({table, leaveTable}) => {
           </div>
         </div>
 
-    <div className='flex'>
-      <div className='theme-button' onClick={()=>handleTableThemeChange('black')}>black</div>
-      <div className='theme-button' onClick={()=>handleTableThemeChange('darkgreen')}>darkgreen</div>
-      <div className='theme-button' onClick={()=>handleTableThemeChange('lightgreen')}>lightgreen</div>
-      <div className='theme-button' onClick={()=>handleTableThemeChange('red')}>red</div>
-      <div className='theme-button' onClick={()=>handleTableThemeChange('realfelt')}>realfelt</div>
-    </div>
+
 
     </div>
     </div>

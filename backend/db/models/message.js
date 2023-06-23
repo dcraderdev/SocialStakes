@@ -16,7 +16,9 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Message.init({
-    userId: DataTypes.UUID
+    tableId: DataTypes.UUID,
+    userId: DataTypes.UUID,
+    content: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'Message',

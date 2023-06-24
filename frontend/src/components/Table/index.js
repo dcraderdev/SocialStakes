@@ -76,40 +76,16 @@ const Table = () => {
         </div> */}
         <div className='seats-container'>
           <div className='top-seats flex between'>
-            {seats[0] ? (
-              <TableSeat seatNumber={1} player={seats[0]} />
-            ) : (
-              <TableSeat seatNumber={1} player={null} />
-            )}
-            {seats[5] ? (
-              <TableSeat seatNumber={6} player={seats[5]} />
-            ) : (
-              <TableSeat seatNumber={6} player={null} />
-            )}
+            <TableSeat seatNumber={1} player={seats.find((user) => user?.seat === 1)} />
+            <TableSeat seatNumber={6} player={seats.find((user) => user?.seat === 6)} />
           </div>
           <div className='mid-seats flex between'>
-            {seats[1] ? (
-              <TableSeat seatNumber={2} player={seats[1]} />
-            ) : (
-              <TableSeat seatNumber={2} player={null} />
-            )}
-            {seats[4] ? (
-              <TableSeat seatNumber={5} player={seats[4]} />
-            ) : (
-              <TableSeat seatNumber={5} player={null} />
-            )}
+            <TableSeat seatNumber={2} player={seats.find((user) => user?.seat === 2)} />
+            <TableSeat seatNumber={5} player={seats.find((user) => user?.seat === 5)} />
           </div>
           <div className='bot-seats flex between'>
-            {seats[2] ? (
-              <TableSeat seatNumber={3} player={seats[2]} />
-            ) : (
-              <TableSeat seatNumber={3} player={null} />
-            )}
-            {seats[3] ? (
-              <TableSeat seatNumber={4} player={seats[3]} />
-            ) : (
-              <TableSeat seatNumber={4} player={null} />
-            )}
+            <TableSeat seatNumber={3} player={seats.find((user) => user?.seat === 3)} />
+            <TableSeat seatNumber={4} player={seats.find((user) => user?.seat === 4)} />
           </div>
         </div>
 

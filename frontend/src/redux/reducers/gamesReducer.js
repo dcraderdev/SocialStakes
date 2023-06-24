@@ -4,7 +4,8 @@ import {
   VIEW_TABLE, LEAVE_TABLE, 
   LEAVE_SEAT, TAKE_SEAT,
   SHOW_GAMES, SHOW_TABLES, SHOW_ACTIVE_TABLES,
-  ADD_MESSAGE, TOGGLE_SHOW_MESSAGES
+  ADD_MESSAGE, TOGGLE_SHOW_MESSAGES,
+  ADD_BALANCE
  } from '../actions/actionTypes'
 
 const initialState = {
@@ -66,17 +67,35 @@ const gamesReducer = (state = initialState, action) => {
     
     }
 
-    case TAKE_SEAT:{
-      console.log(newState.activeTable);
+    case TAKE_SEAT: {
+      console.log('------');
+console.log(action.payload);
 
-      console.log(action.payload);
-      let newCurrentTables = {...newState.currentTables}
-      return {...newState}
-    } 
+      const { room, seat, user } = action.payload;
+console.log(room);
+console.log(seat);
+console.log(user);
 
-
-
+      const { balance, email, firstName, id, lastName, rank, username } = user;
     
+      const newTableUser = {
+        id: id,
+        seat: seat,
+        tableBalance: balance,
+        tableId: room,
+        userId: id,
+        username: username
+      };
+      const newCurrentTables = newState.currentTables
+      newCurrentTables[room].tableUsers.push(newTableUser)
+
+      const newState = { ...newState, currentTables: newCurrentTables };
+      return newState;
+    }
+
+
+
+
     case LEAVE_SEAT:{
       console.log(action.payload);
       return {...newState}

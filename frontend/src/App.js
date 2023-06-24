@@ -4,6 +4,7 @@ import SignupModal from './components/SignupModal';
 import GameFloor from './components/GameFloor';
 import Game from './components/Game';
 import Table from './components/Table';
+import BalanceModal from './components/BalanceModal';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { React, useState, useEffect, useContext } from 'react';
@@ -65,7 +66,12 @@ function App() {
           {modal === 'signup' && <SignupModal />}
         </div>
       )}
-
+      {modal  !== 'balanceModal' && (
+        <div className='modal-container'>
+           <BalanceModal />
+          {/* {modal === 'balanceModal' && <BalanceModal />} */}
+        </div>
+      )}
 
 
       <div>

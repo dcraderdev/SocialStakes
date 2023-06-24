@@ -3,7 +3,7 @@ import {
   getAllTablesAction, getTablesByTypeAction, getTableByIdAction,
   viewTableAction, leaveTableAction, 
   takeSeatAction, leaveSeatAction, changeSeatAction,
-  addMessageAction
+  addMessageAction, addBalanceAction
   } 
   from '../actions/gameActions'
 import { csrfFetch } from './csrf';
@@ -214,6 +214,33 @@ export const addMessage = (messageObj) => async (dispatch) => {
       method: 'POST',
       body: JSON.stringify({
         content
+      })
+    });
+    const data = await response.json();
+
+    console.log('-=-=-=-=');
+    console.log(data); 
+    console.log('-=-=-=-='); 
+    if(data){
+      return data;
+    }
+
+  }catch(error){
+    console.log(error);
+  } 
+}; 
+
+
+export const addBalance = (userId, newBalance) => async (dispatch) => {
+
+
+  dispatch(addBalanceAction());
+  if(user.username === 'Room') return
+  try{
+    const response = await csrfFetch(`/api/users/${userId}/addbalance`, {
+      method: 'PUT',
+      body: JSON.stringify({
+        newBalance
       })
     });
     const data = await response.json();

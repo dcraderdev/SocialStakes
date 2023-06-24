@@ -1,0 +1,79 @@
+.balancemodal-wrapper {
+  z-index: 1000;
+  position: absolute;
+  border: 1px solid rgb(0, 0, 0);
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 450px;
+  height: 150px;
+}
+
+.balancemodal-container{
+  flex-direction: column;
+  justify-content: space-between;
+  height: 150px;
+
+}
+
+.balancemodal-header{
+  width: 100%;
+  font-size: 25px;
+  color: rgb(200, 57, 13);
+}
+
+.balancemodal-subheader{
+  width: 100%;
+  font-size: 22px;
+  color: rgb(200, 57, 13);
+}
+
+
+.balancemodal-memo-container{
+  font-size: 20px;
+  width: 140px;
+  font-size: 20px;
+}
+
+.balancemodal-memo{
+  color: rgb(0, 0, 0);
+}
+.balancemodal-balance{
+  color: rgb(200, 57, 13);
+}
+
+
+.balancemodal-user-buttons{
+  width: 80%;
+  height: 50px;
+}
+
+
+.balancemodal-addbalance,
+.balancemodal-cancel{
+  border-radius: 5px;
+  cursor: pointer;
+  border: solid 1px black;
+  height: 100%;
+}
+
+.balancemodal-addbalance{
+  width: 40%;
+}
+
+.balancemodal-cancel{
+  width: 30%;
+}
+
+
+.balancemodal-addbalance:hover{
+  color: rgb(1, 83, 21);
+  border: solid green 1px;
+}
+
+.balancemodal-cancel:hover{
+  color: rgb(200, 57, 13);
+
+  border: solid rgb(200, 57, 13) 1px;
+}

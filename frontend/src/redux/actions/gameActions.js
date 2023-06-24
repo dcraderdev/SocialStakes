@@ -4,7 +4,8 @@ import {
   VIEW_TABLE, LEAVE_TABLE,
   TAKE_SEAT, LEAVE_SEAT, CHANGE_SEAT,
   SHOW_GAMES, SHOW_TABLES, SHOW_ACTIVE_TABLES,
-  ADD_MESSAGE, TOGGLE_SHOW_MESSAGES
+  ADD_MESSAGE, TOGGLE_SHOW_MESSAGES,
+  ADD_BALANCE
 } from './actionTypes'
 
 
@@ -69,7 +70,7 @@ export const getTablesByTypeAction = (data) => {
   };
 
 export const takeSeatAction = (data) => {
-  console.log(data.table);
+  console.log(data);
   return {
     type: TAKE_SEAT,
     payload: data.table,
@@ -126,5 +127,12 @@ export const addMessageAction = (messageObj) => {
   return {
     type: ADD_MESSAGE,
     payload: messageObj
+  };
+};
+
+
+export const addBalanceAction = () => {
+  return {
+    type: ADD_BALANCE
   };
 };

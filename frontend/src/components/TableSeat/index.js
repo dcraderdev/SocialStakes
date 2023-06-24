@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import './TableSeat.css'
 import * as gameActions from '../../redux/middleware/games';
 import { SocketContext } from '../../context/SocketContext';
+import { ModalContext } from '../../context/ModalContext';
 
 const TableSeat = ({seatNumber, player}) => {
 
@@ -11,9 +12,20 @@ const TableSeat = ({seatNumber, player}) => {
   const table = useSelector(state=>state.games.activeTable)
   const user = useSelector(state => state.users.user)
   const {socket} = useContext(SocketContext)
+  const { modal, openModal, closeModal, updateObj, setUpdateObj} = useContext(ModalContext);
+
+
+
+console.log(user.balance < table.Game.minBet);
 
   const takeSeat = () => {
 
+    if(!user) return
+    if(user.balance < table.Game.minBet){
+      setUpdateObj(table.Game.minBet)
+      openModal('balanceModal')
+      return
+    }
     // socket emit the seat taken, tableID, seat number, player info
   console.log(seatNumber);
     const seatObj = {

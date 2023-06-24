@@ -1,7 +1,7 @@
 'use strict';
-const {
-  Model
-} = require('sequelize');
+const { Model } = require('sequelize');
+const uuid = require('uuid');
+
 module.exports = (sequelize, DataTypes) => {
   class UserTable extends Model {
     /**
@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       UserTable.belongsTo(models.User, { foreignKey: 'userId', as: 'user' });
-      UserTable.belongsTo(models.Table, { foreignKey: 'tableId', as: 'table' });
+      UserTable.belongsTo(models.Table, { foreignKey: 'tableId'});
     }
   }
   UserTable.init({

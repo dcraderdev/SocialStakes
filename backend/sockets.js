@@ -1,69 +1,83 @@
-
-
 module.exports = function (io) {
   const rooms = {};
 
   io.on('connection', (socket) => {
     const userId = socket.handshake.query.userId;
     const username = socket.handshake.query.username;
-    const userRoom = socket.handshake.query.userRoom;
 
     let socketId = socket.id;
 
     console.log('-=-=-=-=-=-=-=-=-=');
     console.log('--- CONNECTING ---');
     console.log('SOCKET ID', socketId);
-    console.log('A user connected', socket.id, 'User ID:', username);
+    console.log('A user connected', socket.id, 'Username:', username);
+    console.log('User Room:', userId);
+
     console.log('-=-=-=-=-=-=-=-=-=');
 
-    socket.join(userRoom);
+    socket.join(userId);
 
     socket.on('initialize', async () => {
       console.log('INITIALIZING');
       console.log('INITIALIZING');
 
-
+      // Load table images
     });
-
-
 
     socket.on('join_room', async (room) => {
+      console.log('--- join_room ---');
+      console.log(`${username} is joining room ${room}.`);
+
+      let messageObj = {
+        user: {
+          username: 'Room',
+          id: 1,
+        },
+        content: `${username} has joined the room.`,
+        room,
+      };
       socket.join(room);
-      console.log(`${username} is attempting to join room ${room}.`);
+
+      io.in(room).emit('new_message', messageObj);
+
+      console.log('-=-=-=-=-=-=-=-=-=');
     });
- 
 
-    socket.on('leave_chat', (chatRoom) => {
-      let room = chatRoom.conversationId
-      let convoObj = {}
-      convoObj.room = room
-      convoObj.userId = userId
-
+    socket.on('leave_room', (room) => {
+      console.log('--- leave_room ---');
       console.log(`${username} is leaving room ${room}.`);
+      console.log('-=-=-=-=-=-=-=-=-=');
       socket.leave(room);
     });
 
-
-
     // Broadcast message to specific room
     socket.on('message', async (messageObj) => {
-
-      let room = messageObj.conversationId;
-      messageObj.conversation = conversation
-
-      if(conversation){
-        io.in(room).emit('message', messageObj);
-      }
-
+      const { room, message } = messageObj;
+      io.in(room).emit('new_message', messageObj);
+      // io.in(userId).emit('message', messageObj);
 
       console.log('--------------');
-      console.log(`Message received from ${messageObj.sender.username}: ${messageObj.content} `);
-      console.log(`@ Room ${messageObj.conversationId}`);
+      console.log(`Message received from ${room}`);
       console.log('--------------');
     });
 
+    socket.on('take_seat', async (seatObj) => {
+      const { room, seat, user } = seatObj;
+      let messageObj = {
+        user: {
+          username: 'Room',
+          id: 1,
+        },
+        content: `${username} has taken seat ${seat}.`,
+        room,
+      };
+      io.in(room).emit('new_message', messageObj);
+      io.in(room).emit('new_player', seatObj);
+      // io.in(userId).emit('message', messageObj);
 
-
-
+      console.log('--------------');
+      console.log(`Message received from ${room}`);
+      console.log('--------------');
+    });
   });
 };

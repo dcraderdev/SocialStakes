@@ -19,6 +19,7 @@ module.exports = {
         email: 'bigtreelittleaxe@user.io',
         username: 'bigtree',
         hashedPassword: await bcrypt.hash('password', salt),
+        balance: 90000
       },
       {
         id:'e87a6a96-6ebc-4ef3-b6a1-3058b136f34b',
@@ -45,6 +46,7 @@ module.exports = {
         email: 'treehugger@user.io',
         username: 'Spruce',
         hashedPassword: await bcrypt.hash('password', salt),
+        balance: 90000
       },
       {
         id:"a83139c5-f4c2-4fc2-a223-9c9c8085f30d",
@@ -53,6 +55,7 @@ module.exports = {
         email: 'treelover@user.io',                                                    // PINE
         username: 'Pine',
         hashedPassword: await bcrypt.hash('password2', salt),
+        balance: 90000
 
       },
       {
@@ -62,6 +65,7 @@ module.exports = {
         email: 'woodman@user.io',
         username: 'OakLeaf',
         hashedPassword: await bcrypt.hash('password3', salt),
+        balance: 90000
 
       },
       {
@@ -71,6 +75,7 @@ module.exports = {
         email: 'arborist@user.io',
         username: 'Willow',                                                           // WILLOW
         hashedPassword: await bcrypt.hash('password4', salt),
+        balance: 90000
 
       },
       {
@@ -79,7 +84,8 @@ module.exports = {
         lastName: 'Cone',
         email: 'treeclimber@user.io',
         username: 'Cedar',                                                           // CEDAR
-        hashedPassword: await bcrypt.hash('password5', salt) 
+        hashedPassword: await bcrypt.hash('password5', salt),
+        balance: 90000
       },
       {
         id:"e10d8de4-f4c7-4d28-9324-56aa9c924a82",
@@ -87,7 +93,8 @@ module.exports = {
         lastName: 'Bark',
         email: 'forester@user.io',
         username: 'ElmWood',
-        hashedPassword: await bcrypt.hash('password6', salt)
+        hashedPassword: await bcrypt.hash('password6', salt),
+        balance: 90000
       },
         {
         id:"e10d8de4-f4c7-4d28-9324-56aa9c000001",
@@ -95,7 +102,8 @@ module.exports = {
         lastName: 'C',
         email: 'admin@gmail.com',
         username: 'admin',
-        hashedPassword: await bcrypt.hash('password', salt)
+        hashedPassword: await bcrypt.hash('password', salt),
+        balance: 90000
       }
     ], {});
   },

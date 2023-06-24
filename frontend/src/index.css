@@ -51,15 +51,116 @@ body{
 .style2-color2{
   background-color: #4d672a;
 }
-.style-neon-color1{
-  box-shadow: 
-  rgba(240, 46, 170, 0.4) 0 0 50px, 
-  rgba(240, 46, 170, 0.3) 0 0 100px, 
-  rgba(240, 46, 170, 0.2) 0 0 150px, 
-  rgba(240, 46, 170, 0.1) 0 0 200px, 
-  rgba(240, 46, 170, 0.05) 0 0 250px; 
+
+.neon{
+  animation: neon 600s infinite;
+
+  text-shadow: -1px 0 #ff3aad, 0 3px #ff3aad, 3px 0 #ff3aad, 0 -1px #ff3aad;
+
 }
 
+
+
+.pulse {
+  animation: pulse 600s infinite;
+}
+
+.rounded{
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+
+
+
+}
+
+
+@keyframes neon {
+
+
+
+  0%, 1%, 2%, 100% {
+    box-shadow:
+      white 0 0 12px,
+      #ff3aad 0 0 24px,
+      #ff3aad 0 0 36px;
+  }
+
+  .9% {
+    box-shadow:
+    white 0 0 20px,
+    #ff3aad 0 0 30px,
+    #ff3aad 0 0 40px;
+  }
+
+  1.9% {
+    box-shadow:
+      /* rgba(255, 255, 255, 0.147) 0 0 12px,
+      #ff3aad28 0 0 24px,
+      #ff3aad2a 0 0 36px; */
+      rgba(255, 255, 255, 0.462) 0 0 8px,
+      #ff3aad 0 0 15px,
+      #ff3aad 0 0 20px;
+  }
+}
+
+
+/* @keyframes floating {
+  0% { transform: scale(0,  0px); }
+  50%  { transform: translate(0, 15px); }
+  100%   { transform: translate(0, -0px); }   
+} */
+
+
+.floating-neon-pink-hover:hover{
+  animation: floating-neon-pink  2s infinite ease-in-out;
+
+}
+
+.floating-neon-pink {
+  animation: floating-neon-pink  2s infinite ease-in-out;
+}
+
+@keyframes floating-neon-pink {
+  0%, 100%{
+    /* transform: scale(1) translateY(0); */
+    /* transform: scale(1) translateY(0px); */
+    transform: translateY(0px);
+    /* box-shadow:
+      white 0 0 10px,
+      #ff3aad 0 0 15px,
+      #ff3aad 0 0 20px; */
+      box-shadow:
+      white 0 0 1px,
+      #ff3aad 0 0 2px,
+      #ff3aad 0 0 2px;
+    }
+    
+    50% {
+      /* transform: scale(1.05) translateY(-100px); */
+      /* transform: scale(1) translateY(-100px); */
+      transform: translateY(-4px);
+      box-shadow:
+        rgba(255, 255, 255, 0.297) -2px 2px,
+        rgba(240, 46, 170, 0.2) -7px 7px,
+        rgba(240, 46, 170, 0.1) -8px 8px,
+        rgba(240, 46, 170, 0.05) -6px 6px;
+  }
+
+}
+
+
+
+
+
+@keyframes pulse {
+
+  95% {
+    font-size: 20px;
+  }
+  100% {
+    font-size: 20px;
+  }
+
+}
 
 
 *{

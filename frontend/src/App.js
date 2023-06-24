@@ -34,6 +34,7 @@ function App() {
   useEffect(() => {
     isLoaded(false);
 
+    dispatch(sessionActions.loadThemes())
     dispatch(sessionActions.restoreUser())
       .then(() => {
         isLoaded(true);
@@ -54,22 +55,16 @@ function App() {
       {loaded && <Navigation />}
 
 
-
-      {modal && (
-        <div
-          className={
-            modal === 'profileMenu'
-              ? 'modal-container-transparent'
-              : 'modal-container'
-          }
-        >
+      {modal === 'login' && (
+        <div className='modal-container'>
           {modal === 'login' && <LoginModal />}
+        </div>
+      )}
+      {modal  === 'signup' && (
+        <div className='modal-container'>
           {modal === 'signup' && <SignupModal />}
         </div>
       )}
-
-
-
 
 
 

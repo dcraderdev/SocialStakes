@@ -34,6 +34,10 @@ module.exports = {
       passCode: {
         type: Sequelize.STRING,
       },
+      active: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: true
+      },
       private: {
         type: Sequelize.BOOLEAN,
       },

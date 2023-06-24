@@ -1,10 +1,37 @@
-.bet-wrapper{
-  border: white solid 1px;
+.bet-wrapper {
   width: 100%;
-  height: 30%;
-  min-height: 300px;
-  position: absolute;
-  left: 0px;
-  bottom: 0px;
+  height: 40%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
 
+.bet-container {
+  height: calc(100% - 100px);
+  width: 100%;
+  display: flex;
+
+}
+
+.chatbox-wrapper {
+  height: 100%;
+  width: 400px;
+  transition: width 1s ease;
+}
+
+.minimize {
+  width: 0px;
+  transition: width 1s ease;
+}
+
+
+.bet-user-settings{
+  width: 60px;
+  height: 20px;
+  position: relative;
+  top: -15px;
+  left: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }

@@ -1,51 +1,69 @@
 import React, { useState, useRef, useEffect, useContext } from 'react';
 import { Route, Router, Switch, NavLink, Link,useHistory, useParams} from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-// import feltGreen from '../../images/felt-green.jpeg'
-// import feltGreen2 from '../../images/felt-green2.jpeg'
-// import feltGreen3 from '../../images/felt-green3.jpeg'
-import feltGreen4 from '../../images/felt-green4.jpeg'
-// // import feltRed from '../../images/felt-red.svg'
-// import feltRed from '../../images/felt-red-comp.png'
-
 import './Table.css'
 
+import {changeNeonThemeAction, changeTableThemeAction} from '../../redux/actions/userActions';
+
+import TableSeat from '../TableSeat';
 import PlayerBetOptions from '../PlayerBetOptions';
 
-const Table = ({seats}) => {
-  const {id} = useParams()
+const Table = () => {
+
+  const dispatch = useDispatch()
   const game = 'blackjack'
-  const url = 'https://social-stakes.s3.us-west-1.amazonaws.com/AdobeStock_271559753.jpeg'
+  const themes = useSelector(state=>state.users.themes)
+  const neonTheme = useSelector(state=>state.users.neonTheme)
+  const tableTheme = useSelector(state=>state.users.tableTheme)
+  const activeTable = useSelector(state=>state.games.activeTable)
+
+
+  const initialSeats = Array(6).fill(null);
+  const [seats, setSeats] = useState(initialSeats);
+
+
+  useEffect(() => {
+    if(activeTable &&  activeTable.tableUsers){
+    let newSeats = [...initialSeats];
+    activeTable.tableUsers.forEach(user => {
+        if(user.seat && user.seat <= 6 && user.seat > 0) {
+          newSeats[user.seat - 1] = user;
+        } 
+      });
+      setSeats(newSeats);
+    }
+
+    return () => {
+      setSeats(initialSeats);
+    };
+  }, [activeTable]);
+
+
+
 
   return (
     <div className='table-wrapper'>
     <div className='table-container '>
       <div className='table-content flex center'>
-        {/* <img src={feltGreen4} alt='table'></img> */}
-        <img src={url} alt='table'></img>
+        {themes[tableTheme] && <img src={themes[tableTheme].url} alt='table'></img>}
       </div>
 
 
-    {seats === 6 && (
-      <div className='seats-container'>
+
+        <div className='seats-container'>
           <div className='top-seats flex between'>
-            <div className='seat-container six-ring seat1'></div>
-            <div className='seat-container six-ring seat6'></div>
+            <TableSeat seatNumber={1} player={seats[0]}/>
+            <TableSeat seatNumber={6} player={seats[5]}/>
           </div>
           <div className='mid-seats flex between'>
-            <div className='seat-container six-ring seat2'></div>
-            <div className='seat-container six-ring seat5'></div>
+            <TableSeat seatNumber={2} player={seats[1]}/>
+            <TableSeat seatNumber={5} player={seats[4]}/>
           </div>
           <div className='bot-seats flex between'>
-            <div className='seat-container six-ring seat3'></div>
-            <div className='seat-container six-ring seat4'></div>
+            <TableSeat seatNumber={3} player={seats[2]}/>
+            <TableSeat seatNumber={4} player={seats[3]}/>
           </div>
-      </div>
-    )}
-
-
-
-
+        </div>
 
 
 

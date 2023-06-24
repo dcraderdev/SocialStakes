@@ -125,8 +125,6 @@ function SignupModal() {
   };
 
   useEffect(() => {
-    if(updateObj !== 'noUser'){
-
     const handleClickOutside = (event) => {
       if (formRef.current && !formRef.current.contains(event.target)) {
         closeModal();
@@ -136,8 +134,7 @@ function SignupModal() {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }
-  }, [setUpdateObj]);
+  }, []);
 
 
   return (

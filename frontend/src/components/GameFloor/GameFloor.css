@@ -5,15 +5,32 @@
   max-width: 1200px;
   position: absolute;
   left: 50%;
+  top: 270px;
   transform: translate(-50%,0);
-  top: 250px;
 
 }
 
+.gamefloor-content,
+.gamefloor-container{
+  width: 100%;
+  position: relative;
+}
 
+.table-view{
+
+  top: 50px;
+}
+
+.game-view{
+  position: relative;
+  top: 45px;
+  height: calc(100vh - 100px);
+
+}
 
 .games-grid {
-  position: absolute;
+  position: relative;
+
   left: 50%;
   transform: translate(-50%,0);
 
@@ -21,21 +38,24 @@
   width: 95%;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  grid-auto-rows: minmax(200px, 1fr);
-  grid-gap: 16px;
+  grid-auto-rows: minmax(180px, 1fr);
+  grid-gap: 40px;
+  grid-row-gap: 30px;
   transition: all 0.3s ease;
+  margin-bottom: 30px;
 }
 
 .available-tables-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(500px, 3fr));
-  grid-auto-rows: 300px;
+  border: white solid 1px;
+  display: flex;
+  flex-direction: column;
   grid-gap: 16px;
-  padding: 10px;
-  width: 100%;
-  max-width: 100%;
+  width: 95%;
+  left: 2.5%;
+  position: relative;
   transition: all 0.3s ease;
 }
+
 
 @media screen and (max-width: 600px) {
   .games-grid {
@@ -58,18 +78,47 @@
   position: absolute;
   left: 50%;
   transform: translate(-50%,0);
-  top: -120px;
+  top: -140px;
   border: white solid 1px;
 }
 
 .private-game-button{
+  cursor: pointer;
   border: rgb(0, 0, 0) solid 1px;
   width: 40%;
   height: 70px;
-
-  border-radius: 14px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 4px;
   background-color: #fff;
   background: radial-gradient(#ffffff, #68ade5);
 
 
 }
+.gamefloor-back-button-container{
+  width: 95%;
+  height: 40px;
+  max-width: 1200px;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%,0);
+  top: -40px;
+}
+
+.gamefloor-back-button{
+  width: 80px;
+  height: 40px;
+  margin-left: 10px;
+  color: rgb(255, 255, 255);
+  transition: all 1s ease;
+}
+
+.gamefloor-back-button:hover{
+  color: rgb(125, 57, 57);
+}
+
+.gamefloor-back-button{
+  transform: scale(2.5);
+}
+

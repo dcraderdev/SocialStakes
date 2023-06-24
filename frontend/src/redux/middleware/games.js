@@ -1,5 +1,13 @@
-import { getAllGamesAction, getAllTablesAction, getGameByIdAction, getTableByIdAction, joinTableAction} from '../actions/gameActions'
+import { 
+  getAllGamesAction, getGameByIdAction,
+  getAllTablesAction, getTablesByTypeAction, getTableByIdAction,
+  viewTableAction, leaveTableAction, 
+  takeSeatAction, leaveSeatAction, changeSeatAction,
+  addMessageAction
+  } 
+  from '../actions/gameActions'
 import { csrfFetch } from './csrf';
+
 
 
 
@@ -52,7 +60,27 @@ export const getAllGames = () => async (dispatch) => {
     }
   }
 
+  export const getTablesByType = (gameId) => async (dispatch) => {
+    try{
+      const response = await csrfFetch(`/api/tables/game/${gameId}`, {
+        method: 'GET',
+      });
+      const data = await response.json();
+ 
+      console.log('-=-=-=-=');
+      console.log(data); 
+      console.log('-=-=-=-=');
+
+      dispatch(getTablesByTypeAction(data));
+      return {data, response};
+
+    }catch(error){
+      console.log(error);
+    }
+  };  
+
   
+
   export const getTableById = (tableId) => async (dispatch) => {
 
     try{
@@ -73,10 +101,41 @@ export const getAllGames = () => async (dispatch) => {
     }
   };  
 
+  export const viewTable = (tableId) => async (dispatch) => {
+    console.log('view table');
+    try{
+      const response = await csrfFetch(`/api/tables/${tableId}`, {
+        method: 'GET'
+      });
+ 
+
+      const data = await response.json();
+  
+      console.log('-=-=-=-=');
+      console.log(data); 
+      console.log('-=-=-=-=');
+   
+      dispatch(viewTableAction(data));
+      return {data, response};
+  
+    }catch(error){
+      console.log(error);
+    } 
+  };
 
 
-export const joinTable = (tableId, seat) => async (dispatch) => {
+  export const leaveTable = (tableId) => async (dispatch) => {
+    console.log('leaving');
+    dispatch(leaveTableAction(tableId));
+  };
 
+
+
+export const takeSeat = (seatObj) => async (dispatch) => {
+  const { room, seat, user } = seatObj;
+  let tableId = room
+  console.log(seat);
+  
   try{
     const response = await csrfFetch(`/api/tables/${tableId}/join`, {
       method: 'POST',
@@ -89,11 +148,84 @@ export const joinTable = (tableId, seat) => async (dispatch) => {
     console.log('-=-=-=-=');
     console.log(data); 
     console.log('-=-=-=-=');
+ 
+    dispatch(takeSeatAction(data));
+    return {data, response};
 
-    dispatch(joinTableAction(data));
+  }catch(error){
+    console.log(error);
+  } 
+};
+
+
+export const changeSeat = (tableId, seat) => async (dispatch) => {
+  try{
+    const response = await csrfFetch(`/api/tables/${tableId}/seat`, {
+      method: 'PUT',
+      body: JSON.stringify({
+        seat
+      })
+    });
+    const data = await response.json();
+
+    console.log('-=-=-=-=');
+    console.log(data); 
+    console.log('-=-=-=-=');
+
+    dispatch(changeSeatAction(data));
     return {data, response};
 
   }catch(error){
     console.log(error);
   }
-};  
+}; 
+
+
+export const leaveSeat = (tableId, seat) => async (dispatch) => {
+
+  try{
+    const response = await csrfFetch(`/api/tables/${tableId}/leave`, {
+      method: 'DELETE',
+    });
+    const data = await response.json();
+
+    console.log('-=-=-=-=');
+    console.log(data); 
+    console.log('-=-=-=-='); 
+    if(data){
+      dispatch(leaveSeatAction(tableId, seat));
+    }
+    return {data, response};
+
+  }catch(error){
+    console.log(error);
+  } 
+}; 
+
+export const addMessage = (messageObj) => async (dispatch) => {
+  console.log(messageObj);
+  const {content, room,  user} = messageObj
+  let tableId = room
+
+  dispatch(addMessageAction(messageObj));
+  if(user.username === 'Room') return
+  try{
+    const response = await csrfFetch(`/api/tables/${tableId}/message`, {
+      method: 'POST',
+      body: JSON.stringify({
+        content
+      })
+    });
+    const data = await response.json();
+
+    console.log('-=-=-=-=');
+    console.log(data); 
+    console.log('-=-=-=-='); 
+    if(data){
+      return data;
+    }
+
+  }catch(error){
+    console.log(error);
+  } 
+}; 

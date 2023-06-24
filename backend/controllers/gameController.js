@@ -95,10 +95,7 @@ const gameController = {
 
 
 
-  async takeSeat(tableId, seat, user) {
-    console.log(tableId);
-    console.log(seat);
-    console.log(user.id); 
+  async takeSeat(tableId, seat, user, amount) {
     const table = await Table.findByPk(tableId, {
       include: [
         {
@@ -120,34 +117,24 @@ const gameController = {
       return false;
     }
 
-    const alreadySitting = table.tableUsers.some((player) => {
-      if (player.userId === user.id) {
-        return true;
-      }
-      return false;
-    });
-
-    if (alreadySitting) {
-      console.log('we are sitting at table already');
-      return table;
-    }
 
     const seatOccupied = table.tableUsers.some((player) => {
+      console.log(player);
       if (player.seat === seat) {
         if (player.userId === user.id) {
-          console.log('we are sitting here already');
-          return table; // If we're sitting in the checked seat, return the table
+          return true; // If we're sitting in the checked seat, return the userTable info
         } else {
-          console.log('someone is sitting here already');
           return true;
         }
       }
       return false;
     });
-  
+
     if (seatOccupied) {
+      console.log('false');
       return false;
     }
+
 
 
     if (table.players.length < table.Game.maxNumPlayers) {
@@ -155,25 +142,14 @@ const gameController = {
         userId: user.id,
         tableId,
         seat,
+        tableBalance: amount
       });
       if (!takeSeat) {
         return false;
       }
 
-      const updatedTable = await Table.findByPk(tableId, {
-        include: [
-          { model: Game },
-          { model: UserTable, as: 'tableUsers' },
-          {
-            model: User,
-            as: 'players',
-            through: UserTable,
-            attributes: ['id', 'username', 'balance', 'rank'],
-          },
-        ],
-      });
 
-      return updatedTable;
+      return takeSeat;
     }
   },
 

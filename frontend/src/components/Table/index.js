@@ -22,22 +22,32 @@ const Table = () => {
   const [seats, setSeats] = useState(initialSeats);
 
 
+  // useEffect(() => {
+  //   if(activeTable &&  activeTable.tableUsers){
+  //   let newSeats = [...initialSeats];
+  //   activeTable.tableUsers.forEach(user => {
+  //       if(user.seat && user.seat <= 6 && user.seat > 0) {
+  //         newSeats[user.seat - 1] = user;
+  //       } 
+  //     });
+  //     setSeats(newSeats);
+  //   }
+
+  //   return () => {
+  //     setSeats(initialSeats);
+  //   };
+  // }, [activeTable]);
+
   useEffect(() => {
-    if(activeTable &&  activeTable.tableUsers){
-    let newSeats = [...initialSeats];
-    activeTable.tableUsers.forEach(user => {
-        if(user.seat && user.seat <= 6 && user.seat > 0) {
-          newSeats[user.seat - 1] = user;
-        } 
-      });
-      setSeats(newSeats);
+    if(activeTable && activeTable.tableUsers){
+
+      setSeats(activeTable.tableUsers);
     }
 
     return () => {
       setSeats(initialSeats);
     };
   }, [activeTable]);
-
 
 
 
@@ -50,7 +60,7 @@ const Table = () => {
 
 
 
-        <div className='seats-container'>
+        {/* <div className='seats-container'>
           <div className='top-seats flex between'>
             <TableSeat seatNumber={1} player={seats[0]}/>
             <TableSeat seatNumber={6} player={seats[5]}/>
@@ -62,6 +72,44 @@ const Table = () => {
           <div className='bot-seats flex between'>
             <TableSeat seatNumber={3} player={seats[2]}/>
             <TableSeat seatNumber={4} player={seats[3]}/>
+          </div>
+        </div> */}
+        <div className='seats-container'>
+          <div className='top-seats flex between'>
+            {seats[0] ? (
+              <TableSeat seatNumber={1} player={seats[0]} />
+            ) : (
+              <TableSeat seatNumber={1} player={null} />
+            )}
+            {seats[5] ? (
+              <TableSeat seatNumber={6} player={seats[5]} />
+            ) : (
+              <TableSeat seatNumber={6} player={null} />
+            )}
+          </div>
+          <div className='mid-seats flex between'>
+            {seats[1] ? (
+              <TableSeat seatNumber={2} player={seats[1]} />
+            ) : (
+              <TableSeat seatNumber={2} player={null} />
+            )}
+            {seats[4] ? (
+              <TableSeat seatNumber={5} player={seats[4]} />
+            ) : (
+              <TableSeat seatNumber={5} player={null} />
+            )}
+          </div>
+          <div className='bot-seats flex between'>
+            {seats[2] ? (
+              <TableSeat seatNumber={3} player={seats[2]} />
+            ) : (
+              <TableSeat seatNumber={3} player={null} />
+            )}
+            {seats[3] ? (
+              <TableSeat seatNumber={4} player={seats[3]} />
+            ) : (
+              <TableSeat seatNumber={4} player={null} />
+            )}
           </div>
         </div>
 

@@ -73,7 +73,7 @@ export const takeSeatAction = (data) => {
   console.log(data);
   return {
     type: TAKE_SEAT,
-    payload: data.table,
+    payload: data,
   };
 };
 

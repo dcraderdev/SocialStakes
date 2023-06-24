@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import io from 'socket.io-client';
 
 import * as gameActions from '../redux/middleware/games';
+import {takeSeatAction} from '../redux/actions/gameActions';
+
 
 const SocketContext = createContext();
 
@@ -56,7 +58,7 @@ const SocketProvider = ({ children }) => {
       socket.on('new_player', (seatObj) => {
         console.log(seatObj);
         console.log('heerererereeeee');
-        dispatch(gameActions.takeSeat(seatObj));
+        dispatch(takeSeatAction(seatObj));
       });    
 
 

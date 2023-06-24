@@ -24,9 +24,9 @@ const PlayerBetOptions = () => {
     dispatch(changeTableThemeAction(tableTheme))
   }
 
+  
   const leaveTable = () =>{
     console.log('asdgasdg');
-
     dispatch(leaveTableAction(activeTable.id))
   }
 

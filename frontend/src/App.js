@@ -66,10 +66,9 @@ function App() {
           {modal === 'signup' && <SignupModal />}
         </div>
       )}
-      {modal  !== 'balanceModal' && (
+      {modal  === 'balanceModal' && (
         <div className='modal-container'>
-           <BalanceModal />
-          {/* {modal === 'balanceModal' && <BalanceModal />} */}
+          {modal === 'balanceModal' && <BalanceModal />}
         </div>
       )}
 

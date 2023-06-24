@@ -22,21 +22,6 @@ const Table = () => {
   const [seats, setSeats] = useState(initialSeats);
 
 
-  // useEffect(() => {
-  //   if(activeTable &&  activeTable.tableUsers){
-  //   let newSeats = [...initialSeats];
-  //   activeTable.tableUsers.forEach(user => {
-  //       if(user.seat && user.seat <= 6 && user.seat > 0) {
-  //         newSeats[user.seat - 1] = user;
-  //       } 
-  //     });
-  //     setSeats(newSeats);
-  //   }
-
-  //   return () => {
-  //     setSeats(initialSeats);
-  //   };
-  // }, [activeTable]);
 
   useEffect(() => {
     if(activeTable && activeTable.tableUsers){
@@ -59,33 +44,18 @@ const Table = () => {
       </div>
 
 
-
-        {/* <div className='seats-container'>
-          <div className='top-seats flex between'>
-            <TableSeat seatNumber={1} player={seats[0]}/>
-            <TableSeat seatNumber={6} player={seats[5]}/>
-          </div>
-          <div className='mid-seats flex between'>
-            <TableSeat seatNumber={2} player={seats[1]}/>
-            <TableSeat seatNumber={5} player={seats[4]}/>
-          </div>
-          <div className='bot-seats flex between'>
-            <TableSeat seatNumber={3} player={seats[2]}/>
-            <TableSeat seatNumber={4} player={seats[3]}/>
-          </div>
-        </div> */}
         <div className='seats-container'>
           <div className='top-seats flex between'>
-            <TableSeat seatNumber={1} player={seats.find((user) => user?.seat === 1)} />
-            <TableSeat seatNumber={6} player={seats.find((user) => user?.seat === 6)} />
+            <TableSeat seatNumber={1} player={activeTable.tableUsers['1']} />
+            <TableSeat seatNumber={6} player={activeTable.tableUsers['6']} />
           </div>
           <div className='mid-seats flex between'>
-            <TableSeat seatNumber={2} player={seats.find((user) => user?.seat === 2)} />
-            <TableSeat seatNumber={5} player={seats.find((user) => user?.seat === 5)} />
+            <TableSeat seatNumber={2} player={activeTable.tableUsers['2']} />
+            <TableSeat seatNumber={5} player={activeTable.tableUsers['5']} />
           </div>
           <div className='bot-seats flex between'>
-            <TableSeat seatNumber={3} player={seats.find((user) => user?.seat === 3)} />
-            <TableSeat seatNumber={4} player={seats.find((user) => user?.seat === 4)} />
+            <TableSeat seatNumber={3} player={activeTable.tableUsers['3']} />
+            <TableSeat seatNumber={4} player={activeTable.tableUsers['4']} />
           </div>
         </div>
 

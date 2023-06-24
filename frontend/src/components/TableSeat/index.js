@@ -16,7 +16,6 @@ const TableSeat = ({seatNumber, player}) => {
 
 
 
-// console.log(user.balance < table.Game.minBet);
 
   const takeSeat = () => {
     if(!user) return
@@ -24,18 +23,6 @@ const TableSeat = ({seatNumber, player}) => {
     setUpdateObj({minBet:table.Game.minBet, seatNumber})
     openModal('balanceModal')
 
-
-  //   const {socket} = useContext(SocketContext)
-
-  //   // socket emit the seat taken, tableID, seat number, player info
-  // console.log(seatNumber);
-  //   const seatObj = {
-  //     room: table.id,
-  //     seat: seatNumber,
-  //     user: user
-  //   }
-  //   socket.emit('take_seat', seatObj)
-    // dispatch(gameActions.takeSeat(seatObj))
   }
 
   const leaveSeat = () => {

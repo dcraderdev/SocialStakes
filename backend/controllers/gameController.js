@@ -85,6 +85,16 @@ const gameController = {
         }
       }
     }
+
+    // Normalize the tableUsers array into an object
+    const normalizedTableUsers = returnedTable.tableUsers.reduce((acc, user) => {
+      acc[user.seat] = user;
+      return acc;
+    }, {})
+
+
+    returnedTable.tableUsers = normalizedTableUsers
+
     
     return returnedTable;
   },

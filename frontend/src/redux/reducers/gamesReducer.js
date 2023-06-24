@@ -68,24 +68,16 @@ const gamesReducer = (state = initialState, action) => {
     }
 
     case TAKE_SEAT: {
-      console.log('------');
-      console.log(action.payload);
+      const {id, seat, tableBalance, tableId, userId, username } = action.payload
       const newTableUser = action.payload;
 
       // Create a copy of the currentTables object
       const newCurrentTables = { ...newState.currentTables };
-
-      console.log(newCurrentTables[action.payload.tableId]);
-      
       // Check if the active table exists in newCurrentTables
-      if (newCurrentTables[action.payload.tableId]) {
-        console.log('yes');
-        // Push the newTableUser to the tableUsers array of the active table
-        newCurrentTables[action.payload.tableId].tableUsers.push(newTableUser);
+      if (newCurrentTables[tableId]) {
+        // Assign newTableUser to seat in tableUsers obj of the active table
+        newCurrentTables[tableId].tableUsers[seat] = newTableUser;
       }
-
-      console.log(newCurrentTables);
-
       // Return the updated state
       return { ...newState, currentTables: newCurrentTables };
     }

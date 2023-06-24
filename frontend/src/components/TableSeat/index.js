@@ -3,23 +3,32 @@ import { Route, Router, Switch, NavLink, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import './TableSeat.css'
 import * as gameActions from '../../redux/middleware/games';
-
+import { SocketContext } from '../../context/SocketContext';
 
 const TableSeat = ({seatNumber, player}) => {
 
   const dispatch = useDispatch()
   const table = useSelector(state=>state.games.activeTable)
+  const user = useSelector(state => state.users.user)
+  const {socket} = useContext(SocketContext)
 
   const takeSeat = () => {
+
+    // socket emit the seat taken, tableID, seat number, player info
   console.log(seatNumber);
-    
-    dispatch(gameActions.takeSeat(table.id, seatNumber))
+    const seatObj = {
+      room: table.id,
+      seat: seatNumber,
+      user: user
+    }
+    socket.emit('take_seat', seatObj)
+    dispatch(gameActions.takeSeat(seatObj))
   }
 
   const leaveSeat = () => {
     dispatch(gameActions.leaveSeat(table.id, seatNumber))
   }
-
+ 
 
 return(
 

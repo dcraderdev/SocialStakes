@@ -50,19 +50,18 @@ const SocketProvider = ({ children }) => {
       
 
       socket.on('new_message', (messageObj) => {
-        console.log('receiving message');
-        console.log('receiving message');
-        console.log('receiving message');
-        console.log(messageObj);
-  
         dispatch(gameActions.addMessage(messageObj));
-
       });
 
-    
+      socket.on('new_player', (seatObj) => {
+        console.log(seatObj);
+        console.log('heerererereeeee');
+        dispatch(gameActions.takeSeat(seatObj));
+      });    
 
 
       return () => {
+        socket.off('new_player');
         socket.off('message');
         socket.off('initialize_messages');
 

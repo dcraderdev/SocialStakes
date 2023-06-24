@@ -8,7 +8,6 @@ import {
   from '../actions/gameActions'
 import { csrfFetch } from './csrf';
 
-import { SocketInstance } from '../../context/SocketContext';
 
 
 
@@ -132,10 +131,10 @@ export const getAllGames = () => async (dispatch) => {
 
 
 
-export const takeSeat = (tableId, seat) => async (dispatch) => {
-console.log(seat);
-console.log(seat);
-console.log(seat);
+export const takeSeat = (seatObj) => async (dispatch) => {
+  const { room, seat, user } = seatObj;
+  let tableId = room
+  console.log(seat);
   
   try{
     const response = await csrfFetch(`/api/tables/${tableId}/join`, {

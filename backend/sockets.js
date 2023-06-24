@@ -1,12 +1,9 @@
-
-
 module.exports = function (io) {
   const rooms = {};
 
   io.on('connection', (socket) => {
     const userId = socket.handshake.query.userId;
     const username = socket.handshake.query.username;
-
 
     let socketId = socket.id;
 
@@ -27,43 +24,60 @@ module.exports = function (io) {
       // Load table images
     });
 
-
     socket.on('join_room', async (room) => {
       console.log('--- join_room ---');
       console.log(`${username} is joining room ${room}.`);
 
-      let messageObj = {user: {username: 'Room', id: 1}, content:`${username} has joined the room.`, room}
+      let messageObj = {
+        user: {
+          username: 'Room',
+          id: 1,
+        },
+        content: `${username} has joined the room.`,
+        room,
+      };
       socket.join(room);
 
       io.in(room).emit('new_message', messageObj);
 
       console.log('-=-=-=-=-=-=-=-=-=');
     });
- 
 
     socket.on('leave_room', (room) => {
       console.log('--- leave_room ---');
       console.log(`${username} is leaving room ${room}.`);
-      socket.leave(room);
       console.log('-=-=-=-=-=-=-=-=-=');
+      socket.leave(room);
     });
-
-
 
     // Broadcast message to specific room
     socket.on('message', async (messageObj) => {
-      const {room, message} = messageObj
+      const { room, message } = messageObj;
       io.in(room).emit('new_message', messageObj);
       // io.in(userId).emit('message', messageObj);
-
 
       console.log('--------------');
       console.log(`Message received from ${room}`);
       console.log('--------------');
     });
 
+    socket.on('take_seat', async (seatObj) => {
+      const { room, seat, user } = seatObj;
+      let messageObj = {
+        user: {
+          username: 'Room',
+          id: 1,
+        },
+        content: `${username} has taken seat ${seat}.`,
+        room,
+      };
+      io.in(room).emit('new_message', messageObj);
+      io.in(room).emit('new_player', seatObj);
+      // io.in(userId).emit('message', messageObj);
 
-
-
+      console.log('--------------');
+      console.log(`Message received from ${room}`);
+      console.log('--------------');
+    });
   });
 };

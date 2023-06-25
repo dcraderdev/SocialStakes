@@ -124,38 +124,11 @@ export const getAllGames = () => async (dispatch) => {
   };
 
 
-  export const leaveTable = (tableId) => async (dispatch) => {
-    console.log('leaving');
-    dispatch(leaveTableAction(tableId));
-  };
+  // export const leaveTable = (tableId) => async (dispatch) => {
+  //   console.log('leaving');
+  //   dispatch(leaveTableAction(tableId));
+  // };
 
-
-
-// export const takeSeat = (seatObj) => async (dispatch) => {
-//   const { room, seat, user } = seatObj;
-//   let tableId = room
-//   console.log(seat);
-  
-//   try{
-//     const response = await csrfFetch(`/api/tables/${tableId}/join`, {
-//       method: 'POST',
-//       body: JSON.stringify({
-//         seat
-//       })
-//     });
-//     const data = await response.json();
-
-//     console.log('-=-=-=-=');
-//     console.log(data); 
-//     console.log('-=-=-=-=');
- 
-//     dispatch(takeSeatAction(data));
-//     return {data, response};
-
-//   }catch(error){
-//     console.log(error);
-//   } 
-// };
 
 
 export const changeSeat = (tableId, seat) => async (dispatch) => {

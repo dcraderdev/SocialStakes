@@ -64,6 +64,50 @@ module.exports = function (io) {
       console.log('--------------');
     });
 
+
+
+
+    socket.on('leave_seat', async (seatObj) => {
+      
+      const { room, seat, user, tableBalance } = seatObj;
+      let tableId = room
+
+      io.in(room).emit('halp');
+
+      console.log('--------------');
+      console.log(`leave_seat`);
+      console.log(room);
+      console.log('--------------');
+
+
+      const leaveSeat = await gameController.leaveSeat(tableId, seat, user, tableBalance)
+
+      if(!leaveSeat) return
+
+      console.log('returning true');
+      console.log('returning true');
+
+
+      const leaveSeatObj = {
+        seat,
+        tableId,
+        tableBalance
+      }
+
+      console.log(leaveSeatObj);
+      io.in(room).emit('player_leave', leaveSeatObj);
+
+
+
+    });
+
+
+
+
+
+
+
+
     socket.on('take_seat', async (seatObj) => {
       const { room, seat, user, amount } = seatObj;
       let tableId = room

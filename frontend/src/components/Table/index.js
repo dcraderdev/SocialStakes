@@ -11,7 +11,6 @@ import PlayerBetOptions from '../PlayerBetOptions';
 const Table = () => {
 
   const dispatch = useDispatch()
-  const game = 'blackjack'
   const themes = useSelector(state=>state.users.themes)
   const neonTheme = useSelector(state=>state.users.neonTheme)
   const tableTheme = useSelector(state=>state.users.tableTheme)

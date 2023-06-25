@@ -40,7 +40,6 @@ function BalanceModal() {
 
     
     // socket emit the seat taken, tableID, seat number, player info
-    console.log(seat);
     const seatObj = {
       room: table.id,
       seat,
@@ -48,8 +47,9 @@ function BalanceModal() {
       amount: roundedAmount
     }
     
-    closeModal()
     socket.emit('take_seat', seatObj)
+    closeModal()
+    setUpdateObj(null)
     return
 
   };

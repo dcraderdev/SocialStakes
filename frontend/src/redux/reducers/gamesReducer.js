@@ -78,6 +78,10 @@ const gamesReducer = (state = initialState, action) => {
         // Assign newTableUser to seat in tableUsers obj of the active table
         newCurrentTables[tableId].tableUsers[seat] = newTableUser;
       }
+      // Update new user balance
+      const updatedUser = {...newState.user}
+      updatedUser.balance -= tableBalance
+
       // Return the updated state
       return { ...newState, currentTables: newCurrentTables };
     }
@@ -87,8 +91,24 @@ const gamesReducer = (state = initialState, action) => {
 
     case LEAVE_SEAT:{
       console.log(action.payload);
-      return {...newState}
+      const {seat, tableId} = action.payload
+      // Create a copy of the currentTables object
+      const newCurrentTables = { ...newState.currentTables };
+
+      // Check if the active table exists in newCurrentTables
+      if (newCurrentTables[tableId]) {
+        // Remove the seat from the tableUsers object
+        delete newCurrentTables[tableId].tableUsers[seat];
+      }
+
+
+      // Return the updated state
+      return { ...newState, currentTables: newCurrentTables };
     }
+
+
+
+
     case SHOW_GAMES:{
       return {...newState, showGames: true, showTables: false, activeTable: null}
     }

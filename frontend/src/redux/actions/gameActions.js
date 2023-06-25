@@ -77,10 +77,10 @@ export const takeSeatAction = (data) => {
   };
 };
 
-export const leaveSeatAction = (table) => {
+export const leaveSeatAction = (data) => {
   return {
     type: LEAVE_SEAT,
-    payload: table,
+    payload: data,
   };
 };
 

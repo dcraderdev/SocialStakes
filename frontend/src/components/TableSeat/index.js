@@ -2,7 +2,6 @@ import { React, useState, useRef, useEffect, useContext } from 'react';
 import { Route, Router, Switch, NavLink, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import './TableSeat.css'
-import * as gameActions from '../../redux/middleware/games';
 import { SocketContext } from '../../context/SocketContext';
 import { ModalContext } from '../../context/ModalContext';
 
@@ -15,6 +14,8 @@ const TableSeat = ({seatNumber, player}) => {
   const { modal, openModal, closeModal, updateObj, setUpdateObj} = useContext(ModalContext);
 
 
+console.log(player);
+
 
 
   const takeSeat = () => {
@@ -26,7 +27,10 @@ const TableSeat = ({seatNumber, player}) => {
   }
 
   const leaveSeat = () => {
-    dispatch(gameActions.leaveSeat(table.id, seatNumber))
+    setUpdateObj({seatNumber, tableBalance:player.tableBalance})
+
+    openModal('leaveTableModal')
+
   }
 
   // console.log(player);

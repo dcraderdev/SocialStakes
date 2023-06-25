@@ -106,6 +106,7 @@ const gameController = {
 
 
   async takeSeat(tableId, seat, user, amount) {
+    const userToUpdate = await User.findByPk(user.id);
     const table = await Table.findByPk(tableId, {
       include: [
         {
@@ -145,6 +146,10 @@ const gameController = {
       return false;
     }
 
+    //update users unplayed balance
+    userToUpdate.balance -= amount;
+    await userToUpdate.save();
+
 
 
     if (table.players.length < table.Game.maxNumPlayers) {
@@ -163,13 +168,20 @@ const gameController = {
     }
   },
 
-  async leaveSeat(tableId, userId) {
-    const userTable = await UserTable.findOne({ where: { tableId, userId } });
+
+
+
+  async leaveSeat(tableId, seat, user, tableBalance) {
+    const userTable = await UserTable.findOne({ where: { tableId, userId:user.id } });
+    const userToUpdate = await User.findByPk(user.id);
 
     if (!userTable) {
       return false;
     }
 
+    userToUpdate.balance += tableBalance;
+    await userToUpdate.save();
+  
     await userTable.destroy();
     return true;
   },

@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import io from 'socket.io-client';
 
 import * as gameActions from '../redux/middleware/games';
-import {takeSeatAction} from '../redux/actions/gameActions';
+import {takeSeatAction, leaveSeatAction} from '../redux/actions/gameActions';
 
 
 const SocketContext = createContext();
@@ -59,11 +59,33 @@ const SocketProvider = ({ children }) => {
         console.log(seatObj);
         console.log('heerererereeeee');
         dispatch(takeSeatAction(seatObj));
+        return
       });    
 
+      socket.on('player_leave', (seatObj) => {
+        console.log(seatObj);
+        console.log('heerererereeeee');
+        dispatch(leaveSeatAction(seatObj)); 
+        return
+
+      });   
+
+      socket.on('halp', () => {
+        console.log('heerererereeeee');
+        console.log('heerererereeeee');
+        console.log('heerererereeeee');
+        console.log('heerererereeeee');
+        console.log('heerererereeeee');
+        console.log('heerererereeeee');
+        console.log('heerererereeeee');
+      });  
 
       return () => {
+
+
         socket.off('new_player');
+        socket.off('player_leave');
+        socket.off('halp');
         socket.off('message');
         socket.off('initialize_messages');
 

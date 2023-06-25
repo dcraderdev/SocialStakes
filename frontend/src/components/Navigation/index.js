@@ -27,6 +27,7 @@ function Navigation(){
   const [loaded, isLoaded] = useState(false);
 
   const user = useSelector(state=> state.users.user)
+  const balance = useSelector(state=> state.users.balance)
  
   const wideScreen = windowWidth > 600
 
@@ -81,7 +82,7 @@ let b = 'e10d8de4-f4c2-4d28-9324-56aa9c920801'
 
             {wideScreen && <div className='nav-user-button' onClick={handleGameClick}>Games</div>}
             {wideScreen && <div className='nav-user-button' onClick={handleFriendsClick}>Friends</div>}
-            <div className='nav-user-button balance'>${user.balance}</div>
+            <div className='nav-user-button balance'>${balance}</div>
             <div ref={profileBtnRef} className='nav-user-button profile' onClick={handleProfileButtonClick}>
               <div className='profile-icon-container flex center'><i className="fa-regular fa-user"></i></div>
             </div>

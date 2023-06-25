@@ -1,8 +1,14 @@
 
-import { SET_USER, REMOVE_USER, SET_THEMES, CHANGE_NEON_THEME, CHANGE_TABLE_THEME } from '../actions/actionTypes'
+import { 
+  SET_USER, REMOVE_USER, 
+  SET_THEMES, CHANGE_NEON_THEME, CHANGE_TABLE_THEME,
+  LEAVE_SEAT, TAKE_SEAT,
+} from '../actions/actionTypes'
+
 
 const initialState = {
   user: null,
+  balance: null,
   friends: {},
   themes: {},
   neonTheme: null,
@@ -15,13 +21,15 @@ const userReducer = (state = initialState, action) => {
   switch (action.type) {
 
     case SET_USER:
+      let newBalance = action.payload.balance
       return {
         ...newState,
         user: action.payload,
+        balance: newBalance
       };
 
     case REMOVE_USER:
-      return {...newState, user: null, friends: {}}
+      return {...newState, user: null, balance:null , friends: {}}
 
     case SET_THEMES:{
       const themes = action.payload.reduce((acc, theme)=>{
@@ -46,6 +54,36 @@ const userReducer = (state = initialState, action) => {
         neonTheme: action.payload,
       };   
     } 
+
+
+    case TAKE_SEAT: {
+      const {id, seat, tableBalance, tableId, userId, username } = action.payload
+
+      // Update new user balance
+      let updatedBalance = newState.balance
+      updatedBalance -= tableBalance
+
+      // Return the updated state
+      return { ...newState, balance: updatedBalance };
+    }
+
+    case LEAVE_SEAT: {
+      console.log(action.payload);
+
+      const {seat, tableId, tableBalance } = action.payload
+
+      // Update new user balance
+      let updatedBalance = newState.balance
+      updatedBalance += tableBalance
+
+      // Return the updated state
+      return { ...newState, balance: updatedBalance };
+    }
+
+          // // Update user balance
+          // const updatedUser = { ...newState.user };
+          // updatedUser.balance -= tableBalance;
+          // , user: updatedUser
 
 
 

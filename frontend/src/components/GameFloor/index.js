@@ -65,7 +65,7 @@ function GameFloor() {
   const viewTable = (table) =>{
     console.log('viewing table');
       //join table's socket
-      if(user){
+      if(user){ 
         socket.emit('join_room', table.id);
       }
       dispatch(gameActions.viewTable(table.id))
@@ -73,12 +73,12 @@ function GameFloor() {
 
 
 
-  const leaveTable = (table) =>{
-    console.log('leaving table');
-    //join table's socket
-    socket.emit('leave_room', table.id);
-    dispatch(gameActions.leaveTable(table))
-}
+//   const leaveTable = (table) =>{
+//     console.log('leaving table');
+//     //join table's socket
+//     socket.emit('leave_room', table.id);
+//     dispatch(gameActions.leaveTable(table))
+// }
 
 
   
@@ -167,7 +167,7 @@ function GameFloor() {
                 {isLoaded && activeTable && (
                   <div className='game-view'>
                     {activeTable &&  (
-                      <Game table={activeTable} leaveTable={leaveTable}/>
+                      <Game table={activeTable}/>
                     )}
                   </div>
                 )}

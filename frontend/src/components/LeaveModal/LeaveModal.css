@@ -1,4 +1,4 @@
-.leavetablemodal-wrapper {
+.leavemodal-wrapper {
   z-index: 1000;
   position: absolute;
   border: 1px solid rgb(0, 0, 0);
@@ -12,20 +12,20 @@
 
 
 
-.leavetablemodal-container{
+.leavemodal-container{
   flex-direction: column;
   justify-content: space-between;
   height: 100%;
   
 }
 
-.leavetablemodal-header{
+.leavemodal-header{
   width: 100%;
   font-size: 25px;
   color: rgb(200, 57, 13);
 }
 
-.leavetablemodal-subheader{
+.leavemodal-subheader{
   width: 100%;
   font-size: 22px;
   color: rgb(200, 57, 13);
@@ -35,28 +35,28 @@
   color: white;
 }
 
-.leavetablemodal-memo-container{
+.leavemodal-memo-container{
   font-size: 20px;
   width: 150px;
   font-size: 20px;
 }
 
-.leavetablemodal-memo{
+.leavemodal-memo{
   color: rgb(255, 255, 255);
 }
-.leavetablemodal-balance{
+.leavemodal-balance{
   color: rgb(200, 57, 13);
 }
 
 
-.leavetablemodal-user-buttons{
+.leavemodal-user-buttons{
   width: 80%;
   height: 50px;
 }
 
 
-.leavetablemodal-addbalance,
-.leavetablemodal-cancel{
+.leavemodal-addbalance,
+.leavemodal-cancel{
   border-radius: 5px;
   cursor: pointer;
   border: solid 1px rgb(255, 255, 255);
@@ -64,24 +64,24 @@
   color: white;
 }
 
-.leavetablemodal-addbalance{
+.leavemodal-addbalance{
   width: 40%;
 }
 
 
 
 
-.leavetablemodal-cancel{
+.leavemodal-cancel{
   width: 30%;
 }
 
 
-.leavetablemodal-addbalance:hover{
+.leavemodal-addbalance:hover{
   color: rgb(1, 83, 21);
   border: solid green 1px;
 }
 
-.leavetablemodal-cancel:hover{
+.leavemodal-cancel:hover{
   color: rgb(200, 57, 13);
 
   border: solid rgb(200, 57, 13) 1px;

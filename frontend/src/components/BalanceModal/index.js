@@ -21,8 +21,12 @@ function BalanceModal() {
   const table = useSelector((state) => state.games.activeTable);
 
 
-  const addTableBalance = () => {
+  const fundTable = () => {
     console.log(parseInt(amount));
+
+    if(amount<updateObj.minBet || amount === '' ){
+      return
+    }
 
     let roundedAmount = parseInt(amount)
     let seat = updateObj.seatNumber
@@ -71,6 +75,7 @@ function BalanceModal() {
 
 
   const addBalance = () => {
+
     const newBalance = 1000
     dispatch(addBalance(user.id, newBalance))
     setUpdateObj(null)
@@ -81,8 +86,10 @@ function BalanceModal() {
     setUpdateObj(null)
   }
 
-
   console.log(amount);
+  console.log(amount !== '');
+  console.log(updateObj.minBet);
+  console.log(amount<updateObj.minBet);
 
   return (
     <div className="balancemodal-wrapper" ref={formRef}>
@@ -119,17 +126,19 @@ function BalanceModal() {
           <div className="balancemodal-subheader flex center">{`Minimum buy-in: $${updateObj.minBet}`}</div>
           <div className="balancemodal-memo-container flex between">
             <div className="balancemodal-memo">Balance:</div>
-            <div className="balancemodal-balance">{`$${user.balance ? user.balance : 0}`}</div>
+            <div className={`balancemodal-balance ${user.balance > updateObj.minBet ? 'green' : 'red'}`}>{`$${user.balance ? user.balance : 0}`}</div>
           </div>
 
-        <form onSubmit={addTableBalance}>
+        <form 
+        onSubmit={fundTable}
+        
+        >
           <input
             type="number"
             value={amount} 
             onChange={(e)=>setAmount(e.target.value)}
             placeholder="Enter amount"
-            disabled={amount<updateObj.minbet}
-          />
+            />
         </form>
 
 
@@ -137,7 +146,10 @@ function BalanceModal() {
             <div className="balancemodal-cancel flex center" onClick={cancel}>
               Cancel
             </div>
-            <div className={`balancemodal-addbalance flex center ${amount< updateObj.minBet ? ' disabled' : ''}`}onClick={addTableBalance}>
+            <div
+             className={`balancemodal-addbalance flex center ${amount< updateObj.minBet ? ' disabled' : ''}`} 
+             onClick={fundTable}
+            >
               Submit
             </div>
           </div>

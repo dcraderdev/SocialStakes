@@ -1,13 +1,13 @@
 import React, { useEffect, useRef, useState, useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, Redirect, useHistory } from 'react-router-dom';
-import './LeaveTableModal.css';
+import './LeaveModal.css';
 import { ModalContext } from '../../context/ModalContext';
 import { SocketContext } from '../../context/SocketContext';
 import * as sessionActions from '../../redux/middleware/users';
 import { showGamesAction } from '../../redux/actions/gameActions';
 
-function LeaveTableModal() {
+function LeaveModal() {
   const dispatch = useDispatch();
   const history = useHistory();
   const formRef = useRef(null);
@@ -70,19 +70,19 @@ function LeaveTableModal() {
 
  
   return (
-    <div className="leavetablemodal-wrapper" ref={formRef}>
+    <div className="leavemodal-wrapper" ref={formRef}>
 
         
-        <div className="leavetablemodal-container flex center">
-          <div className="leavetablemodal-header white flex center">
-            Leave Table?
+        <div className="leavemodal-container flex center">
+          <div className="leavemodal-header white flex center">
+            Leave Seat?
           </div>
 
-          <div className="leavetablemodal-user-buttons flex between">
-            <div className="leavetablemodal-cancel flex center" onClick={cancel}>
+          <div className="leavemodal-user-buttons flex between">
+            <div className="leavemodal-cancel flex center" onClick={cancel}>
             Cancel
             </div>
-            <div className={`leavetablemodal-addbalance flex center`}onClick={leaveSeat}>
+            <div className={`leavemodal-addbalance flex center`}onClick={leaveSeat}>
             Leave
             </div>
           </div>
@@ -92,4 +92,4 @@ function LeaveTableModal() {
   );
 }
 
-export default LeaveTableModal;
+export default LeaveModal;

@@ -44,10 +44,12 @@
 .balancemodal-memo{
   color: rgb(255, 255, 255);
 }
-.balancemodal-balance{
+.green{
+  color: rgb(25, 141, 60);
+}
+.red{
   color: rgb(200, 57, 13);
 }
-
 
 .balancemodal-user-buttons{
   width: 80%;

@@ -5,7 +5,8 @@ import {
   LEAVE_SEAT, TAKE_SEAT,
   SHOW_GAMES, SHOW_TABLES, SHOW_ACTIVE_TABLES,
   ADD_MESSAGE, TOGGLE_SHOW_MESSAGES,
-  ADD_BALANCE
+  ADD_BALANCE,
+  ADD_BET, REMOVE_BET
  } from '../actions/actionTypes'
 
 const initialState = {
@@ -77,12 +78,10 @@ const gamesReducer = (state = initialState, action) => {
       if (newCurrentTables[tableId]) {
         // Assign newTableUser to seat in tableUsers obj of the active table
         newCurrentTables[tableId].tableUsers[seat] = newTableUser;
+        newCurrentTables[tableId].tableUsers[seat].currentBet = 0;
+        newCurrentTables[tableId].currentSeat = seat;
       }
-      // Update new user balance
-      const updatedUser = {...newState.user}
-      updatedUser.balance -= tableBalance
 
-      // Return the updated state
       return { ...newState, currentTables: newCurrentTables };
     }
 
@@ -101,8 +100,6 @@ const gamesReducer = (state = initialState, action) => {
         delete newCurrentTables[tableId].tableUsers[seat];
       }
 
-
-      // Return the updated state
       return { ...newState, currentTables: newCurrentTables };
     }
 
@@ -135,6 +132,42 @@ const gamesReducer = (state = initialState, action) => {
     
       return { ...newState, currentTables: newCurrentTables };
     }
+
+    case ADD_BET: {
+      const {bet, tableId, user, seat} = action.payload
+
+      // currentSeat = 
+
+      console.log(action.payload);
+
+      const newCurrentTable = newState.currentTables[tableId]
+
+      console.log(newCurrentTable);
+
+      const playerSeat = newCurrentTable.tableUsers[seat]
+      const newBet = playerSeat.currentBet += bet
+
+      console.log(newCurrentTable);
+      console.log(playerSeat);
+
+      console.log(newCurrentTable[playerSeat]);
+
+
+
+
+
+
+
+
+    
+      return { ...newState,};
+    }
+
+    case REMOVE_BET: {
+
+      return { ...newState,};
+    }
+
 
 
 

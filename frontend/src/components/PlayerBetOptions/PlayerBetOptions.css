@@ -7,16 +7,17 @@
 }
 
 .bet-container {
-  height: calc(100% - 100px);
+  height: 100%;
   width: 100%;
   display: flex;
-
+  border: rgb(57, 32, 201) solid 1px;
 }
 
 .chatbox-wrapper {
-  height: 100%;
+  height: calc(100%-100px);
   width: 400px;
   transition: width 1s ease;
+
 }
 
 .minimize {
@@ -26,12 +27,50 @@
 
 
 .bet-user-settings{
+  border: rgb(32, 201, 66) solid 1px;
+
   width: 60px;
-  height: 20px;
+  height: fit-content;
   position: relative;
-  top: -15px;
+  top: -20px;
   left: 10px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+}
+
+
+.bet-content{
+  display: flex;
+  flex-direction: row;
+  border: rgb(201, 32, 32) solid 1px;
+}
+
+
+
+.undo-bet-container,
+.chips-option-container,
+.rebet-option-container,
+.decision-option-container{
+  width: 150px;
+  height: 200px;
+  border: white solid 1px;
+}
+
+
+.section.right{
+  display: flex;
+  flex-direction: row;
+}
+
+.undo,
+.rebet,
+.chip,
+.action{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 35px;
+  border: white solid 1px;
 }

@@ -104,6 +104,9 @@ function GameFloor() {
 
   }
 
+  console.log(activeTable);
+
+
   return ( 
     <>
       <div className={`gamefloor-wrapper ${activeTable ? 'table-view' : ''}`}>     
@@ -167,7 +170,7 @@ function GameFloor() {
                 {isLoaded && activeTable && (
                   <div className='game-view'>
                     {activeTable &&  (
-                      <Game table={activeTable}/>
+                      <Game />
                     )}
                   </div>
                 )}

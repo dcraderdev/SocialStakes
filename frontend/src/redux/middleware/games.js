@@ -3,7 +3,9 @@ import {
   getAllTablesAction, getTablesByTypeAction, getTableByIdAction,
   viewTableAction, leaveTableAction, 
   takeSeatAction, leaveSeatAction, changeSeatAction,
-  addMessageAction, addBalanceAction
+  addMessageAction, addBalanceAction,
+  addBetAction, removeBetAction
+
   } 
   from '../actions/gameActions'
 import { csrfFetch } from './csrf';
@@ -205,7 +207,6 @@ export const addMessage = (messageObj) => async (dispatch) => {
 
 
 export const addBalance = (userId, newBalance) => async (dispatch) => {
-
 
   dispatch(addBalanceAction());
   if(user.username === 'Room') return

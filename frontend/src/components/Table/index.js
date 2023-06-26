@@ -17,21 +17,7 @@ const Table = () => {
   const activeTable = useSelector(state=>state.games.activeTable)
 
 
-  const initialSeats = Array(6).fill(null);
-  const [seats, setSeats] = useState(initialSeats);
 
-
-
-  useEffect(() => {
-    if(activeTable && activeTable.tableUsers){
-
-      setSeats(activeTable.tableUsers);
-    }
-
-    return () => {
-      setSeats(initialSeats);
-    };
-  }, [activeTable]);
 
 
 

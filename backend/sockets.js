@@ -97,8 +97,6 @@ module.exports = function (io) {
       console.log(leaveSeatObj);
       io.in(room).emit('player_leave', leaveSeatObj);
 
-
-
     });
 
 

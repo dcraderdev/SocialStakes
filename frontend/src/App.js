@@ -5,7 +5,7 @@ import GameFloor from './components/GameFloor';
 import Game from './components/Game';
 import Table from './components/Table';
 import BalanceModal from './components/BalanceModal';
-import LeaveTableModal from './components/LeaveModal';
+import LeaveModal from './components/LeaveModal';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { React, useState, useEffect, useContext } from 'react';
@@ -72,9 +72,9 @@ function App() {
           {modal === 'balanceModal' && <BalanceModal />}
         </div>
       )}
-      {modal  === 'leaveTableModal' && (
+      {modal  === 'leaveModal' && (
         <div className='modal-container'>
-          {modal === 'leaveTableModal' && <LeaveTableModal />}
+          {modal === 'leaveModal' && <LeaveModal />}
         </div>
       )}
 

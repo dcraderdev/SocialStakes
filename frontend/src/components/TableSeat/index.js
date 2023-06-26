@@ -18,19 +18,21 @@ console.log(player);
 
 
 
+
+
+
   const takeSeat = () => {
     if(!user) return
-
     setUpdateObj({minBet:table.Game.minBet, seatNumber})
     openModal('balanceModal')
 
   }
 
+
+
   const leaveSeat = () => {
     setUpdateObj({seatNumber, tableBalance:player.tableBalance})
-
-    openModal('leaveTableModal')
-
+    openModal('leaveModal')
   }
 
   // console.log(player);

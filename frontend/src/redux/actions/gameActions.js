@@ -5,7 +5,9 @@ import {
   TAKE_SEAT, LEAVE_SEAT, CHANGE_SEAT,
   SHOW_GAMES, SHOW_TABLES, SHOW_ACTIVE_TABLES,
   ADD_MESSAGE, TOGGLE_SHOW_MESSAGES,
-  ADD_BALANCE
+  ADD_BALANCE,
+  ADD_BET, REMOVE_BET
+
 } from './actionTypes'
 
 
@@ -134,5 +136,19 @@ export const addMessageAction = (messageObj) => {
 export const addBalanceAction = () => {
   return {
     type: ADD_BALANCE
+  };
+};
+
+
+export const addBetAction = (betObj) => {
+  return {
+    type: ADD_BET,
+    payload: betObj
+  };
+};
+
+export const removeBetAction = (bet) => {
+  return {
+    type: REMOVE_BET
   };
 };

@@ -9,6 +9,7 @@ import {
   toggleShowMessages,
   addBetAction,
   removeBetAction,
+  removeAllBetAction,
   changeActiveTablesAction
 } from '../../redux/actions/gameActions';
 
@@ -19,10 +20,34 @@ const PlayerBetOptions = () => {
 
   const [sitOutSelected, setSitOutSelected] = useState(false);
   const [sitOutNextHandSelected, setSitOutNextHandSelected] = useState(false);
+  const [lastBet, setLastBet] = useState(0);
+  const [isSitting, setIsSitting] = useState(false);
+  const [currentSeat, setCurrentSeat] = useState(false);
+  const [tableBalance, setTableBalance] = useState(false);
 
+  const currentTables = useSelector((state) => state.games.currentTables);
   const activeTable = useSelector((state) => state.games.activeTable);
   const showMessages = useSelector((state) => state.games.showMessages);
   const user = useSelector((state) => state.users.user);
+
+
+  useEffect(()=>{
+      setIsSitting(false)
+      if(activeTable && user){
+      Object.values(currentTables[activeTable.id].tableUsers).map(seat=>{
+        console.log(seat);
+
+        if(seat.userId === user.id){
+          setIsSitting(true)
+          setCurrentSeat(seat.seat)
+          setTableBalance(seat.tableBalance)
+        }
+      })
+    }
+  }, [currentTables])
+
+
+console.log(tableBalance);
 
   const handleTableThemeChange = (tableTheme) => {
     console.log(tableTheme);
@@ -41,22 +66,36 @@ const PlayerBetOptions = () => {
 
   };
   const undoBet = (multiplier) => {
-    if(multiplier){
-      dispatch(addBetAction(bet));
+    const betObj={
+      tableId: activeTable.id,
+      user,
+      seat: currentSeat,
+      lastBet
+    }
 
+    if(multiplier){
+      dispatch(removeAllBetAction(betObj));
       return
     }
+    dispatch(removeBetAction(betObj));
+
+
   };
 
 
   const addBet = (bet) => {
     if(!user) return
+    if(!isSitting) return
+    if(bet >= tableBalance){
+      bet = tableBalance
+    }
     const betObj={
       bet,
       tableId: activeTable.id,
       user,
-      seat: activeTable.currentSeat
+      seat: currentSeat
     }
+    setLastBet(bet)
     dispatch(addBetAction(betObj));
   };
 
@@ -100,16 +139,16 @@ const PlayerBetOptions = () => {
               </div>
             </div>
 
-            
 
+{isSitting && (
             <div className="section right flex center">
                 <div className="rebet-option-container">
                   <div className="rebet regular" onClick={()=>rebet(true)}>Rebet</div>
                   <div className="rebet double" onClick={()=>rebet(false)}>Rebet x2</div>
                 </div>
                 <div className="undo-bet-container">
-                  <div className="undo one" onClick={()=>undoBet(true)}>Undo</div>
-                  <div className="undo all" onClick={()=>undoBet(false)}>Undo all</div>
+                  <div className="undo one" onClick={()=>undoBet(false)}>Undo</div>
+                  <div className="undo all" onClick={()=>undoBet(true)}>Undo all</div>
                 </div>
                 <div className="chips-option-container">
                   <div className="chip" onClick={()=>addBet(1)}>1</div>
@@ -125,6 +164,9 @@ const PlayerBetOptions = () => {
                   <div className="action" onClick={()=>handleAction('split')}>Split</div>
               </div>
             </div>
+)}
+            
+
 
 
 

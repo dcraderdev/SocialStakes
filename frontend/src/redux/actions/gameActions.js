@@ -6,7 +6,7 @@ import {
   SHOW_GAMES, SHOW_TABLES, SHOW_ACTIVE_TABLES,
   ADD_MESSAGE, TOGGLE_SHOW_MESSAGES,
   ADD_BALANCE,
-  ADD_BET, REMOVE_BET
+  ADD_BET, REMOVE_BET, REMOVE_ALL_BET
 
 } from './actionTypes'
 
@@ -147,8 +147,16 @@ export const addBetAction = (betObj) => {
   };
 };
 
-export const removeBetAction = (bet) => {
+export const removeBetAction = (betObj) => {
   return {
-    type: REMOVE_BET
+    type: REMOVE_BET,
+    payload: betObj
+  };
+};
+
+export const removeAllBetAction = (betObj) => {
+  return {
+    type: REMOVE_ALL_BET,
+    payload: betObj
   };
 };

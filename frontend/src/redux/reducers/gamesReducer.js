@@ -6,7 +6,7 @@ import {
   SHOW_GAMES, SHOW_TABLES, SHOW_ACTIVE_TABLES,
   ADD_MESSAGE, TOGGLE_SHOW_MESSAGES,
   ADD_BALANCE,
-  ADD_BET, REMOVE_BET
+  ADD_BET, REMOVE_BET, REMOVE_ALL_BET
  } from '../actions/actionTypes'
 
 const initialState = {
@@ -134,41 +134,53 @@ const gamesReducer = (state = initialState, action) => {
     }
 
     case ADD_BET: {
-      const {bet, tableId, user, seat} = action.payload
-
-      // currentSeat = 
-
-      console.log(action.payload);
-
-      const newCurrentTable = newState.currentTables[tableId]
-
-      console.log(newCurrentTable);
-
-      const playerSeat = newCurrentTable.tableUsers[seat]
-      const newBet = playerSeat.currentBet += bet
-
-      console.log(newCurrentTable);
-      console.log(playerSeat);
-
-      console.log(newCurrentTable[playerSeat]);
-
-
-
-
-
-
-
-
+      const { bet, tableId, user, seat } = action.payload;
     
-      return { ...newState,};
+      const newCurrentTables = { ...newState.currentTables };
+      const newCurrentTable = { ...newCurrentTables[tableId] };
+    
+      const playerSeat = { ...newCurrentTable.tableUsers[seat] };
+      playerSeat.currentBet += bet;
+      playerSeat.tableBalance -= bet;
+    
+      newCurrentTable.tableUsers[seat] = playerSeat;
+      newCurrentTables[tableId] = newCurrentTable;
+    
+      return { ...newState, currentTables: newCurrentTables };
     }
 
     case REMOVE_BET: {
-
-      return { ...newState,};
+      const { tableId, seat, lastBet } = action.payload;
+    
+      const newCurrentTables = { ...newState.currentTables };
+      const newCurrentTable = { ...newCurrentTables[tableId] };
+    
+      const playerSeat = { ...newCurrentTable.tableUsers[seat] };
+      playerSeat.currentBet -= lastBet;
+      playerSeat.tableBalance += lastBet;
+    
+      newCurrentTable.tableUsers[seat] = playerSeat;
+      newCurrentTables[tableId] = newCurrentTable;
+    
+      return { ...newState, currentTables: newCurrentTables };
     }
-
-
+    
+    case REMOVE_ALL_BET: {
+      const { tableId, seat } = action.payload;
+    
+      const newCurrentTables = { ...newState.currentTables };
+      const newCurrentTable = { ...newCurrentTables[tableId] };
+    
+      const playerSeat = { ...newCurrentTable.tableUsers[seat] };
+      playerSeat.tableBalance += playerSeat.currentBet;
+      playerSeat.currentBet = 0;
+    
+      newCurrentTable.tableUsers[seat] = playerSeat;
+      newCurrentTables[tableId] = newCurrentTable;
+    
+      return { ...newState, currentTables: newCurrentTables };
+    }
+    
 
 
   

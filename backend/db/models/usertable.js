@@ -24,6 +24,7 @@ module.exports = (sequelize, DataTypes) => {
     tableId: DataTypes.UUID,
     seat: DataTypes.INTEGER,
     tableBalance: DataTypes.INTEGER,
+    currentBet: DataTypes.INTEGER,
   }, {
     sequelize,
     modelName: 'UserTable',

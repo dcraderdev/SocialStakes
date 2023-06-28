@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import io from 'socket.io-client';
 
 import * as gameActions from '../redux/middleware/games';
-import {takeSeatAction, leaveSeatAction, addBetAction, removeBetAction, removeAllBetAction, playerDisconnectAction, playerReconnectAction, removePlayerAction} from '../redux/actions/gameActions';
+import {takeSeatAction, leaveSeatAction, addBetAction, removeLastBetAction, removeAllBetAction, playerDisconnectAction, playerReconnectAction, removePlayerAction} from '../redux/actions/gameActions';
 
 
 const SocketContext = createContext();
@@ -65,10 +65,26 @@ const SocketProvider = ({ children }) => {
         dispatch(leaveSeatAction(seatObj)); 
       });   
 
+
+
+
       socket.on('new_bet', (betObj) => {
         console.log(betObj);
         dispatch(addBetAction(betObj)); 
       });  
+
+      socket.on('remove_last_bet', (betObj) => {
+        console.log(betObj);
+        dispatch(removeLastBetAction(betObj)); 
+      });  
+      socket.on('remove_all_bet', (betObj) => {
+        console.log(betObj);
+        dispatch(removeAllBetAction(betObj)); 
+      });  
+
+
+
+
 
       socket.on('player_disconnected', ({seat, tableId, timer}) => {
         console.log('player_disconnected');

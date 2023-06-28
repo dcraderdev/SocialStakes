@@ -10,8 +10,6 @@ import { ModalContext } from '../../context/ModalContext';
    leaveTableAction,
    toggleShowMessages,
    addBetAction,
-   removeBetAction,
-   removeAllBetAction,
    changeActiveTablesAction
   } from '../../redux/actions/gameActions';
   
@@ -49,7 +47,10 @@ import { ModalContext } from '../../context/ModalContext';
         }
       })
     }
-  }, [currentTables])
+  }, [currentTables, activeTable])
+
+
+  console.log(currentSeat);
 
 
 
@@ -71,22 +72,29 @@ import { ModalContext } from '../../context/ModalContext';
 
 
   const undoBet = (multiplier) => {
-    let currPendingBet = currentTables[activeTable.id].tableUsers.currentSeat.pendingBet
-    if(pendingBet === 0){
+    console.log(currentSeat);
+    console.log(currentTables[activeTable.id].tableUsers[currentSeat]);
+
+    let currPendingBet = currentTables[activeTable.id].tableUsers[currentSeat].pendingBet
+
+
+    if(currPendingBet === 0){
       return
     }
     const betObj={
       tableId: activeTable.id,
-      user,
       seat: currentSeat,
       lastBet
     }
 
     if(multiplier){
-      dispatch(removeAllBetAction(betObj));
+      socket.emit('remove_all_bet', betObj)
+
+      // dispatch(removeAllBetAction(betObj));
       return
     }
-    dispatch(removeBetAction(betObj));
+    socket.emit('remove_last_bet', betObj)
+    // dispatch(removeBetAction(betObj));
 
 
   };
@@ -101,7 +109,6 @@ import { ModalContext } from '../../context/ModalContext';
     const betObj={
       bet,
       tableId: activeTable.id,
-      user,
       seat: currentSeat
     }
     setLastBet(bet)

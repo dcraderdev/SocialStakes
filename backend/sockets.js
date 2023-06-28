@@ -231,17 +231,48 @@ module.exports = function (io) {
 
 
     socket.on('place_bet', async (betObj) => {
-      const {bet, tableId, user, seat } = betObj
+      const {bet, tableId, seat } = betObj
       let room = tableId
 
       io.in(room).emit('new_bet', betObj);
-
-      // io.in(userId).emit('message', messageObj);
 
       console.log('--------------');
       console.log(`Bet(${bet}) received from ${username} @room ${room}`);
       console.log('--------------');
     });
+
+
+
+    socket.on('remove_last_bet', async (betObj) => {
+      const { tableId, seat, lastBet } = betObj
+      let room = tableId
+
+      io.in(room).emit('remove_last_bet', betObj);
+
+      console.log('--------------');
+      console.log(`Removing last bet(${lastBet}) received from ${username} @room ${room}`);
+      console.log('--------------');
+    });
+
+
+    
+
+
+    socket.on('remove_all_bet', async (betObj) => {
+      const { tableId, seat, lastBet } = betObj
+      let room = tableId
+
+      io.in(room).emit('remove_all_bet', betObj);
+
+      console.log('--------------');
+      console.log(`Removing all bets received from ${username} @room ${room}`);
+      console.log('--------------');
+    });
+
+
+
+
+
 
     socket.on('add_funds', async (seatObj) => {
       const {room, seat, user, amount } = seatObj
@@ -251,7 +282,7 @@ module.exports = function (io) {
       // io.in(userId).emit('message', messageObj);
 
       console.log('--------------');
-      console.log(`Bet(${bet}) received from ${username} @room ${room}`);
+      console.log(`Adding funds for ${username} @room ${room}`);
       console.log('--------------');
     });
 

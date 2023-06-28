@@ -80,7 +80,7 @@ function BalanceModal() {
     const seatObj = {
       room: table.id,
       seat,
-      user: user,
+      userId: user.id,
       amount: roundedAmount
     }
     

@@ -6,7 +6,7 @@ import {
   SHOW_GAMES, SHOW_TABLES, SHOW_ACTIVE_TABLES,
   ADD_MESSAGE, TOGGLE_SHOW_MESSAGES,
   ADD_BALANCE,
-  ADD_BET, REMOVE_BET, REMOVE_ALL_BET,
+  ADD_BET, REMOVE_LAST_BET, REMOVE_ALL_BET,
   PLAYER_DISCONNECT, PLAYER_RECONNECT,
   REMOVE_PLAYER,
   PLAYER_ADD_TABLE_FUNDS
@@ -136,7 +136,7 @@ const gamesReducer = (state = initialState, action) => {
     }
 
     case ADD_BET: {
-      const { bet, tableId, user, seat } = action.payload;
+      const { bet, tableId, seat } = action.payload;
     
       const newCurrentTables = { ...newState.currentTables };
       const newCurrentTable = { ...newCurrentTables[tableId] };
@@ -151,13 +151,16 @@ const gamesReducer = (state = initialState, action) => {
       return { ...newState, currentTables: newCurrentTables };
     }
 
-    case REMOVE_BET: {
+    case REMOVE_LAST_BET: {
       const { tableId, seat, lastBet } = action.payload;
     
       const newCurrentTables = { ...newState.currentTables };
       const newCurrentTable = { ...newCurrentTables[tableId] };
     
       const playerSeat = { ...newCurrentTable.tableUsers[seat] };
+
+      console.log(playerSeat);
+
       playerSeat.pendingBet -= lastBet;
       playerSeat.tableBalance += lastBet;
     
@@ -232,8 +235,11 @@ const gamesReducer = (state = initialState, action) => {
       
       return { ...newState, currentTables: newCurrentTables };
     }
-    
+
+
+
     case PLAYER_ADD_TABLE_FUNDS: {
+      console.log(action.payload);
       const {seat, tableId} = action.payload;
       
       const newCurrentTables = { ...newState.currentTables };

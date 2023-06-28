@@ -6,7 +6,7 @@ import {
   SHOW_GAMES, SHOW_TABLES, SHOW_ACTIVE_TABLES,
   ADD_MESSAGE, TOGGLE_SHOW_MESSAGES,
   ADD_BALANCE,
-  ADD_BET, REMOVE_BET, REMOVE_ALL_BET,
+  ADD_BET, REMOVE_LAST_BET, REMOVE_ALL_BET,
   PLAYER_DISCONNECT, PLAYER_RECONNECT,
   REMOVE_PLAYER,
   PLAYER_ADD_TABLE_FUNDS
@@ -74,18 +74,18 @@ export const getTablesByTypeAction = (data) => {
     };
   };
 
-export const takeSeatAction = (data) => {
-  console.log(data);
+export const takeSeatAction = (seatObj) => {
+  console.log(seatObj);
   return {
     type: TAKE_SEAT,
-    payload: data,
+    payload: seatObj,
   };
 };
 
-export const leaveSeatAction = (data) => {
+export const leaveSeatAction = (seatObj) => {
   return {
     type: LEAVE_SEAT,
-    payload: data,
+    payload: seatObj,
   };
 };
 
@@ -150,9 +150,9 @@ export const addBetAction = (betObj) => {
   };
 };
 
-export const removeBetAction = (betObj) => {
+export const removeLastBetAction = (betObj) => {
   return {
-    type: REMOVE_BET,
+    type: REMOVE_LAST_BET,
     payload: betObj
   };
 };
@@ -183,5 +183,12 @@ export const removePlayerAction = ({seat, tableId}) => {
   return {
     type: REMOVE_PLAYER,
     payload: {seat, tableId}
+  };
+};
+
+export const playerAddTableFundsAction = (seatObj) => {
+  return {
+    type: PLAYER_ADD_TABLE_FUNDS,
+    payload: seatObj
   };
 };

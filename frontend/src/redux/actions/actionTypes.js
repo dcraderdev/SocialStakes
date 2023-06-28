@@ -21,7 +21,7 @@ export const GET_TABLES_BY_TYPE = 'games/GET_TABLES_BY_TYPE';
 
 export const ADD_BALANCE = 'games/ADD_BALANCE';
 export const ADD_BET = 'games/ADD_BET';
-export const REMOVE_BET = 'games/REMOVE_BET';
+export const REMOVE_LAST_BET = 'games/REMOVE_LAST_BET';
 export const REMOVE_ALL_BET = 'games/REMOVE_ALL_BET';
 
 export const PLAYER_DISCONNECT = 'games/PLAYER_DISCONNECT';

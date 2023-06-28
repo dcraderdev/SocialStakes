@@ -201,6 +201,10 @@ module.exports = function (io) {
       rooms[tableId].seats[seat] = takeSeatObj;
 
 
+      console.log(rooms[tableId]);
+      console.log(rooms[tableId].seats[seat]);
+
+
       console.log(takeSeatObj);
 
       // const newSeatObj = takeSeat.toJSON() 
@@ -211,7 +215,7 @@ module.exports = function (io) {
       // io.in(userId).emit('message', messageObj);
 
       console.log('--------------');
-      console.log(`Message received from ${room}`);
+      console.log(`${username} taking seat${seat} in ${room}`);
       console.log('--------------');
     });
 
@@ -231,7 +235,7 @@ module.exports = function (io) {
       }
 
       // If the room is empty, delete the room
-      if (Object.keys(rooms[tableId].seats).length === 0) {
+      if (rooms[tableId] && Object.keys(rooms[tableId].seats).length === 0) {
         delete rooms[tableId];
       }
 
@@ -256,14 +260,25 @@ module.exports = function (io) {
 
 
     socket.on('place_bet', async (betObj) => {
+
       const {bet, tableId, seat } = betObj
       let room = tableId
 
+
+      console.log(rooms[tableId]);
+      console.log(rooms[tableId].seats[seat]);
+
+
       // Update pendingBet in the rooms object
       if (rooms[tableId] && rooms[tableId].seats[seat]) {
+        console.log('placing bet');
+        console.log('placing bet');
+        console.log('placing bet');
         rooms[tableId].seats[seat].pendingBet += bet;
         rooms[tableId].seats[seat].tableBalance -= bet;
       }
+
+
 
       io.in(room).emit('new_bet', betObj);
 

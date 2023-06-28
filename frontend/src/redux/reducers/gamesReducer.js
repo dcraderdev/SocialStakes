@@ -68,8 +68,8 @@ const gamesReducer = (state = initialState, action) => {
     
         for(let seat in currentTable.tableUsers) {
 
-          console.log(seat);
-          console.log(table.seats[seat].pendingBet);
+          // console.log(seat);
+          // console.log(table.seats[seat].pendingBet);
 
           // If the incoming table has data for this seat, update it in the currentTable
           if (table.seats[seat]) {

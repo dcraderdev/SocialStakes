@@ -4,8 +4,9 @@ const { gameController } = require('./controllers/gameController');
 module.exports = function (io) {
   const rooms = {};
   const disconnectTimeouts = {};
+  const isReconnecting = {};
 
-  io.on('connection', (socket) => {
+  io.on('connection', async (socket) => {
     const userId = socket.handshake.query.userId;
     const username = socket.handshake.query.username;
 
@@ -21,12 +22,38 @@ module.exports = function (io) {
 
     socket.join(userId);
 
+    const userTables = await gameController.getUserTables(userId);
+
     // Reconnection logic
     if (disconnectTimeouts[userId]) {
       clearTimeout(disconnectTimeouts[userId]);
       console.log(`User ${username} reconnected, timeout cleared.`);
       delete disconnectTimeouts[userId];
+      isReconnecting[userId] = false; 
+
+      
+      if(userTables){
+        for(table of userTables){
+          let tableId = table.tableId
+          let seat = table.seat
+          let timer = 0
+          let messageObj = {
+            user: {
+              username: 'Room',
+              id: 1,
+            },
+            content: `${username} has reconnected.`,
+            room: tableId,
+          };
+  
+          io.in(tableId).emit('new_message', messageObj);
+          io.in(tableId).emit('player_reconnected', {seat, tableId, timer});
+        }
+      }
+
+
     }
+    
 
     socket.on('initialize', async () => {
       console.log('INITIALIZING');
@@ -38,7 +65,7 @@ module.exports = function (io) {
   socket.on('disconnect', async () => {
     let timer = 5000 // 15 seconds, adjust as needed
     console.log(`User ${username} disconnected`);
-    userTables = await gameController.getUserTables(userId);
+    const userTables = await gameController.getUserTables(userId);
     if(userTables){
       for(table of userTables){
         let tableId = table.tableId
@@ -52,8 +79,6 @@ module.exports = function (io) {
           room: tableId,
         };
 
-        
-
         io.in(tableId).emit('new_message', messageObj);
         io.in(tableId).emit('player_disconnected', {seat, tableId, timer});
       }
@@ -66,7 +91,7 @@ module.exports = function (io) {
 
     // Start a new timeout for this user
     disconnectTimeouts[userId] = setTimeout(async () => {
-      
+      if (!isReconnecting[userId]) {
       console.log('REMOVING PLAYER');
       if(userTables){
         for(table of userTables){
@@ -76,11 +101,13 @@ module.exports = function (io) {
         }
       }
       await gameController.removeUserFromTables(userId);
-
+    }
 
     }, timer); 
+    isReconnecting[userId] = true;
   });
 
+  
 
 
     socket.on('join_room', async (room) => {
@@ -143,7 +170,8 @@ module.exports = function (io) {
       const leaveSeatObj = {
         seat,
         tableId,
-        tableBalance
+        userId:user.id,
+        tableBalance,
       }
 
       console.log(leaveSeatObj);
@@ -215,6 +243,17 @@ module.exports = function (io) {
       console.log('--------------');
     });
 
+    socket.on('add_funds', async (seatObj) => {
+      const {room, seat, user, amount } = seatObj
+
+      io.in(room).emit('player_add_table_funds', seatObj);
+
+      // io.in(userId).emit('message', messageObj);
+
+      console.log('--------------');
+      console.log(`Bet(${bet}) received from ${username} @room ${room}`);
+      console.log('--------------');
+    });
 
 
   });

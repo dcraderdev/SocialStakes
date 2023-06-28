@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect, useContext } from 'react';
 import {Route,Router,Switch,NavLink,Link,useHistory,useParams,} from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';import
- { SocketContext } from '../../context/SocketContext';
+import { useDispatch, useSelector } from 'react-redux';
+import { SocketContext } from '../../context/SocketContext';
+import { ModalContext } from '../../context/ModalContext';
  
  import './PlayerBetOptions.css';
  import Chatbox from '../Chatbox';
@@ -27,6 +28,7 @@ import { useDispatch, useSelector } from 'react-redux';import
     const [tableBalance, setTableBalance] = useState(0);
     
     const {socket} = useContext(SocketContext)
+    const {openModal, closeModal, setUpdateObj} = useContext(ModalContext)
 
     const currentTables = useSelector((state) => state.games.currentTables);
     const activeTable = useSelector((state) => state.games.activeTable);
@@ -113,7 +115,11 @@ import { useDispatch, useSelector } from 'react-redux';import
     dispatch(leaveTableAction(activeTable.id));
   };
 
-
+  const addBalance = () => {
+      if(!user) return
+      setUpdateObj({minBet:activeTable.Game.minBet, seatNumber:currentSeat, type:'addDeposit'})
+      openModal('balanceModal')
+  };
 
 
   return (
@@ -125,6 +131,9 @@ import { useDispatch, useSelector } from 'react-redux';import
 
             <div className="section left">
               <div className="bet-user-settings">
+                <div className="gamefloor-add-balance" onClick={addBalance}>
+                  +
+                </div>
                 <div className="gamefloor-leave-button" onClick={leaveTable}>
                   <i className="fa-solid fa-right-to-bracket"></i>
                 </div>

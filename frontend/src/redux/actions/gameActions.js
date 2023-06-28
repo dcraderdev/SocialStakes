@@ -7,8 +7,9 @@ import {
   ADD_MESSAGE, TOGGLE_SHOW_MESSAGES,
   ADD_BALANCE,
   ADD_BET, REMOVE_BET, REMOVE_ALL_BET,
-  SHOW_DISCONNECT_TIMER, REMOVE_DISCONNECT_TIMER,
-  REMOVE_PLAYER
+  PLAYER_DISCONNECT, PLAYER_RECONNECT,
+  REMOVE_PLAYER,
+  PLAYER_ADD_TABLE_FUNDS
 
 } from './actionTypes'
 
@@ -163,18 +164,18 @@ export const removeAllBetAction = (betObj) => {
   };
 };
 
-export const showDisconnectTimerAction = ({seat, tableId, timer}) => {
+export const playerDisconnectAction = ({seat, tableId, timer}) => {
   return {
-    type: SHOW_DISCONNECT_TIMER,
+    type: PLAYER_DISCONNECT,
     payload: {seat, tableId, timer}
   };
 };
 
 
-export const removeDisconnectTimerAction = ({seat, tableId}) => {
+export const playerReconnectAction = ({seat, tableId, timer}) => {
   return {
-    type: REMOVE_DISCONNECT_TIMER,
-    payload: {seat, tableId}
+    type: PLAYER_RECONNECT,
+    payload: {seat, tableId, timer}
   };
 };
 

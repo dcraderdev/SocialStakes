@@ -24,11 +24,12 @@ export const ADD_BET = 'games/ADD_BET';
 export const REMOVE_BET = 'games/REMOVE_BET';
 export const REMOVE_ALL_BET = 'games/REMOVE_ALL_BET';
 
-export const SHOW_DISCONNECT_TIMER = 'games/SHOW_DISCONNECT_TIMER';
-export const REMOVE_DISCONNECT_TIMER = 'games/REMOVE_DISCONNECT_TIMER';
+export const PLAYER_DISCONNECT = 'games/PLAYER_DISCONNECT';
+export const PLAYER_RECONNECT = 'games/PLAYER_RECONNECT';
 export const REMOVE_PLAYER = 'games/REMOVE_PLAYER';
 
 
+export const PLAYER_ADD_TABLE_FUNDS = 'games/PLAYER_ADD_TABLE_FUNDS';
 
 
 

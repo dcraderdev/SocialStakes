@@ -7,8 +7,9 @@ import {
   ADD_MESSAGE, TOGGLE_SHOW_MESSAGES,
   ADD_BALANCE,
   ADD_BET, REMOVE_BET, REMOVE_ALL_BET,
-  SHOW_DISCONNECT_TIMER, REMOVE_DISCONNECT_TIMER,
-  REMOVE_PLAYER
+  PLAYER_DISCONNECT, PLAYER_RECONNECT,
+  REMOVE_PLAYER,
+  PLAYER_ADD_TABLE_FUNDS
  } from '../actions/actionTypes'
 
 const initialState = {
@@ -182,7 +183,26 @@ const gamesReducer = (state = initialState, action) => {
       return { ...newState, currentTables: newCurrentTables };
     }
 
-    case SHOW_DISCONNECT_TIMER: {
+    case PLAYER_DISCONNECT: {
+      const {seat, tableId, timer} = action.payload;
+
+      console.log(seat);
+      console.log(tableId);
+      console.log(timer);
+    
+      const newCurrentTables = { ...newState.currentTables };
+      const newCurrentTable = { ...newCurrentTables[tableId] };
+    
+      const playerSeat = { ...newCurrentTable.tableUsers[seat] };
+      playerSeat.disconnectTimer = timer;
+    
+      newCurrentTable.tableUsers[seat] = playerSeat;
+      newCurrentTables[tableId] = newCurrentTable;
+    
+      return { ...newState, currentTables: newCurrentTables };
+    }
+
+    case PLAYER_RECONNECT: {
       const {seat, tableId, timer} = action.payload;
 
       console.log(seat);
@@ -212,7 +232,21 @@ const gamesReducer = (state = initialState, action) => {
       
       return { ...newState, currentTables: newCurrentTables };
     }
+    
+    case PLAYER_ADD_TABLE_FUNDS: {
+      const {seat, tableId} = action.payload;
+      
+      const newCurrentTables = { ...newState.currentTables };
+      const newCurrentTable = { ...newCurrentTables[tableId] };
+      
+      delete newCurrentTable.tableUsers[seat];
+      newCurrentTables[tableId] = newCurrentTable;
+      
+      return { ...newState, currentTables: newCurrentTables };
+    }
 
+
+    
   
     default:
       return newState;

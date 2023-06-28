@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import io from 'socket.io-client';
 
 import * as gameActions from '../redux/middleware/games';
-import {takeSeatAction, leaveSeatAction, addBetAction, removeBetAction, removeAllBetAction, showDisconnectTimerAction, removeDisconnectTimerAction, removePlayerAction} from '../redux/actions/gameActions';
+import {takeSeatAction, leaveSeatAction, addBetAction, removeBetAction, removeAllBetAction, playerDisconnectAction, playerReconnectAction, removePlayerAction} from '../redux/actions/gameActions';
 
 
 const SocketContext = createContext();
@@ -58,19 +58,16 @@ const SocketProvider = ({ children }) => {
       socket.on('new_player', (seatObj) => {
         console.log(seatObj);
         dispatch(takeSeatAction(seatObj));
-        return
       });    
 
       socket.on('player_leave', (seatObj) => {
         console.log(seatObj);
         dispatch(leaveSeatAction(seatObj)); 
-        return
       });   
 
       socket.on('new_bet', (betObj) => {
         console.log(betObj);
         dispatch(addBetAction(betObj)); 
-        return
       });  
 
       socket.on('player_disconnected', ({seat, tableId, timer}) => {
@@ -79,20 +76,27 @@ const SocketProvider = ({ children }) => {
         console.log(seat);
         console.log(tableId);
         console.log(timer);
-        dispatch(showDisconnectTimerAction({seat, tableId, timer})); 
-        return
+        dispatch(playerDisconnectAction({seat, tableId, timer})); 
+      });  
+
+      socket.on('player_reconnected', ({seat, tableId, timer}) => {
+        console.log('player_reconnected');
+      
+        console.log(seat);
+        console.log(tableId);
+        console.log(timer);
+        dispatch(playerReconnectAction({seat, tableId, timer})); 
       });  
 
       socket.on('remove_player', ({seat, tableId}) => {
         console.log('remove_player');
-      
-        console.log(seat);
-        console.log(tableId);
         dispatch(removePlayerAction({seat, tableId})); 
-        return
       });  
 
-
+      socket.on('player_add_table_funds', (seatObj) => {
+        console.log('player_add_table_funds');
+        dispatch(playerAddTableFunds(seatObj)); 
+      });  
 
 
       return () => {
@@ -102,6 +106,8 @@ const SocketProvider = ({ children }) => {
         socket.off('player_leave');
         socket.off('new_bet');
         socket.off('player_disconnected');
+        socket.off('player_reconnected');
+        socket.off('player_add_funds');
         socket.off('remove_player');
 
 

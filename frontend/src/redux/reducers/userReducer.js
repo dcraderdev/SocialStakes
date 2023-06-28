@@ -2,7 +2,7 @@
 import { 
   SET_USER, REMOVE_USER, 
   SET_THEMES, CHANGE_NEON_THEME, CHANGE_TABLE_THEME,
-  LEAVE_SEAT, TAKE_SEAT,
+  LEAVE_SEAT, TAKE_SEAT, PLAYER_ADD_TABLE_FUNDS,
 } from '../actions/actionTypes'
 
 
@@ -57,20 +57,44 @@ const userReducer = (state = initialState, action) => {
 
 
     case TAKE_SEAT: {
+      console.log(action.payload);
+
       const {id, seat, tableBalance, tableId, userId, username } = action.payload
 
       // Update new user balance
-      let updatedBalance = newState.balance
-      updatedBalance -= tableBalance
+      if (newState.user.id === userId) {
+        let updatedBalance = newState.balance
+        updatedBalance -= tableBalance
 
-      // Return the updated state
-      return { ...newState, balance: updatedBalance };
+        // Return the updated state
+        return { ...newState, balance: updatedBalance };
+      }
+
+      return newState;
     }
 
     case LEAVE_SEAT: {
       console.log(action.payload);
 
-      const {seat, tableId, tableBalance } = action.payload
+      const {seat, tableId, userId, tableBalance } = action.payload
+
+      // Update new user balance
+      // Update new user balance
+      if (newState.user.id === userId) {
+        let updatedBalance = newState.balance
+        updatedBalance += tableBalance
+
+        // Return the updated state
+        return { ...newState, balance: updatedBalance };
+      }
+
+      return newState;
+    }
+
+    case PLAYER_ADD_TABLE_FUNDS: {
+      console.log(action.payload);
+
+      const {room, seat, user, amount } = action.payload
 
       // Update new user balance
       let updatedBalance = newState.balance

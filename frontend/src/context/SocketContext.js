@@ -3,7 +3,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import io from 'socket.io-client';
 
 import * as gameActions from '../redux/middleware/games';
-import {takeSeatAction, leaveSeatAction, addBetAction, removeLastBetAction, removeAllBetAction, playerDisconnectAction, playerReconnectAction, removePlayerAction} from '../redux/actions/gameActions';
+import {
+  updateTableAction,
+  takeSeatAction, leaveSeatAction,
+  addBetAction, removeLastBetAction, removeAllBetAction,
+  playerDisconnectAction, playerReconnectAction,
+  removePlayerAction,
+  playerAddTableFundsAction
+} from '../redux/actions/gameActions';
 
 
 const SocketContext = createContext();
@@ -46,9 +53,25 @@ const SocketProvider = ({ children }) => {
   useEffect(() => {
     if(socket){
       
-      if(user){
-        socket.emit('initialize_messages');
-      }
+
+
+      socket.on('get_updated_table', (updateObj) => {
+        const {tableId, table} = updateObj
+        
+        console.log('get_updated_table');
+          console.log('=-=-=-=-=-=-=');
+          console.log('=-=-=-=-=-=-=');
+          console.log('=-=-=-=-=-=-=');
+          console.log('=-=-=-=-=-=-=');
+        console.log(table);
+        console.log('=-=-=-=-=-=-=');
+        console.log('=-=-=-=-=-=-=');
+        console.log('=-=-=-=-=-=-=');
+        console.log('=-=-=-=-=-=-=');
+        console.log('=-=-=-=-=-=-=');
+
+        dispatch(updateTableAction(updateObj)); 
+      }); 
       
 
       socket.on('new_message', (messageObj) => {
@@ -111,7 +134,7 @@ const SocketProvider = ({ children }) => {
 
       socket.on('player_add_table_funds', (seatObj) => {
         console.log('player_add_table_funds');
-        dispatch(playerAddTableFunds(seatObj)); 
+        dispatch(playerAddTableFundsAction(seatObj)); 
       });  
 
 
@@ -123,11 +146,9 @@ const SocketProvider = ({ children }) => {
         socket.off('new_bet');
         socket.off('player_disconnected');
         socket.off('player_reconnected');
-        socket.off('player_add_funds');
+        socket.off('player_add_table_funds');
         socket.off('remove_player');
-
-
-        socket.off('initialize_messages');
+        socket.off('get_updated_table');
 
       };
       

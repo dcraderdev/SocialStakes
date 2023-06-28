@@ -78,7 +78,7 @@ function BalanceModal() {
 
     // socket emit the seat taken, tableID, seat number, player info
     const seatObj = {
-      room: table.id,
+      tableId: table.id,
       seat,
       userId: user.id,
       amount: roundedAmount

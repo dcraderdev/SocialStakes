@@ -16,7 +16,7 @@ const TableSeat = ({seatNumber, player}) => {
   const { modal, openModal, closeModal, updateObj, setUpdateObj} = useContext(ModalContext);
 
   const [disconnectTimer, setDisconnectTimer] = useState(0)
-  const [totalBet, setTotalBet] = useState(0)
+  const [pendingBet, setPendingBet] = useState(0)
   const [currentBalance, setCurrentBalance] = useState(0)
 
 
@@ -27,7 +27,7 @@ const TableSeat = ({seatNumber, player}) => {
     let userPendingBet = currentTables[activeTable.id]?.tableUsers[seatNumber]?.pendingBet;
     let userCurrentBalance = currentTables[activeTable.id]?.tableUsers[seatNumber]?.tableBalance;
 
-    setTotalBet(userPendingBet)
+    setPendingBet(userPendingBet)
     setCurrentBalance(userCurrentBalance)
     if (userDisconnectTimer > 0) {
       setDisconnectTimer(userDisconnectTimer / 1000);
@@ -60,7 +60,8 @@ const TableSeat = ({seatNumber, player}) => {
 
 
   const leaveSeat = () => {
-    setUpdateObj({seatNumber, tableBalance:player.tableBalance})
+    let tableBalance = pendingBet + currentBalance
+    setUpdateObj({seatNumber, tableBalance})
     openModal('leaveModal')
   }
 
@@ -72,7 +73,7 @@ return(
 
     <div className={`seat-container six-ring seat${seatNumber}`}>
       {disconnectTimer > 0 && (<div className='disconnect-timer flex center'>{disconnectTimer}s</div>)}
-      <div className='total-bet flex center'>bet:{totalBet}</div>
+      <div className='total-bet flex center'>bet:{pendingBet}</div>
       <div className='table-balance flex center'>${currentBalance}</div>
       <button onClick={takeSeat}>Take seat</button>
       {player && (

@@ -1,6 +1,7 @@
 import { 
   GET_GAME_BY_ID, GET_GAMES,
   GET_TABLE_BY_ID, GET_TABLES, GET_TABLES_BY_TYPE,
+  UPDATE_TABLE,
   VIEW_TABLE, LEAVE_TABLE,
   TAKE_SEAT, LEAVE_SEAT, CHANGE_SEAT,
   SHOW_GAMES, SHOW_TABLES, SHOW_ACTIVE_TABLES,
@@ -53,6 +54,16 @@ export const getTablesByTypeAction = (data) => {
   };
 };
 
+
+
+export const updateTableAction = (data) => {
+  console.log(data);
+
+  return {
+    type: UPDATE_TABLE,
+    payload: data,
+  };
+};
 
 
   export const viewTableAction = (data) => {
@@ -187,6 +198,7 @@ export const removePlayerAction = ({seat, tableId}) => {
 };
 
 export const playerAddTableFundsAction = (seatObj) => {
+  console.log('hi');
   return {
     type: PLAYER_ADD_TABLE_FUNDS,
     payload: seatObj

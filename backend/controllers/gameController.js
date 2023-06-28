@@ -244,6 +244,43 @@ const gameController = {
 
     return true;
   },
+
+
+  async addFunds(seatObj) {
+    const {tableId, seat, userId, amount} = seatObj
+    const userToUpdate = await User.findByPk(userId);
+    const userTable = await UserTable.findOne({where:{
+      userId,
+      tableId
+    }})
+
+    if(!userTable || !userToUpdate){
+      return false
+    }
+
+    if(userToUpdate.balance<amount){
+      return false
+    }
+
+
+    try {
+      //update users unplayed balance
+      userToUpdate.balance -= amount;
+      await userToUpdate.save();
+      //update userTable balance
+      userTable.tableBalance += amount;
+      await userTable.save();
+      return true;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+    
+
+  },
+
+
+
 };
 
 module.exports = {

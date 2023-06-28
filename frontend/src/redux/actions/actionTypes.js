@@ -34,6 +34,7 @@ export const PLAYER_ADD_TABLE_FUNDS = 'games/PLAYER_ADD_TABLE_FUNDS';
 
 
 
+export const UPDATE_TABLE = 'game/UPDATE_TABLE';
 export const VIEW_TABLE = 'game/VIEW_TABLE';
 export const LEAVE_TABLE = 'game/LEAVE_TABLE';
 

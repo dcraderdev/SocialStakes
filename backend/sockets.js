@@ -20,6 +20,8 @@ module.exports = function (io) {
 
     console.log('-=-=-=-=-=-=-=-=-=');
 
+
+
     socket.join(userId);
 
     const userTables = await gameController.getUserTables(userId);
@@ -48,6 +50,7 @@ module.exports = function (io) {
   
           io.in(tableId).emit('new_message', messageObj);
           io.in(tableId).emit('player_reconnected', {seat, tableId, timer});
+
         }
       }
 
@@ -55,12 +58,6 @@ module.exports = function (io) {
     }
     
 
-    socket.on('initialize', async () => {
-      console.log('INITIALIZING');
-      console.log('INITIALIZING');
-
-      // Load table images
-    });
 
   socket.on('disconnect', async () => {
     let timer = 5000 // 15 seconds, adjust as needed
@@ -113,6 +110,7 @@ module.exports = function (io) {
     socket.on('join_room', async (room) => {
       console.log('--- join_room ---');
       console.log(`${username} is joining room ${room}.`);
+      let tableId = room
 
       let messageObj = {
         user: {
@@ -122,9 +120,19 @@ module.exports = function (io) {
         content: `${username} has joined the room.`,
         room,
       };
-      socket.join(room);
 
+
+      // If the room doesnt exist create a new room
+      if (!rooms[tableId]) {
+        rooms[tableId] = { seats: { } };
+      }
+
+      let updateObj = {tableId, table:rooms[tableId]}
+
+      socket.join(room);
+      socket.emit('get_updated_table', updateObj);
       io.in(room).emit('new_message', messageObj);
+      
 
       console.log('-=-=-=-=-=-=-=-=-=');
     });
@@ -148,37 +156,6 @@ module.exports = function (io) {
     });
 
 
-    socket.on('leave_seat', async (seatObj) => {
-      
-      const { room, seat, user, tableBalance } = seatObj;
-      let tableId = room
-
-      console.log('--------------');
-      console.log(`leave_seat`);
-      console.log(room);
-      console.log('--------------');
-
-
-      const leaveSeat = await gameController.leaveSeat(tableId, seat, user, tableBalance)
-
-      if(!leaveSeat) return
-
-      console.log('returning true');
-      console.log('returning true');
-
-
-      const leaveSeatObj = {
-        seat,
-        tableId,
-        userId:user.id,
-        tableBalance,
-      }
-
-      console.log(leaveSeatObj);
-      io.in(room).emit('player_leave', leaveSeatObj);
-
-    });
-
 
     socket.on('take_seat', async (seatObj) => {
       const { room, seat, user, amount } = seatObj;
@@ -196,7 +173,6 @@ module.exports = function (io) {
       const takeSeat = await gameController.takeSeat(tableId, seat, user, amount)
 
       if(!takeSeat){
-        console.log('yeee');
         return
       }
 
@@ -212,8 +188,18 @@ module.exports = function (io) {
         pendingBet:  takeSeat.pendingBet,
         currentBet:  takeSeat.currentBet,
 
-        username: user.username
+        username: user.username,
+        cards: []
       }
+
+      // Check if room already exists in rooms object, if not create one
+      if (!rooms[tableId]) {
+        rooms[tableId] = { seats: {} };
+      }
+
+      // Add the player to the room
+      rooms[tableId].seats[seat] = takeSeatObj;
+
 
       console.log(takeSeatObj);
 
@@ -229,10 +215,55 @@ module.exports = function (io) {
       console.log('--------------');
     });
 
+    socket.on('leave_seat', async (seatObj) => {
+      
+      const { room, seat, user, tableBalance } = seatObj;
+      let tableId = room
+
+      console.log('--------------');
+      console.log(`leave_seat`);
+      console.log(room);
+      console.log('--------------');
+
+      // Remove the player from the room state
+      if(rooms[tableId] && rooms[tableId].seats[seat]){
+        delete rooms[tableId].seats[seat];
+      }
+
+      // If the room is empty, delete the room
+      if (Object.keys(rooms[tableId].seats).length === 0) {
+        delete rooms[tableId];
+      }
+
+      const leaveSeat = await gameController.leaveSeat(tableId, seat, user, tableBalance)
+
+      if(!leaveSeat) return
+
+      const leaveSeatObj = {
+        seat,
+        tableId,
+        userId:user.id,
+        tableBalance,
+      }
+
+      console.log(leaveSeatObj);
+      io.in(room).emit('player_leave', leaveSeatObj);
+
+    });
+
+
+  
+
 
     socket.on('place_bet', async (betObj) => {
       const {bet, tableId, seat } = betObj
       let room = tableId
+
+      // Update pendingBet in the rooms object
+      if (rooms[tableId] && rooms[tableId].seats[seat]) {
+        rooms[tableId].seats[seat].pendingBet += bet;
+        rooms[tableId].seats[seat].tableBalance -= bet;
+      }
 
       io.in(room).emit('new_bet', betObj);
 
@@ -247,6 +278,13 @@ module.exports = function (io) {
       const { tableId, seat, lastBet } = betObj
       let room = tableId
 
+      // Update pendingBet in the rooms object
+      if (rooms[tableId] && rooms[tableId].seats[seat]) {
+        rooms[tableId].seats[seat].pendingBet -= lastBet;
+        rooms[tableId].seats[seat].tableBalance += lastBet;
+
+      }
+
       io.in(room).emit('remove_last_bet', betObj);
 
       console.log('--------------');
@@ -255,12 +293,19 @@ module.exports = function (io) {
     });
 
 
-    
+
 
 
     socket.on('remove_all_bet', async (betObj) => {
       const { tableId, seat, lastBet } = betObj
       let room = tableId
+
+      // Update pendingBet in the rooms object
+      if (rooms[tableId] && rooms[tableId].seats[seat]) {
+        let pendingBet = rooms[tableId].seats[seat].pendingBet
+        rooms[tableId].seats[seat].tableBalance += pendingBet;
+        rooms[tableId].seats[seat].pendingBet = 0;  
+      }
 
       io.in(room).emit('remove_all_bet', betObj);
 
@@ -275,14 +320,25 @@ module.exports = function (io) {
 
 
     socket.on('add_funds', async (seatObj) => {
-      const {room, seat, user, amount } = seatObj
+      const {tableId, seat, userId, amount } = seatObj
+      let room = tableId
 
-      io.in(room).emit('player_add_table_funds', seatObj);
+
+      const addFunds = await gameController.addFunds(seatObj)
+
+      if(!addFunds){
+        return
+      }
+
+      if(addFunds){
+        io.in(room).emit('player_add_table_funds', seatObj);
+      }
+
 
       // io.in(userId).emit('message', messageObj);
 
       console.log('--------------');
-      console.log(`Adding funds for ${username} @room ${room}`);
+      console.log(`Adding funds(${amount}) for ${username} @room ${room}`);
       console.log('--------------');
     });
 

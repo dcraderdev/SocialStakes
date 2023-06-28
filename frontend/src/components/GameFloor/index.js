@@ -66,9 +66,10 @@ function GameFloor() {
     console.log('viewing table');
       //join table's socket
       if(user){ 
-        socket.emit('join_room', table.id);
+        dispatch(gameActions.viewTable(table.id)).then(()=>{
+          socket.emit('join_room', table.id);
+        })
       }
-      dispatch(gameActions.viewTable(table.id))
   }
 
 

@@ -66,7 +66,6 @@ const userReducer = (state = initialState, action) => {
         let updatedBalance = newState.balance
         updatedBalance -= tableBalance
 
-        // Return the updated state
         return { ...newState, balance: updatedBalance };
       }
 
@@ -79,12 +78,10 @@ const userReducer = (state = initialState, action) => {
       const {seat, tableId, userId, tableBalance } = action.payload
 
       // Update new user balance
-      // Update new user balance
       if (newState.user.id === userId) {
         let updatedBalance = newState.balance
         updatedBalance += tableBalance
 
-        // Return the updated state
         return { ...newState, balance: updatedBalance };
       }
 
@@ -93,21 +90,19 @@ const userReducer = (state = initialState, action) => {
 
     case PLAYER_ADD_TABLE_FUNDS: {
       console.log(action.payload);
-
-      const {room, seat, user, amount } = action.payload
-
+    
+      const {seat, tableId, amount, userId} = action.payload;
+    
       // Update new user balance
-      let updatedBalance = newState.balance
-      updatedBalance += tableBalance
-
-      // Return the updated state
-      return { ...newState, balance: updatedBalance };
+      if (newState.user.id === userId) {
+        let updatedBalance = newState.balance;
+        updatedBalance -= amount;
+    
+        return { ...newState, balance: updatedBalance };
+      }
+    
+      return newState;
     }
-
-          // // Update user balance
-          // const updatedUser = { ...newState.user };
-          // updatedUser.balance -= tableBalance;
-          // , user: updatedUser
 
 
 

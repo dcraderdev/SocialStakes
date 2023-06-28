@@ -1,6 +1,7 @@
 import { 
   GET_GAMES, GET_GAME_BY_ID,
   GET_TABLES, GET_TABLES_BY_TYPE, GET_TABLE_BY_ID,
+  UPDATE_TABLE,
   VIEW_TABLE, LEAVE_TABLE, 
   LEAVE_SEAT, TAKE_SEAT,
   SHOW_GAMES, SHOW_TABLES, SHOW_ACTIVE_TABLES,
@@ -43,14 +44,61 @@ const gamesReducer = (state = initialState, action) => {
       return {...newState, openTablesByGameType: action.payload, showGames: false, showTables: true, showActiveTable: false}
     }
 
+
+
+
+
+
+
+
+    
+    case UPDATE_TABLE:{
+      const {tableId, table} = action.payload
+    
+      console.log(action.payload);
+    
+      let updatedCurrentTables = {...newState.currentTables};
+
+      console.log(updatedCurrentTables);
+
+      if (updatedCurrentTables[tableId]) {
+        const currentTable = updatedCurrentTables[tableId];
+
+        console.log(currentTable);
+    
+        for(let seat in currentTable.tableUsers) {
+
+          console.log(seat);
+          console.log(table.seats[seat].pendingBet);
+
+          // If the incoming table has data for this seat, update it in the currentTable
+          if (table.seats[seat]) {
+            currentTable.tableUsers[seat].cards = table.seats[seat].cards;
+            currentTable.tableUsers[seat].pendingBet = table.seats[seat].pendingBet;
+            currentTable.tableUsers[seat].tableBalance = table.seats[seat].tableBalance;
+          }
+        }
+    
+        // Replace the table in currentTables with the updated table
+        updatedCurrentTables[tableId] = currentTable;
+      }
+    
+      return {...newState, currentTables: updatedCurrentTables}
+    }
+    
+
+
     case VIEW_TABLE:{
-      console.log('asd');
+
       console.log(action.payload);
       let newCurrentTables = {...newState.currentTables}
       newCurrentTables[action.payload.id] = action.payload
       newCurrentTables[action.payload.id].messages = []
       return {...newState, currentTables: newCurrentTables, activeTable:action.payload, showGames: false, showTables: false, showActiveTable: true}
     }
+
+
+
     case LEAVE_TABLE: {
       console.log('leaving');
     
@@ -72,10 +120,9 @@ const gamesReducer = (state = initialState, action) => {
     }
 
     case TAKE_SEAT: {
-      const {id, seat, tableBalance, tableId, userId, username } = action.payload
+      const {id, seat, tableId} = action.payload
       const newTableUser = action.payload;
 
-      // Create a copy of the currentTables object
       const newCurrentTables = { ...newState.currentTables };
       // Check if the active table exists in newCurrentTables
       if (newCurrentTables[tableId]) {
@@ -93,7 +140,6 @@ const gamesReducer = (state = initialState, action) => {
     case LEAVE_SEAT:{
       console.log(action.payload);
       const {seat, tableId} = action.payload
-      // Create a copy of the currentTables object
       const newCurrentTables = { ...newState.currentTables };
 
       // Check if the active table exists in newCurrentTables
@@ -240,13 +286,16 @@ const gamesReducer = (state = initialState, action) => {
 
     case PLAYER_ADD_TABLE_FUNDS: {
       console.log(action.payload);
-      const {seat, tableId} = action.payload;
+      const {seat, tableId, amount} = action.payload;
       
       const newCurrentTables = { ...newState.currentTables };
       const newCurrentTable = { ...newCurrentTables[tableId] };
       
-      delete newCurrentTable.tableUsers[seat];
-      newCurrentTables[tableId] = newCurrentTable;
+      const newCurrentSeat = newCurrentTable.tableUsers[seat];
+      console.log(newCurrentTable.tableUsers);
+
+      console.log(newCurrentSeat);
+      newCurrentSeat.tableBalance += amount;
       
       return { ...newState, currentTables: newCurrentTables };
     }

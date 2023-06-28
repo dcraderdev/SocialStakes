@@ -98,3 +98,8 @@
   color: rgba(255, 255, 255, 0.149);
   border: solid 1px rgba(255, 255, 255, 0.118);
 }
+
+
+.balancemodal-funding-input{
+  width: 150px;
+}

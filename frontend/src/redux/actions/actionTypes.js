@@ -24,6 +24,14 @@ export const ADD_BET = 'games/ADD_BET';
 export const REMOVE_BET = 'games/REMOVE_BET';
 export const REMOVE_ALL_BET = 'games/REMOVE_ALL_BET';
 
+export const SHOW_DISCONNECT_TIMER = 'games/SHOW_DISCONNECT_TIMER';
+export const REMOVE_DISCONNECT_TIMER = 'games/REMOVE_DISCONNECT_TIMER';
+export const REMOVE_PLAYER = 'games/REMOVE_PLAYER';
+
+
+
+
+
 
 export const VIEW_TABLE = 'game/VIEW_TABLE';
 export const LEAVE_TABLE = 'game/LEAVE_TABLE';

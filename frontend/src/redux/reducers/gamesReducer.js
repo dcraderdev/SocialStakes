@@ -6,7 +6,9 @@ import {
   SHOW_GAMES, SHOW_TABLES, SHOW_ACTIVE_TABLES,
   ADD_MESSAGE, TOGGLE_SHOW_MESSAGES,
   ADD_BALANCE,
-  ADD_BET, REMOVE_BET, REMOVE_ALL_BET
+  ADD_BET, REMOVE_BET, REMOVE_ALL_BET,
+  SHOW_DISCONNECT_TIMER, REMOVE_DISCONNECT_TIMER,
+  REMOVE_PLAYER
  } from '../actions/actionTypes'
 
 const initialState = {
@@ -78,7 +80,6 @@ const gamesReducer = (state = initialState, action) => {
       if (newCurrentTables[tableId]) {
         // Assign newTableUser to seat in tableUsers obj of the active table
         newCurrentTables[tableId].tableUsers[seat] = newTableUser;
-        newCurrentTables[tableId].tableUsers[seat].currentBet = 0;
         newCurrentTables[tableId].currentSeat = seat;
       }
 
@@ -140,7 +141,7 @@ const gamesReducer = (state = initialState, action) => {
       const newCurrentTable = { ...newCurrentTables[tableId] };
     
       const playerSeat = { ...newCurrentTable.tableUsers[seat] };
-      playerSeat.currentBet += bet;
+      playerSeat.pendingBet += bet;
       playerSeat.tableBalance -= bet;
     
       newCurrentTable.tableUsers[seat] = playerSeat;
@@ -156,7 +157,7 @@ const gamesReducer = (state = initialState, action) => {
       const newCurrentTable = { ...newCurrentTables[tableId] };
     
       const playerSeat = { ...newCurrentTable.tableUsers[seat] };
-      playerSeat.currentBet -= lastBet;
+      playerSeat.pendingBet -= lastBet;
       playerSeat.tableBalance += lastBet;
     
       newCurrentTable.tableUsers[seat] = playerSeat;
@@ -172,8 +173,27 @@ const gamesReducer = (state = initialState, action) => {
       const newCurrentTable = { ...newCurrentTables[tableId] };
     
       const playerSeat = { ...newCurrentTable.tableUsers[seat] };
-      playerSeat.tableBalance += playerSeat.currentBet;
-      playerSeat.currentBet = 0;
+      playerSeat.tableBalance += playerSeat.pendingBet;
+      playerSeat.pendingBet = 0;
+    
+      newCurrentTable.tableUsers[seat] = playerSeat;
+      newCurrentTables[tableId] = newCurrentTable;
+    
+      return { ...newState, currentTables: newCurrentTables };
+    }
+
+    case SHOW_DISCONNECT_TIMER: {
+      const {seat, tableId, timer} = action.payload;
+
+      console.log(seat);
+      console.log(tableId);
+      console.log(timer);
+    
+      const newCurrentTables = { ...newState.currentTables };
+      const newCurrentTable = { ...newCurrentTables[tableId] };
+    
+      const playerSeat = { ...newCurrentTable.tableUsers[seat] };
+      playerSeat.disconnectTimer = timer;
     
       newCurrentTable.tableUsers[seat] = playerSeat;
       newCurrentTables[tableId] = newCurrentTable;
@@ -181,7 +201,17 @@ const gamesReducer = (state = initialState, action) => {
       return { ...newState, currentTables: newCurrentTables };
     }
     
-
+    case REMOVE_PLAYER: {
+      const {seat, tableId} = action.payload;
+      
+      const newCurrentTables = { ...newState.currentTables };
+      const newCurrentTable = { ...newCurrentTables[tableId] };
+      
+      delete newCurrentTable.tableUsers[seat];
+      newCurrentTables[tableId] = newCurrentTable;
+      
+      return { ...newState, currentTables: newCurrentTables };
+    }
 
   
     default:

@@ -1,42 +1,45 @@
 import React, { useState, useRef, useEffect, useContext } from 'react';
 import {Route,Router,Switch,NavLink,Link,useHistory,useParams,} from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';import
+ { SocketContext } from '../../context/SocketContext';
+ 
+ import './PlayerBetOptions.css';
+ import Chatbox from '../Chatbox';
+ import {
+   leaveTableAction,
+   toggleShowMessages,
+   addBetAction,
+   removeBetAction,
+   removeAllBetAction,
+   changeActiveTablesAction
+  } from '../../redux/actions/gameActions';
+  
+  import { changeTableThemeAction } from '../../redux/actions/userActions';
+  
+  const PlayerBetOptions = () => {
+    const dispatch = useDispatch();
+    
+    const [sitOutSelected, setSitOutSelected] = useState(false);
+    const [sitOutNextHandSelected, setSitOutNextHandSelected] = useState(false);
+    const [lastBet, setLastBet] = useState(0);
+    const [isSitting, setIsSitting] = useState(false);
+    const [currentSeat, setCurrentSeat] = useState(null);
+    const [tableBalance, setTableBalance] = useState(0);
+    
+    const {socket} = useContext(SocketContext)
 
-import './PlayerBetOptions.css';
-import Chatbox from '../Chatbox';
-import {
-  leaveTableAction,
-  toggleShowMessages,
-  addBetAction,
-  removeBetAction,
-  removeAllBetAction,
-  changeActiveTablesAction
-} from '../../redux/actions/gameActions';
-
-import { changeTableThemeAction } from '../../redux/actions/userActions';
-
-const PlayerBetOptions = () => {
-  const dispatch = useDispatch();
-
-  const [sitOutSelected, setSitOutSelected] = useState(false);
-  const [sitOutNextHandSelected, setSitOutNextHandSelected] = useState(false);
-  const [lastBet, setLastBet] = useState(0);
-  const [isSitting, setIsSitting] = useState(false);
-  const [currentSeat, setCurrentSeat] = useState(false);
-  const [tableBalance, setTableBalance] = useState(false);
-
-  const currentTables = useSelector((state) => state.games.currentTables);
-  const activeTable = useSelector((state) => state.games.activeTable);
-  const showMessages = useSelector((state) => state.games.showMessages);
-  const user = useSelector((state) => state.users.user);
+    const currentTables = useSelector((state) => state.games.currentTables);
+    const activeTable = useSelector((state) => state.games.activeTable);
+    const showMessages = useSelector((state) => state.games.showMessages);
+    const user = useSelector((state) => state.users.user);
 
 
   useEffect(()=>{
+      setCurrentSeat(null)
       setIsSitting(false)
+      setTableBalance(0)
       if(activeTable && user){
       Object.values(currentTables[activeTable.id].tableUsers).map(seat=>{
-        console.log(seat);
-
         if(seat.userId === user.id){
           setIsSitting(true)
           setCurrentSeat(seat.seat)
@@ -47,7 +50,6 @@ const PlayerBetOptions = () => {
   }, [currentTables])
 
 
-console.log(tableBalance);
 
   const handleTableThemeChange = (tableTheme) => {
     console.log(tableTheme);
@@ -60,12 +62,17 @@ console.log(tableBalance);
 
   const rebet = (multiplier) => {
     if(multiplier){
-
       return
     }
-
   };
+
+
+
   const undoBet = (multiplier) => {
+    let currPendingBet = currentTables[activeTable.id].tableUsers.currentSeat.pendingBet
+    if(pendingBet === 0){
+      return
+    }
     const betObj={
       tableId: activeTable.id,
       user,
@@ -96,7 +103,8 @@ console.log(tableBalance);
       seat: currentSeat
     }
     setLastBet(bet)
-    dispatch(addBetAction(betObj));
+    socket.emit('place_bet', betObj)
+    // dispatch(addBetAction(betObj));
   };
 
 

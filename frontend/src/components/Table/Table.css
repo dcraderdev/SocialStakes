@@ -84,16 +84,7 @@
   height: 30%;
 }
 
-.seat-container{
-  border: white solid 1px;
-  width: 100px;
-  min-width: 100px;
-  height: 100px;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-} 
+
 
 .seat1{
   left: 20px;

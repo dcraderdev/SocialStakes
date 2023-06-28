@@ -18,7 +18,20 @@ function BalanceModal() {
   const { modal, openModal, closeModal, updateObj, setUpdateObj} = useContext(ModalContext);
   
   const user = useSelector((state) => state.users.user);
+  const balance = useSelector((state) => state.users.balance);
   const table = useSelector((state) => state.games.activeTable);
+
+
+
+
+  const handleSetFunding = (e) => {
+    if(e.target.value < 0){
+      setAmount(0)
+    } else {
+      e.target.value > balance ? setAmount(balance): setAmount(e.target.value)
+    }
+
+  }
 
 
   const fundTable = () => {
@@ -86,17 +99,15 @@ function BalanceModal() {
     setUpdateObj(null)
   }
 
-  console.log(amount);
-  console.log(amount !== '');
-  console.log(updateObj.minBet);
-  console.log(amount<updateObj.minBet);
+  
+
 
   return (
     <div className="balancemodal-wrapper" ref={formRef}>
 
 
       {/* Not enough Balance */}
-      {user && updateObj.minBet && user.balance < updateObj.minBet && (
+      {user && updateObj.minBet && balance < updateObj.minBet && (
         <div className="balancemodal-container flex center">
           <div className="balancemodal-header flex center">
             Insufficient Account Balance!
@@ -106,7 +117,7 @@ function BalanceModal() {
           </div>
           <div className="balancemodal-memo-container flex between">
             <div className="balancemodal-memo">{`Balance:`}</div>
-            <div className="balancemodal-balance">{`${user?.balance ? user.balance : 0 }`}</div>
+            <div className="balancemodal-balance">{`${balance ? balance : 0 }`}</div>
             
           </div>
           <div className='balancemodal-user-buttons flex between'>        
@@ -117,7 +128,6 @@ function BalanceModal() {
       )}
 
 
-
       {user && updateObj.minBet && user.balance >= updateObj.minBet && (
         <div className="balancemodal-container flex center">
           <div className="balancemodal-header white flex center">
@@ -126,7 +136,7 @@ function BalanceModal() {
           <div className="balancemodal-subheader flex center">{`Minimum buy-in: $${updateObj.minBet}`}</div>
           <div className="balancemodal-memo-container flex between">
             <div className="balancemodal-memo">Balance:</div>
-            <div className={`balancemodal-balance ${user.balance > updateObj.minBet ? 'green' : 'red'}`}>{`$${user.balance ? user.balance : 0}`}</div>
+            <div className={`balancemodal-balance ${balance > updateObj.minBet ? 'green' : 'red'}`}>{`$${balance ? balance : 0}`}</div>
           </div>
 
         <form 
@@ -134,10 +144,14 @@ function BalanceModal() {
         
         >
           <input
+          className='balancemodal-funding-input'
             type="number"
             value={amount} 
-            onChange={(e)=>setAmount(e.target.value)}
+            onChange={(e)=> handleSetFunding(e)}
+            
             placeholder="Enter amount"
+            max={balance}
+            min={0}
             />
         </form>
 

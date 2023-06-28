@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import io from 'socket.io-client';
 
 import * as gameActions from '../redux/middleware/games';
-import {takeSeatAction, leaveSeatAction} from '../redux/actions/gameActions';
+import {takeSeatAction, leaveSeatAction, addBetAction, removeBetAction, removeAllBetAction, showDisconnectTimerAction, removeDisconnectTimerAction, removePlayerAction} from '../redux/actions/gameActions';
 
 
 const SocketContext = createContext();
@@ -57,36 +57,54 @@ const SocketProvider = ({ children }) => {
 
       socket.on('new_player', (seatObj) => {
         console.log(seatObj);
-        console.log('heerererereeeee');
         dispatch(takeSeatAction(seatObj));
         return
       });    
 
       socket.on('player_leave', (seatObj) => {
         console.log(seatObj);
-        console.log('heerererereeeee');
         dispatch(leaveSeatAction(seatObj)); 
         return
-
       });   
 
-      socket.on('halp', () => {
-        console.log('heerererereeeee');
-        console.log('heerererereeeee');
-        console.log('heerererereeeee');
-        console.log('heerererereeeee');
-        console.log('heerererereeeee');
-        console.log('heerererereeeee');
-        console.log('heerererereeeee');
+      socket.on('new_bet', (betObj) => {
+        console.log(betObj);
+        dispatch(addBetAction(betObj)); 
+        return
       });  
+
+      socket.on('player_disconnected', ({seat, tableId, timer}) => {
+        console.log('player_disconnected');
+      
+        console.log(seat);
+        console.log(tableId);
+        console.log(timer);
+        dispatch(showDisconnectTimerAction({seat, tableId, timer})); 
+        return
+      });  
+
+      socket.on('remove_player', ({seat, tableId}) => {
+        console.log('remove_player');
+      
+        console.log(seat);
+        console.log(tableId);
+        dispatch(removePlayerAction({seat, tableId})); 
+        return
+      });  
+
+
+
 
       return () => {
 
-
+        socket.off('new_message');
         socket.off('new_player');
         socket.off('player_leave');
-        socket.off('halp');
-        socket.off('message');
+        socket.off('new_bet');
+        socket.off('player_disconnected');
+        socket.off('remove_player');
+
+
         socket.off('initialize_messages');
 
       };

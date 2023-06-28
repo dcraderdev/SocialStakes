@@ -101,9 +101,39 @@ const gameController = {
 
 
 
+  async getUserTables(userId) {
+    const userTables = await UserTable.findAll({where:{userId}})
+    if(!userTables){
+      return false
+    }
+    // const tableIds = userTables.map(userTable=>userTable.tableId)
+    return userTables
+  },
 
 
+  async removeUserFromTables(userId) {
+    const userTables = await UserTable.findAll({where:{userId}})
+    const userToUpdate = await User.findByPk(userId);
 
+    if(!userTables || !userToUpdate){
+      return false
+    }
+
+    let totalTableBalance = 0;
+
+    for(let userTable of userTables){
+      totalTableBalance += userTable.tableBalance; 
+      await userTable.destroy();
+    }
+  
+    userToUpdate.balance += totalTableBalance;
+    await userToUpdate.save();
+
+
+    return
+  },
+
+  
 
   async takeSeat(tableId, seat, user, amount) {
     const userToUpdate = await User.findByPk(user.id);
@@ -133,7 +163,7 @@ const gameController = {
       console.log(player);
       if (player.seat === seat) {
         if (player.userId === user.id) {
-          return true; // If we're sitting in the checked seat, return the userTable info
+          return true;
         } else {
           return true;
         }
@@ -157,7 +187,10 @@ const gameController = {
         userId: user.id,
         tableId,
         seat,
-        tableBalance: amount
+        tableBalance: amount,
+        currentBet: 0,
+        pendingBet: 0,
+        disconnectTimer: 0
       });
       if (!takeSeat) {
         return false;

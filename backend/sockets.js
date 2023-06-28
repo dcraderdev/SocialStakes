@@ -3,6 +3,7 @@ const { gameController } = require('./controllers/gameController');
 
 module.exports = function (io) {
   const rooms = {};
+  const disconnectTimeouts = {};
 
   io.on('connection', (socket) => {
     const userId = socket.handshake.query.userId;
@@ -20,12 +21,67 @@ module.exports = function (io) {
 
     socket.join(userId);
 
+    // Reconnection logic
+    if (disconnectTimeouts[userId]) {
+      clearTimeout(disconnectTimeouts[userId]);
+      console.log(`User ${username} reconnected, timeout cleared.`);
+      delete disconnectTimeouts[userId];
+    }
+
     socket.on('initialize', async () => {
       console.log('INITIALIZING');
       console.log('INITIALIZING');
 
       // Load table images
     });
+
+  socket.on('disconnect', async () => {
+    let timer = 5000 // 15 seconds, adjust as needed
+    console.log(`User ${username} disconnected`);
+    userTables = await gameController.getUserTables(userId);
+    if(userTables){
+      for(table of userTables){
+        let tableId = table.tableId
+        let seat = table.seat
+        let messageObj = {
+          user: {
+            username: 'Room',
+            id: 1,
+          },
+          content: `${username} has disconnected.`,
+          room: tableId,
+        };
+
+        
+
+        io.in(tableId).emit('new_message', messageObj);
+        io.in(tableId).emit('player_disconnected', {seat, tableId, timer});
+      }
+    }
+
+    // Clear the existing timeout for this user (if any)
+    if (disconnectTimeouts[userId]) {
+      clearTimeout(disconnectTimeouts[userId]);
+    }
+
+    // Start a new timeout for this user
+    disconnectTimeouts[userId] = setTimeout(async () => {
+      
+      console.log('REMOVING PLAYER');
+      if(userTables){
+        for(table of userTables){
+          let tableId = table.tableId
+          let seat = table.seat
+          io.in(tableId).emit('remove_player', {seat, tableId});
+        }
+      }
+      await gameController.removeUserFromTables(userId);
+
+
+    }, timer); 
+  });
+
+
 
     socket.on('join_room', async (room) => {
       console.log('--- join_room ---');
@@ -65,14 +121,10 @@ module.exports = function (io) {
     });
 
 
-
-
     socket.on('leave_seat', async (seatObj) => {
       
       const { room, seat, user, tableBalance } = seatObj;
       let tableId = room
-
-      io.in(room).emit('halp');
 
       console.log('--------------');
       console.log(`leave_seat`);
@@ -100,12 +152,6 @@ module.exports = function (io) {
     });
 
 
-
-
-
-
-
-
     socket.on('take_seat', async (seatObj) => {
       const { room, seat, user, amount } = seatObj;
       let tableId = room
@@ -126,24 +172,7 @@ module.exports = function (io) {
         return
       }
 
-      console.log('-=-=--=-=-');
-      console.log('-=-=--=-=-');
-      console.log(takeSeat);
-      console.log('-=-=--=-=-');
-      console.log('-=-=--=-=-');
-
       takeSeat['username'] = user.username
-
-      let goal = {
-        id: "e87a6a96-6ebc-4ef3-b6a1-3058b136fbbb",
-        seat: 2,
-        tableBalance: 50,
-        tableId: "e10d8de4-f4c2-4d28-9324-56aa9c920801",
-        userId: "87d1cb3a-b8e2-4c7e-9d80-462a523b0fcb",
-        username: "Hazel"
-      }
-
-
 
       const takeSeatObj = {
         id: takeSeat.id,
@@ -151,6 +180,10 @@ module.exports = function (io) {
         tableBalance: takeSeat.tableBalance,
         tableId:  takeSeat.tableId,
         userId:  takeSeat.userId,
+        disconnectTimer:  takeSeat.disconnectTimer,
+        pendingBet:  takeSeat.pendingBet,
+        currentBet:  takeSeat.currentBet,
+
         username: user.username
       }
 
@@ -161,12 +194,28 @@ module.exports = function (io) {
       io.in(room).emit('new_message', messageObj);
       io.in(room).emit('new_player', takeSeatObj);
 
-
       // io.in(userId).emit('message', messageObj);
 
       console.log('--------------');
       console.log(`Message received from ${room}`);
       console.log('--------------');
     });
+
+
+    socket.on('place_bet', async (betObj) => {
+      const {bet, tableId, user, seat } = betObj
+      let room = tableId
+
+      io.in(room).emit('new_bet', betObj);
+
+      // io.in(userId).emit('message', messageObj);
+
+      console.log('--------------');
+      console.log(`Bet(${bet}) received from ${username} @room ${room}`);
+      console.log('--------------');
+    });
+
+
+
   });
 };

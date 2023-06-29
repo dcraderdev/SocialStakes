@@ -70,12 +70,16 @@ import { ModalContext } from '../../context/ModalContext';
   };
 
 
-
+  
   const undoBet = (multiplier) => {
+    
+    
+    console.log(lastBet);
     console.log(currentSeat);
     console.log(currentTables[activeTable.id].tableUsers[currentSeat]);
 
     let currPendingBet = currentTables[activeTable.id].tableUsers[currentSeat].pendingBet
+
 
 
     if(currPendingBet === 0){
@@ -104,7 +108,7 @@ import { ModalContext } from '../../context/ModalContext';
     if(!user) return
     if(!isSitting) return
     if(bet >= tableBalance){
-      bet = tableBalance
+      bet = parseInt(tableBalance)
     }
     const betObj={
       bet,
@@ -124,6 +128,7 @@ import { ModalContext } from '../../context/ModalContext';
 
   const addBalance = () => {
       if(!user) return
+      if(!currentSeat) return
       setUpdateObj({minBet:activeTable.Game.minBet, seatNumber:currentSeat, type:'addDeposit'})
       openModal('balanceModal')
   };

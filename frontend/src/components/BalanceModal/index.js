@@ -227,7 +227,7 @@ function BalanceModal() {
           </div>
 
         <form 
-        onSubmit={fundTable}
+        onSubmit={addFundsToTable}
         
         >
           <input

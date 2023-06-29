@@ -17,7 +17,12 @@ const TableSeat = ({seatNumber, player}) => {
 
   const [disconnectTimer, setDisconnectTimer] = useState(0)
   const [pendingBet, setPendingBet] = useState(0)
+  const [currentBet, setCurrentBet] = useState(0)
   const [currentBalance, setCurrentBalance] = useState(0)
+
+
+  const [isCurrentUser, setIsCurrentUser] = useState(false);
+  const [isUserInAnySeat, setIsUserInAnySeat] = useState(false);
 
 
 
@@ -27,15 +32,26 @@ const TableSeat = ({seatNumber, player}) => {
 
     let userDisconnectTimer = currentTables[activeTable.id]?.tableUsers[seatNumber]?.disconnectTimer;
     let userPendingBet = currentTables[activeTable.id]?.tableUsers[seatNumber]?.pendingBet;
+    let userCurrentBet = currentTables[activeTable.id]?.tableUsers[seatNumber]?.currentBet;
     let userCurrentBalance = currentTables[activeTable.id]?.tableUsers[seatNumber]?.tableBalance;
 
     setPendingBet(userPendingBet)
+    setCurrentBet(userCurrentBet)
     setCurrentBalance(userCurrentBalance)
     if (userDisconnectTimer > 0) {
       setDisconnectTimer(userDisconnectTimer / 1000);
     }
   }, [currentTables, activeTable.id, seatNumber]);
   
+
+  useEffect(() => {
+    let userInAnySeat = Object.values(currentTables[activeTable.id]?.tableUsers || {}).some(seat => seat.username === user.username);
+
+    let currentUserInSeat = currentTables[activeTable.id]?.tableUsers[seatNumber]?.username === user.username;
+    setIsCurrentUser(currentUserInSeat);
+    setIsUserInAnySeat(userInAnySeat);
+  }, [currentTables, activeTable.id, seatNumber, user]);
+
 
   useEffect(() => {
     let timerId = null;
@@ -75,12 +91,23 @@ return(
 
     <div className={`seat-container six-ring seat${seatNumber}`}>
       {disconnectTimer > 0 && (<div className='disconnect-timer flex center'>{disconnectTimer}s</div>)}
-      <div className='total-bet flex center'>bet:{pendingBet}</div>
-      <div className='table-balance flex center'>${currentBalance}</div>
-      <button onClick={takeSeat}>Take seat</button>
+
       {player && (
+        <div>
+          <div className='flex center'>user:{player?.username ? player.username : ''}</div>
+          <div className='total-bet flex center'>pending bet:{pendingBet}</div>
+          <div className='total-bet flex center'>current bet:{currentBet}</div>
+          <div className='table-balance flex center'>${currentBalance}</div>
+        </div>
+      )}
+
+
+
+      {!player && !isCurrentUser && !isUserInAnySeat && (
+        <button onClick={takeSeat}>Take seat</button>
+      )}
+      {player && isCurrentUser && (
         <>
-          <div>{player?.username ? player.username : ' anon'}</div>
           <button onClick={leaveSeat}>Leave seat</button>
         </>
       )}

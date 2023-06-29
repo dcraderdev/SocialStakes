@@ -80,6 +80,7 @@ const gamesReducer = (state = initialState, action) => {
           if (table.seats[seat]) {
             currentTable.tableUsers[seat].cards = table.seats[seat].cards;
             currentTable.tableUsers[seat].pendingBet = table.seats[seat].pendingBet;
+            currentTable.tableUsers[seat].currentBet = table.seats[seat].currentBet;
             currentTable.tableUsers[seat].tableBalance = table.seats[seat].tableBalance;
           }
         }

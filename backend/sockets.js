@@ -34,7 +34,7 @@ module.exports = function (io) {
 
 
       if(userTables){
-        for(table of userTables){
+        for(let table of userTables){
           let tableId = table.tableId
           let seat = table.seat
           let timer = 0
@@ -60,7 +60,7 @@ module.exports = function (io) {
       console.log(`User ${username} disconnected`);
       const userTables = await gameController.getUserTables(userId);
       if(userTables){
-        for(table of userTables){
+        for(let table of userTables){
           let tableId = table.tableId
           let seat = table.seat
           let messageObj = {
@@ -88,7 +88,7 @@ module.exports = function (io) {
         console.log('REMOVING PLAYER');
         if(userTables){
 
-          for(table of userTables){
+          for(let table of userTables){
             let tableId = table.tableId
             let seat = table.seat
             io.in(tableId).emit('remove_player', {seat, tableId});
@@ -236,10 +236,6 @@ module.exports = function (io) {
         delete rooms[tableId].seats[seat];
       }
 
-      // If the room is empty, delete the room
-      if (rooms[tableId] && Object.keys(rooms[tableId].seats).length === 0) {
-        delete rooms[tableId];
-      }
 
       const leaveSeat = await gameController.leaveSeat(tableId, seat, user, tableBalance)
 
@@ -315,8 +311,22 @@ module.exports = function (io) {
             console.log('=-=-=-=-=-');
 
 
-            // Emit updated table to clients
-            io.in(room).emit('table_updated', rooms[tableId]);
+            // // Emit updated table to clients
+            // io.in(room).emit('table_updated', rooms[tableId]);
+
+
+            let updateObj = {
+              tableId,
+              table: {
+                seats: rooms[tableId].seats,
+                countdownRemaining
+              }
+            };
+      
+            socket.join(room);
+            io.in(room).emit('get_updated_table', updateObj);
+
+
 
 
             // Countdown finished, emit event to collect all bets
@@ -383,9 +393,6 @@ module.exports = function (io) {
       console.log(`Removing all bets received from ${username} @room ${room}`);
       console.log('--------------');
     });
-
-
-
 
 
 

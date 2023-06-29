@@ -11,7 +11,8 @@ import {
   PLAYER_DISCONNECT, PLAYER_RECONNECT,
   REMOVE_PLAYER,
   PLAYER_ADD_TABLE_FUNDS,
-  START_TABLE_COUNTDOWN
+  START_TABLE_COUNTDOWN,
+  COLLECT_BETS
  } from '../actions/actionTypes'
 
 const initialState = {
@@ -66,11 +67,14 @@ const gamesReducer = (state = initialState, action) => {
         const currentTable = updatedCurrentTables[tableId];
 
         console.log(currentTable);
+        console.log(table.countdownRemaining);
+        currentTable.countdown = table.countdownRemaining;
     
         for(let seat in currentTable.tableUsers) {
 
           // console.log(seat);
           // console.log(table.seats[seat].pendingBet);
+
 
           // If the incoming table has data for this seat, update it in the currentTable
           if (table.seats[seat]) {
@@ -79,6 +83,8 @@ const gamesReducer = (state = initialState, action) => {
             currentTable.tableUsers[seat].tableBalance = table.seats[seat].tableBalance;
           }
         }
+
+        console.log(currentTable);
     
         // Replace the table in currentTables with the updated table
         updatedCurrentTables[tableId] = currentTable;
@@ -303,13 +309,38 @@ const gamesReducer = (state = initialState, action) => {
 
     case START_TABLE_COUNTDOWN: {
       console.log(action.payload);
-      const {countdown, tableId} = action.payload;
+      console.log('here');
+
+      const {countdownRemaining, tableId} = action.payload;
       
       const newCurrentTables = { ...newState.currentTables };
       const newCurrentTable = { ...newCurrentTables[tableId] };
 
 
-      newCurrentTable.countdown = countdown
+      newCurrentTable.countdown = countdownRemaining
+      newCurrentTables[tableId] = newCurrentTable;
+
+      console.log(newCurrentTable);
+      
+
+      
+      return { ...newState, currentTables: newCurrentTables };
+    }
+
+    case COLLECT_BETS: {
+      console.log(action.payload);
+      console.log('here');
+
+      const {countdownRemaining, tableId} = action.payload;
+      
+      const newCurrentTables = { ...newState.currentTables };
+      const newCurrentTable = { ...newCurrentTables[tableId] };
+
+
+      newCurrentTable.countdown = countdownRemaining
+      newCurrentTables[tableId] = newCurrentTable;
+
+      console.log(newCurrentTable);
       
 
       

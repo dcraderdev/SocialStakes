@@ -110,14 +110,14 @@ module.exports = {
         card: null,
         betSize: 50,
       }, 
-      {
-        id: 'ea0a6a96-7abc-4ef3-b6a1-3058aaaaaa02',
-        userId: userIds[1], // Hazel Forest
-        roundId: 2,
-        type: 'bet_init',
-        card: null,
-        betSize: 50,
-      }, 
+      // {
+      //   id: 'ea0a6a96-7abc-4ef3-b6a1-3058aaaaaa02',
+      //   userId: userIds[1], // Hazel Forest
+      //   roundId: 2,
+      //   type: 'bet_init',
+      //   card: null,
+      //   betSize: 50,
+      // }, 
       {
         id: 'ea0a6a96-7abc-4ef3-b6a1-3058aaaaaa03',
         userId: userIds[0], // Trina Pine
@@ -127,14 +127,14 @@ module.exports = {
 
         betSize: null,
       },
-      {
-        id: 'ea0a6a96-7abc-4ef3-b6a1-3058aaaaaa04',
-        userId: userIds[1], // Hazel Forest
-        roundId: 2,
-        type: 'initial_cards_deal',
-        card: `${cards2[0]} ${cards2[1]}`, //[ 21, 32 ]{ rank: '10', suit: 'heart', value: 10 }{ rank: '8', suit: 'diamond', value: 8 }
-        betSize: null,
-      },
+      // {
+      //   id: 'ea0a6a96-7abc-4ef3-b6a1-3058aaaaaa04',
+      //   userId: userIds[1], // Hazel Forest
+      //   roundId: 2,
+      //   type: 'initial_cards_deal',
+      //   card: `${cards2[0]} ${cards2[1]}`, //[ 21, 32 ]{ rank: '10', suit: 'heart', value: 10 }{ rank: '8', suit: 'diamond', value: 8 }
+      //   betSize: null,
+      // },
 
       {
         id: 'ea0a6a96-7abc-4ef3-b6a1-3058aaaaaa05',
@@ -152,14 +152,14 @@ module.exports = {
         card: null,
         betSize: null,
       },
-      {
-        id: 'ea0a6a96-7abc-4ef3-b6a1-3058aaaaaa07',
-        userId: '87d1cb3a-b8e2-4c7e-9d80-462a523b0fcb', // Hazel Forest
-        roundId: 2,
-        type: 'stay_player',
-        card: null,
-        betSize: null,
-      },
+      // {
+      //   id: 'ea0a6a96-7abc-4ef3-b6a1-3058aaaaaa07',
+      //   userId: '87d1cb3a-b8e2-4c7e-9d80-462a523b0fcb', // Hazel Forest
+      //   roundId: 2,
+      //   type: 'stay_player',
+      //   card: null,
+      //   betSize: null,
+      // },
       {
         id: 'ea0a6a96-7abc-4ef3-b6a1-3058aaaaaa08',
         userId: null, // Dealer (init)
@@ -201,12 +201,12 @@ module.exports = {
        roundId: 2,
        cards: `${cards1[0]} ${cards1[1]}`
      },
-     {
-       id: 'ea0a6a96-7abc-4ef3-b6a1-5556aaaabb11',
-       userTableId: 'e87a6a96-6ebc-4ef3-b6a1-3058b136fbbb', // Hazel Forest
-       roundId: 2,
-       cards: `${cards2[0]} ${cards2[1]}`
-     },
+    //  {
+    //    id: 'ea0a6a96-7abc-4ef3-b6a1-5556aaaabb11',
+    //    userTableId: 'e87a6a96-6ebc-4ef3-b6a1-3058b136fbbb', // Hazel Forest
+    //    roundId: 2,
+    //    cards: `${cards2[0]} ${cards2[1]}`
+    //  },
    ]
 
 
@@ -223,13 +223,13 @@ module.exports = {
       potAmount: 50,
     };
 
-    const pot2 = {
-      id: 'e87a6a96-6ebc-4ef3-b6a1-3058b1000015',
-      roundId: 2,
-      potAmount: 50,
-    };
+    // const pot2 = {
+    //   id: 'e87a6a96-6ebc-4ef3-b6a1-3058b1000015',
+    //   roundId: 2,
+    //   potAmount: 50,
+    // };
 
-    await queryInterface.bulkInsert(options, [pot1, pot2], {});
+    await queryInterface.bulkInsert(options, [pot1], {});
 
     // Create UserPots
    options.tableName = 'UserPots'
@@ -240,14 +240,14 @@ module.exports = {
       potId: pot1.id,
       won: false
     };
-    const userPot2 = {
-      id: 'e87a6a96-6ebc-4ef3-b6a1-3058b7770015',
-      userId: '2da2c0a2-0de9-4275-a5e5-5d91e8b8533c',
-      potId: pot2.id,
-      won: false
-    };
+    // const userPot2 = {
+    //   id: 'e87a6a96-6ebc-4ef3-b6a1-3058b7770015',
+    //   userId: '2da2c0a2-0de9-4275-a5e5-5d91e8b8533c',
+    //   potId: pot2.id,
+    //   won: false
+    // };
 
-    await queryInterface.bulkInsert(options, [userPot1, userPot2], {});
+    await queryInterface.bulkInsert(options, [userPot1], {});
 
 
   },

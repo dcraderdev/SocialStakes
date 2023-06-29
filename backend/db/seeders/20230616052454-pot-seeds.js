@@ -18,13 +18,13 @@ module.exports = {
       roundId: 1,
       potAmount: 50,
     };
-    const pot2 = {
-      id: 'e87a6a96-6ebc-4ef3-b6a1-3058b1000002',
-      roundId: 1,
-      potAmount: 50,
-    };
+    // const pot2 = {
+    //   id: 'e87a6a96-6ebc-4ef3-b6a1-3058b1000002',
+    //   roundId: 1,
+    //   potAmount: 50,
+    // };
 
-    await queryInterface.bulkInsert(options, [pot1, pot2], {});
+    await queryInterface.bulkInsert(options, [pot1], {});
 
 
     options.tableName = 'UserPots';
@@ -36,15 +36,15 @@ module.exports = {
       potId: pot1.id,
       won: true
     };
-    const userPot2 = {
-      id: 'e87a6a96-6ebc-4ef3-b6a1-3058b7770005',
-      userId: '2da2c0a2-0de9-4275-a5e5-5d91e8b8533c',
-      potId: pot2.id,
-      won: false
-    };
+    // const userPot2 = {
+    //   id: 'e87a6a96-6ebc-4ef3-b6a1-3058b7770005',
+    //   userId: '2da2c0a2-0de9-4275-a5e5-5d91e8b8533c',
+    //   potId: pot2.id,
+    //   won: false
+    // };
 
 
-    await queryInterface.bulkInsert(options, [userPot1, userPot2], {});
+    await queryInterface.bulkInsert(options, [userPot1], {});
   },
 
   down: async (queryInterface, Sequelize) => {

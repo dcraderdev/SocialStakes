@@ -21,6 +21,8 @@ const TableSeat = ({seatNumber, player}) => {
 
 
 
+
+
   useEffect(() => {
 
     let userDisconnectTimer = currentTables[activeTable.id]?.tableUsers[seatNumber]?.disconnectTimer;

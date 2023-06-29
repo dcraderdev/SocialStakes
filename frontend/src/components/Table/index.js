@@ -17,16 +17,40 @@ const Table = () => {
   const activeTable = useSelector(state=>state.games.activeTable)
   const currentTables = useSelector(state=>state.games.currentTables)
 
-  const [countdown, setCountdown] = useState(0)
+  const [countdown, setCountdown] = useState(null);
+
 
   useEffect(()=>{
     if(activeTable && currentTables){
-      let currTable = currentTables[activeTable.id]
-      console.log(currTable);
-      setCountdown(currTable.countdown)
+      let currTable = currentTables[activeTable.id];
+      
+      if(!countdown && currTable.countdown){
+        setCountdown(currTable.countdown/1000);
+      }
+        console.log(currTable);
+    }
+  },[currentTables, activeTable]);
+
+
+
+  useEffect(() => {
+    let countdownInterval = null;
+    if (countdown > 0) {
+      countdownInterval = setInterval(() => {
+        setCountdown((prevCountdown) => prevCountdown - 1);
+      }, 1000);
     }
 
-  },[currentTables, activeTable])
+    if (countdown === 0) {
+      setCountdown(null);
+    }
+
+    return () => {
+      if (countdownInterval) clearInterval(countdownInterval);
+    };
+  }, [countdown]);
+
+
 
 
 
@@ -41,7 +65,7 @@ const Table = () => {
       <div className='table-content flex center'>
         {themes[tableTheme] && <img src={themes[tableTheme].url} alt='table'></img>}
       </div>
-      <div className='table-countdown'>{countdown}</div>
+      <div className='table-countdown'>{countdown > 0 ? countdown : ''}</div>
 
 
         <div className='seats-container'>

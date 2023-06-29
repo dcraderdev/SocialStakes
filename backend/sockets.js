@@ -55,50 +55,50 @@ module.exports = function (io) {
     
 
 
-  socket.on('disconnect', async () => {
-    let timer = 5000 // 15 seconds, adjust as needed
-    console.log(`User ${username} disconnected`);
-    const userTables = await gameController.getUserTables(userId);
-    if(userTables){
-      for(table of userTables){
-        let tableId = table.tableId
-        let seat = table.seat
-        let messageObj = {
-          user: {
-            username: 'Room',
-            id: 1,
-          },
-          content: `${username} has disconnected.`,
-          room: tableId,
-        };
-
-        io.in(tableId).emit('new_message', messageObj);
-        io.in(tableId).emit('player_disconnected', {seat, tableId, timer});
-      }
-    }
-
-    // Clear the existing timeout for this user (if any)
-    if (disconnectTimeouts[userId]) {
-      clearTimeout(disconnectTimeouts[userId]);
-    }
-
-
-    // Start a new timeout for this user
-    disconnectTimeouts[userId] = setTimeout(async () => {
-      console.log('REMOVING PLAYER');
+    socket.on('disconnect', async () => {
+      let timer = 5000 // 15 seconds, adjust as needed
+      console.log(`User ${username} disconnected`);
+      const userTables = await gameController.getUserTables(userId);
       if(userTables){
-
         for(table of userTables){
           let tableId = table.tableId
           let seat = table.seat
-          io.in(tableId).emit('remove_player', {seat, tableId});
+          let messageObj = {
+            user: {
+              username: 'Room',
+              id: 1,
+            },
+            content: `${username} has disconnected.`,
+            room: tableId,
+          };
+
+          io.in(tableId).emit('new_message', messageObj);
+          io.in(tableId).emit('player_disconnected', {seat, tableId, timer});
         }
       }
-      await gameController.removeUserFromTables(userId);
 
-    }, timer); 
-    // isReconnecting[userId] = true;
-  });
+      // Clear the existing timeout for this user (if any)
+      if (disconnectTimeouts[userId]) {
+        clearTimeout(disconnectTimeouts[userId]);
+      }
+
+
+      // Start a new timeout for this user
+      disconnectTimeouts[userId] = setTimeout(async () => {
+        console.log('REMOVING PLAYER');
+        if(userTables){
+
+          for(table of userTables){
+            let tableId = table.tableId
+            let seat = table.seat
+            io.in(tableId).emit('remove_player', {seat, tableId});
+          }
+        }
+        await gameController.removeUserFromTables(userId);
+
+      }, timer); 
+      // isReconnecting[userId] = true;
+    });
 
   
 
@@ -273,23 +273,9 @@ module.exports = function (io) {
 
       // Update pendingBet in the rooms object
 
-
-      console.log();
-
-
-
       if (rooms[tableId] && rooms[tableId].seats[seat]) {
-        console.log('yes');
-        console.log('yes');
-        console.log('yes');
-        console.log('yes');
-        console.log('yes');
         rooms[tableId].seats[seat].pendingBet += bet;
         rooms[tableId].seats[seat].tableBalance -= bet;
-
-        console.log(rooms[tableId].seats[seat].pendingBet);
-        console.log(rooms[tableId].seats[seat].tableBalance);
-
       }
 
 
@@ -302,16 +288,10 @@ module.exports = function (io) {
       // Start a new countdown
       let countdownRemaining = countdownDuration;
 
-
       // Start a new countdown if one isn't already running
       if (!rooms[tableId].countdownTimer) {
-        let countdownObj = {
-          countdownRemaining,
-          tableId
-        }
-
-        io.in(room).emit('countdown_update', countdownObj);
-
+        
+        
         rooms[tableId].countdownTimer = setInterval(() => {
           countdownRemaining -= 1000;
           rooms[tableId].countdownRemaining = countdownRemaining;
@@ -320,14 +300,42 @@ module.exports = function (io) {
             rooms[tableId].countdownTimer = null;
             rooms[tableId].countdownRemaining = 0;
             rooms[tableId].handInProgress = true;
+
+            // Transfer pendingBet to currentBet for each seat
+            for (let seatKey in rooms[tableId].seats) {
+              const seat = rooms[tableId].seats[seatKey];
+              seat.currentBet += seat.pendingBet;
+              seat.pendingBet = 0;
+            }
+
+
+            console.log('=-=-=-=-=-');
+            console.log('=-=-=-=-=-');
+            console.log(rooms[tableId]);
+            console.log('=-=-=-=-=-');
+
+
+            // Emit updated table to clients
+            io.in(room).emit('table_updated', rooms[tableId]);
+
+
             // Countdown finished, emit event to collect all bets
-            io.in(room).emit('collect_bets');
+            let countdownObj = {
+              countdownRemaining,
+              tableId
+            }
+            io.in(room).emit('collect_bets', countdownObj);
           } 
         }, 1000); 
       }
-
-
+      
+      let countdownObj = {
+        countdownRemaining,
+        tableId
+      }
+      
       io.in(room).emit('new_bet', betObj);
+      io.in(room).emit('countdown_update', countdownObj);
 
       console.log('--------------');
       console.log(`Bet(${bet}) received from ${username} @room ${room}`);

@@ -39,7 +39,7 @@ router.get('/:tableId', async (req, res, next) => {
     return next(err);
   }
 
-  return res.status(200).json({'hi':'hi', table });
+  return res.status(200).json({ table });
 });
 
 // Join table by tableId

@@ -18,14 +18,14 @@ module.exports = {
         card: null,
         betSize: 50,
       },
-      {
-        id: 'ea0a6a96-7abc-4ef3-b6a1-3058b1322a02',
-        userId: '87d1cb3a-b8e2-4c7e-9d80-462a523b0fcb', // Hazel Forest
-        roundId: 1,
-        type: 'bet_init',
-        card: null,
-        betSize: 50,
-      },
+      // {
+      //   id: 'ea0a6a96-7abc-4ef3-b6a1-3058b1322a02',
+      //   userId: '87d1cb3a-b8e2-4c7e-9d80-462a523b0fcb', // Hazel Forest
+      //   roundId: 1,
+      //   type: 'bet_init',
+      //   card: null,
+      //   betSize: 50,
+      // },
       {
         id: 'ea0a6a96-7abc-4ef3-b6a1-3058b1322a03',
         userId: 'e87a6a96-6ebc-4ef3-b6a1-3058b136f34b', // Trina Pine
@@ -34,14 +34,14 @@ module.exports = {
         card: '2h 14s',
         betSize: null,
       },
-      {
-        id: 'ea0a6a96-7abc-4ef3-b6a1-3058b1322a04',
-        userId: '87d1cb3a-b8e2-4c7e-9d80-462a523b0fcb', // Hazel Forest
-        roundId: 1,
-        type: 'initial_cards_deal',
-        card: '2d 13s',
-        betSize: null,
-      },
+      // {
+      //   id: 'ea0a6a96-7abc-4ef3-b6a1-3058b1322a04',
+      //   userId: '87d1cb3a-b8e2-4c7e-9d80-462a523b0fcb', // Hazel Forest
+      //   roundId: 1,
+      //   type: 'initial_cards_deal',
+      //   card: '2d 13s',
+      //   betSize: null,
+      // },
       {
         id: 'ea0a6a96-7abc-4ef3-b6a1-3058b1322a05',
         userId: null, // Dealer (init)
@@ -58,22 +58,22 @@ module.exports = {
         card: null,
         betSize: null,
       },
-      {
-        id: 'ea0a6a96-7abc-4ef3-b6a1-3058b1322a07',
-        userId: '87d1cb3a-b8e2-4c7e-9d80-462a523b0fcb', // Hazel Forest
-        roundId: 1,
-        type: 'hit_dealer_deal',
-        card: '7c',
-        betSize: null,
-      },
-      {
-        id: 'ea0a6a96-7abc-4ef3-b6a1-3058b1322a08',
-        userId: '87d1cb3a-b8e2-4c7e-9d80-462a523b0fcb', // Hazel Forest
-        roundId: 1,
-        type: 'bust',
-        card: null,
-        betSize: null,
-      },
+      // {
+      //   id: 'ea0a6a96-7abc-4ef3-b6a1-3058b1322a07',
+      //   userId: '87d1cb3a-b8e2-4c7e-9d80-462a523b0fcb', // Hazel Forest
+      //   roundId: 1,
+      //   type: 'hit_dealer_deal',
+      //   card: '7c',
+      //   betSize: null,
+      // },
+      // {
+      //   id: 'ea0a6a96-7abc-4ef3-b6a1-3058b1322a08',
+      //   userId: '87d1cb3a-b8e2-4c7e-9d80-462a523b0fcb', // Hazel Forest
+      //   roundId: 1,
+      //   type: 'bust',
+      //   card: null,
+      //   betSize: null,
+      // },
       {
         id: 'ea0a6a96-7abc-4ef3-b6a1-3058b1322a09',
         userId: null, // Dealer (init)

@@ -11,7 +11,8 @@ import {
   PLAYER_DISCONNECT, PLAYER_RECONNECT,
   REMOVE_PLAYER,
   PLAYER_ADD_TABLE_FUNDS,
-  START_TABLE_COUNTDOWN
+  START_TABLE_COUNTDOWN,
+  COLLECT_BETS
 
 } from './actionTypes'
 
@@ -47,7 +48,6 @@ export const getTableByIdAction = (data) => {
 };
 
 export const getTablesByTypeAction = (data) => {
-  console.log(data.tables);
   return {
     type: GET_TABLES_BY_TYPE,
     payload: data.tables,
@@ -58,8 +58,6 @@ export const getTablesByTypeAction = (data) => {
 
 
 export const updateTableAction = (data) => {
-  console.log(data);
-
   return {
     type: UPDATE_TABLE,
     payload: data,
@@ -68,9 +66,6 @@ export const updateTableAction = (data) => {
 
 
   export const viewTableAction = (data) => {
-    console.log(data);
-
-    console.log(data.table);
     return {
       type: VIEW_TABLE,
       payload: data.table,
@@ -78,8 +73,6 @@ export const updateTableAction = (data) => {
   };
 
   export const leaveTableAction = (tableId) => {
-  console.log('leaving');
-
     return {
       type: LEAVE_TABLE,
       payload: tableId,
@@ -87,7 +80,6 @@ export const updateTableAction = (data) => {
   };
 
 export const takeSeatAction = (seatObj) => {
-  console.log(seatObj);
   return {
     type: TAKE_SEAT,
     payload: seatObj,
@@ -212,6 +204,16 @@ export const startTableCountdownAction = (countdownObj) => {
   console.log('here');
   return {
     type: START_TABLE_COUNTDOWN,
+    payload: countdownObj
+  };
+};
+
+export const collectBetsAction = (countdownObj) => {
+  console.log('here');
+  console.log('here');
+  console.log('here');
+  return {
+    type: COLLECT_BETS,
     payload: countdownObj
   };
 };

@@ -33,6 +33,7 @@ export const PLAYER_ADD_TABLE_FUNDS = 'games/PLAYER_ADD_TABLE_FUNDS';
 
 
 export const START_TABLE_COUNTDOWN = 'games/START_TABLE_COUNTDOWN';
+export const COLLECT_BETS = 'games/COLLECT_BETS';
 
 
 export const UPDATE_TABLE = 'game/UPDATE_TABLE';

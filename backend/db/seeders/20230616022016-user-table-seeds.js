@@ -16,13 +16,13 @@ module.exports = {
         seat: 1,
         tableBalance: 150
       },
-      {
-        id: 'e87a6a96-6ebc-4ef3-b6a1-3058b136fbbb',
-        userId: '87d1cb3a-b8e2-4c7e-9d80-462a523b0fcb', // Hazel Forest
-        tableId: 'e10d8de4-f4c2-4d28-9324-56aa9c920801',
-        seat: 2,
-        tableBalance: 50
-      },
+      // {
+      //   id: 'e87a6a96-6ebc-4ef3-b6a1-3058b136fbbb',
+      //   userId: '87d1cb3a-b8e2-4c7e-9d80-462a523b0fcb', // Hazel Forest
+      //   tableId: 'e10d8de4-f4c2-4d28-9324-56aa9c920801',
+      //   seat: 2,
+      //   tableBalance: 50
+      // },
 
 
 

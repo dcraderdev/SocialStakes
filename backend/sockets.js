@@ -33,7 +33,6 @@ module.exports = function (io) {
       delete disconnectTimeouts[userId];
       isReconnecting[userId] = false; 
 
-      
       if(userTables){
         for(table of userTables){
           let tableId = table.tableId
@@ -50,11 +49,8 @@ module.exports = function (io) {
   
           io.in(tableId).emit('new_message', messageObj);
           io.in(tableId).emit('player_reconnected', {seat, tableId, timer});
-
         }
       }
-
-
     }
     
 
@@ -86,22 +82,49 @@ module.exports = function (io) {
       clearTimeout(disconnectTimeouts[userId]);
     }
 
+console.log('=-=-=-=-=-=-=-');
+console.log('=-=-=-=-=-=-=-');
+console.log('=-=-=-=-=-=-=-');
+console.log('=-=-=-=-=-=-=-');
+    console.log(!isReconnecting[userId]);
+    console.log(userTables);
+    console.log('=-=-=-=-=-=-=-');
+    console.log('=-=-=-=-=-=-=-');
+    console.log('=-=-=-=-=-=-=-');
+    console.log('=-=-=-=-=-=-=-');
+    console.log('=-=-=-=-=-=-=-');
+
     // Start a new timeout for this user
     disconnectTimeouts[userId] = setTimeout(async () => {
-      if (!isReconnecting[userId]) {
+
+      console.log('here!!!*****************');
+
+      // if (isReconnecting[userId] === undefined || isReconnecting[userId] === false ) {
       console.log('REMOVING PLAYER');
       if(userTables){
+
+        console.log('here!!!!!!');
+
         for(table of userTables){
           let tableId = table.tableId
           let seat = table.seat
           io.in(tableId).emit('remove_player', {seat, tableId});
         }
       }
+      console.log('here!!!!!!');
+      console.log('here!!!!!!');
+      console.log('here!!!!!!');
+      console.log('here!!!!!!');
+      console.log('here!!!!!!');
+      console.log('here!!!!!!');
+      console.log('here!!!!!!');
       await gameController.removeUserFromTables(userId);
-    }
+      // isReconnecting[userId] = false;
+
+    // }
 
     }, timer); 
-    isReconnecting[userId] = true;
+    // isReconnecting[userId] = true;
   });
 
   

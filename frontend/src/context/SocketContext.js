@@ -9,7 +9,8 @@ import {
   addBetAction, removeLastBetAction, removeAllBetAction,
   playerDisconnectAction, playerReconnectAction,
   removePlayerAction,
-  playerAddTableFundsAction
+  playerAddTableFundsAction,
+  startTableCountdownAction
 } from '../redux/actions/gameActions';
 
 
@@ -69,7 +70,7 @@ const SocketProvider = ({ children }) => {
         console.log('=-=-=-=-=-=-=');
         console.log('=-=-=-=-=-=-=');
         console.log('=-=-=-=-=-=-=');
-
+ 
         dispatch(updateTableAction(updateObj)); 
       }); 
       
@@ -137,6 +138,10 @@ const SocketProvider = ({ children }) => {
         dispatch(playerAddTableFundsAction(seatObj)); 
       });  
 
+      socket.on('countdown_update', (countdownObj) => {
+        console.log('countdown_update'); 
+        dispatch(startTableCountdownAction(countdownObj)); 
+      });  
 
       return () => {
 
@@ -149,6 +154,7 @@ const SocketProvider = ({ children }) => {
         socket.off('player_add_table_funds');
         socket.off('remove_player');
         socket.off('get_updated_table');
+        socket.off('countdown_update');
 
       };
       

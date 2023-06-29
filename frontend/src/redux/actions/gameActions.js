@@ -10,7 +10,8 @@ import {
   ADD_BET, REMOVE_LAST_BET, REMOVE_ALL_BET,
   PLAYER_DISCONNECT, PLAYER_RECONNECT,
   REMOVE_PLAYER,
-  PLAYER_ADD_TABLE_FUNDS
+  PLAYER_ADD_TABLE_FUNDS,
+  START_TABLE_COUNTDOWN
 
 } from './actionTypes'
 
@@ -198,9 +199,19 @@ export const removePlayerAction = ({seat, tableId}) => {
 };
 
 export const playerAddTableFundsAction = (seatObj) => {
-  console.log('hi');
   return {
     type: PLAYER_ADD_TABLE_FUNDS,
     payload: seatObj
+  };
+};
+
+
+export const startTableCountdownAction = (countdownObj) => {
+  console.log('here');
+  console.log('here');
+  console.log('here');
+  return {
+    type: START_TABLE_COUNTDOWN,
+    payload: countdownObj
   };
 };

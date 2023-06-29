@@ -20,7 +20,7 @@ import { ModalContext } from '../../context/ModalContext';
     
     const [sitOutSelected, setSitOutSelected] = useState(false);
     const [sitOutNextHandSelected, setSitOutNextHandSelected] = useState(false);
-    const [lastBet, setLastBet] = useState(0);
+    const [lastBets, setLastBets] = useState([]);
     const [isSitting, setIsSitting] = useState(false);
     const [currentSeat, setCurrentSeat] = useState(null);
     const [tableBalance, setTableBalance] = useState(0);
@@ -74,12 +74,12 @@ import { ModalContext } from '../../context/ModalContext';
   const undoBet = (multiplier) => {
     
     
-    console.log(lastBet);
+    console.log(lastBets);
     console.log(currentSeat);
     console.log(currentTables[activeTable.id].tableUsers[currentSeat]);
 
     let currPendingBet = currentTables[activeTable.id].tableUsers[currentSeat].pendingBet
-
+    let lastBet = lastBets.pop()
 
 
     if(currPendingBet === 0){
@@ -99,8 +99,6 @@ import { ModalContext } from '../../context/ModalContext';
     }
     socket.emit('remove_last_bet', betObj)
     // dispatch(removeBetAction(betObj));
-
-
   };
 
 
@@ -115,7 +113,9 @@ import { ModalContext } from '../../context/ModalContext';
       tableId: activeTable.id,
       seat: currentSeat
     }
-    setLastBet(bet)
+    if(bet > 0){
+      setLastBets([...lastBets, bet])
+    }
     socket.emit('place_bet', betObj)
     // dispatch(addBetAction(betObj));
   };

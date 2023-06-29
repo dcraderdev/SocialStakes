@@ -4,7 +4,7 @@ const { gameController } = require('./controllers/gameController');
 module.exports = function (io) {
   const rooms = {};
   const disconnectTimeouts = {};
-  const isReconnecting = {};
+
 
   io.on('connection', async (socket) => {
     const userId = socket.handshake.query.userId;
@@ -31,7 +31,7 @@ module.exports = function (io) {
       clearTimeout(disconnectTimeouts[userId]);
       console.log(`User ${username} reconnected, timeout cleared.`);
       delete disconnectTimeouts[userId];
-      isReconnecting[userId] = false; 
+
 
       if(userTables){
         for(table of userTables){
@@ -82,28 +82,11 @@ module.exports = function (io) {
       clearTimeout(disconnectTimeouts[userId]);
     }
 
-console.log('=-=-=-=-=-=-=-');
-console.log('=-=-=-=-=-=-=-');
-console.log('=-=-=-=-=-=-=-');
-console.log('=-=-=-=-=-=-=-');
-    console.log(!isReconnecting[userId]);
-    console.log(userTables);
-    console.log('=-=-=-=-=-=-=-');
-    console.log('=-=-=-=-=-=-=-');
-    console.log('=-=-=-=-=-=-=-');
-    console.log('=-=-=-=-=-=-=-');
-    console.log('=-=-=-=-=-=-=-');
 
     // Start a new timeout for this user
     disconnectTimeouts[userId] = setTimeout(async () => {
-
-      console.log('here!!!*****************');
-
-      // if (isReconnecting[userId] === undefined || isReconnecting[userId] === false ) {
       console.log('REMOVING PLAYER');
       if(userTables){
-
-        console.log('here!!!!!!');
 
         for(table of userTables){
           let tableId = table.tableId
@@ -111,17 +94,7 @@ console.log('=-=-=-=-=-=-=-');
           io.in(tableId).emit('remove_player', {seat, tableId});
         }
       }
-      console.log('here!!!!!!');
-      console.log('here!!!!!!');
-      console.log('here!!!!!!');
-      console.log('here!!!!!!');
-      console.log('here!!!!!!');
-      console.log('here!!!!!!');
-      console.log('here!!!!!!');
       await gameController.removeUserFromTables(userId);
-      // isReconnecting[userId] = false;
-
-    // }
 
     }, timer); 
     // isReconnecting[userId] = true;
@@ -147,10 +120,16 @@ console.log('=-=-=-=-=-=-=-');
 
       // If the room doesnt exist create a new room
       if (!rooms[tableId]) {
-        rooms[tableId] = { seats: { } };
+        rooms[tableId] = { seats: { }, countdownTimer: 0, countdownRemaining: 0, handInProgress : false  };
       }
 
-      let updateObj = {tableId, table:rooms[tableId]}
+      let updateObj = {
+        tableId,
+        table: {
+          seats: rooms[tableId].seats,
+          countdownRemaining: rooms[tableId].countdownRemaining
+        }
+      };
 
       socket.join(room);
       socket.emit('get_updated_table', updateObj);
@@ -217,7 +196,7 @@ console.log('=-=-=-=-=-=-=-');
 
       // Check if room already exists in rooms object, if not create one
       if (!rooms[tableId]) {
-        rooms[tableId] = { seats: {} };
+        rooms[tableId] = { seats: {}, countdownTimer: 0, countdownRemaining: 0, handInProgress : false   };
       }
 
       // Add the player to the room
@@ -287,20 +266,65 @@ console.log('=-=-=-=-=-=-=-');
       const {bet, tableId, seat } = betObj
       let room = tableId
 
-
-      console.log(rooms[tableId]);
-      console.log(rooms[tableId].seats[seat]);
-
-
-      // Update pendingBet in the rooms object
-      if (rooms[tableId] && rooms[tableId].seats[seat]) {
-        console.log('placing bet');
-        console.log('placing bet');
-        console.log('placing bet');
-        rooms[tableId].seats[seat].pendingBet += bet;
-        rooms[tableId].seats[seat].tableBalance -= bet;
+      // Check if room already exists in rooms object, if not create one
+      if (!rooms[tableId]) {
+        rooms[tableId] = { seats: {}, countdownTimer: 0, countdownRemaining: 0, handInProgress : false  };
       }
 
+      // Update pendingBet in the rooms object
+
+
+      console.log();
+
+
+
+      if (rooms[tableId] && rooms[tableId].seats[seat]) {
+        console.log('yes');
+        console.log('yes');
+        console.log('yes');
+        console.log('yes');
+        console.log('yes');
+        rooms[tableId].seats[seat].pendingBet += bet;
+        rooms[tableId].seats[seat].tableBalance -= bet;
+
+        console.log(rooms[tableId].seats[seat].pendingBet);
+        console.log(rooms[tableId].seats[seat].tableBalance);
+
+      }
+
+
+      console.log(rooms);
+      console.log(rooms[tableId]);
+
+      // Countdown duration
+      const countdownDuration = 5000; // 5 seconds
+
+      // Start a new countdown
+      let countdownRemaining = countdownDuration;
+
+
+      // Start a new countdown if one isn't already running
+      if (!rooms[tableId].countdownTimer) {
+        let countdownObj = {
+          countdownRemaining,
+          tableId
+        }
+
+        io.in(room).emit('countdown_update', countdownObj);
+
+        rooms[tableId].countdownTimer = setInterval(() => {
+          countdownRemaining -= 1000;
+          rooms[tableId].countdownRemaining = countdownRemaining;
+          if (countdownRemaining <= 0) {
+            clearInterval(rooms[tableId].countdownTimer);
+            rooms[tableId].countdownTimer = null;
+            rooms[tableId].countdownRemaining = 0;
+            rooms[tableId].handInProgress = true;
+            // Countdown finished, emit event to collect all bets
+            io.in(room).emit('collect_bets');
+          } 
+        }, 1000); 
+      }
 
 
       io.in(room).emit('new_bet', betObj);
@@ -368,7 +392,11 @@ console.log('=-=-=-=-=-=-=-');
         return
       }
 
+      
       if(addFunds){
+        if (rooms[tableId] && rooms[tableId].seats[seat]) {
+          rooms[tableId].seats[seat].tableBalance += amount;
+        }
         io.in(room).emit('player_add_table_funds', seatObj);
       }
 

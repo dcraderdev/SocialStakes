@@ -15,6 +15,20 @@ const Table = () => {
   const neonTheme = useSelector(state=>state.users.neonTheme)
   const tableTheme = useSelector(state=>state.users.tableTheme)
   const activeTable = useSelector(state=>state.games.activeTable)
+  const currentTables = useSelector(state=>state.games.currentTables)
+
+  const [countdown, setCountdown] = useState(0)
+
+  useEffect(()=>{
+    if(activeTable && currentTables){
+      let currTable = currentTables[activeTable.id]
+      console.log(currTable);
+      setCountdown(currTable.countdown)
+    }
+
+  },[currentTables, activeTable])
+
+
 
 
 
@@ -27,6 +41,7 @@ const Table = () => {
       <div className='table-content flex center'>
         {themes[tableTheme] && <img src={themes[tableTheme].url} alt='table'></img>}
       </div>
+      <div className='table-countdown'>{countdown}</div>
 
 
         <div className='seats-container'>

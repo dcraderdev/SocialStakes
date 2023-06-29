@@ -10,7 +10,8 @@ import {
   ADD_BET, REMOVE_LAST_BET, REMOVE_ALL_BET,
   PLAYER_DISCONNECT, PLAYER_RECONNECT,
   REMOVE_PLAYER,
-  PLAYER_ADD_TABLE_FUNDS
+  PLAYER_ADD_TABLE_FUNDS,
+  START_TABLE_COUNTDOWN
  } from '../actions/actionTypes'
 
 const initialState = {
@@ -300,7 +301,20 @@ const gamesReducer = (state = initialState, action) => {
       return { ...newState, currentTables: newCurrentTables };
     }
 
+    case START_TABLE_COUNTDOWN: {
+      console.log(action.payload);
+      const {countdown, tableId} = action.payload;
+      
+      const newCurrentTables = { ...newState.currentTables };
+      const newCurrentTable = { ...newCurrentTables[tableId] };
 
+
+      newCurrentTable.countdown = countdown
+      
+
+      
+      return { ...newState, currentTables: newCurrentTables };
+    }
     
   
     default:

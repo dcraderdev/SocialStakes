@@ -5,6 +5,20 @@ module.exports = function (io) {
   const rooms = {};
   const disconnectTimeouts = {};
 
+  const roomInit = () => {
+    return {
+      seats: { },
+      countdownTimer: 0,
+      countdownRemaining: 0, 
+      handInProgress: false, 
+      gameSessionId: null,
+      serverSeed: null,
+      nonce: null,
+      deck: null, 
+    }
+  }
+      
+
 
   io.on('connection', async (socket) => {
     const userId = socket.handshake.query.userId;
@@ -117,22 +131,35 @@ module.exports = function (io) {
         room,
       };
 
+      let updatedTable = await gameController.getTableById(tableId)
+
+
+      if (!updatedTable) {
+        // TODO: Create logic for creating a new game
+      }
 
       // If the room doesnt exist create a new room
+      // if (!rooms[tableId]) {
+      //   rooms[tableId] = { seats: { }, countdownTimer: 0, countdownRemaining: 0, handInProgress : false, gameSessionId: updatedTable.gameSessions[0].id  };
+      // }
+
       if (!rooms[tableId]) {
-        rooms[tableId] = { seats: { }, countdownTimer: 0, countdownRemaining: 0, handInProgress : false  };
+        rooms[tableId] = roomInit()
       }
+
 
       let updateObj = {
         tableId,
         table: {
           seats: rooms[tableId].seats,
-          countdownRemaining: rooms[tableId].countdownRemaining
+          countdownRemaining: rooms[tableId].countdownRemaining,
+          gameSessionId: rooms[tableId].gameSessionId
         }
       };
 
       socket.join(room);
       socket.emit('get_updated_table', updateObj);
+      socket.emit('view_table', updatedTable);
       io.in(room).emit('new_message', messageObj);
       
 
@@ -422,6 +449,48 @@ module.exports = function (io) {
       console.log(`Adding funds(${amount}) for ${username} @room ${room}`);
       console.log('--------------');
     });
+
+
+    socket.on('deal_cards', async (tableId) => {
+      let room = tableId
+
+      console.log('--------------');
+      console.log('--------------');
+      console.log(rooms[tableId].gameSessionId);
+      console.log('--------------');
+      console.log('--------------');
+
+      
+
+      let dealObj = {
+        tableId,
+        gameSessionId: rooms[tableId].gameSessionId
+      }
+      const dealCards = await gameController.dealCards(dealObj)
+
+      if(!dealCards){
+        return
+      }
+
+
+      let updateObj = {
+        tableId,
+        table: {
+          seats: rooms[tableId].seats,
+        },
+        dealCards
+      };
+
+      io.in(room).emit('get_updated_table', updateObj);
+
+
+      // io.in(userId).emit('message', messageObj);
+
+      console.log('--------------');
+      console.log(`Dealing cards @room ${room}`);
+      console.log('--------------');
+    });
+
 
 
   });

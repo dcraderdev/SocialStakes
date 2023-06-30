@@ -15,8 +15,19 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.UUID
       },
+      gameSessionId: {
+        type: Sequelize.UUID,
+        references: {
+          model: 'GameSessions',
+        },
+        onDelete: 'CASCADE'
+      },
       serverSeed: {
         type: Sequelize.STRING
+      },
+      used: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
       },
       createdAt: {
         type: Sequelize.DATE,

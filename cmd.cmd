@@ -16,6 +16,7 @@ npx sequelize-cli model:generate --name Theme --attributes url:string
 npx sequelize-cli seed:generate --name user-seeds
 npx sequelize-cli seed:generate --name game-seeds
 npx sequelize-cli seed:generate --name table-seeds
+npx sequelize-cli seed:generate --name game-session-seeds
 npx sequelize-cli seed:generate --name user-table-seeds
 npx sequelize-cli seed:generate --name round-seeds
 npx sequelize-cli seed:generate --name hand-seeds

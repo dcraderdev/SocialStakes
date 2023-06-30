@@ -21,13 +21,6 @@ module.exports = {
         },
         onDelete: 'CASCADE'
       },
-      serverSeedId: {
-        type: Sequelize.UUID,
-        references: {
-          model: 'ServerSeeds',
-        },
-        onDelete: 'CASCADE'
-      },
       clientSeed: {
         type: Sequelize.STRING
       },

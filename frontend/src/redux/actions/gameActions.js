@@ -58,6 +58,7 @@ export const getTablesByTypeAction = (data) => {
 
 
 export const updateTableAction = (data) => {
+  console.log(data);
   return {
     type: UPDATE_TABLE,
     payload: data,
@@ -66,9 +67,10 @@ export const updateTableAction = (data) => {
 
 
   export const viewTableAction = (data) => {
+    console.log(data);
     return {
       type: VIEW_TABLE,
-      payload: data.table,
+      payload: data,
     };
   };
 

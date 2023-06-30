@@ -11,7 +11,8 @@ import {
   removePlayerAction,
   playerAddTableFundsAction,
   startTableCountdownAction,
-  collectBetsAction
+  collectBetsAction,
+  viewTableAction
 } from '../redux/actions/gameActions';
 
 
@@ -55,23 +56,26 @@ const SocketProvider = ({ children }) => {
   useEffect(() => {
     if(socket){
       
-
+      socket.on('view_table', (table) => {
+        dispatch(viewTableAction(table));
+      }); 
 
       socket.on('get_updated_table', (updateObj) => {
-        const {tableId, table} = updateObj
-        
-        console.log('get_updated_table');
-          console.log('=-=-=-=-=-=-=');
-          console.log('=-=-=-=-=-=-=');
-          console.log('=-=-=-=-=-=-=');
-          console.log('=-=-=-=-=-=-=');
-        console.log(table);
-        console.log('=-=-=-=-=-=-=');
-        console.log('=-=-=-=-=-=-=');
-        console.log('=-=-=-=-=-=-=');
-        console.log('=-=-=-=-=-=-=');
-        console.log('=-=-=-=-=-=-=');
- 
+
+
+        console.log('-=-=-=-=-=');
+        console.log('-=-=-=-=-=');
+        console.log('-=-=-=-=-=');
+        console.log('-=-=-=-=-=');
+        console.log(updateObj);
+        console.log('-=-=-=-=-=');
+        console.log('-=-=-=-=-=');
+        console.log('-=-=-=-=-=');
+        console.log('-=-=-=-=-=');
+
+
+
+
         dispatch(updateTableAction(updateObj)); 
       }); 
       
@@ -147,11 +151,14 @@ const SocketProvider = ({ children }) => {
       socket.on('collect_bets', (countdownObj) => {
         console.log('collect_bets'); 
         console.log(countdownObj);
+        let tableId = countdownObj.tableId
         dispatch(collectBetsAction(countdownObj)); 
+        socket.emit('deal_cards', tableId)
       });  
 
       return () => {
 
+        socket.off('view_table');
         socket.off('new_message');
         socket.off('new_player');
         socket.off('player_leave');

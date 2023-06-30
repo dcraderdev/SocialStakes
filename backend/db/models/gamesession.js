@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       GameSession.belongsTo(models.Table, { foreignKey: 'tableId' });
-      GameSession.hasMany(models.ServerSeed, { foreignKey: 'serverSeedId' });
+      GameSession.hasMany(models.ServerSeed, { foreignKey: 'gameSessionId', as: 'serverSeeds' });
     }
   }
 
@@ -22,9 +22,8 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: () => uuid.v4(), 
     },
     tableId: DataTypes.UUID,
-    serverSeedId: DataTypes.UUID,
-    blockHash: DataTypes.STRING,
     clientSeed: DataTypes.STRING,
+    blockHash: DataTypes.STRING,
     nonce: DataTypes.STRING
   }, {
     sequelize,

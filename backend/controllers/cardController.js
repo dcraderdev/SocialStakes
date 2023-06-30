@@ -225,7 +225,7 @@ async function main() {
   cardsDrawn.forEach(draw => {
     const index = deck.indexOf(draw);
     if (index > -1) {
-      deck.splice(index, 1);
+      deck.splice(index, 1);6
     }
   });
 
@@ -251,7 +251,6 @@ async function drawCards(deck, totalNumberOfDraws, serverSeed, blockHash, nonce)
   }).map(float => Math.floor(float * 52));
 
 
-  console.log(deck);
   // Draw the cards
   const cardsDrawn = draws.map(draw => deck[draw]);
 

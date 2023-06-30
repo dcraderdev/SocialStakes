@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      ServerSeed.belongsTo(models.GameSession, { foreignKey: 'serverSeedId' });
+      ServerSeed.belongsTo(models.GameSession, { foreignKey: 'gameSessionId' });
     }
   }
   ServerSeed.init({
@@ -19,9 +19,9 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       defaultValue: () => uuid.v4(), 
     },
-    serverSeed:{
-      type: DataTypes.STRING
-    }
+    serverSeed:DataTypes.STRING,
+    gameSessionId: DataTypes.UUID,
+    used: DataTypes.BOOLEAN
   }, {
     sequelize,
     modelName: 'ServerSeed',

@@ -16,14 +16,7 @@ module.exports = {
       cutPoint: 40,
       shufflePoint: 35,
       tableBalance: 0
-     },
-     {
-      id: 'e10d8de4-f4c2-4d28-9324-56aa9c920802',
-      gameId: 'blackjack_1_deck_low_stakes_multi',
-      cutPoint: 40,
-      shufflePoint: 35,
-      tableBalance: 0
-     },
+     }
 
     ], {});
   },

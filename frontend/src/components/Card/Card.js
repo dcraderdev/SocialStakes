@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './Card.css';
 
-import cardConverter from './cardConverter'
+import cardConverter from '../../utils/cardConverter'
 import {suitToSymbol, rankToLetter} from '.';
 
 

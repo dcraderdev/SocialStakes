@@ -66,6 +66,7 @@ const Table = () => {
         {themes[tableTheme] && <img src={themes[tableTheme].url} alt='table'></img>}
       </div>
       <div className='table-countdown'>{countdown > 0 ? countdown : ''}</div>
+      <div className='dealer-cards'>ssssss</div>
 
 
         <div className='seats-container'>

@@ -32,10 +32,6 @@ module.exports = {
         type: Sequelize.STRING,
         defaultValue: ''
       },
-      phase:{
-        type: Sequelize.STRING,
-        defaultValue: 'pre_deal'
-      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

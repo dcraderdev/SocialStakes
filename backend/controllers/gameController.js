@@ -46,7 +46,7 @@ const gameController = {
           model: User,
           as: 'players',
           through: UserTable,
-          attributes: ['id', 'username', 'balance', 'rank'],
+          attributes: ['id', 'username', 'rank'],
         },
       ],
       attributes: ['id','private'],
@@ -299,7 +299,14 @@ const gameController = {
 
 
   async dealCards(dealObj) {
-    const {gameSessionId, blockHash, nonce, decksUsed} = dealObj
+    const {tableId,gameSessionId, blockHash, nonce, decksUsed} = dealObj
+
+
+    const newRound = await Round.create({tableId})
+    if(!newRound){
+      return false
+    }
+
 
     const getServerSeed = await ServerSeed.findOne({
       where:{
@@ -311,11 +318,26 @@ const gameController = {
 
     let serverSeed = getServerSeed.serverSeed
     let deck = await generateDeck(serverSeed, blockHash, nonce, decksUsed);
-
-    return deck
+    let deckandRoundId = {roundId: newRound.id, deck}
+    return deckandRoundId
   },
 
 
+
+
+  async createHands(userTableIds, roundId) {
+
+    let handIds = []
+
+    await userTableIds.map(id=>{
+      newHand = Hand.create({userTableId:id,roundId})
+      if(newHand){
+        handIds.push(newHand.id)
+      }
+    })
+
+    return handIds
+  },
 
 };
 

@@ -14,7 +14,6 @@ module.exports = {
         tableId: 'e10d8de4-f4c2-4d28-9324-56aa9c920801',
         active: false,
         cards: '10c 5h 7s',
-        phase: 'payout',
       },
 
 

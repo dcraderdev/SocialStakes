@@ -207,10 +207,7 @@ module.exports = function (io) {
       let tableId = room
 
       let messageObj = {
-        user: {
-          username: 'Room',
-          id: 1,
-        },
+        user: {username: 'Room', id: 1,},
         content: `${username} has taken seat ${seat}.`,
         room,
       };
@@ -232,8 +229,8 @@ module.exports = function (io) {
         disconnectTimer:  takeSeat.disconnectTimer,
         pendingBet:  takeSeat.pendingBet,
         currentBet:  takeSeat.currentBet,
-
         username: user.username,
+        hands:{},
         cards: []
       }
 
@@ -468,33 +465,46 @@ module.exports = function (io) {
       let room = tableId
 
       let dealObj = {
+        tableId,
         gameSessionId: rooms[tableId].gameSessionId,
         blockHash: rooms[tableId].blockHash,
         nonce: rooms[tableId].nonce,
         decksUsed: rooms[tableId].decksUsed
       }
 
-      
-      const deck = await gameController.dealCards(dealObj)
+      // generate cards and create Round entry in db
+      const deckandRoundId = await gameController.dealCards(dealObj)
 
-      if(!deck){
+      if(!deckandRoundId){
         return
       }
+
+      const {roundId, deck} = deckandRoundId
 
       // Assign deck to room
       rooms[tableId].deck = deck
 
       // Calculate number of cards to draw
       // numSeats with currentBets + cards for dealer
-
       // Sort the seats by seat number and only include those with a current bet
       let sortedSeats = Object.entries(rooms[tableId].seats)
-        .filter(([i, seat]) => seat.currentBet > 0)  // filter seats with currentBet > 0
+        .filter(([i, seat]) => seat.currentBet > 0)
         .sort(([seatNumberA], [seatNumberB]) => seatNumberA - seatNumberB)
-        .map(([i, seat]) => seat);  // we only need the seat objects, not the seat numbers
+        .map(([i, seat]) => seat);
 
 
         console.log(sortedSeats);
+        let userTableIds = sortedSeats.map(seat=>seat.id)  
+        console.log('=-=-=-=-');
+        console.log('=-=-=-=-');
+        console.log(userTableIds);
+        console.log(roundId);
+        console.log('=-=-=-=-');
+        console.log('=-=-=-=-');
+
+      // Create hand for each active player
+      const handIds = await gameController.createHands(userTableIds, roundId)
+
 
 
       let numSeatsWithBets = sortedSeats.length + 1;
@@ -505,49 +515,55 @@ module.exports = function (io) {
         deck,
         cardsToDraw,
         cursor
-      }
-
+      } 
 
       const drawnCards = await drawCards(drawObj)
 
-      console.log('-=-=-=-=-=-');
-      console.log('-=-=-=-=-=-');
-      console.log('-=-=-=-=-=-');
-      console.log(drawnCards);
-      console.log('-=-=-=-=-=-');
-      console.log('-=-=-=-=-=-');
-      console.log('-=-=-=-=-=-');
+ 
+      if(handIds && drawnCards){
 
-
-      
-      // Distribute the cards
-      for(let j = 0; j < 2; j++){
-
-        for (let i = 0; i < sortedSeats.length; i++) {
-          let seat = sortedSeats[i];
-          if (seat.currentBet > 0) {  // only distribute cards to players who have placed bets
-            // Get the card for this seat and remove it from the drawnCards array
-            seat.cards.push(drawnCards.shift());
-          }
-        }
-  
-        // Distribute the first card to the dealer
-        rooms[tableId].dealerCards.push(drawnCards.shift());
+        console.log('yes');
+        console.log('yes');
+        console.log('yes');
+        console.log('yes');
+        console.log('yes');
+        
+              // Distribute the cards
+              for(let j = 0; j < 2; j++){
+        
+                for (let i = 0; i < sortedSeats.length; i++) {
+                  let seat = sortedSeats[i];
+                  // Get the next card and remove it from the drawnCards array
+                  let nextCard = drawnCards.shift()
+        
+                  seat.cards.push(nextCard);
+        
+                    // Create a newHand inside the handsObj in case we need to split during the hand
+                    // Use the map we created to get the handIds
+                    if(!seat.hands[`${handIds[i]}`]){
+                      seat.hands[`${handIds[i]}`] = []
+                    }
+                    seat.hands[`${handIds[i]}`].push(nextCard);
+                }
+          
+                // Distribute the first card to the dealer
+                rooms[tableId].dealerCards.push(drawnCards.shift());
+        
+              }
 
       }
 
-      // Set new cursor point
+
+
+
+      // Set new cursor point, setDealers cards
       rooms[tableId].cursor += cardsToDraw 
       rooms[tableId].dealerVisibleCard = rooms[tableId].dealerCards[1]
       rooms[tableId].dealerHiddenCard = rooms[tableId].dealerCards[0] 
 
 
-
-
-
       console.log(rooms[tableId]);
-            
-
+          
 
       let updateObj = {
         tableId,

@@ -26,4 +26,6 @@
   border: white solid 1px;
   top: -100px;
   position: absolute;
+  display: flex;
+  flex-direction: row;
 }

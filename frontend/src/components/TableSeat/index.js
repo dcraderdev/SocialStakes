@@ -6,6 +6,7 @@ import { SocketContext } from '../../context/SocketContext';
 import { ModalContext } from '../../context/ModalContext';
 
 import Card from '../Card'
+import cardConverter from '../../utils/cardConverter';
 
 const TableSeat = ({seatNumber, player}) => {
 
@@ -26,6 +27,7 @@ const TableSeat = ({seatNumber, player}) => {
   const [isCurrentUser, setIsCurrentUser] = useState(false);
   const [isUserInAnySeat, setIsUserInAnySeat] = useState(false);
   const [cards, setCards] = useState([]);
+  const [valueOfHand, setValueOfHand] = useState([]);
 
 
 
@@ -136,9 +138,7 @@ return(
       {player && (
         <div>
           <div className='seat-card-area'>
-            {cards && cards[0] && <Card card={cards[0]}/>}
-            {cards && cards[1] && <Card card={cards[1]}/>}
-            {/* <Card card={cards[1]}/> */}
+            {cards && cards.map((card, index) => <Card key={index} card={card} />)}
           </div>
           <div className='flex center'>user:{player?.username ? player.username : ''}</div>
           <div className='total-bet flex center'>pending bet:{pendingBet}</div>

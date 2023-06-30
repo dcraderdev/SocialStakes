@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: () => uuid.v4(), 
     },
     userTableId: DataTypes.UUID,
-    roundId: DataTypes.UUID,
+    roundId: DataTypes.INTEGER,
     hand: DataTypes.STRING
   }, {
     sequelize,

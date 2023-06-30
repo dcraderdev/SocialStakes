@@ -39,8 +39,6 @@ const TableSeat = ({seatNumber, player}) => {
     let userCurrentBalance = currentTables[activeTable.id]?.tableUsers[seatNumber]?.tableBalance;
     let userCards = currentTables[activeTable.id]?.tableUsers[seatNumber]?.cards;
 
-    console.log(currentTables[activeTable.id]?.tableUsers[seatNumber]?.cards);
-
     setPendingBet(userPendingBet)
     setCurrentBet(userCurrentBet)
     setCurrentBalance(userCurrentBalance)

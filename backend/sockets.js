@@ -19,7 +19,8 @@ module.exports = function (io) {
       cursor: 0,
       dealerCards: [],
       dealerVisibleCard: null,
-      dealerHiddenCard: null
+      dealerHiddenCard: null,
+      messages: []
     }
   }
       
@@ -128,10 +129,7 @@ module.exports = function (io) {
       let tableId = room
 
       let messageObj = {
-        user: {
-          username: 'Room',
-          id: 1,
-        },
+        user: {username: 'Room',id: 1,},
         content: `${username} has joined the room.`,
         room,
       };
@@ -163,13 +161,26 @@ module.exports = function (io) {
       };
 
       socket.join(room);
-      socket.emit('get_updated_table', updateObj);
       socket.emit('view_table', updatedTable);
+      socket.emit('get_updated_table', updateObj);
       io.in(room).emit('new_message', messageObj);
       
 
       console.log('-=-=-=-=-=-=-=-=-=');
     });
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     socket.on('leave_room', (room) => {
       console.log('--- leave_room ---');

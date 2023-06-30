@@ -1,4 +1,5 @@
 const { gameController } = require('./controllers/gameController');
+const { drawCards } = require('./controllers/cardController');
 
 
 module.exports = function (io) {
@@ -15,6 +16,10 @@ module.exports = function (io) {
       serverSeed: null,
       nonce: null,
       deck: null, 
+      cursor: 0,
+      dealerCards: [],
+      dealerVisibleCard: null,
+      dealerHiddenCard: null
     }
   }
       
@@ -138,13 +143,13 @@ module.exports = function (io) {
         // TODO: Create logic for creating a new game
       }
 
-      // If the room doesnt exist create a new room
-      // if (!rooms[tableId]) {
-      //   rooms[tableId] = { seats: { }, countdownTimer: 0, countdownRemaining: 0, handInProgress : false, gameSessionId: updatedTable.gameSessions[0].id  };
-      // }
 
+        
+      // If the room doesnt exist create a new room
       if (!rooms[tableId]) {
         rooms[tableId] = roomInit()
+        rooms[tableId].gameSessionId = updatedTable.gameSessions[0].id
+        rooms[tableId].decksUsed = updatedTable.Game.decksUsed
       }
 
 
@@ -221,27 +226,21 @@ module.exports = function (io) {
         cards: []
       }
 
-      // Check if room already exists in rooms object, if not create one
+      
+      // If the room doesnt exist create a new room
       if (!rooms[tableId]) {
-        rooms[tableId] = { seats: {}, countdownTimer: 0, countdownRemaining: 0, handInProgress : false   };
+        let updatedTable = await gameController.getTableById(tableId)
+        rooms[tableId] = roomInit()
+        rooms[tableId].gameSessionId = updatedTable.gameSessions[0].id
+        rooms[tableId].decksUsed = updatedTable.Game.decksUsed
       }
+
 
       // Add the player to the room
       rooms[tableId].seats[seat] = takeSeatObj;
 
-
-      console.log(rooms[tableId]);
-      console.log(rooms[tableId].seats[seat]);
-
-
-      console.log(takeSeatObj);
-
-      // const newSeatObj = takeSeat.toJSON() 
-
       io.in(room).emit('new_message', messageObj);
       io.in(room).emit('new_player', takeSeatObj);
-
-      // io.in(userId).emit('message', messageObj);
 
       console.log('--------------');
       console.log(`${username} taking seat${seat} in ${room}`);
@@ -289,9 +288,12 @@ module.exports = function (io) {
       const {bet, tableId, seat } = betObj
       let room = tableId
 
-      // Check if room already exists in rooms object, if not create one
+      // If the room doesnt exist create a new room
       if (!rooms[tableId]) {
-        rooms[tableId] = { seats: {}, countdownTimer: 0, countdownRemaining: 0, handInProgress : false  };
+        let updatedTable = await gameController.getTableById(tableId)
+        rooms[tableId] = roomInit()
+        rooms[tableId].gameSessionId = updatedTable.gameSessions[0].id
+        rooms[tableId].decksUsed = updatedTable.Game.decksUsed
       }
 
       // Update pendingBet in the rooms object
@@ -306,7 +308,7 @@ module.exports = function (io) {
       console.log(rooms[tableId]);
 
       // Countdown duration
-      const countdownDuration = 5000; // 5 seconds
+      const countdownDuration = 2000; // 5 seconds
 
       // Start a new countdown
       let countdownRemaining = countdownDuration;
@@ -454,23 +456,86 @@ module.exports = function (io) {
     socket.on('deal_cards', async (tableId) => {
       let room = tableId
 
-      console.log('--------------');
-      console.log('--------------');
-      console.log(rooms[tableId].gameSessionId);
-      console.log('--------------');
-      console.log('--------------');
+      let dealObj = {
+        gameSessionId: rooms[tableId].gameSessionId,
+        blockHash: rooms[tableId].blockHash,
+        nonce: rooms[tableId].nonce,
+        decksUsed: rooms[tableId].decksUsed
+      }
 
       
+      const deck = await gameController.dealCards(dealObj)
 
-      let dealObj = {
-        tableId,
-        gameSessionId: rooms[tableId].gameSessionId
-      }
-      const dealCards = await gameController.dealCards(dealObj)
-
-      if(!dealCards){
+      if(!deck){
         return
       }
+
+      // Assign deck to room
+      rooms[tableId].deck = deck
+
+      // Calculate number of cards to draw
+      // numSeats with currentBets + cards for dealer
+
+      // Sort the seats by seat number and only include those with a current bet
+      let sortedSeats = Object.entries(rooms[tableId].seats)
+        .filter(([i, seat]) => seat.currentBet > 0)  // filter seats with currentBet > 0
+        .sort(([seatNumberA], [seatNumberB]) => seatNumberA - seatNumberB)
+        .map(([i, seat]) => seat);  // we only need the seat objects, not the seat numbers
+
+
+        console.log(sortedSeats);
+
+
+      let numSeatsWithBets = sortedSeats.length + 1;
+      let cardsToDraw = numSeatsWithBets * 2
+      let cursor = rooms[tableId].cursor
+
+      let drawObj = {
+        deck,
+        cardsToDraw,
+        cursor
+      }
+
+
+      const drawnCards = await drawCards(drawObj)
+
+      console.log('-=-=-=-=-=-');
+      console.log('-=-=-=-=-=-');
+      console.log('-=-=-=-=-=-');
+      console.log(drawnCards);
+      console.log('-=-=-=-=-=-');
+      console.log('-=-=-=-=-=-');
+      console.log('-=-=-=-=-=-');
+
+
+      
+      // Distribute the cards
+      for(let j = 0; j < 2; j++){
+
+        for (let i = 0; i < sortedSeats.length; i++) {
+          let seat = sortedSeats[i];
+          if (seat.currentBet > 0) {  // only distribute cards to players who have placed bets
+            // Get the card for this seat and remove it from the drawnCards array
+            seat.cards.push(drawnCards.shift());
+          }
+        }
+  
+        // Distribute the first card to the dealer
+        rooms[tableId].dealerCards.push(drawnCards.shift());
+
+      }
+
+      // Set new cursor point
+      rooms[tableId].cursor += cardsToDraw 
+      rooms[tableId].dealerVisibleCard = rooms[tableId].dealerCards[1]
+      rooms[tableId].dealerHiddenCard = rooms[tableId].dealerCards[0] 
+
+
+
+
+
+      console.log(rooms[tableId]);
+            
 
 
       let updateObj = {
@@ -478,8 +543,13 @@ module.exports = function (io) {
         table: {
           seats: rooms[tableId].seats,
         },
-        dealCards
+        dealerCards:{
+          hiddenCard: null,
+          visibleCard: rooms[tableId].dealerVisibleCard,
+        }
       };
+
+      console.log(updateObj);
 
       io.in(room).emit('get_updated_table', updateObj);
 

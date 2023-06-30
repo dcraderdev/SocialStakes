@@ -5,6 +5,8 @@ import './TableSeat.css'
 import { SocketContext } from '../../context/SocketContext';
 import { ModalContext } from '../../context/ModalContext';
 
+import Card from '../Card'
+
 const TableSeat = ({seatNumber, player}) => {
 
   const dispatch = useDispatch()
@@ -23,6 +25,7 @@ const TableSeat = ({seatNumber, player}) => {
 
   const [isCurrentUser, setIsCurrentUser] = useState(false);
   const [isUserInAnySeat, setIsUserInAnySeat] = useState(false);
+  const [cards, setCards] = useState([]);
 
 
 
@@ -34,10 +37,14 @@ const TableSeat = ({seatNumber, player}) => {
     let userPendingBet = currentTables[activeTable.id]?.tableUsers[seatNumber]?.pendingBet;
     let userCurrentBet = currentTables[activeTable.id]?.tableUsers[seatNumber]?.currentBet;
     let userCurrentBalance = currentTables[activeTable.id]?.tableUsers[seatNumber]?.tableBalance;
+    let userCards = currentTables[activeTable.id]?.tableUsers[seatNumber]?.cards;
+
+    console.log(currentTables[activeTable.id]?.tableUsers[seatNumber]?.cards);
 
     setPendingBet(userPendingBet)
     setCurrentBet(userCurrentBet)
     setCurrentBalance(userCurrentBalance)
+    setCards(userCards)
     if (userDisconnectTimer > 0) {
       setDisconnectTimer(userDisconnectTimer / 1000);
     }
@@ -69,6 +76,41 @@ const TableSeat = ({seatNumber, player}) => {
 
 
 
+
+
+
+
+// let arr = [1,1,1,1,1]
+// let hash = {}
+
+// for(let i of arr){
+//   if(hash[arr[i]]){
+//     hash[arr[i]] += 1
+//   }else {
+//     hash[arr[i]] = 1
+//   }
+// } 
+
+
+
+// console.log(hash);
+// console.log(arr.length);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   const takeSeat = () => {
     if(!user) return
     setUpdateObj({minBet:activeTable.Game.minBet, seatNumber, type:'initDeposit'})
@@ -90,10 +132,16 @@ const TableSeat = ({seatNumber, player}) => {
 return(
 
     <div className={`seat-container six-ring seat${seatNumber}`}>
+
       {disconnectTimer > 0 && (<div className='disconnect-timer flex center'>{disconnectTimer}s</div>)}
 
       {player && (
         <div>
+          <div className='seat-card-area'>
+            {cards && cards[0] && <Card card={cards[0]}/>}
+            {cards && cards[1] && <Card card={cards[1]}/>}
+            {/* <Card card={cards[1]}/> */}
+          </div>
           <div className='flex center'>user:{player?.username ? player.username : ''}</div>
           <div className='total-bet flex center'>pending bet:{pendingBet}</div>
           <div className='total-bet flex center'>current bet:{currentBet}</div>

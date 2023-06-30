@@ -3,6 +3,7 @@ const crypto = require('crypto');
 const _ = require('lodash');
 
 
+
 function generateSeed() {
   // generate a random value
   const randomValue = crypto.randomBytes(64).toString('hex');
@@ -13,19 +14,29 @@ function generateSeed() {
 
 
 
-function generateDeck(serverSeed, blockHash, nonce) {
+// function generateDeck(serverSeed, blockHash, nonce) {
+//   const hash = crypto.createHash('sha256');
+//   hash.update(serverSeed + blockHash + nonce);
+//   const seed = parseInt(hash.digest('hex').substr(0, 10), 16);
+//   const deck = shuffle([...Array(52).keys()], seed); // Shuffle an array of 52 numbers
+//   return deck;
+// }
+
+function generateDeck(serverSeed, blockHash, nonce, decksUsed) {
+  let arrLength = decksUsed * 52
   const hash = crypto.createHash('sha256');
   hash.update(serverSeed + blockHash + nonce);
   const seed = parseInt(hash.digest('hex').substr(0, 10), 16);
-  const deck = shuffle([...Array(52).keys()], seed); // Shuffle an array of 52 numbers
+  const deck = shuffle([...Array(arrLength).keys()], seed); // Shuffle an array of __ numbers
   return deck;
 }
+
+
 
 function verifyDeck(serverSeed, blockHash, nonce, deck) {
   const calculatedDeck = generateDeck(serverSeed, blockHash, nonce);
   return JSON.stringify(calculatedDeck) === JSON.stringify(deck);
 }
-
 
 
 function shuffle(array, seed) {
@@ -240,30 +251,68 @@ async function main() {
 // }).catch(console.error);
 
 
-async function drawCards(deck, totalNumberOfDraws, serverSeed, blockHash, nonce) {
+// async function drawCards(deck, totalNumberOfDraws, serverSeed, blockHash, nonce) {
 
-  const draws = generateFloats({
-    serverSeed: serverSeed,
-    blockHash: blockHash,
-    nonce: nonce,
-    cursor: 0,
-    count: totalNumberOfDraws,
-  }).map(float => Math.floor(float * 52));
+//   let localDeck = [...deck];
+//   const cardsDrawn = [];
+
+//   for(let i=0; i<totalNumberOfDraws; i++) {
+//     const drawFloat = generateFloats({
+//       serverSeed: serverSeed,
+//       blockHash: blockHash,
+//       nonce: nonce,
+//       cursor: i,
+//     });
+
+//     // Get card index based on current deck size
+//     const drawIndex = Math.floor(drawFloat * localDeck.length);
+    
+//     // Add drawn card to drawn array and remove it from the deck
+//     cardsDrawn.push(localDeck[drawIndex]);
+//     localDeck.splice(drawIndex, 1);
+//   }
+
+//   return cardsDrawn;
+// }
 
 
-  // Draw the cards
-  const cardsDrawn = draws.map(draw => deck[draw]);
+// async function drawCards(deck, totalNumberOfDraws, serverSeed, blockHash, nonce, cursor) {
+//   const draws = generateFloats({
+//     serverSeed: serverSeed,
+//     blockHash: blockHash,
+//     nonce: nonce,
+//     cursor: cursor,
+//     count: totalNumberOfDraws,
+//   }).map(float => Math.floor(float * deck.length)); // Use the current deck length
 
-  // Remove the drawn cards from the deck
-  cardsDrawn.forEach(draw => {
-    const index = deck.indexOf(draw);
-    if (index > -1) {
-      deck.splice(index, 1);
-    }
-  });
+//   const cardsDrawn = [];
 
+//   // Sort the draw indexes in descending order. This way, removing cards from the deck doesn't shift
+//   // the positions of the cards we haven't drawn yet.
+//   draws.sort((a, b) => b - a);
+
+//   // Draw the cards and remove them from the deck
+//   draws.forEach(draw => {
+//     cardsDrawn.push(deck[draw]);
+//     deck.splice(draw, 1);
+//   });
+
+//   return cardsDrawn;
+// }
+
+async function drawCards(drawObj) {
+  const {deck, cardsToDraw, cursor} = drawObj
+
+console.log(deck);
+console.log(cardsToDraw);
+console.log(cursor);
+
+  const cardsDrawn = deck.splice(cursor, cardsToDraw);
   return cardsDrawn;
 }
+
+
+
 
 module.exports = {
   generateSeed,

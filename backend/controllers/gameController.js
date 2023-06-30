@@ -14,7 +14,7 @@ const {
   UserPot,
 } = require('../db/models');
 
-const {generateDeck,drawCards} = require('./cardController')
+const {generateDeck} = require('./cardController')
 
 const gameController = {
   async getGames() {
@@ -38,6 +38,9 @@ const gameController = {
         {
           model: Game,
           where: { gameType },
+          attributes: {
+            exclude: ['createdAt', 'updatedAt', 'rake']
+          },
         },
         {
           model: User,
@@ -46,6 +49,7 @@ const gameController = {
           attributes: ['id', 'username', 'balance', 'rank'],
         },
       ],
+      attributes: ['id','private'],
     });
 
     if (!tables) {
@@ -59,6 +63,10 @@ const gameController = {
       include: [
         {
           model: Game,
+          attributes: {
+            exclude: ['createdAt', 'updatedAt', 'rake']
+          },
+
         },
         {
           model: UserTable,
@@ -286,57 +294,25 @@ const gameController = {
       console.log(error);
       throw error;
     }
-    
-
+  
   },
 
 
   async dealCards(dealObj) {
-    const {tableId, gameSessionId} = dealObj
-    const gameSession = await GameSession.findByPk(gameSessionId,{
-      include:[
-        {
-          model: ServerSeed,
-            where: {
-              'used': false
-            },
-            as: 'serverSeeds',
-            attributes: ['serverSeed', 'id'],
-        },
-      ]
-    });
+    const {gameSessionId, blockHash, nonce, decksUsed} = dealObj
 
-    console.log(gameSession);
+    const getServerSeed = await ServerSeed.findOne({
+      where:{
+        gameSessionId,
+        used: false
+      },
+      attributes:['serverSeed']
+    })
 
-    console.log('=-=-=-=--=');
-    console.log('=-=-=-=--=');
-    console.log(gameSession.nonce);
-    console.log(gameSession.serverSeeds[0].serverSeed);
-    console.log('=-=-=-=--=');
-    console.log('=-=-=-=--=');
-    console.log('=-=-=-=--=');
+    let serverSeed = getServerSeed.serverSeed
+    let deck = await generateDeck(serverSeed, blockHash, nonce, decksUsed);
 
-    
-    let serverSeed = gameSession.serverSeeds[0].serverSeed
-    let nonce = gameSession.nonce
-    let blockHash = gameSession.blockHash
-    
-    let deck = await generateDeck(serverSeed, blockHash, nonce)
-    let cards = await drawCards(deck, 52, serverSeed, blockHash, nonce)
-
-    console.log('=-=-=-=--=');
-    console.log(deck);
-    console.log(cards);
-    console.log('=-=-=-=--=');
- 
-
-
-    return false
-
-    // if(!serverSeed){
-    //   return false
-    // }
-
+    return deck
   },
 
 

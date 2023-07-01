@@ -58,15 +58,10 @@ const gamesReducer = (state = initialState, action) => {
       const {tableId, table} = action.payload
       console.log('-=-=-=-=-=-=-=-=-=');
       console.log('-=-=-=-=-=-=-=-=-=');
-      console.log('-=-=-=-=-=-=-=-=-=');
-      console.log('-=-=-=-=-=-=-=-=-=');
-    
       console.log(action.payload);
       console.log('-=-=-=-=-=-=-=-=-=');
       console.log('-=-=-=-=-=-=-=-=-=');
-      console.log('-=-=-=-=-=-=-=-=-=');
-      console.log('-=-=-=-=-=-=-=-=-=');
-    
+
       let updatedCurrentTables = {...newState.currentTables};
 
       console.log(updatedCurrentTables);
@@ -77,9 +72,13 @@ const gamesReducer = (state = initialState, action) => {
         console.log(currentTable);
         console.log(table.countdownRemaining);
         console.log(action.payload.dealerCards?.visibleCards);
+
+
+
         currentTable.countdown = table.countdownRemaining;
         currentTable.dealerCards = action.payload.table.dealerCards?.visibleCards;
         currentTable.actionSeat = action.payload.table.actionSeat;
+        currentTable.actionTimer = action.payload.table.actionTimer;
 
         // only update handInProgress if specified in payload
         if(action.payload.table.handInProgress){
@@ -91,7 +90,6 @@ const gamesReducer = (state = initialState, action) => {
           // console.log(seat);
           // console.log(table.seats[seat].pendingBet);
 
-
           // If the incoming table has data for this seat, update it in the currentTable
           if (table.seats[seat]) {
             currentTable.tableUsers[seat].cards = table.seats[seat].cards;
@@ -99,7 +97,6 @@ const gamesReducer = (state = initialState, action) => {
             currentTable.tableUsers[seat].pendingBet = table.seats[seat].pendingBet;
             currentTable.tableUsers[seat].currentBet = table.seats[seat].currentBet;
             currentTable.tableUsers[seat].tableBalance = table.seats[seat].tableBalance;
-            currentTable.tableUsers[seat].turnTimer = table.seats[seat].turnTimer;
           }
         } 
 

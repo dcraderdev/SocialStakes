@@ -4,12 +4,15 @@ const { drawCards } = require('./controllers/cardController');
 
 module.exports = function (io) {
   const rooms = {};
+  let turnTimers = {};
+
   const disconnectTimeouts = {};
 
   const roomInit = () => {
     return {
       seats: { },
       actionSeat: null,
+      actionTimer: null,
       countdownTimer: 0,
       countdownRemaining: 0, 
       handInProgress: false, 
@@ -159,6 +162,7 @@ module.exports = function (io) {
         tableId,
         table: {
           actionSeat: rooms[tableId].actionSeat,
+          actionTimer: rooms[tableId].actionTimer,
           handInProgress: rooms[tableId].handInProgress,
           seats: rooms[tableId].seats,
           countdownRemaining: rooms[tableId].countdownRemaining,
@@ -649,19 +653,43 @@ module.exports = function (io) {
       //returns next player or false if all players have acted
       async function getNextPlayer(tableId){
         console.log(rooms[tableId].sortedActivePlayers);
-
         let nextPlayer
         if(rooms[tableId] && rooms[tableId].sortedActivePlayers.length){
-          nextPlayer = rooms[tableId].sortedActivePlayers.shift()
+          nextPlayer = rooms[tableId].sortedActivePlayers.pop()
         } 
-
         if(nextPlayer){
           return nextPlayer
         } else {
           return false
         }
+      }
+
+      //returns next player or false if all players have acted
+      async function handleDealerTurn(tableId, io){
+        let room = tableId
+        console.log(rooms[tableId].sortedActivePlayers);
+        let hiddenCards = rooms[tableId].dealerCards.hiddenCards
+        let visibleCards = rooms[tableId].dealerCards.visibleCards
+        let newCards = [...hiddenCards, ...visibleCards ]
+        rooms[tableId].dealerCards.visibleCards = newCards
+
+        // Emit update to clients
+        let updateObj = {
+          tableId,
+          table: {
+            actionSeat: null,
+            seats: rooms[tableId].seats,
+            dealerCards:{
+              visibleCards: rooms[tableId].dealerCards.visibleCards,
+            }
+          },
+        };
+        
+        io.in(room).emit('get_updated_table', updateObj);
 
       }
+
+
 
       async function gameLoop(tableId, io) {
         let room = tableId
@@ -669,30 +697,30 @@ module.exports = function (io) {
         let nextPlayer = await getNextPlayer(tableId)
         if(!nextPlayer){
           console.log('DEALERS TURN');
+          handleDealerTurn(tableId, io)
           return
           //dealers turn
         }
+
+        console.log('-=-=-=-=-=-');
         console.log('PLAYERS TURN');
         console.log(nextPlayer);
-
-            
-        console.log('-=-=-=-=-=-');
-        console.log('-=-=-=-=-=-');
-        console.log('-=-=-=-=-=-');
         console.log(rooms[tableId].seats[nextPlayer.seat]);  
         console.log(nextPlayer.seat);  
-        console.log('-=-=-=-=-=-');
-        console.log('-=-=-=-=-=-');
+        console.log('-=-=-=-=-=-'); 
 
-        // Create timer 
+        // Create actionTimer 
+        rooms[tableId].actionTimer = 5000;
+
         // Set action seat
-        // Emit update to clients
         rooms[tableId].actionSeat = nextPlayer.seat
-
+ 
+        // Emit update to clients
         let updateObj = {
           tableId,
           table: {
             actionSeat: nextPlayer.seat,
+            actionTimer: rooms[tableId].actionTimer,
             seats: rooms[tableId].seats,
             dealerCards:{
               visibleCards: rooms[tableId].dealerCards.visibleCards,
@@ -701,6 +729,44 @@ module.exports = function (io) {
         };
 
         io.in(room).emit('get_updated_table', updateObj);
+
+
+
+
+
+        // Create timer and store its id in the room object
+        rooms[tableId].timerId = setInterval(() => {
+          rooms[tableId].actionTimer -= 1000; // Decrement by 1 second
+          console.log('COUNTDOWN: ',rooms[tableId].actionTimer);
+          // If timer reaches 0, clear interval and emit a timeout event
+          if (rooms[tableId].actionTimer <= 0) {
+            clearInterval(rooms[tableId].timerId);
+            
+            console.log('TURN OVER');
+            console.log('TURN OVER');
+            console.log('TURN OVER');
+            console.log('TURN OVER');
+            gameLoop(tableId, io) 
+
+            // io.in(room).emit('player_timeout', {tableId, seat: nextPlayer.seat});
+          }
+        }, 1000)
+  
+   
+
+        // let updateObj = {
+        //   tableId,
+        //   table: {
+        //     actionSeat: nextPlayer.seat,
+        //     actionTimer: rooms[tableId].actionTimer,
+        //     seats: rooms[tableId].seats,
+        //     dealerCards:{
+        //       visibleCards: rooms[tableId].dealerCards.visibleCards,
+        //     }
+        //   },
+        // };
+
+        // io.in(room).emit('get_updated_table', updateObj);
 
       }
 

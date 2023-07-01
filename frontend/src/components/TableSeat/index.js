@@ -19,7 +19,7 @@ const TableSeat = ({seatNumber, player}) => {
   const { modal, openModal, closeModal, updateObj, setUpdateObj} = useContext(ModalContext);
 
   const [disconnectTimer, setDisconnectTimer] = useState(0)
-  const [turnTimer, setTurnTimer] = useState(0)
+  const [actionTimer, setActionTimer] = useState(0)
   const [pendingBet, setPendingBet] = useState(0)
   const [currentBet, setCurrentBet] = useState(0)
   const [currentBalance, setCurrentBalance] = useState(0)
@@ -39,7 +39,7 @@ const TableSeat = ({seatNumber, player}) => {
   useEffect(() => {
 
     let userDisconnectTimer = currentTables[activeTable.id]?.tableUsers[seatNumber]?.disconnectTimer;
-    let userTurnTimer = currentTables[activeTable.id]?.tableUsers[seatNumber]?.turnTimer;
+    let userActionTimer = currentTables[activeTable.id].actionTimer;
     let userPendingBet = currentTables[activeTable.id]?.tableUsers[seatNumber]?.pendingBet;
     let userCurrentBet = currentTables[activeTable.id]?.tableUsers[seatNumber]?.currentBet;
     let userCurrentBalance = currentTables[activeTable.id]?.tableUsers[seatNumber]?.tableBalance;
@@ -54,8 +54,8 @@ const TableSeat = ({seatNumber, player}) => {
     if (userDisconnectTimer > 0) {
       setDisconnectTimer(userDisconnectTimer / 1000);
     }
-    if (userTurnTimer > 0) {
-      setTurnTimer(userTurnTimer / 1000);
+    if (userActionTimer > 0) {
+      setActionTimer(userActionTimer / 1000);
     }
   }, [currentTables, activeTable.id, seatNumber]);
   
@@ -78,18 +78,38 @@ const TableSeat = ({seatNumber, player}) => {
 
 
   useEffect(() => {
-    let timerId = null;
+    let disconnectTimerId = null;
   
     if (disconnectTimer > 0) {
-      timerId = setInterval(() => {
+      disconnectTimerId = setInterval(() => {
         setDisconnectTimer((prevTimer) => prevTimer - 1);
       }, 1000);
     }
   
     return () => {
-      if (timerId) clearInterval(timerId);
+      if (disconnectTimerId) clearInterval(disconnectTimerId);
     };
   }, [disconnectTimer]);
+
+
+  useEffect(() => {
+    let actionTimerId = null;
+  
+    if (actionTimer > 0) {
+      actionTimerId = setInterval(() => {
+        setActionTimer((prevTimer) => prevTimer - 1);
+      }, 1000);
+    }
+  
+    return () => {
+      if (actionTimerId) clearInterval(actionTimerId);
+    };
+  }, [actionTimer]);
+
+
+console.log(actionTimer);
+console.log(currentTables[activeTable.id]);
+
 
 
   const takeSeat = () => {
@@ -116,7 +136,7 @@ return(
     <div className={`seat-container six-ring seat${seatNumber} ${isActiveSeat ? ' gold' : ''}`}>
 
       {disconnectTimer > 0 && (<div className='disconnect-timer flex center'>{disconnectTimer}s</div>)}
-      {turnTimer > 0 && (<div className='turn-timer flex center'>{turnTimer}s</div>)}
+      {actionTimer > 0 && isActiveSeat && (<div className='turn-timer flex center'>{actionTimer}s</div>)}
 
       {player && (
         <div>

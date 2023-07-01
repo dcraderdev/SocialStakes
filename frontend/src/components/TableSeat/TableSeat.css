@@ -19,6 +19,10 @@
 
 }
 
+.gold{
+  border: gold solid 1px;
+}
+
 
 .seat-card-area{
   width: 100%;

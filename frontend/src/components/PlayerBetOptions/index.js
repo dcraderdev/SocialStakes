@@ -24,6 +24,10 @@ import { ModalContext } from '../../context/ModalContext';
     const [isSitting, setIsSitting] = useState(false);
     const [currentSeat, setCurrentSeat] = useState(null);
     const [tableBalance, setTableBalance] = useState(0);
+
+    const [isHandInProgress, setIsHandInProgress] = useState(false);
+    const [isActiveSeat, setIsActiveSeat] = useState(false);
+  
     
     const {socket} = useContext(SocketContext)
     const {openModal, closeModal, setUpdateObj} = useContext(ModalContext)
@@ -50,7 +54,21 @@ import { ModalContext } from '../../context/ModalContext';
   }, [currentTables, activeTable])
 
 
-  console.log(currentSeat);
+  useEffect(() => {
+    let userInActiveSeat = currentTables[activeTable.id]?.actionSeat === currentSeat && currentSeat !== null;
+    let handInProgress = currentTables[activeTable.id]?.handInProgress;
+
+    setIsActiveSeat(userInActiveSeat)
+    setIsHandInProgress(handInProgress)
+
+  }, [currentTables, activeTable.id]);
+
+  console.log(isActiveSeat);
+  console.log(isHandInProgress); 
+
+  console.log(currentSeat); 
+  console.log(currentTables[activeTable.id]?.actionSeat);
+
 
 
 
@@ -170,28 +188,42 @@ import { ModalContext } from '../../context/ModalContext';
 
 
 {isSitting && (
+
             <div className="section right flex center">
-                <div className="rebet-option-container">
-                  <div className="rebet regular" onClick={()=>rebet(true)}>Rebet</div>
-                  <div className="rebet double" onClick={()=>rebet(false)}>Rebet x2</div>
+
+              {!isHandInProgress &&(
+                <div className="section right flex center">
+                  <div className="rebet-option-container">
+                    <div className="rebet regular" onClick={()=>rebet(true)}>Rebet</div>
+                    <div className="rebet double" onClick={()=>rebet(false)}>Rebet x2</div>
+                  </div>
+                  <div className="undo-bet-container">
+                    <div className="undo one" onClick={()=>undoBet(false)}>Undo</div>
+                    <div className="undo all" onClick={()=>undoBet(true)}>Undo all</div>
+                  </div>
+                  <div className="chips-option-container">
+                    <div className="chip" onClick={()=>addBet(1)}>1</div>
+                    <div className="chip" onClick={()=>addBet(5)}>5</div>
+                    <div className="chip" onClick={()=>addBet(25)}>25</div>
+                    <div className="chip" onClick={()=>addBet(100)}>100</div>
+                    <div className="chip" onClick={()=>addBet(500)}>500</div>
+                  </div>
                 </div>
-                <div className="undo-bet-container">
-                  <div className="undo one" onClick={()=>undoBet(false)}>Undo</div>
-                  <div className="undo all" onClick={()=>undoBet(true)}>Undo all</div>
+              )}
+
+              {isHandInProgress &&(
+                <div className="section right flex center">
+                  <div className="decision-option-container">
+                    <div className="action" onClick={()=>handleAction('hit')}>Hit</div>
+                    <div className="action" onClick={()=>handleAction('stay')}>Stay</div>
+                    <div className="action" onClick={()=>handleAction('double')}>Double</div>
+                    <div className="action" onClick={()=>handleAction('split')}>Split</div>
+                  </div>
+
                 </div>
-                <div className="chips-option-container">
-                  <div className="chip" onClick={()=>addBet(1)}>1</div>
-                  <div className="chip" onClick={()=>addBet(5)}>5</div>
-                  <div className="chip" onClick={()=>addBet(25)}>25</div>
-                  <div className="chip" onClick={()=>addBet(100)}>100</div>
-                  <div className="chip" onClick={()=>addBet(500)}>500</div>
-                </div>
-                <div className="decision-option-container">
-                  <div className="action" onClick={()=>handleAction('hit')}>Hit</div>
-                  <div className="action" onClick={()=>handleAction('stay')}>Stay</div>
-                  <div className="action" onClick={()=>handleAction('double')}>Double</div>
-                  <div className="action" onClick={()=>handleAction('split')}>Split</div>
-              </div>
+              )}
+
+
             </div>
 )}
             

@@ -56,8 +56,16 @@ const gamesReducer = (state = initialState, action) => {
     
     case UPDATE_TABLE:{
       const {tableId, table} = action.payload
+      console.log('-=-=-=-=-=-=-=-=-=');
+      console.log('-=-=-=-=-=-=-=-=-=');
+      console.log('-=-=-=-=-=-=-=-=-=');
+      console.log('-=-=-=-=-=-=-=-=-=');
     
       console.log(action.payload);
+      console.log('-=-=-=-=-=-=-=-=-=');
+      console.log('-=-=-=-=-=-=-=-=-=');
+      console.log('-=-=-=-=-=-=-=-=-=');
+      console.log('-=-=-=-=-=-=-=-=-=');
     
       let updatedCurrentTables = {...newState.currentTables};
 
@@ -68,8 +76,15 @@ const gamesReducer = (state = initialState, action) => {
 
         console.log(currentTable);
         console.log(table.countdownRemaining);
+        console.log(action.payload.dealerCards?.visibleCards);
         currentTable.countdown = table.countdownRemaining;
-        currentTable.dealerCards = action.payload.dealerCards?.visibleCards;
+        currentTable.dealerCards = action.payload.table.dealerCards?.visibleCards;
+        currentTable.actionSeat = action.payload.table.actionSeat;
+
+        // only update handInProgress if specified in payload
+        if(action.payload.table.handInProgress){
+          currentTable.handInProgress = action.payload.table.handInProgress;
+        }
     
         for(let seat in currentTable.tableUsers) {
 
@@ -84,8 +99,9 @@ const gamesReducer = (state = initialState, action) => {
             currentTable.tableUsers[seat].pendingBet = table.seats[seat].pendingBet;
             currentTable.tableUsers[seat].currentBet = table.seats[seat].currentBet;
             currentTable.tableUsers[seat].tableBalance = table.seats[seat].tableBalance;
+            currentTable.tableUsers[seat].turnTimer = table.seats[seat].turnTimer;
           }
-        }
+        } 
 
         console.log(currentTable);
     

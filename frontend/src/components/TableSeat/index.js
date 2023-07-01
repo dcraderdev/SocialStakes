@@ -19,23 +19,27 @@ const TableSeat = ({seatNumber, player}) => {
   const { modal, openModal, closeModal, updateObj, setUpdateObj} = useContext(ModalContext);
 
   const [disconnectTimer, setDisconnectTimer] = useState(0)
+  const [turnTimer, setTurnTimer] = useState(0)
   const [pendingBet, setPendingBet] = useState(0)
   const [currentBet, setCurrentBet] = useState(0)
   const [currentBalance, setCurrentBalance] = useState(0)
 
-
-  const [isCurrentUser, setIsCurrentUser] = useState(false);
-  const [isUserInAnySeat, setIsUserInAnySeat] = useState(false);
   const [cards, setCards] = useState([]);
   const [valueOfHand, setValueOfHand] = useState([]);
 
 
+  const [isCurrentUser, setIsCurrentUser] = useState(false);
+  const [isUserInAnySeat, setIsUserInAnySeat] = useState(false);
+  const [isActiveSeat, setIsActiveSeat] = useState(false);
+  const [isHandInProgress, setIsHandInProgress] = useState(false);
+  
 
 
 
   useEffect(() => {
 
     let userDisconnectTimer = currentTables[activeTable.id]?.tableUsers[seatNumber]?.disconnectTimer;
+    let userTurnTimer = currentTables[activeTable.id]?.tableUsers[seatNumber]?.turnTimer;
     let userPendingBet = currentTables[activeTable.id]?.tableUsers[seatNumber]?.pendingBet;
     let userCurrentBet = currentTables[activeTable.id]?.tableUsers[seatNumber]?.currentBet;
     let userCurrentBalance = currentTables[activeTable.id]?.tableUsers[seatNumber]?.tableBalance;
@@ -50,16 +54,27 @@ const TableSeat = ({seatNumber, player}) => {
     if (userDisconnectTimer > 0) {
       setDisconnectTimer(userDisconnectTimer / 1000);
     }
+    if (userTurnTimer > 0) {
+      setTurnTimer(userTurnTimer / 1000);
+    }
   }, [currentTables, activeTable.id, seatNumber]);
   
 
   useEffect(() => {
     let userInAnySeat = Object.values(currentTables[activeTable.id]?.tableUsers || {}).some(seat => seat.username === user.username);
-
     let currentUserInSeat = currentTables[activeTable.id]?.tableUsers[seatNumber]?.username === user.username;
+    let userInActiveSeat = currentTables[activeTable.id]?.actionSeat === seatNumber;
+    let handInProgress = currentTables[activeTable.id]?.handInProgress;
+
     setIsCurrentUser(currentUserInSeat);
     setIsUserInAnySeat(userInAnySeat);
+    setIsActiveSeat(userInActiveSeat)
+    setIsHandInProgress(handInProgress)
   }, [currentTables, activeTable.id, seatNumber, user]);
+
+
+
+
 
 
   useEffect(() => {
@@ -93,13 +108,15 @@ const TableSeat = ({seatNumber, player}) => {
 
   // console.log(player);
 
- 
+//  console.log(isActiveSeat);
+//  console.log(currentTables[activeTable.id]);
 
 return(
 
-    <div className={`seat-container six-ring seat${seatNumber}`}>
+    <div className={`seat-container six-ring seat${seatNumber} ${isActiveSeat ? ' gold' : ''}`}>
 
       {disconnectTimer > 0 && (<div className='disconnect-timer flex center'>{disconnectTimer}s</div>)}
+      {turnTimer > 0 && (<div className='turn-timer flex center'>{turnTimer}s</div>)}
 
       {player && (
         <div>

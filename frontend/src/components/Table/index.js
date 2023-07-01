@@ -79,10 +79,10 @@ console.log(cards);
       <div className='table-countdown'>{countdown > 0 ? countdown : ''}</div>
 
       <div className='dealer-cards flex center'>
+        {cards && cards.map((card, index) => <Card key={index} card={card} />)}
         {cards.length === 1 && (
           <Card card={'hidden'} />
-        )}
-            {cards && cards.map((card, index) => <Card key={index} card={card} />)}
+          )}
       </div>
 
 

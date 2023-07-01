@@ -25,6 +25,7 @@ const TableSeat = ({seatNumber, player}) => {
   const [currentBalance, setCurrentBalance] = useState(0)
 
   const [cards, setCards] = useState([]);
+  const [hands, setHands] = useState([]);
   const [valueOfHand, setValueOfHand] = useState([]);
 
 
@@ -33,7 +34,7 @@ const TableSeat = ({seatNumber, player}) => {
   const [isActiveSeat, setIsActiveSeat] = useState(false);
   const [isHandInProgress, setIsHandInProgress] = useState(false);
   
-
+  console.log(hands);
 
 
   useEffect(() => {
@@ -44,6 +45,7 @@ const TableSeat = ({seatNumber, player}) => {
     let userCurrentBet = currentTables[activeTable.id]?.tableUsers[seatNumber]?.currentBet;
     let userCurrentBalance = currentTables[activeTable.id]?.tableUsers[seatNumber]?.tableBalance;
     let userCards = currentTables[activeTable.id]?.tableUsers[seatNumber]?.cards;
+    let userHands = currentTables[activeTable.id]?.tableUsers[seatNumber]?.hands;
 
     console.log(currentTables[activeTable.id]?.tableUsers[seatNumber]);
 
@@ -51,6 +53,8 @@ const TableSeat = ({seatNumber, player}) => {
     setCurrentBet(userCurrentBet)
     setCurrentBalance(userCurrentBalance)
     setCards(userCards)
+    setHands(userHands)
+
     if (userDisconnectTimer > 0) {
       setDisconnectTimer(userDisconnectTimer / 1000);
     }

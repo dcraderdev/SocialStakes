@@ -2,6 +2,8 @@ const fetch = require('node-fetch');
 const crypto = require('crypto');
 const _ = require('lodash');
 
+const {cardConverter} = require('./cardConverter');
+
 
 
 function generateSeed() {
@@ -314,6 +316,36 @@ console.log('-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=');
   return cardsDrawn;
 }
 
+async function handSummary(cards) {
+  console.log('HAND SUMMARY');
+
+  let handSummary = {
+    softSeventeen: false,
+    busted: false,
+    value: 0
+  }
+  let containsAce = false
+
+  for(let card of cards){
+    let convertedCard = cardConverter[card]
+    if(convertedCard.value === 11){
+      containsAce = true
+    }
+    handSummary.value += convertedCard.value
+  }
+
+  if(handSummary.value > 21){
+    handSummary.busted = true
+  }
+  if(handSummary.value === 17 && containsAce){
+    handSummary.softSeventeen = true
+  }
+
+  return handSummary
+
+}
+
+
 
 
 
@@ -326,5 +358,6 @@ module.exports = {
   fetchSpecificBlockHash,
   getLatestBlockHeight,
   generateFloats,
-  byteGenerator
+  byteGenerator,
+  handSummary
 };

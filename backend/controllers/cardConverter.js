@@ -1,15 +1,3 @@
-const {  
-  generateSeed,
-  generateDeck,
-  shuffle,
-  fetchLatestBlock,
-  fetchSpecificBlockHash,
-  getLatestBlockHeight,
-  generateFloats,
-  byteGenerator,
-  drawCards
-} = require('./cardController')
-
 let cardConverter = {
   0: {
     rank: '2',
@@ -274,54 +262,59 @@ let cardConverter = {
 };
 
 
-
-let serverSeeds = [
-  {
-    id:'b16f9b4c-0000-0000-0000-8fcf6a000111', 
-    serverSeed:'d639e1c006361c8af99f64c8578325336d346caf5011c32a47111246a31ceba8',
-  },
-  {
-    id:'b16f9b4c-0000-0000-0000-8fcf6a000112', 
-    serverSeed:'3630cf9f5384c671a06d6760a95940cef2f9f36e98b3f7b1660cb326c58cfd1d'
-  }
-  ]
-
-let blockHashSeeds = [
-  '9b933ea9aa2ab2124be2caaa0fb91e8fb11f5a1789eb228887d0be9cdf2e7d8b'
-]  
-
-
-let userIds = [
-  'e87a6a96-6ebc-4ef3-b6a1-3058b136f34b', // Trina Pine
-  '87d1cb3a-b8e2-4c7e-9d80-462a523b0fcb', // Hazel Foreste
-]
-
-let serverSeed1 = serverSeeds[0].serverSeed
-let serverSeed2 = serverSeeds[1]
-let blockHash = blockHashSeeds[0]
-let nonce = '1'
+module.exports = {
+  cardConverter,
+};
 
 
 
-let deck1 = generateDeck(serverSeed1, blockHash, nonce)
+// let serverSeeds = [
+//   {
+//     id:'b16f9b4c-0000-0000-0000-8fcf6a000111', 
+//     serverSeed:'d639e1c006361c8af99f64c8578325336d346caf5011c32a47111246a31ceba8',
+//   },
+//   {
+//     id:'b16f9b4c-0000-0000-0000-8fcf6a000112', 
+//     serverSeed:'3630cf9f5384c671a06d6760a95940cef2f9f36e98b3f7b1660cb326c58cfd1d'
+//   }
+//   ]
 
-console.log(deck1);
-
-
-let cards1 =  drawCards(deck1, 2, serverSeed1, blockHash, nonce)
-let cards2 =  drawCards(deck1, 2, serverSeed1, blockHash, nonce)
-let cards3 =  drawCards(deck1, 2, serverSeed1, blockHash, nonce)
-let cards4 =  drawCards(deck1, 1, serverSeed1, blockHash, nonce)
-let cards5 =  drawCards(deck1, 1, serverSeed1, blockHash, nonce)
-
-console.log(cards1);
-console.log(cards2);
-console.log(cards3);
-console.log(cards4);
-console.log(cards5);
-console.log(deck1);
+// let blockHashSeeds = [
+//   '9b933ea9aa2ab2124be2caaa0fb91e8fb11f5a1789eb228887d0be9cdf2e7d8b'
+// ]  
 
 
+// let userIds = [
+//   'e87a6a96-6ebc-4ef3-b6a1-3058b136f34b', // Trina Pine
+//   '87d1cb3a-b8e2-4c7e-9d80-462a523b0fcb', // Hazel Foreste
+// ]
 
-console.log(cardConverter[2]);
-console.log(cardConverter[22]);
+// let serverSeed1 = serverSeeds[0].serverSeed
+// let serverSeed2 = serverSeeds[1]
+// let blockHash = blockHashSeeds[0]
+// let nonce = '1'
+
+
+
+// let deck1 = generateDeck(serverSeed1, blockHash, nonce)
+
+// console.log(deck1);
+
+
+// let cards1 =  drawCards(deck1, 2, serverSeed1, blockHash, nonce)
+// let cards2 =  drawCards(deck1, 2, serverSeed1, blockHash, nonce)
+// let cards3 =  drawCards(deck1, 2, serverSeed1, blockHash, nonce)
+// let cards4 =  drawCards(deck1, 1, serverSeed1, blockHash, nonce)
+// let cards5 =  drawCards(deck1, 1, serverSeed1, blockHash, nonce)
+
+// console.log(cards1);
+// console.log(cards2);
+// console.log(cards3);
+// console.log(cards4);
+// console.log(cards5);
+// console.log(deck1);
+
+
+
+// console.log(cardConverter[2]);
+// console.log(cardConverter[22]);

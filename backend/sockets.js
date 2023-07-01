@@ -1,5 +1,5 @@
 const { gameController } = require('./controllers/gameController');
-const { drawCards } = require('./controllers/cardController');
+const { drawCards, handSummary } = require('./controllers/cardController');
 
 
 module.exports = function (io) {
@@ -25,13 +25,14 @@ module.exports = function (io) {
         hiddenCards: [],
         visibleCards: [],
         otherCards: [],
+        handSummary: null
       },
       messages: [],
       sortedActivePlayers: [],
+      sortedFinishedPlayers: []
     }
   }
       
-
 
   io.on('connection', async (socket) => {
     const userId = socket.handshake.query.userId;
@@ -608,15 +609,32 @@ module.exports = function (io) {
                 for(let j = 0; j < 2; j++){
                   for (let i = 0; i < sortedSeats.length; i++) {
                     let seat = sortedSeats[i];
+
+                    console.log('-=-=-=-=-=-');
+                    console.log('%$%$%$%$%$%$%$%$%$%');
+                    console.log('%$%$%$%$%$%$%$%$%$%');
+                    console.log('%$%$%$%$%$%$%$%$%$%');
+                    console.log('%$%$%$%$%$%$%$%$%$%');
+                    console.log(seat);
+                    console.log('%$%$%$%$%$%$%$%$%$%');
+                    console.log('%$%$%$%$%$%$%$%$%$%');
+                    console.log('%$%$%$%$%$%$%$%$%$%');
+                    console.log('%$%$%$%$%$%$%$%$%$%');
+                    console.log('%$%$%$%$%$%$%$%$%$%');
+                    console.log('-=-=-=-=-=-');
                     // Get the next card and remove it from the drawnCards array
                     let nextCard = drawnCards.shift()
                     seat.cards.push(nextCard);
                       // Create a newHand inside the handsObj in case we need to split during the hand
                       // Use the map we created to get the handIds
                       if(!seat.hands[`${handIds[i]}`]){
-                        seat.hands[`${handIds[i]}`] = []
+                        seat.hands[`${handIds[i]}`] = {
+                          cards: [],
+                          bet: null,
+                        }
                       }
-                      seat.hands[`${handIds[i]}`].push(nextCard);
+                      seat.hands[`${handIds[i]}`].cards.push(nextCard);
+                      seat.hands[`${handIds[i]}`].bet = seat.currentBet;
                   }
                   // Distribute the cards to the dealer
                   let nextCard = drawnCards.shift()
@@ -666,11 +684,13 @@ module.exports = function (io) {
 
       //returns next player or false if all players have acted
       async function handleDealerTurn(tableId, io){
+        console.log('HANDLING DEALER TURN');
+
         let room = tableId
-        console.log(rooms[tableId].sortedActivePlayers);
         let hiddenCards = rooms[tableId].dealerCards.hiddenCards
         let visibleCards = rooms[tableId].dealerCards.visibleCards
-        let newCards = [...hiddenCards, ...visibleCards ]
+        let otherCards = rooms[tableId].dealerCards.otherCards
+        let newCards = [...visibleCards, ...hiddenCards, ...otherCards ]
         rooms[tableId].dealerCards.visibleCards = newCards
 
         // Emit update to clients
@@ -687,9 +707,45 @@ module.exports = function (io) {
         
         io.in(room).emit('get_updated_table', updateObj);
 
-      }
+
+        //Check current handSummary
+        let dealerHand = await handSummary(newCards)
+
+        console.log(dealerHand);
+
+        
+        // if dealer has soft 17 or less than 16
+        if(dealerHand.softSeventeen || dealerHand.value <= 16){
+          
+          let cardsToDraw = 1
+  
+          let drawObj = {
+            deck: rooms[tableId].deck,
+            cardsToDraw,
+            cursor: rooms[tableId].cursor
+          } 
+          const drawnCards = await drawCards(drawObj)
+          rooms[tableId].dealerCards.otherCards.push(drawnCards)
+          // Set new cursor point, setDealers cards
+          rooms[tableId].cursor += cardsToDraw 
+          handleDealerTurn(tableId, io)
+        }
+
+        if(dealerHand.value >= 17){
+          //END ROUND
+          console.log('DEALER STAYS');
+          rooms[tableId].dealerCards.handSummary = dealerHand
+          endRound(tableId, io)
+        }
+      } 
 
 
+
+
+
+
+        
+        
 
       async function gameLoop(tableId, io) {
         let room = tableId
@@ -697,7 +753,7 @@ module.exports = function (io) {
         let nextPlayer = await getNextPlayer(tableId)
         if(!nextPlayer){
           console.log('DEALERS TURN');
-          handleDealerTurn(tableId, io)
+          await handleDealerTurn(tableId, io)
           return
           //dealers turn
         }
@@ -710,7 +766,7 @@ module.exports = function (io) {
         console.log('-=-=-=-=-=-'); 
 
         // Create actionTimer 
-        rooms[tableId].actionTimer = 5000;
+        rooms[tableId].actionTimer = 2000;
 
         // Set action seat
         rooms[tableId].actionSeat = nextPlayer.seat
@@ -747,30 +803,74 @@ module.exports = function (io) {
             console.log('TURN OVER');
             console.log('TURN OVER');
             gameLoop(tableId, io) 
-
+            rooms[tableId].sortedFinishedPlayers.push(nextPlayer)
             // io.in(room).emit('player_timeout', {tableId, seat: nextPlayer.seat});
           }
         }, 1000)
-  
-   
-
-        // let updateObj = {
-        //   tableId,
-        //   table: {
-        //     actionSeat: nextPlayer.seat,
-        //     actionTimer: rooms[tableId].actionTimer,
-        //     seats: rooms[tableId].seats,
-        //     dealerCards:{
-        //       visibleCards: rooms[tableId].dealerCards.visibleCards,
-        //     }
-        //   },
-        // };
-
-        // io.in(room).emit('get_updated_table', updateObj);
-
       }
 
 
+
+
+
+
+      async function endRound(tableId, io) {
+        let room = tableId
+
+        // Update table with latest info before ending the round
+        let updateObj = {
+          tableId,
+          table: {
+            seats: rooms[tableId].seats,
+            dealerCards:{
+              visibleCards: rooms[tableId].dealerCards.visibleCards,
+            }
+          },
+        };
+        io.in(room).emit('get_updated_table', updateObj);
+
+        console.log(rooms[tableId].dealerCards.handSummary);
+
+        let dealerHand = rooms[tableId].dealerCards.handSummary
+        let finsihedPlayers = rooms[tableId].sortedFinishedPlayers
+
+        for(let player of finsihedPlayers){
+
+          let playerHands = Object.entries(player.hands)
+          for(let [key, value] of playerHands){
+            let cards = value.cards
+            let playerHand = await handSummary(cards)
+
+// Dealer busted
+            if(dealerHand.value > 21){
+              console.log('WIN');
+            }
+// Tied score
+
+            if(playerHand.value === dealerHand.value){
+              console.log('PUSH');
+            }
+// Player losing hand
+
+            if(playerHand.value < dealerHand.value){
+              console.log('LOSE');
+            }
+// Player winning hand
+
+            if(playerHand.value > dealerHand.value){
+              console.log('WIN');
+            }
+          }
+        }
+
+
+
+
+
+
+        
+
+      }
 
   });
 };

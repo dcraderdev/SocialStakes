@@ -41,6 +41,8 @@ const TableSeat = ({seatNumber, player}) => {
     let userCurrentBalance = currentTables[activeTable.id]?.tableUsers[seatNumber]?.tableBalance;
     let userCards = currentTables[activeTable.id]?.tableUsers[seatNumber]?.cards;
 
+    console.log(currentTables[activeTable.id]?.tableUsers[seatNumber]);
+
     setPendingBet(userPendingBet)
     setCurrentBet(userCurrentBet)
     setCurrentBalance(userCurrentBalance)
@@ -73,42 +75,6 @@ const TableSeat = ({seatNumber, player}) => {
       if (timerId) clearInterval(timerId);
     };
   }, [disconnectTimer]);
-
-
-
-
-
-
-
-// let arr = [1,1,1,1,1]
-// let hash = {}
-
-// for(let i of arr){
-//   if(hash[arr[i]]){
-//     hash[arr[i]] += 1
-//   }else {
-//     hash[arr[i]] = 1
-//   }
-// } 
-
-
-
-// console.log(hash);
-// console.log(arr.length);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
   const takeSeat = () => {

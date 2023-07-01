@@ -7,6 +7,7 @@ import {changeNeonThemeAction, changeTableThemeAction} from '../../redux/actions
 
 import TableSeat from '../TableSeat';
 import PlayerBetOptions from '../PlayerBetOptions';
+import Card from '../Card';
 
 const Table = () => {
 
@@ -18,11 +19,21 @@ const Table = () => {
   const currentTables = useSelector(state=>state.games.currentTables)
 
   const [countdown, setCountdown] = useState(null);
+  const [cards, setCards] = useState([]);
 
 
   useEffect(()=>{
     if(activeTable && currentTables){
       let currTable = currentTables[activeTable.id];
+      let dealerCards = currTable.dealerCards
+
+      if(dealerCards?.length){
+        setCards(dealerCards)
+      }
+
+
+
+console.log(currentTables);
       
       if(!countdown && currTable.countdown){
         setCountdown(currTable.countdown/1000);
@@ -31,7 +42,7 @@ const Table = () => {
     }
   },[currentTables, activeTable]);
 
-
+console.log(cards);
 
   useEffect(() => {
     let countdownInterval = null;
@@ -66,7 +77,13 @@ const Table = () => {
         {themes[tableTheme] && <img src={themes[tableTheme].url} alt='table'></img>}
       </div>
       <div className='table-countdown'>{countdown > 0 ? countdown : ''}</div>
-      <div className='dealer-cards'>ssssss</div>
+
+      <div className='dealer-cards flex center'>
+        {cards.length === 1 && (
+          <Card card={'hidden'} />
+        )}
+            {cards && cards.map((card, index) => <Card key={index} card={card} />)}
+      </div>
 
 
         <div className='seats-container'>

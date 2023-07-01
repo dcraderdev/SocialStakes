@@ -69,6 +69,7 @@ const gamesReducer = (state = initialState, action) => {
         console.log(currentTable);
         console.log(table.countdownRemaining);
         currentTable.countdown = table.countdownRemaining;
+        currentTable.dealerCards = action.payload.dealerCards?.visibleCards;
     
         for(let seat in currentTable.tableUsers) {
 
@@ -79,6 +80,7 @@ const gamesReducer = (state = initialState, action) => {
           // If the incoming table has data for this seat, update it in the currentTable
           if (table.seats[seat]) {
             currentTable.tableUsers[seat].cards = table.seats[seat].cards;
+            currentTable.tableUsers[seat].hands = table.seats[seat].hands;
             currentTable.tableUsers[seat].pendingBet = table.seats[seat].pendingBet;
             currentTable.tableUsers[seat].currentBet = table.seats[seat].currentBet;
             currentTable.tableUsers[seat].tableBalance = table.seats[seat].tableBalance;

@@ -326,18 +326,21 @@ const gameController = {
 
 
   async createHands(userTableIds, roundId) {
-
-    let handIds = []
-
-    await userTableIds.map(id=>{
-      newHand = Hand.create({userTableId:id,roundId})
-      if(newHand){
-        handIds.push(newHand.id)
+    let handIds = [];
+  
+    const hands = await Promise.all(userTableIds.map(async (id) => {
+      const newHand = await Hand.create({userTableId: id, roundId});
+      return newHand;
+    }));
+  
+    hands.forEach(hand => {
+      if(hand) {
+        handIds.push(hand.id);
       }
-    })
-
-    return handIds
-  },
+    });
+  
+    return handIds;
+  }
 
 };
 

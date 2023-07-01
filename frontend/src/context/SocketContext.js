@@ -153,7 +153,7 @@ const SocketProvider = ({ children }) => {
         console.log(countdownObj);
         let tableId = countdownObj.tableId
         dispatch(collectBetsAction(countdownObj)); 
-        socket.emit('deal_cards', tableId)
+        // socket.emit('deal_cards', tableId)
       });  
 
       return () => {

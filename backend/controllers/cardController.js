@@ -303,9 +303,12 @@ async function main() {
 async function drawCards(drawObj) {
   const {deck, cardsToDraw, cursor} = drawObj
 
+  console.log('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=');
+
 console.log(deck);
 console.log(cardsToDraw);
 console.log(cursor);
+console.log('-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=');
 
   const cardsDrawn = deck.splice(cursor, cardsToDraw);
   return cardsDrawn;

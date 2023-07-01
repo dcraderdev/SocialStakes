@@ -17,9 +17,11 @@ module.exports = function (io) {
       nonce: null,
       deck: null, 
       cursor: 0,
-      dealerCards: [],
-      dealerVisibleCard: null,
-      dealerHiddenCard: null,
+      dealerCards: {
+        hiddenCards: [],
+        visibleCards: [],
+        otherCards: [],
+      },
       messages: []
     }
   }
@@ -156,7 +158,8 @@ module.exports = function (io) {
         table: {
           seats: rooms[tableId].seats,
           countdownRemaining: rooms[tableId].countdownRemaining,
-          gameSessionId: rooms[tableId].gameSessionId
+          gameSessionId: rooms[tableId].gameSessionId,
+          dealerCards: rooms[tableId].dealerCards
         }
       };
 
@@ -340,18 +343,6 @@ module.exports = function (io) {
               seat.currentBet += seat.pendingBet;
               seat.pendingBet = 0;
             }
-
-
-            console.log('=-=-=-=-=-');
-            console.log('=-=-=-=-=-');
-            console.log(rooms[tableId]);
-            console.log('=-=-=-=-=-');
-
-
-            // // Emit updated table to clients
-            // io.in(room).emit('table_updated', rooms[tableId]);
-
-
             let updateObj = {
               tableId,
               table: {
@@ -363,15 +354,13 @@ module.exports = function (io) {
             socket.join(room);
             io.in(room).emit('get_updated_table', updateObj);
 
-
-
-
             // Countdown finished, emit event to collect all bets
             let countdownObj = {
               countdownRemaining,
               tableId
             }
             io.in(room).emit('collect_bets', countdownObj);
+            dealCards(tableId, io);
           } 
         }, 1000); 
       }
@@ -471,16 +460,12 @@ module.exports = function (io) {
         nonce: rooms[tableId].nonce,
         decksUsed: rooms[tableId].decksUsed
       }
-
       // generate cards and create Round entry in db
       const deckandRoundId = await gameController.dealCards(dealObj)
-
       if(!deckandRoundId){
         return
       }
-
       const {roundId, deck} = deckandRoundId
-
       // Assign deck to room
       rooms[tableId].deck = deck
 
@@ -492,21 +477,15 @@ module.exports = function (io) {
         .sort(([seatNumberA], [seatNumberB]) => seatNumberA - seatNumberB)
         .map(([i, seat]) => seat);
 
-
         console.log(sortedSeats);
         let userTableIds = sortedSeats.map(seat=>seat.id)  
-        console.log('=-=-=-=-');
         console.log('=-=-=-=-');
         console.log(userTableIds);
         console.log(roundId);
         console.log('=-=-=-=-');
-        console.log('=-=-=-=-');
 
       // Create hand for each active player
       const handIds = await gameController.createHands(userTableIds, roundId)
-
-
-
       let numSeatsWithBets = sortedSeats.length + 1;
       let cardsToDraw = numSeatsWithBets * 2
       let cursor = rooms[tableId].cursor
@@ -516,28 +495,15 @@ module.exports = function (io) {
         cardsToDraw,
         cursor
       } 
-
       const drawnCards = await drawCards(drawObj)
-
- 
       if(handIds && drawnCards){
-
-        console.log('yes');
-        console.log('yes');
-        console.log('yes');
-        console.log('yes');
-        console.log('yes');
-        
               // Distribute the cards
               for(let j = 0; j < 2; j++){
-        
                 for (let i = 0; i < sortedSeats.length; i++) {
                   let seat = sortedSeats[i];
                   // Get the next card and remove it from the drawnCards array
                   let nextCard = drawnCards.shift()
-        
                   seat.cards.push(nextCard);
-        
                     // Create a newHand inside the handsObj in case we need to split during the hand
                     // Use the map we created to get the handIds
                     if(!seat.hands[`${handIds[i]}`]){
@@ -545,25 +511,14 @@ module.exports = function (io) {
                     }
                     seat.hands[`${handIds[i]}`].push(nextCard);
                 }
-          
                 // Distribute the first card to the dealer
                 rooms[tableId].dealerCards.push(drawnCards.shift());
-        
               }
-
       }
-
-
-
-
       // Set new cursor point, setDealers cards
       rooms[tableId].cursor += cardsToDraw 
-      rooms[tableId].dealerVisibleCard = rooms[tableId].dealerCards[1]
-      rooms[tableId].dealerHiddenCard = rooms[tableId].dealerCards[0] 
-
-
-      console.log(rooms[tableId]);
-          
+      rooms[tableId].dealer.visibleCards = rooms[tableId].dealerCards[1]
+      rooms[tableId].dealer.hiddenCards = rooms[tableId].dealerCards[0] 
 
       let updateObj = {
         tableId,
@@ -575,20 +530,104 @@ module.exports = function (io) {
           visibleCard: rooms[tableId].dealerVisibleCard,
         }
       };
-
       console.log(updateObj);
-
       io.in(room).emit('get_updated_table', updateObj);
-
-
       // io.in(userId).emit('message', messageObj);
-
       console.log('--------------');
       console.log(`Dealing cards @room ${room}`);
       console.log('--------------');
     });
 
 
+    async function dealCards(tableId, io) {
+        let room = tableId
+  
+        let dealObj = {
+          tableId,
+          gameSessionId: rooms[tableId].gameSessionId,
+          blockHash: rooms[tableId].blockHash,
+          nonce: rooms[tableId].nonce,
+          decksUsed: rooms[tableId].decksUsed
+        }
+        // generate cards and create Round entry in db
+        const deckandRoundId = await gameController.dealCards(dealObj)
+        if(!deckandRoundId){
+          return
+        }
+        const {roundId, deck} = deckandRoundId
+        // Assign deck to room
+        rooms[tableId].deck = deck
+  
+        // Calculate number of cards to draw
+        // numSeats with currentBets + cards for dealer
+        // Sort the seats by seat number and only include those with a current bet
+        let sortedSeats = Object.entries(rooms[tableId].seats)
+          .filter(([i, seat]) => seat.currentBet > 0)
+          .sort(([seatNumberA], [seatNumberB]) => seatNumberA - seatNumberB)
+          .map(([i, seat]) => seat);
+  
+          console.log(sortedSeats);
+          let userTableIds = sortedSeats.map(seat=>seat.id)  
+          console.log('=-=-=-=-');
+          console.log(userTableIds);
+          console.log(roundId);
+          console.log('=-=-=-=-');
+  
+        // Create hand for each active player
+        const handIds = await gameController.createHands(userTableIds, roundId)
+        let numSeatsWithBets = sortedSeats.length + 1;
+        let cardsToDraw = numSeatsWithBets * 2
+        let cursor = rooms[tableId].cursor
+  
+        let drawObj = {
+          deck,
+          cardsToDraw,
+          cursor
+        } 
+        const drawnCards = await drawCards(drawObj)
+        if(handIds && drawnCards){
+                // Distribute the cards
+                for(let j = 0; j < 2; j++){
+                  for (let i = 0; i < sortedSeats.length; i++) {
+                    let seat = sortedSeats[i];
+                    // Get the next card and remove it from the drawnCards array
+                    let nextCard = drawnCards.shift()
+                    seat.cards.push(nextCard);
+                      // Create a newHand inside the handsObj in case we need to split during the hand
+                      // Use the map we created to get the handIds
+                      if(!seat.hands[`${handIds[i]}`]){
+                        seat.hands[`${handIds[i]}`] = []
+                      }
+                      seat.hands[`${handIds[i]}`].push(nextCard);
+                  }
+                  // Distribute the cards to the dealer
+                  let nextCard = drawnCards.shift()
+                  if(j===1){
+                    rooms[tableId].dealerCards.hiddenCards.push(nextCard)
+                  }else {
+                    rooms[tableId].dealerCards.visibleCards.push(nextCard)
+                  }
+                }
+        }
+        // Set new cursor point, setDealers cards
+        rooms[tableId].cursor += cardsToDraw 
+  
+        let updateObj = {
+          tableId,
+          table: {
+            seats: rooms[tableId].seats,
+          },
+          dealerCards:{
+            visibleCards: rooms[tableId].dealerCards.visibleCards,
+          }
+        };
+        console.log(updateObj);
+        io.in(room).emit('get_updated_table', updateObj);
+        // io.in(userId).emit('message', messageObj);
+        console.log('--------------');
+        console.log(`Dealing cards @room ${room}`);
+        console.log('--------------');
+      }
 
   });
 };

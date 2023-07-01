@@ -11,6 +11,12 @@
 }
 
 
+.card.hidden{
+  background-color: #302a17;
+  
+}
+
+
 .card-suit {
   position: absolute;
   top: 2px;
@@ -52,4 +58,6 @@
 .club {
   background-color: black;
 }
+
+
 

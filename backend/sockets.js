@@ -288,6 +288,10 @@ console.log(rooms[tableId]?.seats);
       // If server resets seats, we can reset all user's seats without resetting db
       if(rooms[tableId]?.seats[seat] === undefined){
         await gameController.removeUserFromTables(user.id);
+        // Remove the player from the room state
+        if(rooms[tableId] && rooms[tableId].seats[seat]){
+          delete rooms[tableId].seats[seat];
+        }  
         return
       }
 
@@ -862,17 +866,40 @@ console.log(rooms[tableId]?.seats);
         console.log(rooms[tableId].dealerCards.handSummary);
 
         let bestDealerValue = rooms[tableId].dealerCards.bestValue
-        let finsihedPlayers = rooms[tableId].sortedFinishedPlayers
+        let finishedPlayers = rooms[tableId].sortedFinishedPlayers
+
+
+
+
+        console.log('finishedPlayers:', finishedPlayers);
+
+
+
 
 
         //Iterate over each player and keep track of any winnings
-        for(let player of finsihedPlayers){
+        for(let player of finishedPlayers){
           let currentBalance = player.tableBalance
           let winnings = 0
 
         //Iterate over each player's hand 
           let playerHands = Object.entries(player.hands)
+
+          console.log('playerhands',playerHands);
+
+
+
+
+
+
           for(let [key, handData] of playerHands){
+
+            console.log('BREAKDOWN',[key, handData]);
+            console.log('handData',handData);
+            console.log('key',key);
+
+
+
             let cards = handData.cards
             let bet = handData.bet
             let playerHand = await handSummary(cards)
@@ -904,7 +931,7 @@ console.log(rooms[tableId]?.seats);
             } 
 
 
-
+ 
             let handObj = {
               handId: key,
               cards: JSON.stringify(cards),
@@ -961,7 +988,9 @@ console.log(rooms[tableId]?.seats);
         }
 
 
-    // logic after hands have been awarded
+        // logic after hands have been awarded
+        // Reset the room for the next hand
+
         for (let seat in rooms[tableId].seats) {
           rooms[tableId].seats[seat].hands = {}
           rooms[tableId].seats[seat].cards = []
@@ -976,6 +1005,8 @@ console.log(rooms[tableId]?.seats);
           handSummary: null,
           bestValue: null
         }
+
+        rooms[tableId].sortedFinishedPlayers = []
            
 
 

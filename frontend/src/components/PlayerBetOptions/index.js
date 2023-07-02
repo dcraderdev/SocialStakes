@@ -63,12 +63,6 @@ import { ModalContext } from '../../context/ModalContext';
 
   }, [currentTables, activeTable.id]);
 
-  console.log(isActiveSeat);
-  console.log(isHandInProgress); 
-
-  console.log(currentSeat); 
-  console.log(currentTables[activeTable.id]?.actionSeat);
-
 
 
 

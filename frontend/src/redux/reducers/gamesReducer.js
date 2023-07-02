@@ -81,7 +81,7 @@ const gamesReducer = (state = initialState, action) => {
         currentTable.actionTimer = action.payload.table.actionTimer;
 
         // only update handInProgress if specified in payload
-        if(action.payload.table.handInProgress){
+        if(action.payload.table.handInProgress !== null){
           currentTable.handInProgress = action.payload.table.handInProgress;
         }
     

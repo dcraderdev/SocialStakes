@@ -33,9 +33,6 @@ const TableSeat = ({seatNumber, player}) => {
   const [isUserInAnySeat, setIsUserInAnySeat] = useState(false);
   const [isActiveSeat, setIsActiveSeat] = useState(false);
   const [isHandInProgress, setIsHandInProgress] = useState(false);
-  
-  console.log(hands);
-
 
   useEffect(() => {
 
@@ -46,8 +43,6 @@ const TableSeat = ({seatNumber, player}) => {
     let userCurrentBalance = currentTables[activeTable.id]?.tableUsers[seatNumber]?.tableBalance;
     let userCards = currentTables[activeTable.id]?.tableUsers[seatNumber]?.cards;
     let userHands = currentTables[activeTable.id]?.tableUsers[seatNumber]?.hands;
-
-    console.log(currentTables[activeTable.id]?.tableUsers[seatNumber]);
 
     setPendingBet(userPendingBet)
     setCurrentBet(userCurrentBet)
@@ -75,10 +70,6 @@ const TableSeat = ({seatNumber, player}) => {
     setIsActiveSeat(userInActiveSeat)
     setIsHandInProgress(handInProgress)
   }, [currentTables, activeTable.id, seatNumber, user]);
-
-
-
-
 
 
   useEffect(() => {
@@ -111,13 +102,9 @@ const TableSeat = ({seatNumber, player}) => {
   }, [actionTimer]);
 
 
-console.log(actionTimer);
-console.log(currentTables[activeTable.id]);
-
-
-
   const takeSeat = () => {
     if(!user) return
+    if(player || isUserInAnySeat) return
     setUpdateObj({minBet:activeTable.Game.minBet, seatNumber, type:'initDeposit'})
     openModal('balanceModal')
   }
@@ -135,33 +122,55 @@ console.log(currentTables[activeTable.id]);
 //  console.log(isActiveSeat);
 //  console.log(currentTables[activeTable.id]);
 
+
 return(
 
-    <div className={`seat-container six-ring seat${seatNumber} ${isActiveSeat ? ' gold' : ''}`}>
+    <div onClick={takeSeat} className={`seat-container six-ring seat${seatNumber} ${!player ? ' border' : ''}`}>
 
       {disconnectTimer > 0 && (<div className='disconnect-timer flex center'>{disconnectTimer}s</div>)}
       {actionTimer > 0 && isActiveSeat && (<div className='turn-timer flex center'>{actionTimer}s</div>)}
 
       {player && (
-        <div>
-          <div className='seat-card-area'>
-            {cards && cards.map((card, index) => <Card key={index} card={card} />)}
-          </div>
-          <div className='flex center'>user:{player?.username ? player.username : ''}</div>
-          <div className='total-bet flex center'>pending bet:{pendingBet}</div>
-          <div className='total-bet flex center'>current bet:{currentBet}</div>
+                
+        <div className={`seat-name-balance-container ${isActiveSeat ? ' gold' : ''}`}>
+          <div className='flex center'>{player.username}</div>
           <div className='table-balance flex center'>${currentBalance}</div>
         </div>
+
       )}
 
+
+{player && (
+
+            <div>
+              {hands && Object.entries(hands).map(([handId, handData]) => (
+                <div  className='seat-card-area flex' key={handId}>
+                    {/* <div>Hand ID: {handId}</div> */}
+                    <div >Bet: {handData.bet}</div>
+                    {handData.cards.map((card, index) => (
+                        <Card key={index} card={card} />
+                    ))}
+                </div>
+              ))}
+              
+            </div>
+            )}
+
+              
+{/* 
+             <div className='total-bet flex center'>pending bet:{pendingBet}</div>
+             <div className='total-bet flex center'>current bet:{currentBet}</div> */}
 
 
       {!player && !isCurrentUser && !isUserInAnySeat && (
-        <button onClick={takeSeat}>Take seat</button>
+        <div className='flex center' >Take seat</div>
+      )}
+      {!player && !isCurrentUser && isUserInAnySeat && (
+        <div className='flex center' >Change seat</div>
       )}
       {player && isCurrentUser && (
         <>
-          <button onClick={leaveSeat}>Leave seat</button>
+          <button className='seat-leave-button' onClick={leaveSeat}>Leave seat</button>
         </>
       )}
     </div>

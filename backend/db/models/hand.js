@@ -23,7 +23,9 @@ module.exports = (sequelize, DataTypes) => {
     },
     userTableId: DataTypes.UUID,
     roundId: DataTypes.INTEGER,
-    hand: DataTypes.STRING
+    cards: DataTypes.STRING,
+    result: DataTypes.STRING,
+    profitLoss: DataTypes.INTEGER,
   }, {
     sequelize,
     modelName: 'Hand',

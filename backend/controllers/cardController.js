@@ -306,13 +306,22 @@ async function drawCards(drawObj) {
   const {deck, cardsToDraw, cursor} = drawObj
 
   console.log('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=');
-
+ 
 console.log(deck);
 console.log(cardsToDraw);
 console.log(cursor);
 console.log('-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=');
 
   const cardsDrawn = deck.splice(cursor, cardsToDraw);
+console.log(cardsDrawn);
+console.log(cardsDrawn);
+console.log(cardsDrawn);
+console.log(cardsDrawn);
+console.log(cardsDrawn);
+console.log(cardsDrawn);
+console.log(cardsDrawn);
+console.log(cardsDrawn);
+console.log(cardsDrawn);
   return cardsDrawn;
 }
 
@@ -322,7 +331,8 @@ async function handSummary(cards) {
   let handSummary = {
     softSeventeen: false,
     busted: false,
-    value: 0
+    value: 0,
+    value2: 0
   }
   let containsAce = false
 

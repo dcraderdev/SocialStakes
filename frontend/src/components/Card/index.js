@@ -27,7 +27,7 @@ export function rankToLetter(rank) {
     case 14:
       return "A";
     default:
-      return rank.toString();
+      return rank;
   }
 }
 

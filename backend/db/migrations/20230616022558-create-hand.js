@@ -35,6 +35,14 @@ module.exports = {
         type: Sequelize.STRING,
         defaultValue: ''
       },
+      result:{
+        type: Sequelize.STRING,
+        defaultValue: ''
+      },
+      profitLoss:{
+        type: Sequelize.INTEGER,
+        defaultValue: 0
+      },
       createdAt: {
         type: Sequelize.DATE,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')

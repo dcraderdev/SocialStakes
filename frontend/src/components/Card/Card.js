@@ -7,34 +7,29 @@ import {suitToSymbol, rankToLetter} from '.';
 
 
 function Card({card}) {
-
-
-
-
-  const [convertedCard, setConvertedCard] = useState({rank: '14', suit: 'spade', value: 11})
+  const [convertedCard, setConvertedCard] = useState({})
   const [suit, setSuit] = useState('')
   const [rank, setRank] = useState('')
 
   useEffect(()=>{
-  if(card === 'hidden'){return}
+    if(card === 'hidden'){return}
 
-    if(card){
-      setConvertedCard(()=>{
-        return cardConverter[card]
-      })
-    }
+    setConvertedCard(()=>{
+      return cardConverter[card]
+    })
   },[card])
 
   useEffect(()=>{
+    if(convertedCard === {}) return
     setSuit(()=>suitToSymbol(convertedCard.suit))
     setRank(()=>rankToLetter(convertedCard.rank))
   },[convertedCard])
 
 
+
   if(card === 'hidden'){
     return (
       <div className="card hidden">
-
       </div>
     )
   }

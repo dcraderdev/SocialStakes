@@ -324,7 +324,7 @@ const gameController = {
 
 
 
-
+// Create mulitple hands at start of blackjack round
   async createHands(userTableIds, roundId) {
     let handIds = [];
   
@@ -340,7 +340,30 @@ const gameController = {
     });
   
     return handIds;
-  }
+  },
+
+// Save hand at end of blackjack round
+  async savePlayerHand(handObj) {
+    const{handId, cards, result, profitLoss} = handObj
+
+    const handToUpdate = await Hand.findByPk(handId);
+    if(!handToUpdate){
+      return false
+    }
+
+    handToUpdate.result = result
+    handToUpdate.cards = cards
+    handToUpdate.profitLoss = profitLoss
+    await handToUpdate.save();
+
+    return 
+  },
+
+
+
+
+
+
 
 };
 

@@ -13,7 +13,9 @@ module.exports = {
         id: 'e87a6a96-6ebc-4ef3-b6a1-3058b136fffa',
         userTableId: 'e87a6a96-6ebc-4ef3-b6a1-3058b136fbba', // Trina Pine
         roundId: 1,
-        cards: '2h 14s'
+        cards: '2h 14s',
+        result: 'WIN',
+        profitLoss: 50
       },
       // {
       //   id: 'e87a6a96-6ebc-4ef3-b6a1-3058b136fffb',

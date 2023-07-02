@@ -27,22 +27,14 @@ const Table = () => {
       let currTable = currentTables[activeTable.id];
       let dealerCards = currTable.dealerCards
 
-      if(dealerCards?.length){
-        setCards(dealerCards)
-      }
-
-
-
-console.log(currentTables);
+      setCards(dealerCards)
       
       if(!countdown && currTable.countdown){
         setCountdown(currTable.countdown/1000);
       }
-        console.log(currTable);
     }
   },[currentTables, activeTable]);
 
-console.log(cards);
 
   useEffect(() => {
     let countdownInterval = null;
@@ -64,12 +56,6 @@ console.log(cards);
 
 
 
-
-
-
-
-
-
   return (
     <div className='table-wrapper'>
     <div className='table-container '>
@@ -80,7 +66,7 @@ console.log(cards);
 
       <div className='dealer-cards flex center'>
         {cards && cards.map((card, index) => <Card key={index} card={card} />)}
-        {cards.length === 1 && (
+        {cards && cards.length === 1 && (
           <Card card={'hidden'} />
           )}
       </div>

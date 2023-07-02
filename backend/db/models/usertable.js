@@ -27,6 +27,7 @@ module.exports = (sequelize, DataTypes) => {
     currentBet: DataTypes.INTEGER,
     pendingBet: DataTypes.INTEGER,
     disconnectTimer: DataTypes.INTEGER,
+    active: DataTypes.BOOLEAN,
   }, {
     sequelize,
     modelName: 'UserTable',

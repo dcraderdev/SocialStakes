@@ -1,5 +1,5 @@
 const { gameController } = require('./controllers/gameController');
-const { drawCards, handSummary } = require('./controllers/cardController');
+const { drawCards, handSummary, bestValue } = require('./controllers/cardController');
 
 
 module.exports = function (io) {
@@ -25,7 +25,8 @@ module.exports = function (io) {
         hiddenCards: [],
         visibleCards: [],
         otherCards: [],
-        handSummary: null
+        handSummary: null,
+        bestValue: null,
       },
       messages: [],
       sortedActivePlayers: [],
@@ -153,12 +154,9 @@ module.exports = function (io) {
 
       let updatedTable = await gameController.getTableById(tableId)
 
-
       if (!updatedTable) {
         // TODO: Create logic for creating a new game
       }
-
-
         
       // If the room doesnt exist create a new room
       if (!rooms[tableId]) {
@@ -284,30 +282,27 @@ module.exports = function (io) {
       
       const { room, seat, user, tableBalance } = seatObj;
       let tableId = room
-
-      console.log('--------------');
-      console.log(`leave_seat`);
-      console.log(room);
-      console.log('--------------');
-
+      let userTableId = rooms[tableId].seats[seat].id
+      
       // Remove the player from the room state
       if(rooms[tableId] && rooms[tableId].seats[seat]){
         delete rooms[tableId].seats[seat];
       }
-
-
-      const leaveSeat = await gameController.leaveSeat(tableId, seat, user, tableBalance)
-
-      if(!leaveSeat) return
-
-      const leaveSeatObj = {
-        seat,
+      
+      let leaveSeatObj = {
         tableId,
+        seat,
+        userTableId,
         userId:user.id,
         tableBalance,
       }
-
+      console.log('--------------');
+      console.log(`leave_seat`);
       console.log(leaveSeatObj);
+      console.log('--------------');
+
+      const leaveSeat = await gameController.leaveSeat(leaveSeatObj)
+      if(!leaveSeat) return
       io.in(room).emit('player_leave', leaveSeatObj);
 
     });
@@ -626,16 +621,6 @@ module.exports = function (io) {
           cursor
         } 
         const drawnCards = await drawCards(drawObj)
-        console.log(drawnCards);
-        console.log(drawnCards);
-        console.log(drawnCards);
-        console.log(drawnCards);
-        console.log(drawnCards);
-        console.log(drawnCards);
-        console.log(drawnCards);
-        console.log(drawnCards);
-        console.log(drawnCards);
-        console.log(drawnCards);
         if(handIds && drawnCards){  
                 // Distribute the cards 
                 for(let j = 0; j < 2; j++){
@@ -737,12 +722,14 @@ module.exports = function (io) {
 
         //Check current handSummary
         let dealerHand = await handSummary(newCards)
+        //Check current best card combo value
+        let bestDealerValue = bestValue(dealerHand.values);
 
         console.log(dealerHand);
+        console.log(bestDealerValue);
 
-        
-        // if dealer has soft 17 or less than 16
-        if(dealerHand.softSeventeen || dealerHand.value <= 16){
+        // if dealer has soft 17 or bestComboValue is less than 16, draw card
+        if(dealerHand.softSeventeen || bestDealerValue <= 16){
           
           let cardsToDraw = 1
   
@@ -758,10 +745,11 @@ module.exports = function (io) {
           handleDealerTurn(tableId, io)
         }
 
-        if(dealerHand.value >= 17){
+        if(bestDealerValue >= 17){
           //END ROUND
           console.log('DEALER STAYS');
           rooms[tableId].dealerCards.handSummary = dealerHand
+          rooms[tableId].dealerCards.bestValue = bestDealerValue
 
           // await gameController.saveDealerHand(handObj)
           endRound(tableId, io)
@@ -838,6 +826,9 @@ module.exports = function (io) {
 
 
       async function endRound(tableId, io) {
+
+  console.log('------- END ROUND -------');
+
         let room = tableId
 
         // Update table with latest info before ending the round
@@ -854,43 +845,37 @@ module.exports = function (io) {
 
         console.log(rooms[tableId].dealerCards.handSummary);
 
-        let dealerHand = rooms[tableId].dealerCards.handSummary
+        let bestDealerValue = rooms[tableId].dealerCards.bestValue
         let finsihedPlayers = rooms[tableId].sortedFinishedPlayers
 
+
+        //Iterate over each player and keep track of any winnings
         for(let player of finsihedPlayers){
           let currentBalance = player.tableBalance
           let winnings = 0
 
+        //Iterate over each player's hand 
           let playerHands = Object.entries(player.hands)
           for(let [key, handData] of playerHands){
             let cards = handData.cards
             let bet = handData.bet
             let playerHand = await handSummary(cards)
+            let bestPlayerValue = bestValue(playerHand.values);
 
-
-            console.log('^^^^^^^^^^^^^^^^');
-            console.log('^^^^^^^^^^^^^^^^');
-            console.log(cards);
-            console.log(JSON.stringify(cards));
-            console.log(rooms[tableId].roundId);
-            console.log(player);
-            console.log('^^^^^^^^^^^^^^^^');
-            console.log('^^^^^^^^^^^^^^^^');
-            
-            // Determine the result of the hand and update the bet accordingly
+            // Determine the result of the hand and update the chips on table accordingly
             let result;
             let profitLoss
-            if(playerHand.value === 21 && playerHand.value > dealerHand.value){
+            if(bestPlayerValue === 21 && bestPlayerValue > bestDealerValue){
               console.log('BLACKJACK');
               result = 'BLACKJACK';
               profitLoss = bet * 1.5
               winnings += bet * 2.5
-            } else if(dealerHand.value > 21 || playerHand.value > dealerHand.value){
+            } else if(bestDealerValue > 2 || bestPlayerValue > bestDealerValue){
               console.log('WIN');
               result = 'WIN';
               profitLoss = bet
               winnings += bet * 2
-            } else if(playerHand.value === dealerHand.value){
+            } else if(bestPlayerValue === bestDealerValue){
               console.log('PUSH');
               result = 'PUSH';
               profitLoss = 0
@@ -901,6 +886,8 @@ module.exports = function (io) {
               profitLoss = -bet
               winnings += 0
             } 
+
+
 
             let handObj = {
               handId: key,
@@ -923,23 +910,27 @@ module.exports = function (io) {
             };
             io.in(room).emit('get_updated_table', updateObj);
 
+
+            console.log('^^^^^^^^^^^^^^^^');
+            console.log('BET: ', bet);
+            console.log('^^^^^^^^^^^^^^^^');
+            
           }
 
+          console.log('^^^^^^^^^^^^^^^^');
+          console.log('winnings: ', winnings);
+          console.log('currentBalance: ', currentBalance);
+          console.log('player.tableBalance: ',player.tableBalance);
+          console.log('^^^^^^^^^^^^^^^^');
 
-          // Clear players seat, award any winnings
-
-
-
+          // Clear players seat and bet info, award any winnings
           currentBalance+=winnings
-          player.tableBalance = currentBalance;
-          // player.hands = {}
-          // player.cards = []
-          // player.pendingBet = 0
-          // player.currentBet = 0
+          player.tableBalance = currentBalance;   
 
-          // rooms[tableId].seats[seat].hands = {}
-          // rooms[tableId].seats[seat].cards = []
 
+
+          winnings = 0
+          profitLoss = 0
 
           let updateObj = {
             tableId,
@@ -966,7 +957,8 @@ module.exports = function (io) {
           hiddenCards: [],
           visibleCards: [],
           otherCards: [],
-          handSummary: null
+          handSummary: null,
+          bestValue: null
         }
            
 
@@ -985,7 +977,7 @@ module.exports = function (io) {
 
         setTimeout(() => {
           io.in(room).emit('get_updated_table', updateObj);
-        }, 500);
+        }, 5000);
 
          
 

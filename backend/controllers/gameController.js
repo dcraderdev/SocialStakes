@@ -70,6 +70,8 @@ const gameController = {
         },
         {
           model: UserTable,
+          where:{active:true},
+          required: false, 
           as: 'tableUsers',
           attributes: ['userId', 'currentBet', 'pendingBet', 'seat', 'disconnectTimer', 'tableBalance'],
         },
@@ -138,14 +140,15 @@ const gameController = {
       return false
     }
 
-    let totalTableBalance = 0;
+    let sumOfTableBalances = 0;
 
     for(let userTable of userTables){
-      totalTableBalance += userTable.tableBalance; 
-      await userTable.destroy();
+      sumOfTableBalances += userTable.tableBalance; 
+      userTable.active = false;
+      await userTable.save();
     }
   
-    userToUpdate.balance += totalTableBalance;
+    userToUpdate.balance += totalTableBalances;
     await userToUpdate.save();
 
 
@@ -178,65 +181,70 @@ const gameController = {
     }
 
 
-    const seatOccupied = table.tableUsers.some((player) => {
-      console.log(player);
+    const seatActive = table.tableUsers.some((player) => {
       if (player.seat === seat) {
-        if (player.userId === user.id) {
-          return true;
-        } else {
-          return true;
-        }
+        return player.active;
       }
       return false;
     });
-
-    if (seatOccupied) {
-      console.log('false');
+  
+    if (seatActive) {
+      console.log('Seat is active');
       return false;
     }
 
-    //update users unplayed balance
-    userToUpdate.balance -= amount;
-    await userToUpdate.save();
 
+  // update users unplayed balance
+  userToUpdate.balance -= amount;
+  await userToUpdate.save();
 
+  if (table.players.length < table.Game.maxNumPlayers) {
+    const takeSeat = await UserTable.create({
+      userId: user.id,
+      tableId,
+      seat,
+      tableBalance: amount,
+      currentBet: 0,
+      pendingBet: 0,
+      disconnectTimer: 0,
+      active: true,
+    });
 
-    if (table.players.length < table.Game.maxNumPlayers) {
-      const takeSeat = await UserTable.create({
-        userId: user.id,
-        tableId,
-        seat,
-        tableBalance: amount,
-        currentBet: 0,
-        pendingBet: 0,
-        disconnectTimer: 0
-      });
-      if (!takeSeat) {
-        return false;
-      }
-
-
-      return takeSeat;
+    if (!takeSeat) {
+      return false;
     }
-  },
+
+    return takeSeat;
+  }
+},
 
 
-
-
-  async leaveSeat(tableId, seat, user, tableBalance) {
-    const userTable = await UserTable.findOne({ where: { tableId, userId:user.id } });
-    const userToUpdate = await User.findByPk(user.id);
+  async leaveSeat(leaveSeatObj) {
+    const { userId, userTableId, tableBalance } = leaveSeatObj
+    const userTable = await UserTable.findByPk(userTableId);
+    const userToUpdate = await User.findByPk(userId);
 
     if (!userTable) {
       return false;
     }
 
     userToUpdate.balance += tableBalance;
+    
+    userTable.active = false;
+    await userTable.save();
     await userToUpdate.save();
-  
-    await userTable.destroy();
     return true;
   },
+
+
+
+
+
+
+
+
+
+
 
   async changeSeat(tableId, userId, newSeat) {
     const userTable = await UserTable.findOne({ where: { tableId, userId } });

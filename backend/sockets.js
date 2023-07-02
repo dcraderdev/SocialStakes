@@ -193,7 +193,7 @@ module.exports = function (io) {
     });
 
 
-
+ 
 
 
 
@@ -282,13 +282,23 @@ module.exports = function (io) {
       
       const { room, seat, user, tableBalance } = seatObj;
       let tableId = room
+
+
+console.log(rooms[tableId]?.seats);
+      // If server resets seats, we can reset all user's seats without resetting db
+      if(rooms[tableId]?.seats[seat] === undefined){
+        await gameController.removeUserFromTables(user.id);
+        return
+      }
+
+
       let userTableId = rooms[tableId].seats[seat].id
       
       // Remove the player from the room state
       if(rooms[tableId] && rooms[tableId].seats[seat]){
         delete rooms[tableId].seats[seat];
-      }
-      
+      }  
+         
       let leaveSeatObj = {
         tableId,
         seat,
@@ -417,9 +427,6 @@ module.exports = function (io) {
     });
 
 
-
-
-
     socket.on('remove_all_bet', async (betObj) => {
       const { tableId, seat, lastBet } = betObj
       let room = tableId
@@ -443,15 +450,24 @@ module.exports = function (io) {
     socket.on('add_funds', async (seatObj) => {
       const {tableId, seat, userId, amount } = seatObj
       let room = tableId
+      let userTableId
+
+      //Server resets and throws error while working
+      // This prevents the error from being thrown until we can reset seat
+      if(rooms[tableId].seats[seat].id){
+        userTableId = rooms[tableId].seats[seat].id
+      }
+      //attach userTableId to seat Obj
+      seatObj.userTableId= userTableId
 
 
       const addFunds = await gameController.addFunds(seatObj)
 
       if(!addFunds){
         return
-      }
-
-      
+      } 
+  
+       
       if(addFunds){
         if (rooms[tableId] && rooms[tableId].seats[seat]) {
           rooms[tableId].seats[seat].tableBalance += amount;

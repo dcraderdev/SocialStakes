@@ -133,7 +133,7 @@ const gameController = {
 
 
   async removeUserFromTables(userId) {
-    const userTables = await UserTable.findAll({where:{userId}})
+    const userTables = await UserTable.findAll({where:{userId,active:true}})
     const userToUpdate = await User.findByPk(userId);
 
     if(!userTables || !userToUpdate){
@@ -148,7 +148,7 @@ const gameController = {
       await userTable.save();
     }
   
-    userToUpdate.balance += totalTableBalances;
+    userToUpdate.balance += sumOfTableBalances;
     await userToUpdate.save();
 
 
@@ -224,7 +224,7 @@ const gameController = {
     const userTable = await UserTable.findByPk(userTableId);
     const userToUpdate = await User.findByPk(userId);
 
-    if (!userTable) {
+    if (!userTable || !userToUpdate) {
       return false;
     }
 
@@ -235,14 +235,6 @@ const gameController = {
     await userToUpdate.save();
     return true;
   },
-
-
-
-
-
-
-
-
 
 
 
@@ -274,12 +266,9 @@ const gameController = {
 
 
   async addFunds(seatObj) {
-    const {tableId, seat, userId, amount} = seatObj
+    const {tableId, seat, userId, amount, userTableId} = seatObj
     const userToUpdate = await User.findByPk(userId);
-    const userTable = await UserTable.findOne({where:{
-      userId,
-      tableId
-    }})
+    const userTable = await UserTable.findByPk(userTableId)
 
     if(!userTable || !userToUpdate){
       return false

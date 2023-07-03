@@ -123,7 +123,7 @@ const gameController = {
 
 
   async getUserTables(userId) {
-    const userTables = await UserTable.findAll({where:{userId}})
+    const userTables = await UserTable.findAll({where:{userId,active:true}})
     if(!userTables){
       return false
     }
@@ -143,12 +143,19 @@ const gameController = {
     let sumOfTableBalances = 0;
 
     for(let userTable of userTables){
+console.log('ADDING BALANCE: ', userTable.tableBalance);
+
       sumOfTableBalances += userTable.tableBalance; 
       userTable.active = false;
       await userTable.save();
     }
   
+console.log('CURRENT BALANCE: ', userToUpdate.balance);
+
     userToUpdate.balance += sumOfTableBalances;
+
+    console.log('NEW BALANCE: ', userToUpdate.balance);
+
     await userToUpdate.save();
 
 
@@ -341,10 +348,22 @@ const gameController = {
 
 // Save hand at end of blackjack round
   async savePlayerHand(handObj) {
-    const{handId, cards, result, profitLoss} = handObj
 
+    console.log('^^^^^^^^^^^^^^^^');
+    console.log('savePlayerHand: ');
+    console.log('^^^^^^^^^^^^^^^^');
+    const{handId, cards, result, profitLoss, userTableId, winnings} = handObj
+    console.log('^^^^^^^^^^^^^^^^');
+    console.log('handId: ', handId);
+    console.log('userTableId: ', userTableId);
+    console.log('winnings: ', winnings);
+    console.log('profitLoss: ', profitLoss);
+    console.log('result: ', result);
+    console.log('cards: ', cards);
+    console.log('^^^^^^^^^^^^^^^^');
     const handToUpdate = await Hand.findByPk(handId);
-    if(!handToUpdate){
+    const userTableToUpdate = await UserTable.findByPk(userTableId);
+    if(!handToUpdate || !userTableToUpdate){
       return false
     }
 
@@ -352,6 +371,19 @@ const gameController = {
     handToUpdate.cards = cards
     handToUpdate.profitLoss = profitLoss
     await handToUpdate.save();
+
+    userTableToUpdate.tableBalance += winnings
+
+    console.log('^^^^^^^^^^^^^^^^');
+    console.log('userTableToUpdate.tableBalance: ', userTableToUpdate.tableBalance);
+    console.log('winnings: ', winnings);
+    console.log('^^^^^^^^^^^^^^^^');
+
+
+    await userTableToUpdate.save();
+
+
+
 
     return 
   },

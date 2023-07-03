@@ -94,7 +94,7 @@ module.exports = function (io) {
 
 
     socket.on('disconnect', async () => {
-      let timer = 5000 // 15 seconds, adjust as needed
+      let timer = 5000 // 15 seconds
       console.log(`User ${username} disconnected`);
       const userTables = await gameController.getUserTables(userId);
       if(userTables){
@@ -108,7 +108,7 @@ module.exports = function (io) {
             },
             content: `${username} has disconnected.`,
             room: tableId,
-          };
+          }; 
 
           io.in(tableId).emit('new_message', messageObj);
           io.in(tableId).emit('player_disconnected', {seat, tableId, timer});
@@ -138,7 +138,7 @@ module.exports = function (io) {
       // isReconnecting[userId] = true;
     });
 
-  
+      
 
 
     socket.on('join_room', async (room) => {
@@ -163,6 +163,7 @@ module.exports = function (io) {
         rooms[tableId] = roomInit()
         rooms[tableId].gameSessionId = updatedTable.gameSessions[0].id
         rooms[tableId].decksUsed = updatedTable.Game.decksUsed
+
       }
 
 
@@ -178,7 +179,7 @@ module.exports = function (io) {
           dealerCards:{
             visibleCards: rooms[tableId].dealerCards.visibleCards,
           } 
-        }
+        } 
       };
 
       console.log(updateObj);
@@ -294,7 +295,7 @@ console.log(rooms[tableId]?.seats);
         }  
         return
       }
-
+ 
 
       let userTableId = rooms[tableId].seats[seat].id
       
@@ -380,8 +381,8 @@ console.log(rooms[tableId]?.seats);
                 handInProgress: true,
                 seats: rooms[tableId].seats,
                 countdownRemaining
-              }
-            };
+              } 
+            }; 
       
             socket.join(room);
             io.in(room).emit('get_updated_table', updateObj);
@@ -425,6 +426,10 @@ console.log(rooms[tableId]?.seats);
 
       io.in(room).emit('remove_last_bet', betObj);
 
+      if (isNoBetsLeft(tableId)) {
+        stopTimer(tableId);
+      }
+
       console.log('--------------');
       console.log(`Removing last bet(${lastBet}) received from ${username} @room ${room}`);
       console.log('--------------');
@@ -444,11 +449,39 @@ console.log(rooms[tableId]?.seats);
 
       io.in(room).emit('remove_all_bet', betObj);
 
+      if (isNoBetsLeft(tableId)) {
+        stopTimer(tableId);
+      }
+
       console.log('--------------');
       console.log(`Removing all bets received from ${username} @room ${room}`);
       console.log('--------------');
     });
 
+
+
+    function isNoBetsLeft(tableId) {
+      if (!rooms[tableId]) return true;
+    
+      // Iterate over all seats in the room to check for any remaining bets
+      for (let seat in rooms[tableId].seats) {
+        if (rooms[tableId].seats[seat].pendingBet > 0) {
+          return false; // If there is a bet, return false
+        }
+      }
+      // If no bets are found, return true
+      return true;
+    }
+    
+    function stopTimer(tableId) {
+      // Check if the countdownTimer exists before trying to clear it
+      if (rooms[tableId] && rooms[tableId].countdownTimer) {
+        clearInterval(rooms[tableId].countdownTimer);
+        console.log(`Timer stopped for tableId: ${tableId}`);
+      }
+    } 
+    
+ 
 
 
     socket.on('add_funds', async (seatObj) => {
@@ -488,94 +521,94 @@ console.log(rooms[tableId]?.seats);
     });
 
 
-    socket.on('deal_cards', async (tableId) => {
-      let room = tableId
+    // socket.on('deal_cards', async (tableId) => {
+    //   let room = tableId
 
-      let dealObj = {
-        tableId,
-        gameSessionId: rooms[tableId].gameSessionId,
-        blockHash: rooms[tableId].blockHash,
-        nonce: rooms[tableId].nonce,
-        decksUsed: rooms[tableId].decksUsed
-      }
-      // generate cards and create Round entry in db
-      const deckandRoundId = await gameController.dealCards(dealObj)
-      if(!deckandRoundId){
-        return
-      }
-      const {roundId, deck} = deckandRoundId
-      // Assign deck and roundId to room
-      rooms[tableId].deck = deck
-      rooms[tableId].roundId = roundId
+    //   let dealObj = {
+    //     tableId,
+    //     gameSessionId: rooms[tableId].gameSessionId,
+    //     blockHash: rooms[tableId].blockHash,
+    //     nonce: rooms[tableId].nonce,
+    //     decksUsed: rooms[tableId].decksUsed
+    //   }
+    //   // generate cards and create Round entry in db
+    //   const deckandRoundId = await gameController.dealCards(dealObj)
+    //   if(!deckandRoundId){
+    //     return
+    //   }
+    //   const {roundId, deck} = deckandRoundId
+    //   // Assign deck and roundId to room
+    //   rooms[tableId].deck = deck
+    //   rooms[tableId].roundId = roundId
 
-      // Calculate number of cards to draw
-      // numSeats with currentBets + cards for dealer
-      // Sort the seats by seat number and only include those with a current bet
-      let sortedSeats = Object.entries(rooms[tableId].seats)
-        .filter(([i, seat]) => seat.currentBet > 0)
-        .sort(([seatNumberA], [seatNumberB]) => seatNumberA - seatNumberB)
-        .map(([i, seat]) => seat);
+    //   // Calculate number of cards to draw
+    //   // numSeats with currentBets + cards for dealer
+    //   // Sort the seats by seat number and only include those with a current bet
+    //   let sortedSeats = Object.entries(rooms[tableId].seats)
+    //     .filter(([i, seat]) => seat.currentBet > 0)
+    //     .sort(([seatNumberA], [seatNumberB]) => seatNumberA - seatNumberB)
+    //     .map(([i, seat]) => seat);
 
-        console.log(sortedSeats);
-        let userTableIds = sortedSeats.map(seat=>seat.id)  
-        console.log('=-=-=-=-');
-        console.log(userTableIds);
-        console.log(roundId);
-        console.log('=-=-=-=-');
+    //     console.log(sortedSeats);
+    //     let userTableIds = sortedSeats.map(seat=>seat.id)  
+    //     console.log('=-=-=-=-');
+    //     console.log(userTableIds);
+    //     console.log(roundId);
+    //     console.log('=-=-=-=-');
 
-      // Create hand for each active player
-      const handIds = await gameController.createHands(userTableIds, roundId)
-      let numSeatsWithBets = sortedSeats.length + 1;
-      let cardsToDraw = numSeatsWithBets * 2
-      let cursor = rooms[tableId].cursor
+    //   // Create hand for each active player
+    //   const handIds = await gameController.createHands(userTableIds, roundId)
+    //   let numSeatsWithBets = sortedSeats.length + 1;
+    //   let cardsToDraw = numSeatsWithBets * 2
+    //   let cursor = rooms[tableId].cursor
 
-      let drawObj = {
-        deck,
-        cardsToDraw,
-        cursor
-      } 
-      const drawnCards = await drawCards(drawObj)
-      if(handIds && drawnCards){
-              // Distribute the cards
-              for(let j = 0; j < 2; j++){
-                for (let i = 0; i < sortedSeats.length; i++) {
-                  let seat = sortedSeats[i];
-                  // Get the next card and remove it from the drawnCards array
-                  let nextCard = drawnCards.shift()
-                  seat.cards.push(nextCard);
-                    // Create a newHand inside the handsObj in case we need to split during the hand
-                    // Use the map we created to get the handIds
-                    if(!seat.hands[`${handIds[i]}`]){
-                      seat.hands[`${handIds[i]}`] = []
-                    }
-                    seat.hands[`${handIds[i]}`].push(nextCard);
-                }
-                // Distribute the first card to the dealer
-                rooms[tableId].dealerCards.push(drawnCards.shift());
-              }
-      }
-      // Set new cursor point, setDealers cards
-      rooms[tableId].cursor += cardsToDraw 
-      rooms[tableId].dealer.visibleCards = rooms[tableId].dealerCards[1]
-      rooms[tableId].dealer.hiddenCards = rooms[tableId].dealerCards[0] 
+    //   let drawObj = {
+    //     deck,
+    //     cardsToDraw,
+    //     cursor
+    //   } 
+    //   const drawnCards = await drawCards(drawObj)
+    //   if(handIds && drawnCards){
+    //           // Distribute the cards
+    //           for(let j = 0; j < 2; j++){
+    //             for (let i = 0; i < sortedSeats.length; i++) {
+    //               let seat = sortedSeats[i];
+    //               // Get the next card and remove it from the drawnCards array
+    //               let nextCard = drawnCards.shift()
+    //               seat.cards.push(nextCard);
+    //                 // Create a newHand inside the handsObj in case we need to split during the hand
+    //                 // Use the map we created to get the handIds
+    //                 if(!seat.hands[`${handIds[i]}`]){
+    //                   seat.hands[`${handIds[i]}`] = []
+    //                 }
+    //                 seat.hands[`${handIds[i]}`].push(nextCard);
+    //             }
+    //             // Distribute the first card to the dealer
+    //             rooms[tableId].dealerCards.push(drawnCards.shift());
+    //           }
+    //   }
+    //   // Set new cursor point, setDealers cards
+    //   rooms[tableId].cursor += cardsToDraw 
+    //   rooms[tableId].dealer.visibleCards = rooms[tableId].dealerCards[1]
+    //   rooms[tableId].dealer.hiddenCards = rooms[tableId].dealerCards[0] 
 
-      let updateObj = {
-        tableId,
-        table: {
-          seats: rooms[tableId].seats,
-        },
-        dealerCards:{
-          hiddenCard: null,
-          visibleCard: rooms[tableId].dealerVisibleCard,
-        }
-      };
-      console.log(updateObj);
-      io.in(room).emit('get_updated_table', updateObj);
-      // io.in(userId).emit('message', messageObj);
-      console.log('--------------');
-      console.log(`Dealing cards @room ${room}`);
-      console.log('--------------');
-    });
+    //   let updateObj = {
+    //     tableId,
+    //     table: {
+    //       seats: rooms[tableId].seats,
+    //     },
+    //     dealerCards:{
+    //       hiddenCard: null,
+    //       visibleCard: rooms[tableId].dealerVisibleCard,
+    //     }
+    //   };
+    //   console.log(updateObj);
+    //   io.in(room).emit('get_updated_table', updateObj);
+    //   // io.in(userId).emit('message', messageObj);
+    //   console.log('--------------');
+    //   console.log(`Dealing cards @room ${room}`);
+    //   console.log('--------------');
+    // });
 
 
     async function dealCards(tableId, io) {
@@ -589,6 +622,10 @@ console.log(rooms[tableId]?.seats);
           nonce: rooms[tableId].nonce,
           decksUsed: rooms[tableId].decksUsed
         }
+
+
+
+
         // generate cards and create Round entry in db
         const deckandRoundId = await gameController.dealCards(dealObj)
         if(!deckandRoundId){
@@ -604,7 +641,7 @@ console.log(rooms[tableId]?.seats);
         console.log('------------------------');
 
 
-
+ 
   
         // Calculate number of cards to draw
         // numSeats with currentBets + cards for dealer
@@ -713,7 +750,6 @@ console.log(rooms[tableId]?.seats);
         }
       }
 
-      //returns next player or false if all players have acted
       async function handleDealerTurn(tableId, io){
         console.log('HANDLING DEALER TURN');
 
@@ -776,12 +812,78 @@ console.log(rooms[tableId]?.seats);
         }
       } 
 
+
+
+      async function handlePlayerTurn(tableId, player, io){
+        let room = tableId
+
+              //Iterate over each player's hand 
+              let playerHands = Object.entries(player.hands)
+              for(let [key, handData] of playerHands){
+      
+                console.log('-=-=-=-=-=-');
+                console.log('HANDLING PLAYER TURN');
+                console.log(player);
+                console.log(handData);
+                console.log('-=-=-=-=-=-'); 
+      
+      
+      
+                // Create actionTimer 
+                rooms[tableId].actionTimer = 8000;
+        
+                // Set action seat
+                rooms[tableId].actionSeat = player.seat
+         
+                // Emit update to clients
+                let updateObj = {
+                  tableId,
+                  table: {
+                    actionSeat: player.seat,
+                    actionHand: key,
+                    actionTimer: rooms[tableId].actionTimer,
+                    seats: rooms[tableId].seats,
+                    dealerCards:{
+                      visibleCards: rooms[tableId].dealerCards.visibleCards,
+                    }
+                  },
+                };
+        
+                io.in(room).emit('get_updated_table', updateObj);
+        
+        
+                // Create timer and store its id in the room object
+                rooms[tableId].timerId = setInterval(async() => {
+                  rooms[tableId].actionTimer -= 1000; // Decrement by 1 second
+                  console.log('COUNTDOWN: ',rooms[tableId].actionTimer);
+                  // If timer reaches 0, clear interval and emit a timeout event
+                  if (rooms[tableId].actionTimer <= 0) {
+                    clearInterval(rooms[tableId].timerId);
+                    
+                    console.log('TURN OVER');
+                    console.log('TURN OVER');
+                    console.log('TURN OVER');
+                    console.log('PUSHING', player.username);
+                    rooms[tableId].sortedFinishedPlayers.push(player)
+
+                    console.log('sortedFinishedPlayers', rooms[tableId].sortedFinishedPlayers);
+                    await gameLoop(tableId, io) 
+
+                    // io.in(room).emit('player_timeout', {tableId, seat: nextPlayer.seat});
+                  }
+                }, 1000)
+              }
+        return
+      } 
+
  
       async function gameLoop(tableId, io) {
         console.log('------- GAME LOOP -------');
-        let room = tableId
 
+        // Get next player
         let nextPlayer = await getNextPlayer(tableId)
+
+        // If none, handle dealer cards
         if(!nextPlayer){
           console.log('DEALERS TURN');
           await handleDealerTurn(tableId, io)
@@ -789,60 +891,13 @@ console.log(rooms[tableId]?.seats);
           //dealers turn
         } 
 
-        console.log('-=-=-=-=-=-');
-        console.log('PLAYERS TURN');
-        console.log(nextPlayer);
-        console.log(rooms[tableId].seats[nextPlayer.seat]);  
-        console.log(nextPlayer.seat);  
-        console.log('-=-=-=-=-=-'); 
+        await handlePlayerTurn(tableId, nextPlayer, io)
 
-        // Create actionTimer 
-        rooms[tableId].actionTimer = 2000;
-
-        // Set action seat
-        rooms[tableId].actionSeat = nextPlayer.seat
- 
-        // Emit update to clients
-        let updateObj = {
-          tableId,
-          table: {
-            actionSeat: nextPlayer.seat,
-            actionTimer: rooms[tableId].actionTimer,
-            seats: rooms[tableId].seats,
-            dealerCards:{
-              visibleCards: rooms[tableId].dealerCards.visibleCards,
-            }
-          },
-        };
-
-        io.in(room).emit('get_updated_table', updateObj);
-
-
-
-
-
-        // Create timer and store its id in the room object
-        rooms[tableId].timerId = setInterval(() => {
-          rooms[tableId].actionTimer -= 1000; // Decrement by 1 second
-          console.log('COUNTDOWN: ',rooms[tableId].actionTimer);
-          // If timer reaches 0, clear interval and emit a timeout event
-          if (rooms[tableId].actionTimer <= 0) {
-            clearInterval(rooms[tableId].timerId);
-            
-            console.log('TURN OVER');
-            console.log('TURN OVER');
-            console.log('TURN OVER');
-            console.log('TURN OVER');
-            gameLoop(tableId, io) 
-            rooms[tableId].sortedFinishedPlayers.push(nextPlayer)
-            // io.in(room).emit('player_timeout', {tableId, seat: nextPlayer.seat});
-          }
-        }, 1000)
       }
 
 
-
-
+ 
+ 
 
 
       async function endRound(tableId, io) {
@@ -863,42 +918,29 @@ console.log(rooms[tableId]?.seats);
         };
         io.in(room).emit('get_updated_table', updateObj);
 
-        console.log(rooms[tableId].dealerCards.handSummary);
 
         let bestDealerValue = rooms[tableId].dealerCards.bestValue
         let finishedPlayers = rooms[tableId].sortedFinishedPlayers
 
-
+ 
 
 
         console.log('finishedPlayers:', finishedPlayers);
 
+        if(!finishedPlayers.length){
 
-
+        }
 
 
         //Iterate over each player and keep track of any winnings
         for(let player of finishedPlayers){
+
           let currentBalance = player.tableBalance
           let winnings = 0
 
-        //Iterate over each player's hand 
+         //Iterate over each player's hand 
           let playerHands = Object.entries(player.hands)
-
-          console.log('playerhands',playerHands);
-
-
-
-
-
-
           for(let [key, handData] of playerHands){
-
-            console.log('BREAKDOWN',[key, handData]);
-            console.log('handData',handData);
-            console.log('key',key);
-
-
 
             let cards = handData.cards
             let bet = handData.bet
@@ -936,12 +978,30 @@ console.log(rooms[tableId]?.seats);
               handId: key,
               cards: JSON.stringify(cards),
               result,
-              profitLoss
+              profitLoss,
+              winnings,
+              userTableId: player.id
             }
 
+
+            console.log('^^^^^^^^^^^^^^^^');
+            console.log('player: ', player);
+            console.log('winnings: ', winnings);
+            console.log('player.tableBalance: ',player.tableBalance);
+            console.log('^^^^^^^^^^^^^^^^');
             await gameController.savePlayerHand(handObj)
-            
- 
+
+
+          
+
+            rooms[tableId].seats[player.seat].hands[key].bet += profitLoss
+
+            console.log('^^^^^^^^^^^^^^^^');
+            console.log('currentBet:');
+            console.log(rooms[tableId].seats);
+            console.log(rooms[tableId].seats[player.seat].hands[key].bet);
+            console.log('^^^^^^^^^^^^^^^^');
+  
             let updateObj = {
               tableId,
               table: {
@@ -954,26 +1014,30 @@ console.log(rooms[tableId]?.seats);
             io.in(room).emit('get_updated_table', updateObj);
 
 
-            console.log('^^^^^^^^^^^^^^^^');
-            console.log('BET: ', bet);
-            console.log('^^^^^^^^^^^^^^^^');
             
           }
 
-          console.log('^^^^^^^^^^^^^^^^');
-          console.log('winnings: ', winnings);
-          console.log('currentBalance: ', currentBalance);
-          console.log('player.tableBalance: ',player.tableBalance);
-          console.log('^^^^^^^^^^^^^^^^');
 
+          
           // Clear players seat and bet info, award any winnings
           currentBalance+=winnings
           player.tableBalance = currentBalance;   
-
-
-
           winnings = 0
           profitLoss = 0
+          rooms[tableId].seats[player.seat].hands = {}
+          rooms[tableId].seats[player.seat].cards = []
+          rooms[tableId].seats[player.seat].pendingBet = 0
+          rooms[tableId].seats[player.seat].currentBet = 0
+
+ 
+          console.log('^^^^^^^^^^^^^^^^');
+          console.log('new player.tableBalance: ',player.tableBalance);
+          console.log('^^^^^^^^^^^^^^^^');
+
+
+          // Add delay here
+          // await new Promise(resolve => setTimeout(resolve, 3000));
+
 
           let updateObj = {
             tableId,
@@ -984,19 +1048,20 @@ console.log(rooms[tableId]?.seats);
               }
             },
           };
-          io.in(room).emit('get_updated_table', updateObj);
+
+            io.in(room).emit('get_updated_table', updateObj);
         }
 
 
         // logic after hands have been awarded
         // Reset the room for the next hand
 
-        for (let seat in rooms[tableId].seats) {
-          rooms[tableId].seats[seat].hands = {}
-          rooms[tableId].seats[seat].cards = []
-          rooms[tableId].seats[seat].pendingBet = 0
-          rooms[tableId].seats[seat].currentBet = 0
-        }
+        // for (let seat in rooms[tableId].seats) {
+        //   rooms[tableId].seats[seat].hands = {}
+        //   rooms[tableId].seats[seat].cards = []
+        //   rooms[tableId].seats[seat].pendingBet = 0
+        //   rooms[tableId].seats[seat].currentBet = 0
+        // }
 
         rooms[tableId].dealerCards = {
           hiddenCards: [],
@@ -1007,12 +1072,14 @@ console.log(rooms[tableId]?.seats);
         }
 
         rooms[tableId].sortedFinishedPlayers = []
+        rooms[tableId].handInProgress = false
+        rooms[tableId].actionSeat = null
            
-
+        
 
         updateObj = {
           tableId,
-          table: {
+          table: { 
             handInProgress: false,
             seats: rooms[tableId].seats,
             dealerCards:{
@@ -1021,12 +1088,20 @@ console.log(rooms[tableId]?.seats);
 
           },
         };
+        console.log('BEFORE TIMEOUT');
+        console.log('BEFORE TIMEOUT');
+        console.log('BEFORE TIMEOUT');
+        console.log('BEFORE TIMEOUT');
 
-        setTimeout(() => {
           io.in(room).emit('get_updated_table', updateObj);
-        }, 5000);
 
-         
+        console.log('AFTER TIMEOUT');
+        console.log('AFTER TIMEOUT');
+        console.log('AFTER TIMEOUT');
+        console.log('AFTER TIMEOUT');
+        console.log('AFTER TIMEOUT');
+          
+          
 
       }
 

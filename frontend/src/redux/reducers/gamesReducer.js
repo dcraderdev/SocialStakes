@@ -71,7 +71,7 @@ const gamesReducer = (state = initialState, action) => {
 
         console.log(currentTable);
         console.log(table.countdownRemaining);
-        console.log(action.payload.dealerCards?.visibleCards);
+        console.log(action.payload.table.dealerCards?.visibleCards);
 
 
 
@@ -81,7 +81,7 @@ const gamesReducer = (state = initialState, action) => {
         currentTable.actionTimer = action.payload.table.actionTimer;
 
         // only update handInProgress if specified in payload
-        if(action.payload.table.handInProgress !== null){
+        if(action.payload.table.handInProgress !== null && action.payload.table.handInProgress !== undefined){
           currentTable.handInProgress = action.payload.table.handInProgress;
         }
     
@@ -296,6 +296,7 @@ const gamesReducer = (state = initialState, action) => {
     
     case REMOVE_PLAYER: {
       const {seat, tableId} = action.payload;
+      console.log(seat);
       
       const newCurrentTables = { ...newState.currentTables };
       const newCurrentTable = { ...newCurrentTables[tableId] };

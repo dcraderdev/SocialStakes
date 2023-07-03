@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useContext } from 'react';
+import React, { useState, useRef, useEffect, useContext, isValidElement } from 'react';
 import {Route,Router,Switch,NavLink,Link,useHistory,useParams,} from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { SocketContext } from '../../context/SocketContext';
@@ -145,6 +145,8 @@ import { ModalContext } from '../../context/ModalContext';
       openModal('balanceModal')
   };
 
+  console.log(isHandInProgress);
+  console.log(isActiveSeat);
 
   return (
     <>
@@ -185,7 +187,7 @@ import { ModalContext } from '../../context/ModalContext';
 
             <div className="section right flex center">
 
-              {!isHandInProgress &&(
+              {!isHandInProgress && (
                 <div className="section right flex center">
                   <div className="rebet-option-container">
                     <div className="rebet regular" onClick={()=>rebet(true)}>Rebet</div>
@@ -205,7 +207,7 @@ import { ModalContext } from '../../context/ModalContext';
                 </div>
               )}
 
-              {isHandInProgress &&(
+              {isActiveSeat &&(
                 <div className="section right flex center">
                   <div className="decision-option-container">
                     <div className="action" onClick={()=>handleAction('hit')}>Hit</div>

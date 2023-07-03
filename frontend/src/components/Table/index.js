@@ -53,7 +53,8 @@ const Table = () => {
     };
   }, [countdown]);
 
-
+console.log(cards);
+console.log(currentTables);
 
 
   return (

@@ -3,6 +3,7 @@ import {
   SET_USER, REMOVE_USER, 
   SET_THEMES, CHANGE_NEON_THEME, CHANGE_TABLE_THEME,
   LEAVE_SEAT, TAKE_SEAT, PLAYER_ADD_TABLE_FUNDS,
+  REMOVE_PLAYER
 } from '../actions/actionTypes'
 
 
@@ -103,6 +104,27 @@ const userReducer = (state = initialState, action) => {
     
       return newState;
     }
+
+    case REMOVE_PLAYER: {
+      console.log(action.payload);
+
+      const {seat, tableId, userId, tableBalance } = action.payload
+
+      // Update new user balance
+      if (newState.user.id === userId) {
+        let updatedBalance = newState.balance
+        updatedBalance += tableBalance
+
+        return { ...newState, balance: updatedBalance };
+      }
+
+      return newState;
+    }
+
+
+
+
+    
 
 
 

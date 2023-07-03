@@ -32,7 +32,7 @@ export const REMOVE_PLAYER = 'games/REMOVE_PLAYER';
 export const PLAYER_ADD_TABLE_FUNDS = 'games/PLAYER_ADD_TABLE_FUNDS';
 
 
-export const START_TABLE_COUNTDOWN = 'games/START_TABLE_COUNTDOWN';
+export const UPDATE_TABLE_COUNTDOWN = 'games/START_TABLE_COUNTDOWN';
 export const COLLECT_BETS = 'games/COLLECT_BETS';
 
 
@@ -43,6 +43,9 @@ export const LEAVE_TABLE = 'game/LEAVE_TABLE';
 export const LEAVE_SEAT = 'game/LEAVE_SEAT';
 export const TAKE_SEAT = 'game/TAKE_SEAT';
 export const CHANGE_SEAT = 'game/CHANGE_SEAT';
+export const FORFEIT_SEAT = 'game/FORFEIT_SEAT';
+
+
 
 
 export const SHOW_GAMES = 'game/SHOW_GAMES';

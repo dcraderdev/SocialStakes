@@ -3,7 +3,7 @@ import {
   GET_TABLES, GET_TABLES_BY_TYPE, GET_TABLE_BY_ID,
   UPDATE_TABLE,
   VIEW_TABLE, LEAVE_TABLE, 
-  LEAVE_SEAT, TAKE_SEAT,
+  LEAVE_SEAT, TAKE_SEAT, FORFEIT_SEAT,
   SHOW_GAMES, SHOW_TABLES, SHOW_ACTIVE_TABLES,
   ADD_MESSAGE, TOGGLE_SHOW_MESSAGES,
   ADD_BALANCE,
@@ -11,7 +11,7 @@ import {
   PLAYER_DISCONNECT, PLAYER_RECONNECT,
   REMOVE_PLAYER,
   PLAYER_ADD_TABLE_FUNDS,
-  START_TABLE_COUNTDOWN,
+  UPDATE_TABLE_COUNTDOWN,
   COLLECT_BETS
  } from '../actions/actionTypes'
 
@@ -175,6 +175,21 @@ const gamesReducer = (state = initialState, action) => {
       return { ...newState, currentTables: newCurrentTables };
     }
 
+    
+
+    case FORFEIT_SEAT:{
+      console.log(action.payload);
+      const {seat, tableId} = action.payload
+      const newCurrentTables = { ...newState.currentTables };
+
+      // Check if the active table exists in newCurrentTables
+      if (newCurrentTables[tableId]) {
+        // Update the seat to forfeited
+        newCurrentTables[tableId].tableUsers[seat].forfeit = true;
+      }
+
+      return { ...newState, currentTables: newCurrentTables };
+    }
 
 
 
@@ -325,7 +340,7 @@ const gamesReducer = (state = initialState, action) => {
       return { ...newState, currentTables: newCurrentTables };
     }
 
-    case START_TABLE_COUNTDOWN: {
+    case UPDATE_TABLE_COUNTDOWN: {
       console.log(action.payload);
       console.log('here');
 

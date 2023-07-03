@@ -33,6 +33,7 @@ const TableSeat = ({seatNumber, player}) => {
   const [isUserInAnySeat, setIsUserInAnySeat] = useState(false);
   const [isActiveSeat, setIsActiveSeat] = useState(false);
   const [isHandInProgress, setIsHandInProgress] = useState(false);
+  const [isForfeited, setIsForfeited] = useState(false);
 
   useEffect(() => {
 
@@ -43,12 +44,14 @@ const TableSeat = ({seatNumber, player}) => {
     let userCurrentBalance = currentTables[activeTable.id]?.tableUsers[seatNumber]?.tableBalance;
     let userCards = currentTables[activeTable.id]?.tableUsers[seatNumber]?.cards;
     let userHands = currentTables[activeTable.id]?.tableUsers[seatNumber]?.hands;
+    let userForfeited = currentTables[activeTable.id]?.tableUsers[seatNumber]?.forfeit;
 
     setPendingBet(userPendingBet)
     setCurrentBet(userCurrentBet)
     setCurrentBalance(userCurrentBalance)
     setCards(userCards)
     setHands(userHands)
+    setIsForfeited(userForfeited)
 
     if (userDisconnectTimer > 0) {
       setDisconnectTimer(userDisconnectTimer / 1000);
@@ -121,6 +124,18 @@ const TableSeat = ({seatNumber, player}) => {
 
 //  console.log(isActiveSeat);
 //  console.log(currentTables[activeTable.id]);
+
+
+
+
+if(isForfeited){
+  return (
+    <div onClick={takeSeat} className={`seat-container six-ring seat${seatNumber} ${!player ? ' border' : ''}`}>
+    FORFEIT
+    </div>
+  )
+}
+
 
 
 return(

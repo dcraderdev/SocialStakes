@@ -3,7 +3,7 @@ import {
   GET_TABLE_BY_ID, GET_TABLES, GET_TABLES_BY_TYPE,
   UPDATE_TABLE,
   VIEW_TABLE, LEAVE_TABLE,
-  TAKE_SEAT, LEAVE_SEAT, CHANGE_SEAT,
+  TAKE_SEAT, LEAVE_SEAT, CHANGE_SEAT, FORFEIT_SEAT,
   SHOW_GAMES, SHOW_TABLES, SHOW_ACTIVE_TABLES,
   ADD_MESSAGE, TOGGLE_SHOW_MESSAGES,
   ADD_BALANCE,
@@ -11,7 +11,7 @@ import {
   PLAYER_DISCONNECT, PLAYER_RECONNECT,
   REMOVE_PLAYER,
   PLAYER_ADD_TABLE_FUNDS,
-  START_TABLE_COUNTDOWN,
+  UPDATE_TABLE_COUNTDOWN,
   COLLECT_BETS
 
 } from './actionTypes'
@@ -92,6 +92,13 @@ export const leaveSeatAction = (seatObj) => {
   return {
     type: LEAVE_SEAT,
     payload: seatObj,
+  };
+};
+
+export const forfeitSeatAction = (leaveSeatObj) => {
+  return {
+    type: FORFEIT_SEAT,
+    payload: leaveSeatObj,
   };
 };
 
@@ -185,10 +192,10 @@ export const playerReconnectAction = ({seat, tableId, timer}) => {
   };
 };
 
-export const removePlayerAction = ({seat, tableId}) => {
+export const removePlayerAction = (leaveSeatObj) => {
   return {
     type: REMOVE_PLAYER,
-    payload: {seat, tableId}
+    payload: leaveSeatObj
   };
 };
 
@@ -200,12 +207,12 @@ export const playerAddTableFundsAction = (seatObj) => {
 };
 
 
-export const startTableCountdownAction = (countdownObj) => {
+export const updateTableCountdownAction = (countdownObj) => {
   console.log('here');
   console.log('here');
   console.log('here');
   return {
-    type: START_TABLE_COUNTDOWN,
+    type: UPDATE_TABLE_COUNTDOWN,
     payload: countdownObj
   };
 };

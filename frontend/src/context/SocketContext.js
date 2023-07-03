@@ -5,12 +5,12 @@ import io from 'socket.io-client';
 import * as gameActions from '../redux/middleware/games';
 import {
   updateTableAction,
-  takeSeatAction, leaveSeatAction,
+  takeSeatAction, leaveSeatAction, forfeitSeatAction,
   addBetAction, removeLastBetAction, removeAllBetAction,
   playerDisconnectAction, playerReconnectAction,
   removePlayerAction,
   playerAddTableFundsAction,
-  startTableCountdownAction,
+  updateTableCountdownAction,
   collectBetsAction,
   viewTableAction
 } from '../redux/actions/gameActions';
@@ -95,6 +95,11 @@ const SocketProvider = ({ children }) => {
       });   
 
 
+      socket.on('player_forfeit', (leaveSeatObj) => {
+        console.log(leaveSeatObj);
+        dispatch(forfeitSeatAction(leaveSeatObj)); 
+      });  
+
 
 
       socket.on('new_bet', (betObj) => {
@@ -133,9 +138,9 @@ const SocketProvider = ({ children }) => {
         dispatch(playerReconnectAction({seat, tableId, timer})); 
       });  
 
-      socket.on('remove_player', ({seat, tableId}) => {
+      socket.on('remove_player', (leaveSeatObj) => {
         console.log('remove_player');
-        dispatch(removePlayerAction({seat, tableId})); 
+        dispatch(removePlayerAction(leaveSeatObj)); 
       });  
 
       socket.on('player_add_table_funds', (seatObj) => {
@@ -145,7 +150,7 @@ const SocketProvider = ({ children }) => {
 
       socket.on('countdown_update', (countdownObj) => {
         console.log('countdown_update'); 
-        dispatch(startTableCountdownAction(countdownObj)); 
+        dispatch(updateTableCountdownAction(countdownObj)); 
       });  
 
       socket.on('collect_bets', (countdownObj) => {
@@ -162,6 +167,7 @@ const SocketProvider = ({ children }) => {
         socket.off('new_message');
         socket.off('new_player');
         socket.off('player_leave');
+        socket.off('player_forfeit');
         socket.off('new_bet');
         socket.off('player_disconnected');
         socket.off('player_reconnected');

@@ -28,7 +28,11 @@ const Table = () => {
       let dealerCards = currTable.dealerCards
 
       setCards(dealerCards)
-      
+
+      console.log(currTable.countdown);
+      if(currTable.countdown === 0){
+        setCountdown(null);
+      }
       if(!countdown && currTable.countdown){
         setCountdown(currTable.countdown/1000);
       }
@@ -43,8 +47,9 @@ const Table = () => {
         setCountdown((prevCountdown) => prevCountdown - 1);
       }, 1000);
     }
-
+ 
     if (countdown === 0) {
+      console.log('yee');
       setCountdown(null);
     }
 

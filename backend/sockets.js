@@ -79,10 +79,7 @@ module.exports = function (io) {
           let seat = table.seat
           let timer = 0
           let messageObj = {
-            user: {
-              username: 'Room',
-              id: 1,
-            },
+            user: { username: 'Room', id: 1, },
             content: `${username} has reconnected.`,
             room: tableId,
           };
@@ -613,7 +610,6 @@ module.exports = function (io) {
       }
 
 
-      // io.in(userId).emit('message', messageObj);
 
       console.log('--------------');
       console.log(`Adding funds(${amount}) for ${username} @room ${room}`);
@@ -711,7 +707,7 @@ module.exports = function (io) {
     // });
 
 
-    async function dealCards(tableId, io) {
+      async function dealCards(tableId, io) {
       console.log('------- DEALING CARDS -------');
         let room = tableId
   
@@ -838,18 +834,6 @@ module.exports = function (io) {
       }
 
 
-      //returns next player or false if all players have acted
-      async function getNextPlayer(tableId){
-        let nextPlayer
-        if(rooms[tableId] && rooms[tableId].sortedActivePlayers.length){
-          nextPlayer = rooms[tableId].sortedActivePlayers.pop()
-        } 
-        if(nextPlayer){
-          return nextPlayer
-        } else {
-          return false
-        }
-      }
 
       async function handleDealerTurn(tableId, io){
         console.log('HANDLING DEALER TURN');
@@ -916,6 +900,21 @@ module.exports = function (io) {
 
 
 
+
+      //returns next player or false if all players have acted
+      async function getNextPlayer(tableId){
+        let nextPlayer
+        if(rooms[tableId] && rooms[tableId].sortedActivePlayers.length){
+          nextPlayer = rooms[tableId].sortedActivePlayers[0]
+        } 
+        if(nextPlayer){
+          return nextPlayer
+        } else {
+          return false
+        }
+      }
+
+
       async function handlePlayerTurn(tableId, player, io){
         let room = tableId
 
@@ -966,7 +965,9 @@ module.exports = function (io) {
                     console.log('TURN OVER');
                     console.log('TURN OVER');
                     console.log('PUSHING', player.username);
-                    rooms[tableId].sortedFinishedPlayers.push(player)
+
+                    let nextPlayer = rooms[tableId].sortedActivePlayers.pop()
+                    rooms[tableId].sortedFinishedPlayers.push(nextPlayer)
 
                     console.log('sortedFinishedPlayers', rooms[tableId].sortedFinishedPlayers);
                     await gameLoop(tableId, io) 
@@ -998,8 +999,48 @@ module.exports = function (io) {
       }
 
 
+
+      socket.on('player_action', async (seatObj) => {
+        const {tableId, action, seat } = seatObj
+        let room = tableId
+  
+        let messageObj = {
+          user: { username: 'Room', id: 1, },
+          content: `${username} has ${action}.`,
+          room: tableId,
+        }
+  
+  
+
+        // Reset the timer whenever a player takes an action
+        // 1. Clear the existing timer
+        clearInterval(rooms[tableId].timerId);
+        // 2. Reset the actionTimer value
+        rooms[tableId].actionTimer = 0;  
+
+        let updateObj = {
+          tableId,
+          table: {
+            actionTimer: rooms[tableId].actionTimer,
+            seats: rooms[tableId].seats,
+            dealerCards:{
+              visibleCards: rooms[tableId].dealerCards.visibleCards,
+            }
+          },
+        };
+
+        io.in(room).emit('get_updated_table', updateObj);
+        io.in(room).emit('new_message', messageObj);
+        
+        await gameLoop(tableId, io) 
+  
+        console.log('--------------');
+        console.log(`Handling action(${action}) for ${username} @room ${room}`);
+        console.log('--------------');
+      });
+
  
- 
+  
 
 
       async function endRound(tableId, io) {
@@ -1161,6 +1202,7 @@ module.exports = function (io) {
 
         // save dealers cards to db
         let dealersCards = rooms[tableId].dealerCards.visibleCards
+        dealersCards = dealersCards.flat(5)
 
         let handObj = {
           id:roundId,

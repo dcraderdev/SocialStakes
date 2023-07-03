@@ -109,7 +109,6 @@ function GameFloor() {
 
   }
 
-  console.log(activeTable);
 
 
   return ( 

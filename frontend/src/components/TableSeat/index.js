@@ -127,8 +127,6 @@ const TableSeat = ({seatNumber, player}) => {
     openModal('leaveModal')
   }
 
-  console.log(player);
-//  console.log(currentTables[activeTable.id]);
 
 
 

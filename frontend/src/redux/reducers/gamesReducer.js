@@ -69,9 +69,8 @@ const gamesReducer = (state = initialState, action) => {
       if (updatedCurrentTables[tableId]) {
         const currentTable = updatedCurrentTables[tableId];
 
-        console.log(currentTable);
-        console.log(table.countdownRemaining);
-        console.log(action.payload.table.dealerCards?.visibleCards);
+        console.log(currentTable.tableUsers[4]?.cards);
+        console.log(table?.seats[4]?.cards);
 
 
 
@@ -93,7 +92,6 @@ const gamesReducer = (state = initialState, action) => {
           // If the incoming table has data for this seat, update it in the currentTable
           if (table.seats[seat]) {
             currentTable.tableUsers[seat].cards = table.seats[seat].cards;
-            currentTable.tableUsers[seat].hands = table.seats[seat].hands;
             currentTable.tableUsers[seat].hands = table.seats[seat].hands;
             currentTable.tableUsers[seat].pendingBet = table.seats[seat].pendingBet;
             currentTable.tableUsers[seat].currentBet = table.seats[seat].currentBet;

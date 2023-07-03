@@ -191,8 +191,16 @@ const rebet = (multiplier) => {
 
 
   const handleAction = (action) => {
-    dispatch(leaveTableAction(activeTable.id));
+    console.log(action);
+    let actionObj = {
+      action,
+      tableId: activeTable.id,
+      seat: currentSeat
+    }
+    socket.emit('player_action', actionObj)
   };
+
+
 
   const addBalance = () => {
       if(!user) return
@@ -201,8 +209,6 @@ const rebet = (multiplier) => {
       openModal('balanceModal')
   };
 
-  console.log(isHandInProgress);
-  console.log(isActiveSeat);
 
   return (
     <>

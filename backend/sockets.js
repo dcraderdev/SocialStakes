@@ -11,6 +11,7 @@ module.exports = function (io) {
   const roomInit = () => {
     return {
       seats: { },
+      roundId: null,
       actionSeat: null,
       actionTimer: null,
       countdownTimer: 0,
@@ -731,8 +732,9 @@ module.exports = function (io) {
           return
         }
         const {roundId, deck} = deckandRoundId
-        // Assign deck to room
+        // Assign deck and roundId to room
         rooms[tableId].deck = deck
+        rooms[tableId].roundId = roundId
 
 
         console.log('------- rooms[tableId].seats -------');
@@ -906,7 +908,8 @@ module.exports = function (io) {
           rooms[tableId].dealerCards.handSummary = dealerHand
           rooms[tableId].dealerCards.bestValue = bestDealerValue
 
-          // await gameController.saveDealerHand(handObj)
+
+
           endRound(tableId, io)
         }
       } 
@@ -1004,6 +1007,8 @@ module.exports = function (io) {
   console.log('------- END ROUND -------');
 
         let room = tableId
+        let roundId = rooms[tableId]?.roundId
+
 
         // Update table with latest info before ending the round
         let updateObj = {
@@ -1149,7 +1154,20 @@ module.exports = function (io) {
         }
 
 
+
+
+
         // logic after hands have been awarded
+
+        // save dealers cards to db
+        let dealersCards = rooms[tableId].dealerCards.visibleCards
+
+        let handObj = {
+          id:roundId,
+          cards: JSON.stringify(dealersCards),
+          active: false,
+        }
+        await gameController.saveDealerHand(handObj)
         // Reset the room for the next hand
 
         if(rooms[tableId] && rooms[tableId].forfeitedPlayers){

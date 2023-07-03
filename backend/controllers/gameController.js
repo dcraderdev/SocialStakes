@@ -306,7 +306,7 @@ console.log('CURRENT BALANCE: ', userToUpdate.balance);
     const {tableId,gameSessionId, blockHash, nonce, decksUsed} = dealObj
 
 
-    const newRound = await Round.create({tableId})
+    const newRound = await Round.create({tableId, active:true})
     if(!newRound){
       return false
     }
@@ -388,7 +388,29 @@ console.log('CURRENT BALANCE: ', userToUpdate.balance);
     return 
   },
 
+// Save hand at end of blackjack round
+async saveDealerHand(handObj) {
+  const{id, cards, active} = handObj 
 
+  console.log('^^^^^^^^^^^^^^^^');
+  console.log('saveDealerHand: ');
+  console.log('^^^^^^^^^^^^^^^^');
+  console.log('^^^^^^^^^^^^^^^^');
+  console.log('id: ', id);
+  console.log('cards: ', cards);
+  console.log('active: ', active);
+  console.log('^^^^^^^^^^^^^^^^');
+  const roundToUpdate = await Round.findByPk(id);
+  if(!roundToUpdate){
+    return false
+  }
+
+  roundToUpdate.cards = cards
+  roundToUpdate.active = active
+  await roundToUpdate.save();
+
+  return 
+},
 
 
 

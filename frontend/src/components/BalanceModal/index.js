@@ -60,9 +60,7 @@ function BalanceModal() {
     
     socket.emit('take_seat', seatObj)
     closeModal()
-    setUpdateObj(null)
     return
-
   };
 
   const addFundsToTable = () => {

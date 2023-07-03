@@ -35,6 +35,7 @@ const TableSeat = ({seatNumber, player}) => {
   const [isHandInProgress, setIsHandInProgress] = useState(false);
   const [isForfeited, setIsForfeited] = useState(false);
 
+
   useEffect(() => {
 
     let userDisconnectTimer = currentTables[activeTable.id]?.tableUsers[seatNumber]?.disconnectTimer;
@@ -105,8 +106,12 @@ const TableSeat = ({seatNumber, player}) => {
   }, [actionTimer]);
 
 
+
+
+
   const takeSeat = () => {
     if(!user) return
+    
     if(player || isUserInAnySeat) return
     setUpdateObj({minBet:activeTable.Game.minBet, seatNumber, type:'initDeposit'})
     openModal('balanceModal')
@@ -115,14 +120,14 @@ const TableSeat = ({seatNumber, player}) => {
 
 
   const leaveSeat = () => {
+    console.log(seatNumber);
+
     let tableBalance = pendingBet + currentBalance
     setUpdateObj({seatNumber, tableBalance})
     openModal('leaveModal')
   }
 
-  // console.log(player);
-
-//  console.log(isActiveSeat);
+  console.log(player);
 //  console.log(currentTables[activeTable.id]);
 
 
@@ -180,9 +185,9 @@ return(
       {!player && !isCurrentUser && !isUserInAnySeat && (
         <div className='flex center' >Take seat</div>
       )}
-      {!player && !isCurrentUser && isUserInAnySeat && (
+      {/* {!player && !isCurrentUser && isUserInAnySeat && (
         <div className='flex center' >Change seat</div>
-      )}
+      )} */}
       {player && isCurrentUser && (
         <>
           <button className='seat-leave-button' onClick={leaveSeat}>Leave seat</button>

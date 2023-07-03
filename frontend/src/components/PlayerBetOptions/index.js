@@ -21,6 +21,7 @@ import { ModalContext } from '../../context/ModalContext';
     const [sitOutSelected, setSitOutSelected] = useState(false);
     const [sitOutNextHandSelected, setSitOutNextHandSelected] = useState(false);
     const [lastBets, setLastBets] = useState([]);
+    const [lastTotalBet, setLastTotalBet] = useState(0);
     const [isSitting, setIsSitting] = useState(false);
     const [currentSeat, setCurrentSeat] = useState(null);
     const [tableBalance, setTableBalance] = useState(0);
@@ -66,6 +67,29 @@ import { ModalContext } from '../../context/ModalContext';
 
 
 
+  useEffect(() => {
+
+    if(isHandInProgress){
+      setLastTotalBet(lastBets.reduce((acc,add)=> acc += add, 0))
+      setLastBets([])
+    }
+
+  }, [isHandInProgress]);
+
+
+
+useEffect(() => {
+
+  console.log(lastTotalBet);
+  console.log(lastBets);
+
+}, [lastBets, lastTotalBet]);
+
+
+
+
+
+
   const handleTableThemeChange = (tableTheme) => {
     console.log(tableTheme);
     dispatch(changeTableThemeAction(tableTheme));
@@ -75,11 +99,43 @@ import { ModalContext } from '../../context/ModalContext';
     dispatch(leaveTableAction(activeTable.id));
   };
 
-  const rebet = (multiplier) => {
-    if(multiplier){
-      return
-    }
-  };
+const rebet = (multiplier) => {
+  console.log('clik');
+
+  if(!user) console.log('!user');
+  if(!isSitting) console.log('!isSitting');
+  if(lastTotalBet === 0) console.log('lastBets.length === 0');
+
+
+
+  if(!user) return
+  if(!isSitting) return
+  if(lastTotalBet === 0) return
+
+
+  console.log(multiplier);
+
+  let bet = lastTotalBet;
+  // double the bet if multiplier is true
+  if(multiplier){
+    bet *= 2; 
+  }
+
+  if(bet > tableBalance){
+    bet = parseInt(tableBalance)
+  }
+  
+  const betObj = {
+    bet,
+    tableId: activeTable.id,
+    seat: currentSeat
+  }
+
+  setLastBets([bet])
+  socket.emit('place_bet', betObj)
+  // dispatch(addBetAction(betObj));
+};
+
 
 
   
@@ -190,8 +246,8 @@ import { ModalContext } from '../../context/ModalContext';
               {!isHandInProgress && (
                 <div className="section right flex center">
                   <div className="rebet-option-container">
-                    <div className="rebet regular" onClick={()=>rebet(true)}>Rebet</div>
-                    <div className="rebet double" onClick={()=>rebet(false)}>Rebet x2</div>
+                    <div className="rebet regular" onClick={()=>rebet(false)}>Rebet</div>
+                    <div className="rebet double" onClick={()=>rebet(true)}>Rebet x2</div>
                   </div>
                   <div className="undo-bet-container">
                     <div className="undo one" onClick={()=>undoBet(false)}>Undo</div>

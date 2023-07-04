@@ -884,11 +884,11 @@ module.exports = function (io) {
                     await gameLoop(tableId, io) 
 
                     // io.in(room).emit('player_timeout', {tableId, seat: nextPlayer.seat});
-                  }
+                  } 
                 }, 1000)
               }
         return
-      }  
+      }   
 
  
       async function gameLoop(tableId, io) {
@@ -933,6 +933,8 @@ module.exports = function (io) {
 
       async function playerStay(actionObj, io){
         const {tableId, action, seat, handId } = actionObj
+        let nextPlayer = rooms[tableId].sortedActivePlayers.pop()
+        rooms[tableId].sortedFinishedPlayers.push(nextPlayer)
 
       }
       async function playerSplit(actionObj, io){
@@ -960,7 +962,7 @@ module.exports = function (io) {
         } 
   
   
-
+ 
         // Reset the timer whenever a player takes an action
         // 1. Clear the existing timer
         clearInterval(rooms[tableId].timerId);
@@ -975,13 +977,14 @@ module.exports = function (io) {
             dealerCards:{
               visibleCards: rooms[tableId].dealerCards.visibleCards,
             }
-          },
+          }, 
         };
 
         io.in(room).emit('get_updated_table', updateObj);
         io.in(room).emit('new_message', messageObj);
 
-        
+
+         
         
         if(action === 'hit' ){
           playerHit(actionObj, io)
@@ -1003,8 +1006,6 @@ module.exports = function (io) {
           playerInsurance(actionObj, io)
 
         }
-
-
 
         
         await gameLoop(tableId, io) 

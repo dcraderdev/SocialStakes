@@ -131,7 +131,6 @@ const TableSeat = ({seatNumber, player}) => {
   }
 
 
-console.log(actionHand);
 
 
 if(isForfeited){

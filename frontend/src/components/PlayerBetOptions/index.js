@@ -28,6 +28,7 @@ import { ModalContext } from '../../context/ModalContext';
 
     const [isHandInProgress, setIsHandInProgress] = useState(false);
     const [isActiveSeat, setIsActiveSeat] = useState(false);
+    const [actionHand, setActionHand] = useState(null);
   
     
     const {socket} = useContext(SocketContext)
@@ -58,32 +59,42 @@ import { ModalContext } from '../../context/ModalContext';
   useEffect(() => {
     let userInActiveSeat = currentTables[activeTable.id]?.actionSeat === currentSeat && currentSeat !== null;
     let handInProgress = currentTables[activeTable.id]?.handInProgress;
+    let currActionHand = currentTables[activeTable.id]?.actionHand;
 
+
+    setActionHand(currActionHand)
     setIsActiveSeat(userInActiveSeat)
     setIsHandInProgress(handInProgress)
 
   }, [currentTables, activeTable.id]);
 
 
+  // useEffect(() => {
+  //   if(!user) return
+  //   if(!isSitting) return
+  //   if(!isActiveSeat) return
 
 
+  //   if(isActiveSeat){
+
+  //   }
+
+
+  // }, [isSitting, currentTables, activeTable, isActiveSeat]);
+
+
+
+
+
+
+
+  //If had has started, add up the bets made and store them for rebet options
   useEffect(() => {
-
     if(isHandInProgress){
       setLastTotalBet(lastBets.reduce((acc,add)=> acc += add, 0))
       setLastBets([])
     }
-
   }, [isHandInProgress]);
-
-
-
-useEffect(() => {
-
-  console.log(lastTotalBet);
-  console.log(lastBets);
-
-}, [lastBets, lastTotalBet]);
 
 
 
@@ -191,11 +202,17 @@ const rebet = (multiplier) => {
 
 
   const handleAction = (action) => {
+    if(!user) return
+    if(!isSitting) return
+    if(!isActiveSeat) return
+
+
     console.log(action);
     let actionObj = {
       action,
       tableId: activeTable.id,
-      seat: currentSeat
+      seat: currentSeat,
+      handId: actionHand
     }
     socket.emit('player_action', actionObj)
   };

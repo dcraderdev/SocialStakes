@@ -423,7 +423,7 @@ module.exports = function (io) {
       console.log(rooms[tableId]);
 
       // Countdown duration
-      const countdownDuration = 7000; // 5 seconds
+      const countdownDuration = 2000; // 5 seconds
 
       // Start a new countdown
       let countdownRemaining = countdownDuration;
@@ -616,95 +616,6 @@ module.exports = function (io) {
       console.log('--------------');
     });
 
-
-    // socket.on('deal_cards', async (tableId) => {
-    //   let room = tableId
-
-    //   let dealObj = {
-    //     tableId,
-    //     gameSessionId: rooms[tableId].gameSessionId,
-    //     blockHash: rooms[tableId].blockHash,
-    //     nonce: rooms[tableId].nonce,
-    //     decksUsed: rooms[tableId].decksUsed
-    //   }
-    //   // generate cards and create Round entry in db
-    //   const deckandRoundId = await gameController.dealCards(dealObj)
-    //   if(!deckandRoundId){
-    //     return
-    //   }
-    //   const {roundId, deck} = deckandRoundId
-    //   // Assign deck and roundId to room
-    //   rooms[tableId].deck = deck
-    //   rooms[tableId].roundId = roundId
-
-    //   // Calculate number of cards to draw
-    //   // numSeats with currentBets + cards for dealer
-    //   // Sort the seats by seat number and only include those with a current bet
-    //   let sortedSeats = Object.entries(rooms[tableId].seats)
-    //     .filter(([i, seat]) => seat.currentBet > 0)
-    //     .sort(([seatNumberA], [seatNumberB]) => seatNumberA - seatNumberB)
-    //     .map(([i, seat]) => seat);
-
-    //     console.log(sortedSeats);
-    //     let userTableIds = sortedSeats.map(seat=>seat.id)  
-    //     console.log('=-=-=-=-');
-    //     console.log(userTableIds);
-    //     console.log(roundId);
-    //     console.log('=-=-=-=-');
-
-    //   // Create hand for each active player
-    //   const handIds = await gameController.createHands(userTableIds, roundId)
-    //   let numSeatsWithBets = sortedSeats.length + 1;
-    //   let cardsToDraw = numSeatsWithBets * 2
-    //   let cursor = rooms[tableId].cursor
-
-    //   let drawObj = {
-    //     deck,
-    //     cardsToDraw,
-    //     cursor
-    //   } 
-    //   const drawnCards = await drawCards(drawObj)
-    //   if(handIds && drawnCards){
-    //           // Distribute the cards
-    //           for(let j = 0; j < 2; j++){
-    //             for (let i = 0; i < sortedSeats.length; i++) {
-    //               let seat = sortedSeats[i];
-    //               // Get the next card and remove it from the drawnCards array
-    //               let nextCard = drawnCards.shift()
-    //               seat.cards.push(nextCard);
-    //                 // Create a newHand inside the handsObj in case we need to split during the hand
-    //                 // Use the map we created to get the handIds
-    //                 if(!seat.hands[`${handIds[i]}`]){
-    //                   seat.hands[`${handIds[i]}`] = []
-    //                 }
-    //                 seat.hands[`${handIds[i]}`].push(nextCard);
-    //             }
-    //             // Distribute the first card to the dealer
-    //             rooms[tableId].dealerCards.push(drawnCards.shift());
-    //           }
-    //   }
-    //   // Set new cursor point, setDealers cards
-    //   rooms[tableId].cursor += cardsToDraw 
-    //   rooms[tableId].dealer.visibleCards = rooms[tableId].dealerCards[1]
-    //   rooms[tableId].dealer.hiddenCards = rooms[tableId].dealerCards[0] 
-
-    //   let updateObj = {
-    //     tableId,
-    //     table: {
-    //       seats: rooms[tableId].seats,
-    //     },
-    //     dealerCards:{
-    //       hiddenCard: null,
-    //       visibleCard: rooms[tableId].dealerVisibleCard,
-    //     }
-    //   };
-    //   console.log(updateObj);
-    //   io.in(room).emit('get_updated_table', updateObj);
-    //   // io.in(userId).emit('message', messageObj);
-    //   console.log('--------------');
-    //   console.log(`Dealing cards @room ${room}`);
-    //   console.log('--------------');
-    // });
 
 
       async function dealCards(tableId, io) {
@@ -931,7 +842,7 @@ module.exports = function (io) {
       
       
                 // Create actionTimer 
-                rooms[tableId].actionTimer = 8000;
+                rooms[tableId].actionTimer = 2000000;
         
                 // Set action seat
                 rooms[tableId].actionSeat = player.seat
@@ -977,7 +888,7 @@ module.exports = function (io) {
                 }, 1000)
               }
         return
-      } 
+      }  
 
  
       async function gameLoop(tableId, io) {
@@ -999,16 +910,54 @@ module.exports = function (io) {
       }
 
 
+      async function playerHit(actionObj, io){
+        const {tableId, action, seat, handId } = actionObj
+        let currentHand = rooms[tableId].seats[seat].hands[handId].cards
 
-      socket.on('player_action', async (seatObj) => {
-        const {tableId, action, seat } = seatObj
+        console.log('^+^+^+^+^+^+^+^+^+^+^+^+^+');
+        console.log('^+^+^+^+^+^+^+^+^+^+^+^+^+');
+        console.log(currentHand);
+        console.log('^+^+^+^+^+^+^+^+^+^+^+^+^+');
+        console.log('^+^+^+^+^+^+^+^+^+^+^+^+^+');
+
+        let drawObj = {
+          deck: rooms[tableId].deck,
+          cardsToDraw: 1,
+          cursor:rooms[tableId].cursor
+        }
+        const newCard = await drawCards(drawObj)
+
+        currentHand.push(newCard);
+
+      }
+
+      async function playerStay(actionObj, io){
+        const {tableId, action, seat, handId } = actionObj
+
+      }
+      async function playerSplit(actionObj, io){
+        const {tableId, action, seat, handId } = actionObj
+
+      }
+
+      async function playerDouble(actionObj, io){
+        const {tableId, action, seat, handId } = actionObj
+
+      }
+      async function playerInsurance(actionObj, io){
+        const {tableId, action, seat, handId } = actionObj
+
+      }
+
+      socket.on('player_action', async (actionObj) => {
+        const {tableId, action, seat, handId } = actionObj
         let room = tableId
   
         let messageObj = {
           user: { username: 'Room', id: 1, },
           content: `${username} has ${action}.`,
           room: tableId,
-        }
+        } 
   
   
 
@@ -1031,6 +980,32 @@ module.exports = function (io) {
 
         io.in(room).emit('get_updated_table', updateObj);
         io.in(room).emit('new_message', messageObj);
+
+        
+        
+        if(action === 'hit' ){
+          playerHit(actionObj, io)
+          
+        }
+        if(action === 'stay' ){
+          playerStay(actionObj, io)
+          
+        }
+        if(action === 'double' ){
+          playerDouble(actionObj, io)
+      
+        }
+        if(action === 'split' ){
+          playerSplit(actionObj, io)
+          
+        }
+        if(action === 'insurance' ){
+          playerInsurance(actionObj, io)
+
+        }
+
+
+
         
         await gameLoop(tableId, io) 
   

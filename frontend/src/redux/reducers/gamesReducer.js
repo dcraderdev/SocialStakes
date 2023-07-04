@@ -78,7 +78,8 @@ const gamesReducer = (state = initialState, action) => {
         currentTable.dealerCards = action.payload.table.dealerCards?.visibleCards;
         currentTable.actionSeat = action.payload.table.actionSeat;
         currentTable.actionTimer = action.payload.table.actionTimer;
-
+        currentTable.actionHand = action.payload.table.actionHand;
+        
         // only update handInProgress if specified in payload
         if(action.payload.table.handInProgress !== null && action.payload.table.handInProgress !== undefined){
           currentTable.handInProgress = action.payload.table.handInProgress;

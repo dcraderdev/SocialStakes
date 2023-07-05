@@ -87,7 +87,7 @@ const gameController = {
           attributes: ['id','nonce','blockHash'],
         },
       ],
-      attributes: ['id','private'],
+      attributes: ['id','private', 'shufflePoint'],
     });
 
     if (!table) {
@@ -305,6 +305,22 @@ console.log('CURRENT BALANCE: ', userToUpdate.balance);
   async dealCards(dealObj) {
     const {tableId,gameSessionId, blockHash, nonce, decksUsed} = dealObj
 
+    console.log('-=-=-=-=DEALING CARDS-=-=-=-=-=');
+    console.log('-=-=-=-=DEALING CARDS-=-=-=-=-=');
+    console.log('-=-=-=-=DEALING CARDS-=-=-=-=-=');
+    console.log('-=-=-=-=DEALING CARDS-=-=-=-=-=');
+    console.log('-=-=-=-=DEALING CARDS-=-=-=-=-=');
+    console.log('-=-=-=-=DEALING CARDS-=-=-=-=-=');
+
+    console.log(dealObj);
+    console.log('-=-=-=-=DEALING CARDS-=-=-=-=-=');
+    console.log('-=-=-=-=DEALING CARDS-=-=-=-=-=');
+    console.log('-=-=-=-=DEALING CARDS-=-=-=-=-=');
+    console.log('-=-=-=-=DEALING CARDS-=-=-=-=-=');
+    console.log('-=-=-=-=DEALING CARDS-=-=-=-=-=');
+    console.log('-=-=-=-=DEALING CARDS-=-=-=-=-=');
+    console.log('-=-=-=-=DEALING CARDS-=-=-=-=-=');
+
 
     const newRound = await Round.create({tableId, active:true})
     if(!newRound){
@@ -327,6 +343,23 @@ console.log('CURRENT BALANCE: ', userToUpdate.balance);
   },
 
 
+  async newRound(dealObj) {
+    const {tableId} = dealObj
+
+
+    const newRound = await Round.create({tableId, active:true})
+    if(!newRound){
+      return false
+    }
+
+    let roundId = newRound.id
+
+
+    return roundId
+  },
+
+
+
 
 // Create mulitple hands at start of blackjack round
   async createHands(userTableIds, roundId) {
@@ -342,9 +375,20 @@ console.log('CURRENT BALANCE: ', userToUpdate.balance);
         handIds.push(hand.id);
       }
     });
-  
+   
     return handIds;
   },
+
+// Create mulitple hands at start of blackjack round
+async createHand(userTableId, roundId) {
+  const newHand = await Hand.create({userTableId, roundId});
+  if(!newHand) return false
+  return newHand;
+},
+
+
+
+  
 
 // Save hand at end of blackjack round
   async savePlayerHand(handObj) {
@@ -390,7 +434,7 @@ console.log('CURRENT BALANCE: ', userToUpdate.balance);
 
 // Save hand at end of blackjack round
 async saveDealerHand(handObj) {
-  const{id, cards, active} = handObj 
+  const{id, cards, active, nonce} = handObj 
 
   console.log('^^^^^^^^^^^^^^^^');
   console.log('saveDealerHand: ');
@@ -399,6 +443,7 @@ async saveDealerHand(handObj) {
   console.log('id: ', id);
   console.log('cards: ', cards);
   console.log('active: ', active);
+  console.log('nonce: ', nonce);
   console.log('^^^^^^^^^^^^^^^^');
   const roundToUpdate = await Round.findByPk(id);
   if(!roundToUpdate){
@@ -407,6 +452,7 @@ async saveDealerHand(handObj) {
 
   roundToUpdate.cards = cards
   roundToUpdate.active = active
+  roundToUpdate.nonce = nonce
   await roundToUpdate.save();
 
   return 

@@ -111,7 +111,6 @@ const TableSeat = ({seatNumber, player}) => {
 
 
 
-
   const takeSeat = () => {
     if(!user) return
     
@@ -129,6 +128,8 @@ const TableSeat = ({seatNumber, player}) => {
     setUpdateObj({seatNumber, tableBalance})
     openModal('leaveModal')
   }
+
+
 
 
 

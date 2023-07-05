@@ -312,39 +312,18 @@ console.log(cardsToDraw);
 console.log(cursor);
 console.log('-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=');
 
-  const cardsDrawn = deck.splice(cursor, cardsToDraw);
-  return cardsDrawn;
+  const drawnCards = deck.splice(0, cardsToDraw);
+
+  console.log(deck);
+  let newDeck = deck
+  let drawnCardsAndDeck = {drawnCards, newDeck}
+
+
+  return drawnCardsAndDeck;
 }
 
-// async function handSummary(cards) {
-//   console.log('HAND SUMMARY');
 
-//   let handSummary = {
-//     softSeventeen: false,
-//     busted: false,
-//     value: 0,
-//     value2: 0
-//   }
-//   let containsAce = false
 
-//   for(let card of cards){
-//     let convertedCard = cardConverter[card]
-//     if(convertedCard.value === 11){
-//       containsAce = true
-//     }
-//     handSummary.value += convertedCard.value
-//   }
-
-//   if(handSummary.value > 21){
-//     handSummary.busted = true
-//   }
-//   if(handSummary.value === 17 && containsAce){
-//     handSummary.softSeventeen = true
-//   }
-
-//   return handSummary
-
-// }
 async function handSummary(cards) {
   console.log('HAND SUMMARY');
 

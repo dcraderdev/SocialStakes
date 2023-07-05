@@ -19,7 +19,8 @@ module.exports = (sequelize, DataTypes) => {
   Round.init({
     tableId: DataTypes.UUID,
     active: DataTypes.BOOLEAN,
-    cards: DataTypes.STRING
+    cards: DataTypes.STRING,
+    nonce: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Round',

@@ -19,7 +19,7 @@ module.exports = function (io) {
       handInProgress: false, 
       gameSessionId: null,
       serverSeed: null,
-      nonce: null,
+      nonce: 1,
       deck: null, 
       cursor: 0,
       dealerCards: {
@@ -39,7 +39,7 @@ module.exports = function (io) {
 
 
 
-
+ 
 
 
 
@@ -171,6 +171,18 @@ module.exports = function (io) {
 
       let updatedTable = await gameController.getTableById(tableId)
 
+
+
+      console.log('-=-=-=-=-=-=-=');
+      console.log('-=-=-=-=-=-=-=');
+      console.log('-=-=-=-=-=-=-=');
+      console.log(updatedTable);
+      console.log('-=-=-=-=-=-=-=');
+      console.log('-=-=-=-=-=-=-=');
+      console.log('-=-=-=-=-=-=-=');
+
+
+
       if (!updatedTable) {
         // TODO: Create logic for creating a new game
       }
@@ -179,7 +191,9 @@ module.exports = function (io) {
       if (!rooms[tableId]) {
         rooms[tableId] = roomInit()
         rooms[tableId].gameSessionId = updatedTable.gameSessions[0].id
+        rooms[tableId].blockHash = updatedTable.gameSessions[0].blockHash
         rooms[tableId].decksUsed = updatedTable.Game.decksUsed
+        rooms[tableId].shufflePoint = updatedTable.shufflePoint
 
       }
 
@@ -396,8 +410,6 @@ module.exports = function (io) {
 
 
   
-
-
     socket.on('place_bet', async (betObj) => {
 
       const {bet, tableId, seat } = betObj
@@ -617,7 +629,7 @@ module.exports = function (io) {
     });
 
 
-
+      // starts game of blackjack for multiple players
       async function dealCards(tableId, io) {
       console.log('------- DEALING CARDS -------');
         let room = tableId
@@ -630,27 +642,66 @@ module.exports = function (io) {
           decksUsed: rooms[tableId].decksUsed
         }
 
+        let roundId, deck
 
 
 
-        // generate cards and create Round entry in db
-        const deckandRoundId = await gameController.dealCards(dealObj)
-        if(!deckandRoundId){
-          return
+      
+        console.log('-=-=-=-=--=-=-=--=-');
+        console.log('-=-=-=-=--=-=-=--=-');
+        console.log(dealObj);
+        console.log(rooms[tableId].cursor);
+        console.log(rooms[tableId].shufflePoint);
+        console.log('-=-=-=-=--=-=-=--=-');
+        console.log('-=-=-=-=--=-=-=--=-');
+
+        
+        
+        
+        // if no deck or deck cursor is past shuffle point
+        // increment nonce and create new deck
+        if(rooms[tableId].cursor >= rooms[tableId].shufflePoint || !rooms[tableId].deck){
+
+          console.log('-=-=-=-=--=-=-=--=-');
+          console.log('-=-=-=-=--=-=-=--=-');
+          console.log('-=-=-=-=--=-=-=--=-');
+          console.log('-=-=-=-=--=-=-=--=-');
+          console.log('NEED NEW DECK');
+          console.log(rooms[tableId].cursor);
+          console.log(rooms[tableId].shufflePoint);
+          console.log(rooms[tableId].cursor >= rooms[tableId].shufflePoint); 
+          console.log(rooms[tableId].deck);
+          console.log('-=-=-=-=--=-=-=--=-');
+          console.log('-=-=-=-=--=-=-=--=-');
+          console.log('-=-=-=-=--=-=-=--=-');
+          console.log('-=-=-=-=--=-=-=--=-');
+          // generate cards and create Round entry in db
+          dealObj.nonce++
+          rooms[tableId].nonce++
+
+          const deckandRoundId = await gameController.dealCards(dealObj)
+          if(!deckandRoundId){
+            return
+          }
+          deck = deckandRoundId.deck
+          roundId = deckandRoundId.roundId
+          // Assign deck and roundId to room
+          rooms[tableId].deck = deck
+          rooms[tableId].roundId = roundId
+          rooms[tableId].cursor = 0
+        } else {
+          deck = rooms[tableId].deck
+          roundId = await gameController.newRound(dealObj)
+          rooms[tableId].roundId = roundId
+
+
         }
-        const {roundId, deck} = deckandRoundId
-        // Assign deck and roundId to room
-        rooms[tableId].deck = deck
-        rooms[tableId].roundId = roundId
 
 
-        console.log('------- rooms[tableId].seats -------');
-        console.log(rooms[tableId].seats);
-        console.log('------------------------');
 
+        console.log(rooms[tableId].deck);
 
  
-  
         // Calculate number of cards to draw
         // numSeats with currentBets + cards for dealer
         // Sort the seats by seat number and only include those with a current bet
@@ -685,25 +736,20 @@ module.exports = function (io) {
           cardsToDraw,
           cursor
         } 
-        const drawnCards = await drawCards(drawObj)
+        const drawnCardsAndDeck = await drawCards(drawObj)
+        const {drawnCards, newDeck} = drawnCardsAndDeck
+
+        console.log('------- newDeck -------');
+        console.log(newDeck);
+        console.log('------------------------');
+
+        rooms[tableId].deck = newDeck
+
         if(handIds && drawnCards){  
                 // Distribute the cards 
                 for(let j = 0; j < 2; j++){
                   for (let i = 0; i < sortedSeats.length; i++) {
                     let seat = sortedSeats[i];
-  
-                    console.log('-=-=-=-=-=-');
-                    console.log('%$%$%$%$%$%$%$%$%$%');
-                    console.log('%$%$%$%$%$%$%$%$%$%');
-                    console.log('%$%$%$%$%$%$%$%$%$%');
-                    console.log('%$%$%$%$%$%$%$%$%$%');
-                    console.log(seat);
-                    console.log('%$%$%$%$%$%$%$%$%$%');
-                    console.log('%$%$%$%$%$%$%$%$%$%');
-                    console.log('%$%$%$%$%$%$%$%$%$%');
-                    console.log('%$%$%$%$%$%$%$%$%$%'); 
-                    console.log('%$%$%$%$%$%$%$%$%$%');
-                    console.log('-=-=-=-=-=-');
                     // Get the next card and remove it from the drawnCards array
                     let nextCard = drawnCards.shift()
                     seat.cards.push(nextCard);
@@ -713,6 +759,7 @@ module.exports = function (io) {
                         seat.hands[`${handIds[i]}`] = {
                           cards: [],
                           bet: null,
+                          turnEnded: false
                         }  
                       }
                       seat.hands[`${handIds[i]}`].cards.push(nextCard);
@@ -727,8 +774,19 @@ module.exports = function (io) {
                   } 
                 }   
         }
+ 
+ 
+
+
         // Set new cursor point, setDealers cards
         rooms[tableId].cursor += cardsToDraw 
+
+        console.log('_*_*_*_*_*_*_*_*_*_*_*_**_');
+        console.log('_*_*_*_*_*_*_*_*_*_*_*_**_');
+        console.log('cardsToDraw:', cardsToDraw);
+        console.log('NEW CURSOR:', rooms[tableId].cursor);
+        console.log('_*_*_*_*_*_*_*_*_*_*_*_**_');
+        console.log('_*_*_*_*_*_*_*_*_*_*_*_**_');
   
         let updateObj = {
           tableId,
@@ -745,19 +803,17 @@ module.exports = function (io) {
       }
 
 
+ 
 
-      async function handleDealerTurn(tableId, io){
-        console.log('HANDLING DEALER TURN');
 
+      async function gameLoop(tableId, io) {
+        console.log('------- GAME LOOP -------');
+        console.log('------- CURSOR -------');
+        console.log('');
+        console.log(rooms[tableId].cursor);
+        console.log('');
+        console.log('----------------------');
         let room = tableId
-        let hiddenCards = rooms[tableId].dealerCards.hiddenCards
-        let visibleCards = rooms[tableId].dealerCards.visibleCards
-        let otherCards = rooms[tableId].dealerCards.otherCards
-        let newCards = [...visibleCards, ...hiddenCards, ...otherCards ]
-        rooms[tableId].dealerCards.hiddenCards = []
-        rooms[tableId].dealerCards.visibleCards = newCards
-
-        // Emit update to clients
         let updateObj = {
           tableId,
           table: {
@@ -766,54 +822,33 @@ module.exports = function (io) {
             dealerCards:{
               visibleCards: rooms[tableId].dealerCards.visibleCards,
             }
-          },
+          },  
         };
         
+        // Emit latest decision to clients
         io.in(room).emit('get_updated_table', updateObj);
 
+        // Get next player
+        let nextPlayer = await getNextPlayer(tableId)
 
-        //Check current handSummary
-        let dealerHand = await handSummary(newCards)
-        //Check current best card combo value
-        let bestDealerValue = bestValue(dealerHand.values);
+        // If none, handle dealer turn
+        if(!nextPlayer){
+          console.log('DEALERS TURN');
+          await handleDealerTurn(tableId, io)
+          return
+        } 
 
-        console.log(dealerHand);
-        console.log(bestDealerValue);
+        // If some, handle player turn
+        await handlePlayerTurn(tableId, nextPlayer, io)
 
-        // if dealer has soft 17 or bestComboValue is less than 16, draw card
-        if(dealerHand.softSeventeen || bestDealerValue <= 16){
-          
-          let cardsToDraw = 1
-  
-          let drawObj = {
-            deck: rooms[tableId].deck,
-            cardsToDraw,
-            cursor: rooms[tableId].cursor
-          } 
-          const drawnCards = await drawCards(drawObj)
-          rooms[tableId].dealerCards.otherCards.push(drawnCards)
-          // Set new cursor point, setDealers cards
-          rooms[tableId].cursor += cardsToDraw 
-          handleDealerTurn(tableId, io)
-        }
-
-        if(bestDealerValue >= 17){
-          //END ROUND
-          console.log('DEALER STAYS');
-          rooms[tableId].dealerCards.handSummary = dealerHand
-          rooms[tableId].dealerCards.bestValue = bestDealerValue
-
-
-
-          endRound(tableId, io)
-        }
-      } 
-
-
+      }
+ 
 
 
       //returns next player or false if all players have acted
       async function getNextPlayer(tableId){
+        console.log('------- GETTING NEXT PLAYER -------');
+
         let nextPlayer
         if(rooms[tableId] && rooms[tableId].sortedActivePlayers.length){
           nextPlayer = rooms[tableId].sortedActivePlayers[0]
@@ -822,27 +857,48 @@ module.exports = function (io) {
           return nextPlayer
         } else {
           return false
-        }
+        } 
       }
-
+ 
 
       async function handlePlayerTurn(tableId, player, io){
+        console.log('HANDLING PLAYER TURN');
         let room = tableId
+
+
+
 
               //Iterate over each player's hand 
               let playerHands = Object.entries(player.hands)
+
+              // If all hands are done, move the player to sortedFinishedPlayers
+              let allHandsEnded = true;
               for(let [key, handData] of playerHands){
-      
+                if (!handData.turnEnded){
+                  allHandsEnded = false;
+                  break;
+                }
+              }
+              if(allHandsEnded){
+                let nextPlayer = rooms[tableId].sortedActivePlayers.pop()
+                rooms[tableId].sortedFinishedPlayers.push(nextPlayer)
+                await gameLoop(tableId, io) 
+                return
+              }
+
+
+
+              for(let [key, handData] of playerHands){
+
                 console.log('-=-=-=-=-=-');
-                console.log('HANDLING PLAYER TURN');
                 console.log(player);
                 console.log(handData);
                 console.log('-=-=-=-=-=-'); 
       
-      
+                if (handData.turnEnded) continue;
       
                 // Create actionTimer 
-                rooms[tableId].actionTimer = 2000000;
+                rooms[tableId].actionTimer = 5000;
         
                 // Set action seat
                 rooms[tableId].actionSeat = player.seat
@@ -859,10 +915,15 @@ module.exports = function (io) {
                       visibleCards: rooms[tableId].dealerCards.visibleCards,
                     }
                   },
-                };
+                };  
         
                 io.in(room).emit('get_updated_table', updateObj);
-        
+
+                // If timer already exists, return without creating another one
+                if (rooms[tableId].timerId) {
+                  clearInterval(rooms[tableId].timerId)
+                }
+         
         
                 // Create timer and store its id in the room object
                 rooms[tableId].timerId = setInterval(async() => {
@@ -873,83 +934,14 @@ module.exports = function (io) {
                     clearInterval(rooms[tableId].timerId);
                     
                     console.log('TURN OVER');
-                    console.log('TURN OVER');
-                    console.log('TURN OVER');
-                    console.log('PUSHING', player.username);
-
-                    let nextPlayer = rooms[tableId].sortedActivePlayers.pop()
-                    rooms[tableId].sortedFinishedPlayers.push(nextPlayer)
-
-                    console.log('sortedFinishedPlayers', rooms[tableId].sortedFinishedPlayers);
+                    // Set turnEnded to true for this hand
+                    handData.turnEnded = true;
                     await gameLoop(tableId, io) 
-
-                    // io.in(room).emit('player_timeout', {tableId, seat: nextPlayer.seat});
                   } 
                 }, 1000)
               }
         return
-      }   
-
- 
-      async function gameLoop(tableId, io) {
-        console.log('------- GAME LOOP -------');
-
-        // Get next player
-        let nextPlayer = await getNextPlayer(tableId)
-
-        // If none, handle dealer cards
-        if(!nextPlayer){
-          console.log('DEALERS TURN');
-          await handleDealerTurn(tableId, io)
-          return
-          //dealers turn
-        } 
-
-        await handlePlayerTurn(tableId, nextPlayer, io)
-
-      }
-
-
-      async function playerHit(actionObj, io){
-        const {tableId, action, seat, handId } = actionObj
-        let currentHand = rooms[tableId].seats[seat].hands[handId].cards
-
-        console.log('^+^+^+^+^+^+^+^+^+^+^+^+^+');
-        console.log('^+^+^+^+^+^+^+^+^+^+^+^+^+');
-        console.log(currentHand);
-        console.log('^+^+^+^+^+^+^+^+^+^+^+^+^+');
-        console.log('^+^+^+^+^+^+^+^+^+^+^+^+^+');
-
-        let drawObj = {
-          deck: rooms[tableId].deck,
-          cardsToDraw: 1,
-          cursor:rooms[tableId].cursor
-        }
-        const newCard = await drawCards(drawObj)
-
-        currentHand.push(newCard);
-
-      }
-
-      async function playerStay(actionObj, io){
-        const {tableId, action, seat, handId } = actionObj
-        let nextPlayer = rooms[tableId].sortedActivePlayers.pop()
-        rooms[tableId].sortedFinishedPlayers.push(nextPlayer)
-
-      }
-      async function playerSplit(actionObj, io){
-        const {tableId, action, seat, handId } = actionObj
-
-      }
-
-      async function playerDouble(actionObj, io){
-        const {tableId, action, seat, handId } = actionObj
-
-      }
-      async function playerInsurance(actionObj, io){
-        const {tableId, action, seat, handId } = actionObj
-
-      }
+      }    
 
       socket.on('player_action', async (actionObj) => {
         const {tableId, action, seat, handId } = actionObj
@@ -962,12 +954,20 @@ module.exports = function (io) {
         } 
   
   
- 
-        // Reset the timer whenever a player takes an action
-        // 1. Clear the existing timer
-        clearInterval(rooms[tableId].timerId);
-        // 2. Reset the actionTimer value
-        rooms[tableId].actionTimer = 0;  
+        if(rooms[tableId] && rooms[tableId].timerId){
+          console.log('CLEARING TIMER');
+          console.log('CLEARING TIMER');
+          console.log('CLEARING TIMER');
+          console.log('CLEARING TIMER');
+          console.log('CLEARING TIMER');
+          console.log('CLEARING TIMER');
+          // Reset the timer whenever a player takes an action
+          // 1. Clear the existing timer
+          clearInterval(rooms[tableId].timerId);
+          // 2. Reset the actionTimer value
+          rooms[tableId].actionTimer = 0;  
+        } 
+         
 
         let updateObj = {
           tableId,
@@ -982,9 +982,8 @@ module.exports = function (io) {
 
         io.in(room).emit('get_updated_table', updateObj);
         io.in(room).emit('new_message', messageObj);
+ 
 
-
-         
         
         if(action === 'hit' ){
           playerHit(actionObj, io)
@@ -1004,10 +1003,9 @@ module.exports = function (io) {
         }
         if(action === 'insurance' ){
           playerInsurance(actionObj, io)
-
         }
 
-        
+         
         await gameLoop(tableId, io) 
   
         console.log('--------------');
@@ -1015,19 +1013,249 @@ module.exports = function (io) {
         console.log('--------------');
       });
 
+
+      async function playerHit(actionObj, io){
+        const {tableId, action, seat, handId } = actionObj
+        let currentHand = rooms[tableId].seats[seat].hands[handId]
+        let cardsToDraw = 1
+
+        let drawObj = {
+          deck: rooms[tableId].deck,
+          cardsToDraw,
+          cursor:rooms[tableId].cursor
+        }
+
+
+
+        const drawnCardsAndDeck = await drawCards(drawObj)
+        const {drawnCards, newDeck} = drawnCardsAndDeck
+
+        console.log('------- newDeck -------');
+        console.log(newDeck);
+        console.log('------------------------');
+
+        rooms[tableId].deck = newDeck
+
+        // const newCard = await drawCards(drawObj)
+        rooms[tableId].cursor += cardsToDraw
+        currentHand.cards.push(...drawnCards);
+        
+ 
+      }
+
+      // Handle player stay action
+      async function playerStay(actionObj, io){
+        const {tableId, action, seat, handId } = actionObj
+
+      // Update hand to show no more decisions need to be made for the gameLoop
+        let playersHand = rooms[tableId].seats[seat].hands[handId]
+        playersHand.turnEnded = true
+
+      }
+
+      async function playerSplit(actionObj, io){
+        const {tableId, action, seat, handId } = actionObj
+        let room = tableId;
+        let userTableId = rooms[tableId].seats[seat].id;
+        let roundId = rooms[tableId].roundId
+        let currentSeat = rooms[tableId].seats[seat]
+
+        // Create new hand for the split
+        const newHand = await gameController.createHand(userTableId, roundId);
+        let newHandId = newHand.id
+
+        if (!newHand) {
+          await gameLoop(tableId, io)
+        }
+
+
+        if (newHand) {
+          // Get the existing hand
+          let existingHand = rooms[tableId].seats[seat].hands[handId];
+
+
+          if (existingHand.cards.length < 2) {
+            console.error('Not enough cards to split.');
+            return;
+          }
+
+          // Remove chips from table balance if available
+          if(currentSeat.tableBalance < existingHand.bet) return
+          currentSeat.tableBalance -= existingHand.bet;
+
+
+          
+          // Split the cards between the two hands
+          // Add the current bet to the newHands bet
+          let cardToMove = existingHand.cards.pop();
+          let newSplitHand = {
+            cards: [cardToMove],
+            bet: existingHand.bet,
+            turnEnded: false
+          };
+
+      
+          // Update the hands
+          rooms[tableId].seats[seat].hands[newHandId] = newSplitHand;
+        }
+        
+        let updateObj = {
+          tableId,
+          table: {
+            seats: rooms[tableId].seats,
+          }, 
+        };
+        
+        io.in(room).emit('get_updated_table', updateObj);
+        await gameLoop(tableId, io);
+      }
+
+      async function playerDouble(actionObj, io){
+        const {tableId, action, seat, handId } = actionObj
+        let currentSeat = rooms[tableId].seats[seat]
+        let currentHand = rooms[tableId].seats[seat].hands[handId]
+        let currentBet = rooms[tableId].seats[seat].hands[handId].bet
+        let cardsToDraw = 1
+        let drawObj = {
+          deck: rooms[tableId].deck,
+          cardsToDraw,
+          cursor:rooms[tableId].cursor
+        }
+
+
+        // Double the current bet, remove chips from table balance
+        // currentBet *= 2;
+        currentSeat.tableBalance -= currentBet;
+
+        // Save the updated balance and bet in rooms object
+        currentHand.bet += currentBet;
+        
+        // // Draw one more card and push to currentHand
+        // const newCard = await drawCards(drawObj)
+        // currentHand.cards.push(newCard);
+        // rooms[tableId].cursor += cardsToDraw
+
+        const drawnCardsAndDeck = await drawCards(drawObj)
+        const {drawnCards, newDeck} = drawnCardsAndDeck
+
+        console.log('------- newDeck -------');
+        console.log(newDeck);
+        console.log('------------------------');
+
+        rooms[tableId].deck = newDeck
+
+        // const newCard = await drawCards(drawObj)
+        rooms[tableId].cursor += cardsToDraw
+        currentHand.cards.push(...drawnCards);
+
+        // Update hand to show no more decisions need to be made for the gameLoop
+        let playersHand = rooms[tableId].seats[seat].hands[handId]
+        playersHand.turnEnded = true
+        rooms[tableId].seats[seat].hands[handId] = playersHand
+
+        // End players turn
+        // rooms[tableId].sortedFinishedPlayers.push(nextPlayer)
+      }
+
+
+      async function playerInsurance(actionObj, io){
+        const {tableId, action, seat, handId } = actionObj
+
+      }
+
+      async function handleDealerTurn(tableId, io){
+        console.log('HANDLING DEALER TURN');
+
+        let room = tableId
+        let hiddenCards = rooms[tableId].dealerCards.hiddenCards
+        let visibleCards = rooms[tableId].dealerCards.visibleCards
+        let otherCards = rooms[tableId].dealerCards.otherCards
+        let newCards = [...visibleCards, ...hiddenCards, ...otherCards ]
+        rooms[tableId].dealerCards.hiddenCards = []
+        rooms[tableId].dealerCards.visibleCards = newCards
+ 
+        // Emit update to clients
+        let updateObj = {
+          tableId,
+          table: {
+            actionSeat: null,
+            seats: rooms[tableId].seats,
+            dealerCards:{
+              visibleCards: rooms[tableId].dealerCards.visibleCards,
+            }
+          },
+        };
+        
+        io.in(room).emit('get_updated_table', updateObj);
+  
+
+        //Check current handSummary
+        let dealerHand = await handSummary(newCards)
+        //Check current best card combo value
+        let bestDealerValue = bestValue(dealerHand.values);
+
+        console.log(dealerHand);
+        console.log(bestDealerValue);
+
+        // if dealer has soft 17 or bestComboValue is less than 16, draw card
+        while(dealerHand.softSeventeen || bestDealerValue <= 16){
+          let cardsToDraw = 1
+          let drawObj = {
+            deck: rooms[tableId].deck,
+            cardsToDraw,
+            cursor: rooms[tableId].cursor
+          } 
+          // const drawnCards = await drawCards(drawObj)
+
+
+          const drawnCardsAndDeck = await drawCards(drawObj)
+          const {drawnCards, newDeck} = drawnCardsAndDeck
+  
+          console.log('------- newDeck -------');
+          console.log(newDeck);
+          console.log('------------------------');
+  
+          rooms[tableId].deck = newDeck
+          newCards.push(...drawnCards)
+      
+          // Set new cursor point
+          rooms[tableId].cursor++
+
+          console.log('_*_*_*_*_*_*_*_*_*_*_*_**_');
+          console.log('_*_*_*_*_*_*_*_*_*_*_*_**_');
+          console.log('cardsToDraw:', cardsToDraw);
+          console.log('NEW CURSOR:', rooms[tableId].cursor);
+          console.log('_*_*_*_*_*_*_*_*_*_*_*_**_');
+          console.log('_*_*_*_*_*_*_*_*_*_*_*_**_');
+          
+          // Re-calculate the dealer's hand summary and best value.
+          dealerHand = await handSummary(newCards)
+          bestDealerValue = bestValue(dealerHand.values);
+        } 
+
+        //END ROUND if value is above
+        if(bestDealerValue >= 17 && dealerHand.softSeventeen === false){
+          console.log('DEALER STAYS');
+          rooms[tableId].dealerCards.handSummary = dealerHand
+          rooms[tableId].dealerCards.bestValue = bestDealerValue
+          endRound(tableId, io)
+        }
+      } 
+
  
   
 
 
       async function endRound(tableId, io) {
 
-  console.log('------- END ROUND -------');
+        console.log('------- END ROUND -------');
 
         let room = tableId
         let roundId = rooms[tableId]?.roundId
+        let bestDealerValue = rooms[tableId].dealerCards.bestValue
+        let finishedPlayers = rooms[tableId].sortedFinishedPlayers
 
 
-        // Update table with latest info before ending the round
         let updateObj = {
           tableId,
           table: {
@@ -1037,29 +1265,26 @@ module.exports = function (io) {
             }
           },
         };
+        
+         
+    
+        
+        // Update table with latest info before ending the round
         io.in(room).emit('get_updated_table', updateObj);
-
-
-        let bestDealerValue = rooms[tableId].dealerCards.bestValue
-        let finishedPlayers = rooms[tableId].sortedFinishedPlayers
-
- 
-
 
         console.log('finishedPlayers:', finishedPlayers);
 
         if(!finishedPlayers.length){
 
         }
-
+ 
 
         //Iterate over each player and keep track of any winnings
         for(let player of finishedPlayers){
-
           let currentBalance = player.tableBalance
           let winnings = 0
 
-         //Iterate over each player's hand 
+           //Iterate over each player's hand 
           let playerHands = Object.entries(player.hands)
           for(let [key, handData] of playerHands){
 
@@ -1067,6 +1292,7 @@ module.exports = function (io) {
             let bet = handData.bet
             let playerHand = await handSummary(cards)
             let bestPlayerValue = bestValue(playerHand.values);
+
 
             // Determine the result of the hand and update the chips on table accordingly
             let result;
@@ -1093,8 +1319,8 @@ module.exports = function (io) {
               winnings += 0
             } 
 
-
  
+  
             let handObj = {
               handId: key,
               cards: JSON.stringify(cards),
@@ -1184,7 +1410,34 @@ module.exports = function (io) {
           id:roundId,
           cards: JSON.stringify(dealersCards),
           active: false,
+          nonce: rooms[tableId].nonce
         }
+
+
+        console.log('^^^^^^^^^^^^^^^^');
+        console.log('^^^^^^^^^^^^^^^^');
+        console.log('^^^^^^^^^^^^^^^^');
+        console.log('^^^^^^^^^^^^^^^^');
+        console.log('^^^^^^^^^^^^^^^^');
+        console.log('^^^^^^^^^^^^^^^^');
+        console.log('^^^^^^^^^^^^^^^^');
+        console.log('^^^^^^^^^^^^^^^^');
+        console.log('^^^^^^^^^^^^^^^^');
+        console.log('^^^^^^^^^^^^^^^^');
+        console.log(rooms[tableId].nonce);
+        console.log('^^^^^^^^^^^^^^^^');
+        console.log('^^^^^^^^^^^^^^^^');
+        console.log('^^^^^^^^^^^^^^^^');
+        console.log('^^^^^^^^^^^^^^^^');
+        console.log('^^^^^^^^^^^^^^^^');
+        console.log('^^^^^^^^^^^^^^^^');
+        console.log('^^^^^^^^^^^^^^^^');
+        console.log('^^^^^^^^^^^^^^^^');
+        console.log('^^^^^^^^^^^^^^^^');
+        console.log('^^^^^^^^^^^^^^^^');
+        console.log('^^^^^^^^^^^^^^^^');
+        console.log('^^^^^^^^^^^^^^^^');
+
         await gameController.saveDealerHand(handObj)
         // Reset the room for the next hand
 
@@ -1225,8 +1478,13 @@ module.exports = function (io) {
 
         }
 
+        console.log('SETTING HAND IN PROGRESS TO FALSE');
+        console.log('SETTING HAND IN PROGRESS TO FALSE');
+        console.log('SETTING HAND IN PROGRESS TO FALSE');
+        console.log('SETTING HAND IN PROGRESS TO FALSE');
+        console.log('SETTING HAND IN PROGRESS TO FALSE');
 
-
+ 
         rooms[tableId].dealerCards = {
           hiddenCards: [],
           visibleCards: [],
@@ -1262,8 +1520,8 @@ module.exports = function (io) {
         console.log('AFTER TIMEOUT');
 
           
-          
-
+        return 
+ 
       }
 
   });

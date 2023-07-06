@@ -1,0 +1,80 @@
+.insurancemodal-wrapper {
+  z-index: 1000;
+  position: absolute;
+  border: 1px solid rgb(0, 0, 0);
+  background-color: #2d2e2c;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 450px;
+  height: 120px;
+}
+
+
+
+.insurancemodal-container{
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  
+}
+
+.insurancemodal-header{
+  width: 100%;
+  font-size: 25px;
+  color: rgb(200, 57, 13);
+}
+
+.insurancemodal-subheader{
+  width: 100%;
+  font-size: 22px;
+  color: rgb(200, 57, 13);
+}
+
+.white{
+  color: white;
+}
+
+.insurancemodal-memo-container{
+  font-size: 20px;
+  width: 150px;
+  font-size: 20px;
+}
+
+.insurancemodal-memo{
+  color: rgb(255, 255, 255);
+}
+.insurancemodal-balance{
+  color: rgb(200, 57, 13);
+}
+
+
+.insurancemodal-user-buttons{
+  width: 80%;
+  height: 50px;
+}
+
+
+.insurancemodal-decline,
+.insurancemodal-accept{
+  border-radius: 5px;
+  cursor: pointer;
+  border: solid 1px rgb(255, 255, 255);
+  height: 100%;
+  color: white;
+  width: 40%;
+}
+
+
+
+.insurancemodal-accept:hover{
+  color: rgb(1, 83, 21);
+  border: solid green 1px;
+}
+
+.insurancemodal-decline:hover{
+  color: rgb(200, 57, 13);
+
+  border: solid rgb(200, 57, 13) 1px;
+}
+

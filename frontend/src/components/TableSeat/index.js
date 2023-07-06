@@ -26,7 +26,7 @@ const TableSeat = ({seatNumber, player}) => {
 
   const [cards, setCards] = useState([]);
   const [hands, setHands] = useState([]);
-  const [handSummary, setHandSummary] = useState(null);
+  const [handValues, setHandValues] = useState(null);
 
 
   const [isCurrentUser, setIsCurrentUser] = useState(false);
@@ -61,7 +61,7 @@ const TableSeat = ({seatNumber, player}) => {
     if (userActionTimer > 0) {
       setActionTimer(userActionTimer / 1000);
     }
-  }, [currentTables, activeTable.id, seatNumber]);
+  }, [currentTables, activeTable, seatNumber]);
   
 
   useEffect(() => {
@@ -71,6 +71,15 @@ const TableSeat = ({seatNumber, player}) => {
     let handInProgress = currentTables[activeTable.id]?.handInProgress;
     let currActionHand = currentTables[activeTable.id]?.actionHand;
 
+
+    if(hands && actionHand && hands[actionHand]){
+      console.log(hands[actionHand].summary.values);
+      setHandValues(hands[actionHand].summary.values.join(','))
+    }
+
+    if(!handInProgress){
+      setIsForfeited(false)
+    }
     setIsCurrentUser(userInSeat);
     setIsUserInAnySeat(userInAnySeat);
     setIsActiveSeat(userInActiveSeat)
@@ -124,7 +133,6 @@ const TableSeat = ({seatNumber, player}) => {
 
   const leaveSeat = () => {
     console.log(seatNumber);
-
     let tableBalance = pendingBet + currentBalance
     setUpdateObj({seatNumber, tableBalance})
     openModal('leaveModal')
@@ -167,8 +175,8 @@ return(
             <div className={`seat-card-area-container flex`}>
               {hands && Object.entries(hands).map(([handId, handData]) => (
                 <div  className={`seat-card-area flex ${handId === actionHand ? ' gold' : ''}`} key={handId}>
-                    <div>Hand ID: {handData.values}</div>
-                    <div className='seat-bet-area flex center'>{handData.bet}</div>
+                    <div>{handValues}</div>
+                    <div className='seat-bet-area flex center'>Bet: {handData.bet}</div>
                     {handData.cards.map((card, index) => (
                         <Card key={index} card={card} />
                     ))}

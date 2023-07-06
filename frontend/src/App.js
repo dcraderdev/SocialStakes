@@ -16,6 +16,7 @@ import { io } from 'socket.io-client';
 import { ModalContext } from './context/ModalContext';
 import { SocketContext } from './context/SocketContext';
 import * as sessionActions from './redux/middleware/users';
+import InsuranceModal from './components/InsuranceModal';
 
 function App() {
 
@@ -24,9 +25,7 @@ function App() {
   const [loaded, isLoaded] = useState(false);
   const { modal, openModal, closeModal, setUpdateObj } = useContext(ModalContext);
   // const {  } = useContext(SocketContext);
-  const user = useSelector((state) => {
-    return state.users.user;
-  });
+  const user = useSelector((state) => state.users.user);
 
 
   
@@ -77,7 +76,11 @@ function App() {
           {modal === 'leaveModal' && <LeaveModal />}
         </div>
       )}
-
+      {modal  === 'insuranceModal' && (
+        <div className='modal-container'>
+          {modal === 'insuranceModal' && <InsuranceModal />}
+        </div>
+      )}
 
 
 

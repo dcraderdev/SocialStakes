@@ -8,26 +8,37 @@ import {changeNeonThemeAction, changeTableThemeAction} from '../../redux/actions
 import TableSeat from '../TableSeat';
 import PlayerBetOptions from '../PlayerBetOptions';
 import Card from '../Card';
+import cardConverter from '../../utils/cardConverter'
+
+import { ModalContext } from '../../context/ModalContext';
+
 
 const Table = () => {
-
+  
   const dispatch = useDispatch()
+  const user = useSelector((state) => state.users.user);
   const themes = useSelector(state=>state.users.themes)
   const neonTheme = useSelector(state=>state.users.neonTheme)
   const tableTheme = useSelector(state=>state.users.tableTheme)
   const activeTable = useSelector(state=>state.games.activeTable)
   const currentTables = useSelector(state=>state.games.currentTables)
-
+  
   const [countdown, setCountdown] = useState(null);
   const [cards, setCards] = useState([]);
+  const [currentSeat, setCurrentSeat] = useState(null);
 
+
+  
+  const { modal, openModal, closeModal, updateObj, setUpdateObj} = useContext(ModalContext);
 
   useEffect(()=>{
+    setCurrentSeat(null)
+
     if(activeTable && currentTables){
       let currTable = currentTables[activeTable.id];
       let dealerCards = currTable.dealerCards
-
       setCards(dealerCards)
+
 
       if(currTable.countdown === 0){
         setCountdown(null);
@@ -35,8 +46,36 @@ const Table = () => {
       if(!countdown && currTable.countdown){
         setCountdown(currTable.countdown/1000);
       }
+
+      if(user){
+        Object.values(currentTables[activeTable.id].tableUsers).map(seat=>{
+          if(seat.userId === user.id){
+            setCurrentSeat(seat.seat)
+          }
+        })
+      }
+
+
+
     }
   },[currentTables, activeTable]);
+
+
+  useEffect(()=>{
+    if(cards && cards.length === 1){
+      console.log('we got one card!');
+    }
+
+
+    if(cards && cards.length === 1 && cardConverter[cards[0]].value === 11){
+      console.log('we got an ace!');
+      if(!user) return
+      if(!currentSeat) return
+      setUpdateObj({tableId:activeTable.id, seatNumber:currentSeat, type:'insurance'})
+      openModal('insuranceModal')
+    }
+  },[cards]);
+
 
 
   useEffect(() => {

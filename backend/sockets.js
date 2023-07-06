@@ -285,6 +285,9 @@ module.exports = function (io) {
       console.log('--------------');
     });
 
+
+
+    
     socket.on('leave_seat', async (seatObj) => {
                
       console.log('--------------');
@@ -407,7 +410,7 @@ module.exports = function (io) {
       console.log(rooms[tableId]);
 
       // Countdown duration
-      const countdownDuration = 2000; // 5 seconds
+      const countdownDuration = 6000; // 5 seconds
 
       // Start a new countdown
       let countdownRemaining = countdownDuration;
@@ -594,6 +597,22 @@ module.exports = function (io) {
     });
 
 
+
+    socket.on('accept_insurance', async (seatObj) => {
+      const { seat, tableId } = seatObj
+      let room = tableId
+      let userTableId
+
+
+      // get current bet and charge for insurance
+      let amount = 10
+
+      console.log('--------------');
+      console.log(`Insurance accepted(${amount}) for ${username} @room ${room}`);
+      console.log('--------------');
+    });
+
+
       // starts game of blackjack for multiple players
       async function dealCards(tableId, io) {
       console.log('------- DEALING CARDS -------');
@@ -760,7 +779,7 @@ module.exports = function (io) {
         // If some, handle player turn
         await handlePlayerTurn(tableId, nextPlayer, io)
 
-        // cirlce back to gameLoop
+        // cirlce back into gameLoop
         await gameLoop(tableId, io)
 
       }
@@ -818,11 +837,12 @@ module.exports = function (io) {
                 handData.summary = playerHand;
 
 
-                if(playerHand.busted){
+                if(playerHand.blackjack || playerHand.busted){
                   handData.turnEnded = true;
                   clearInterval(rooms[tableId].timerId);
                   continue
                 }
+
                 // Create actionTimer 
                 rooms[tableId].actionTimer = 5000;
         
@@ -844,10 +864,10 @@ module.exports = function (io) {
                 };  
         
               io.in(room).emit('get_updated_table', updateObj);
-              // If timer already exists, return without creating another one
-              if (rooms[tableId].timerId) {
-                clearInterval(rooms[tableId].timerId)
-              }
+              // // If timer already exists, return without creating another one
+              // if (rooms[tableId].timerId) {
+              //   clearInterval(rooms[tableId].timerId)
+              // }
                 // Create timer and store its id in the room object
                 return new Promise((resolve, reject) => {
                   rooms[tableId].timerId = setInterval(async() => {
@@ -868,24 +888,7 @@ module.exports = function (io) {
           return
       }            
       
-      //         // Create timer and store its id in the room object
-      //         rooms[tableId].timerId = setInterval(async() => {
-      //           rooms[tableId].actionTimer -= 1000; // Decrement by 1 second
-      //           console.log('COUNTDOWN: ',rooms[tableId].actionTimer);
-      //           // If timer reaches 0, clear interval and emit a timeout event
-      //           if (rooms[tableId].actionTimer <= 0) {
-      //             clearInterval(rooms[tableId].timerId);
-                  
-      //             console.log('TURN OVER');
-      //             // Set turnEnded to true for this hand
-      //             handData.turnEnded = true;
-      //             // await gameLoop(tableId, io) 
-      //             return
-      //           } 
-      //         }, 1000)
-      //       }
-      //   return
-      // }    
+
 
       socket.on('player_action', async (actionObj) => {
         const {tableId, action, seat, handId } = actionObj
@@ -898,11 +901,9 @@ module.exports = function (io) {
         }  
   
   
+        // Reset the timer whenever a player takes an action
         if(rooms[tableId] && rooms[tableId].timerId){
-          // Reset the timer whenever a player takes an action
-          // 1. Clear the existing timer
           clearInterval(rooms[tableId].timerId);
-          // 2. Reset the actionTimer value
           rooms[tableId].actionTimer = 0;  
         } 
          
@@ -1093,7 +1094,6 @@ module.exports = function (io) {
 
       async function playerInsurance(actionObj, io){
         const {tableId, action, seat, handId } = actionObj
-
       }
  
 
@@ -1129,6 +1129,21 @@ module.exports = function (io) {
         };
     
         io.in(room).emit('get_updated_table', updateObj);
+
+
+      // Check if there's at least one player who hasn't busted
+      let anyPlayersLeft = rooms[tableId].sortedFinishedPlayers.some(player => 
+        Object.values(player.hands).some(hand => 
+            hand.summary && !hand.summary.busted
+        )
+      );
+
+      // If all players have busted, end the round without drawing cards
+      if (!anyPlayersLeft) {
+        console.log('ALL PLAYERS BUSTED');
+        await endRound(tableId, io);
+        return;
+      }
     
         // Execute dealer's strategy
         let stop = false;
@@ -1188,26 +1203,22 @@ module.exports = function (io) {
       let profitLoss;
       let winnings = 0;
     
-      if(blackjack) {
-        result = 'BLACKJACK';
-        profitLoss = bet * 1.5;
-        winnings = bet * 2.5;
-      } else if(bestPlayerValue > 21){
+      if (bestPlayerValue > 21){
         result = 'LOSE';
         profitLoss = -bet;
-      } else if(bestDealerValue > 21 || bestPlayerValue > bestDealerValue){
+      } else if (bestDealerValue > 21 || bestPlayerValue > bestDealerValue){
         result = 'WIN';
         profitLoss = bet;
         winnings = bet * 2;
-      } else if(bestPlayerValue === bestDealerValue){
+      } else if (bestPlayerValue === bestDealerValue){
         result = 'PUSH';
         profitLoss = 0;
-        winnings = bet;
+        winnings = bet; 
       } else {
         result = 'LOSE';
         profitLoss = -bet;
       } 
-
+    
       // Round up winnings
       winnings = Math.ceil(winnings);
       profitLoss = Math.ceil(profitLoss);
@@ -1218,17 +1229,52 @@ module.exports = function (io) {
         winnings
       };
     }
+    
 
     async function processForfeitedPlayers(tableId, io) {
+
+      
+       
       if(rooms[tableId] && rooms[tableId].forfeitedPlayers){
+
+        console.log('-=-=-=-=-=-=-=--');
+        console.log('-=-=-=-=-=-=-=--');
+        console.log(rooms[tableId].forfeitedPlayers);
+        console.log('-=-=-=-=-=-=-=--');
+        console.log('-=-=-=-=-=-=-=--');
+        console.log('-=-=-=-=-=-=-=--');
         let forfeitedPlayers = rooms[tableId].forfeitedPlayers;
         for(let player of forfeitedPlayers){
+
+          console.log('-=-=-=-=-=-=-=--');
+          console.log('-=-=-=-=-=-=-=--');
+          console.log(player);
+          console.log('-=-=-=-=-=-=-=--');
+          console.log('-=-=-=-=-=-=-=--');
+          console.log('-=-=-=-=-=-=-=--');
+
+
           const {userId, seat } = player;
           let userTableId = rooms[tableId].seats[seat].id;
           let tableBalance = rooms[tableId].seats[seat].tableBalance;
     
           // Remove the player from the room state
           if(rooms[tableId] && rooms[tableId].seats[seat]){
+            console.log('yes player in that seat!');
+            console.log('yes player in that seat!');
+            console.log('yes player in that seat!');
+            console.log('yes player in that seat!');
+            console.log('yes player in that seat!');
+            console.log('yes player in that seat!');
+            console.log('yes player in that seat!');
+            console.log('yes player in that seat!');
+            console.log('yes player in that seat!');
+            console.log('yes player in that seat!');
+            console.log('yes player in that seat!');
+            console.log('yes player in that seat!');
+            console.log('yes player in that seat!');
+            console.log('yes player in that seat!');
+            console.log('yes player in that seat!');
             delete rooms[tableId].seats[seat];
           }  
     
@@ -1377,10 +1423,12 @@ module.exports = function (io) {
         nonce: rooms[tableId].nonce
       }
       await gameController.saveDealerHand(handObj);
+
+      // Check for any players that have left midgame and remove them
+      await processForfeitedPlayers(tableId, io);
+
       resetRoomForNextHand(tableId);
     
-      // Check for any players that have left midgame and pay them out if necessary 
-      await processForfeitedPlayers(tableId, io);
     
       // Emit updated table state one last time
       let updateObj = {

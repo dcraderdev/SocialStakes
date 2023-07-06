@@ -1,13 +1,13 @@
 import React, { useEffect, useRef, useState, useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, Redirect, useHistory } from 'react-router-dom';
-import './LeaveModal.css';
+import './InsuranceModal.css';
 import { ModalContext } from '../../context/ModalContext';
 import { SocketContext } from '../../context/SocketContext';
 import * as sessionActions from '../../redux/middleware/users';
 import { showGamesAction } from '../../redux/actions/gameActions';
 
-function LeaveModal() {
+function InsuranceModal() {
   const dispatch = useDispatch();
   const history = useHistory();
   const formRef = useRef(null);
@@ -22,43 +22,32 @@ function LeaveModal() {
   
   
   
-  
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (formRef.current && !formRef.current.contains(event.target)) {
-        closeModal();
-        setUpdateObj(null)
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
-  
-  
 
-  const leaveSeat = () => {
-    const {seatNumber, tableBalance} = updateObj
+   
+
+  const accept = () => {
+    const {tableId, seatNumber} = updateObj
     // dispatch(gameActions.leaveSeat(table.id, seatNumber))
     
     // socket emit the seat taken, tableID, seat number, player info
     const seatObj = {
-      room: table.id,
       seat:seatNumber,
-      user: user,
-      tableBalance
+      tableId
     }
     
-    socket.emit('leave_seat', seatObj)
+    socket.emit('accept_insurance', seatObj)
     closeModal()
     setUpdateObj(null)
     return
+
+
+
+
   }
 
 
 
-  const cancel = () => {
+  const decline = () => {
     closeModal()
     setUpdateObj(null)
   }
@@ -66,20 +55,20 @@ function LeaveModal() {
 
  
   return (
-    <div className="leavemodal-wrapper" ref={formRef}>
+    <div className="insurancemodal-wrapper">
 
         
-        <div className="leavemodal-container flex center">
-          <div className="leavemodal-header white flex center">
-            Leave Seat?
+        <div className="insurancemodal-container flex center">
+          <div className="insurancemodal-header white flex center">
+            Insurance?
           </div>
 
-          <div className="leavemodal-user-buttons flex between">
-            <div className="leavemodal-cancel flex center" onClick={cancel}>
-            Cancel
+          <div className="insurancemodal-user-buttons flex between">
+            <div className="insurancemodal-decline flex center" onClick={decline}>
+            Decline
             </div>
-            <div className={`leavemodal-addbalance flex center`}onClick={leaveSeat}>
-            Leave
+            <div className={`insurancemodal-accept flex center`}onClick={accept}>
+            Accept
             </div>
           </div>
         </div>
@@ -88,4 +77,4 @@ function LeaveModal() {
   );
 }
 
-export default LeaveModal;
+export default InsuranceModal;

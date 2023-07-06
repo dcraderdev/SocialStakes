@@ -162,18 +162,32 @@ console.log('CURRENT BALANCE: ', userToUpdate.balance);
     return
   },
 
-  
-
   async takeSeat(tableId, seat, user, amount) {
     const userToUpdate = await User.findByPk(user.id);
+    
+    // Query the UserTable directly with the specific table and seat
+    const activeUserInSeat = await UserTable.findOne({
+      where: { 
+        tableId,
+        seat,
+        active: true
+      },
+    });
+  
+    // If there's an active user in the seat, return false
+    if (activeUserInSeat) {
+      console.log('Seat is active');
+      return false;
+    }
+  
+    // update user's unplayed balance
+    userToUpdate.balance -= amount;
+    await userToUpdate.save();
+  
     const table = await Table.findByPk(tableId, {
       include: [
         {
           model: Game,
-        },
-        {
-          model: UserTable,
-          as: 'tableUsers',
         },
         {
           model: User,
@@ -183,47 +197,31 @@ console.log('CURRENT BALANCE: ', userToUpdate.balance);
         },
       ],
     });
+  
     if (!table) {
       return false;
     }
-
-
-    const seatActive = table.tableUsers.some((player) => {
-      if (player.seat === seat) {
-        return player.active;
-      }
-      return false;
-    });
   
-    if (seatActive) {
-      console.log('Seat is active');
-      return false;
+    if (table.players.length < table.Game.maxNumPlayers) {
+      const takeSeat = await UserTable.create({
+        userId: user.id,
+        tableId,
+        seat,
+        tableBalance: amount,
+        currentBet: 0,
+        pendingBet: 0,
+        disconnectTimer: 0,
+        active: true,
+      });
+  
+      if (!takeSeat) {
+        return false;
+      }
+  
+      return takeSeat;
     }
-
-
-  // update users unplayed balance
-  userToUpdate.balance -= amount;
-  await userToUpdate.save();
-
-  if (table.players.length < table.Game.maxNumPlayers) {
-    const takeSeat = await UserTable.create({
-      userId: user.id,
-      tableId,
-      seat,
-      tableBalance: amount,
-      currentBet: 0,
-      pendingBet: 0,
-      disconnectTimer: 0,
-      active: true,
-    });
-
-    if (!takeSeat) {
-      return false;
-    }
-
-    return takeSeat;
-  }
-},
+  },
+  
 
 
   async leaveSeat(leaveSeatObj) {

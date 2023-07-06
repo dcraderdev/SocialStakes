@@ -328,6 +328,7 @@ console.log(drawnCards);
     console.log('HAND SUMMARY');
 
     let handSummary = {
+      blackjack: false,
       softSeventeen: false,
       busted: false,
       values: []
@@ -369,6 +370,10 @@ console.log(drawnCards);
     handSummary.busted = !handSummary.values.some(value => value <= 21);
     handSummary.softSeventeen = handSummary.values.includes(7) && handSummary.values.includes(17) && aceCount > 0;
 
+    // Check for blackjack
+    if(cards.length === 2 && handSummary.values.includes(21)) {
+      handSummary.blackjack = true;
+    }
 
     console.log(handSummary);
 

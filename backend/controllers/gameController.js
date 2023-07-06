@@ -414,16 +414,6 @@ async createHand(userTableId, roundId) {
 // Save hand at end of blackjack round
 async saveDealerHand(handObj) {
   const{id, cards, active, nonce} = handObj 
-
-  console.log('^^^^^^^^^^^^^^^^');
-  console.log('saveDealerHand: ');
-  console.log('^^^^^^^^^^^^^^^^');
-  console.log('^^^^^^^^^^^^^^^^');
-  console.log('id: ', id);
-  console.log('cards: ', cards);
-  console.log('active: ', active);
-  console.log('nonce: ', nonce);
-  console.log('^^^^^^^^^^^^^^^^');
   const roundToUpdate = await Round.findByPk(id);
   if(!roundToUpdate){
     return false

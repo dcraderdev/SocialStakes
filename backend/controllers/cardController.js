@@ -302,7 +302,7 @@ async function main() {
 //   return cardsDrawn;
 // }
 
-async function drawCards(drawObj) {
+function drawCards(drawObj) {
   const {deck, cardsToDraw, cursor} = drawObj
 
   console.log('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=');
@@ -318,56 +318,73 @@ console.log('-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=');
   let newDeck = deck
   let drawnCardsAndDeck = {drawnCards, newDeck}
 
-
+console.log(drawnCards);
   return drawnCardsAndDeck;
 }
 
 
 
-async function handSummary(cards) {
-  console.log('HAND SUMMARY');
+  async function handSummary(cards) {
+    console.log('HAND SUMMARY');
 
-  let handSummary = {
-    softSeventeen: false,
-    busted: false,
-    values: []
-  }
-  let aceCount = 0
+    let handSummary = {
+      softSeventeen: false,
+      busted: false,
+      values: []
+    }
 
-  // Count how many aces and add up the other cards
-  let nonAceTotal = 0;
-  for(let card of cards){
-    let convertedCard = cardConverter[card]
-    if(convertedCard.value === 11){
-      aceCount++;
+
+    // Count how many aces and add up the other cards
+    let aceCount = 0
+    let nonAceTotal = 0; 
+    for(let card of cards){
+      let convertedCard = cardConverter[card]
+      console.log(convertedCard);
+      if(convertedCard.value === 11){
+        aceCount++;
+      } else {
+        nonAceTotal += convertedCard.value;
+      }
+    }
+
+    // Generate all possible hand values
+
+
+    if(aceCount){
+      let highValue = nonAceTotal + 11
+      let lowValue = nonAceTotal + 1
+
+      if(aceCount > 1){
+        highValue += (aceCount - 1) 
+        lowValue += (aceCount - 1) 
+      }
+      handSummary.values.push(highValue)
+      handSummary.values.push(lowValue)
     } else {
-      nonAceTotal += convertedCard.value;
-    }
-  }
+      handSummary.values.push(nonAceTotal)
 
-  // Generate all possible hand values
-  for (let i = 0; i <= aceCount; i++) {
-    let value = nonAceTotal + i + 10 * (aceCount - i); // i aces are 1, the rest are 11
-    handSummary.values.push(value);
-    if (value > 21 && i < aceCount) {
-      handSummary.values.push(i + 1); // all aces are 1
     }
-  }
 
-  // Check for soft 17 and if busted
-  handSummary.softSeventeen = handSummary.values.includes(17) && aceCount > 0;
-  handSummary.busted = !handSummary.values.some(value => value <= 21);
+    // Check for soft 17 and if busted
+    handSummary.busted = !handSummary.values.some(value => value <= 21);
+    handSummary.softSeventeen = handSummary.values.includes(7) && handSummary.values.includes(17) && aceCount > 0;
+
+
+    console.log(handSummary);
 
   return handSummary;
 }
 
 
 
-function bestValue(values) {
+async function bestValue(values) {
   let underOrEqualTo21 = values.filter(v => v <= 21);
   if (underOrEqualTo21.length > 0) {
+    console.log('BEST VALUE MAX: ', Math.max(...underOrEqualTo21));
     return Math.max(...underOrEqualTo21);
   } else {
+    console.log('BEST VALUE MIN: ', Math.min(...values));
+
     return Math.min(...values);
   }
 }

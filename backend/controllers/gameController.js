@@ -392,19 +392,8 @@ async createHand(userTableId, roundId) {
 
 // Save hand at end of blackjack round
   async savePlayerHand(handObj) {
-
-    console.log('^^^^^^^^^^^^^^^^');
-    console.log('savePlayerHand: ');
-    console.log('^^^^^^^^^^^^^^^^');
     const{handId, cards, result, profitLoss, userTableId, winnings} = handObj
-    console.log('^^^^^^^^^^^^^^^^');
-    console.log('handId: ', handId);
-    console.log('userTableId: ', userTableId);
-    console.log('winnings: ', winnings);
-    console.log('profitLoss: ', profitLoss);
-    console.log('result: ', result);
-    console.log('cards: ', cards);
-    console.log('^^^^^^^^^^^^^^^^');
+
     const handToUpdate = await Hand.findByPk(handId);
     const userTableToUpdate = await UserTable.findByPk(userTableId);
     if(!handToUpdate || !userTableToUpdate){
@@ -417,17 +406,7 @@ async createHand(userTableId, roundId) {
     await handToUpdate.save();
 
     userTableToUpdate.tableBalance += winnings
-
-    console.log('^^^^^^^^^^^^^^^^');
-    console.log('userTableToUpdate.tableBalance: ', userTableToUpdate.tableBalance);
-    console.log('winnings: ', winnings);
-    console.log('^^^^^^^^^^^^^^^^');
-
-
     await userTableToUpdate.save();
-
-
-
 
     return 
   },

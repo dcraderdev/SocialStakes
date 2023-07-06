@@ -29,7 +29,6 @@ const Table = () => {
 
       setCards(dealerCards)
 
-      console.log(currTable.countdown);
       if(currTable.countdown === 0){
         setCountdown(null);
       }

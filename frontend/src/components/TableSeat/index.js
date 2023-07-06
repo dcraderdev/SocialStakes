@@ -26,7 +26,7 @@ const TableSeat = ({seatNumber, player}) => {
 
   const [cards, setCards] = useState([]);
   const [hands, setHands] = useState([]);
-  const [valueOfHand, setValueOfHand] = useState([]);
+  const [handSummary, setHandSummary] = useState(null);
 
 
   const [isCurrentUser, setIsCurrentUser] = useState(false);
@@ -47,7 +47,7 @@ const TableSeat = ({seatNumber, player}) => {
     let userCards = currentTables[activeTable.id]?.tableUsers[seatNumber]?.cards;
     let userHands = currentTables[activeTable.id]?.tableUsers[seatNumber]?.hands;
     let userForfeited = currentTables[activeTable.id]?.tableUsers[seatNumber]?.forfeit;
-
+  
     setPendingBet(userPendingBet)
     setCurrentBet(userCurrentBet)
     setCurrentBalance(userCurrentBalance)
@@ -77,6 +77,7 @@ const TableSeat = ({seatNumber, player}) => {
     setIsHandInProgress(handInProgress)
     setActionHand(currActionHand)
   }, [currentTables, activeTable.id, seatNumber, user]);
+
 
 
   useEffect(() => {
@@ -166,7 +167,7 @@ return(
             <div className={`seat-card-area-container flex`}>
               {hands && Object.entries(hands).map(([handId, handData]) => (
                 <div  className={`seat-card-area flex ${handId === actionHand ? ' gold' : ''}`} key={handId}>
-                    {/* <div>Hand ID: {handId}</div> */}
+                    <div>Hand ID: {handData.values}</div>
                     <div className='seat-bet-area flex center'>{handData.bet}</div>
                     {handData.cards.map((card, index) => (
                         <Card key={index} card={card} />

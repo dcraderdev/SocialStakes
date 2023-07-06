@@ -609,37 +609,10 @@ module.exports = function (io) {
 
         let roundId, deck
 
-
-
-      
-        console.log('-=-=-=-=--=-=-=--=-');
-        console.log('-=-=-=-=--=-=-=--=-');
-        console.log(dealObj);
-        console.log(rooms[tableId].cursor);
-        console.log(rooms[tableId].shufflePoint);
-        console.log('-=-=-=-=--=-=-=--=-');
-        console.log('-=-=-=-=--=-=-=--=-');
-
-        
-        
-        
         // if no deck or deck cursor is past shuffle point
         // increment nonce and create new deck
         if(rooms[tableId].cursor >= rooms[tableId].shufflePoint || !rooms[tableId].deck){
 
-          console.log('-=-=-=-=--=-=-=--=-');
-          console.log('-=-=-=-=--=-=-=--=-');
-          console.log('-=-=-=-=--=-=-=--=-');
-          console.log('-=-=-=-=--=-=-=--=-');
-          console.log('NEED NEW DECK');
-          console.log(rooms[tableId].cursor);
-          console.log(rooms[tableId].shufflePoint);
-          console.log(rooms[tableId].cursor >= rooms[tableId].shufflePoint); 
-          console.log(rooms[tableId].deck);
-          console.log('-=-=-=-=--=-=-=--=-');
-          console.log('-=-=-=-=--=-=-=--=-');
-          console.log('-=-=-=-=--=-=-=--=-');
-          console.log('-=-=-=-=--=-=-=--=-');
           // generate cards and create Round entry in db
           dealObj.nonce++
           rooms[tableId].nonce++
@@ -717,7 +690,8 @@ module.exports = function (io) {
                         seat.hands[`${handIds[i]}`] = {
                           cards: [],
                           bet: null,
-                          turnEnded: false
+                          turnEnded: false,
+                          summary: null
                         }  
                       }
                       seat.hands[`${handIds[i]}`].cards.push(nextCard);
@@ -786,8 +760,11 @@ module.exports = function (io) {
         // If some, handle player turn
         await handlePlayerTurn(tableId, nextPlayer, io)
 
-      }
+        // cirlce back to gameLoop
+        await gameLoop(tableId, io)
 
+      }
+ 
       //returns next player or false if all players have acted
       function getNextPlayer(tableId){
         console.log('------- GETTING NEXT PLAYER -------');
@@ -822,7 +799,7 @@ module.exports = function (io) {
         if(allHandsEnded){
           let nextPlayer = rooms[tableId].sortedActivePlayers.pop()
           rooms[tableId].sortedFinishedPlayers.push(nextPlayer)
-          await gameLoop(tableId, io) 
+          // await gameLoop(tableId, io) 
           return
         }
 
@@ -837,10 +814,14 @@ module.exports = function (io) {
 
                 let cards = handData.cards
                 let playerHand = await handSummary(cards)
+                // Assign handSummary to hand
+                handData.summary = playerHand;
+
 
                 if(playerHand.busted){
                   handData.turnEnded = true;
                   clearInterval(rooms[tableId].timerId);
+                  continue
                 }
                 // Create actionTimer 
                 rooms[tableId].actionTimer = 5000;
@@ -867,26 +848,44 @@ module.exports = function (io) {
               if (rooms[tableId].timerId) {
                 clearInterval(rooms[tableId].timerId)
               }
-        
+                // Create timer and store its id in the room object
+                return new Promise((resolve, reject) => {
+                  rooms[tableId].timerId = setInterval(async() => {
+                    rooms[tableId].actionTimer -= 1000; // Decrement by 1 second
+                    console.log('COUNTDOWN: ',rooms[tableId].actionTimer);
+                    // If timer reaches 0, clear interval and emit a timeout event
+                    if (rooms[tableId].actionTimer <= 0) {
+                      clearInterval(rooms[tableId].timerId);
+                      
+                      console.log('TURN OVER');
+                      // Set turnEnded to true for this hand
+                      handData.turnEnded = true;
+                      resolve(); // Resolve the promise to let the game loop continue
+                    } 
+                  }, 1000)
+                });
+        }
+          return
+      }            
       
-              // Create timer and store its id in the room object
-              rooms[tableId].timerId = setInterval(async() => {
-                rooms[tableId].actionTimer -= 1000; // Decrement by 1 second
-                console.log('COUNTDOWN: ',rooms[tableId].actionTimer);
-                // If timer reaches 0, clear interval and emit a timeout event
-                if (rooms[tableId].actionTimer <= 0) {
-                  clearInterval(rooms[tableId].timerId);
+      //         // Create timer and store its id in the room object
+      //         rooms[tableId].timerId = setInterval(async() => {
+      //           rooms[tableId].actionTimer -= 1000; // Decrement by 1 second
+      //           console.log('COUNTDOWN: ',rooms[tableId].actionTimer);
+      //           // If timer reaches 0, clear interval and emit a timeout event
+      //           if (rooms[tableId].actionTimer <= 0) {
+      //             clearInterval(rooms[tableId].timerId);
                   
-                  console.log('TURN OVER');
-                  // Set turnEnded to true for this hand
-                  handData.turnEnded = true;
-                  await gameLoop(tableId, io) 
-                  return
-                } 
-              }, 1000)
-            }
-        return
-      }    
+      //             console.log('TURN OVER');
+      //             // Set turnEnded to true for this hand
+      //             handData.turnEnded = true;
+      //             // await gameLoop(tableId, io) 
+      //             return
+      //           } 
+      //         }, 1000)
+      //       }
+      //   return
+      // }    
 
       socket.on('player_action', async (actionObj) => {
         const {tableId, action, seat, handId } = actionObj
@@ -896,7 +895,7 @@ module.exports = function (io) {
           user: { username: 'Room', id: 1, },
           content: `${username} has ${action}.`,
           room: tableId,
-        } 
+        }  
   
   
         if(rooms[tableId] && rooms[tableId].timerId){

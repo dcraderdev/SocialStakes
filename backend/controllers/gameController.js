@@ -68,19 +68,19 @@ const gameController = {
           },
 
         },
-        {
-          model: UserTable,
-          where:{active:true},
-          required: false, 
-          as: 'tableUsers',
-          attributes: ['userId', 'currentBet', 'pendingBet', 'seat', 'disconnectTimer', 'tableBalance'],
-        },
-        {
-          model: User,
-          as: 'players',
-          through: UserTable,
-          attributes: ['id', 'username', 'rank'],
-        },
+        // {
+        //   model: UserTable,
+        //   where:{active:true},
+        //   required: false, 
+        //   as: 'tableUsers',
+        //   attributes: ['userId', 'currentBet', 'pendingBet', 'seat', 'disconnectTimer', 'tableBalance'],
+        // },
+        // {
+        //   model: User,
+        //   as: 'players',
+        //   through: UserTable,
+        //   attributes: ['id', 'username', 'rank'],
+        // },
         {
           model: GameSession,
           as: 'gameSessions',
@@ -95,29 +95,30 @@ const gameController = {
     }
 
   
-    const returnedTable = table.toJSON();
+    // const returnedTable = table.toJSON();
     
-    // Add usernames to tableUsers
-    for (let userTable of returnedTable.tableUsers) {
-      for (let player of returnedTable.players) {
-        if (player.id === userTable.userId) {
-          userTable.username = player.username;
-          break;
-        }
-      }
-    }
+    // // Add usernames to tableUsers
+    // for (let userTable of returnedTable.tableUsers) {
+    //   for (let player of returnedTable.players) {
+    //     if (player.id === userTable.userId) {
+    //       userTable.username = player.username;
+    //       break;
+    //     }
+    //   }
+    // }
 
-    // Normalize the tableUsers array into an object
-    const normalizedTableUsers = returnedTable.tableUsers.reduce((acc, user) => {
-      acc[user.seat] = user;
-      return acc;
-    }, {})
+    // // Normalize the tableUsers array into an object
+    // const normalizedTableUsers = returnedTable.tableUsers.reduce((acc, user) => {
+    //   acc[user.seat] = user;
+    //   return acc;
+    // }, {})
 
 
-    returnedTable.tableUsers = normalizedTableUsers
+    // returnedTable.tableUsers = normalizedTableUsers
 
     
-    return returnedTable;
+    // return returnedTable;
+    return table;
   },
 
 

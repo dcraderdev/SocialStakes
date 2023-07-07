@@ -47,8 +47,8 @@ import { ModalContext } from '../../context/ModalContext';
       setCurrentSeat(null)
       setIsSitting(false)
       setTableBalance(0)
-      if(activeTable && user){
-      Object.values(currentTables[activeTable.id].tableUsers).map(seat=>{
+      if(activeTable && user && currentTables && currentTables?.[activeTable.id]?.tableUsers){
+      Object.values(currentTables?.[activeTable.id]?.tableUsers).map(seat=>{
         if(seat.userId === user.id){
           setIsSitting(true)
           setCurrentSeat(seat.seat)

@@ -2,7 +2,7 @@ import {
   GET_GAMES, GET_GAME_BY_ID,
   GET_TABLES, GET_TABLES_BY_TYPE, GET_TABLE_BY_ID,
   UPDATE_TABLE,
-  VIEW_TABLE, LEAVE_TABLE, 
+  VIEW_TABLE, LEAVE_TABLE, JOIN_TABLE,
   LEAVE_SEAT, TAKE_SEAT, FORFEIT_SEAT,
   SHOW_GAMES, SHOW_TABLES, SHOW_ACTIVE_TABLES,
   ADD_MESSAGE, TOGGLE_SHOW_MESSAGES,
@@ -69,11 +69,12 @@ const gamesReducer = (state = initialState, action) => {
       console.log(updatedCurrentTables);
 
       if (updatedCurrentTables[tableId]) {
+        console.log('yes');
         const currentTable = updatedCurrentTables[tableId];
 
-        console.log(currentTable.tableUsers[4]?.cards);
-        console.log(table?.seats[4]?.cards);
-
+        // console.log(currentTable.tableUsers[4]?.cards);
+        // console.log(table?.seats[4]?.cards);
+        currentTable.tableUsers = table.seats
 
 
         currentTable.countdown = table.countdownRemaining;
@@ -87,24 +88,24 @@ const gamesReducer = (state = initialState, action) => {
           currentTable.handInProgress = action.payload.table.handInProgress;
         }
     
-        for(let seat in currentTable.tableUsers) {
+        // for(let seat in currentTable.tableUsers) {
 
-          // console.log(seat);
-          // console.log(table.seats[seat].pendingBet);
+        //   // console.log(seat);
+        //   // console.log(table.seats[seat].pendingBet);
 
-          // If the incoming table has data for this seat, update it in the currentTable
-          if (table.seats[seat] && table.seats[seat].hands) {
-            currentTable.tableUsers[seat].hands = table.seats[seat].hands;
-          }
+        //   // If the incoming table has data for this seat, update it in the currentTable
+        //   if (table.seats[seat] && table.seats[seat].hands) {
+        //     currentTable.tableUsers[seat].hands = table.seats[seat].hands;
+        //   }
 
-          if (table.seats[seat]) {
-            currentTable.tableUsers[seat].cards = table.seats[seat].cards;
-            // currentTable.tableUsers[seat].hands = table.seats[seat].hands;
-            currentTable.tableUsers[seat].pendingBet = table.seats[seat].pendingBet;
-            currentTable.tableUsers[seat].currentBet = table.seats[seat].currentBet;
-            currentTable.tableUsers[seat].tableBalance = table.seats[seat].tableBalance;
-          }
-        } 
+        //   if (table.seats[seat]) {
+        //     currentTable.tableUsers[seat].cards = table.seats[seat].cards;
+        //     // currentTable.tableUsers[seat].hands = table.seats[seat].hands;
+        //     currentTable.tableUsers[seat].pendingBet = table.seats[seat].pendingBet;
+        //     currentTable.tableUsers[seat].currentBet = table.seats[seat].currentBet;
+        //     currentTable.tableUsers[seat].tableBalance = table.seats[seat].tableBalance;
+        //   }
+        // } 
 
         console.log(currentTable);
     
@@ -118,13 +119,21 @@ const gamesReducer = (state = initialState, action) => {
 
 
     case VIEW_TABLE:{
+      console.log(action.payload);
+      let newCurrentTables = {...newState.currentTables}
+      newCurrentTables[action.payload.id] = action.payload
+      return {...newState, currentTables: newCurrentTables, activeTable:action.payload, showGames: false, showTables: false, showActiveTable: true}
+    }
 
+
+    case JOIN_TABLE:{
       console.log(action.payload);
       let newCurrentTables = {...newState.currentTables}
       newCurrentTables[action.payload.id] = action.payload
       newCurrentTables[action.payload.id].messages = []
       return {...newState, currentTables: newCurrentTables, activeTable:action.payload, showGames: false, showTables: false, showActiveTable: true}
     }
+
 
 
 
@@ -155,6 +164,9 @@ const gamesReducer = (state = initialState, action) => {
       const newCurrentTables = { ...newState.currentTables };
       // Check if the active table exists in newCurrentTables
       if (newCurrentTables[tableId]) {
+        console.log(newCurrentTables[tableId]);
+        console.log(newCurrentTables[tableId].tableUsers);
+        console.log(newCurrentTables[tableId].tableUsers[seat]);
         // Assign newTableUser to seat in tableUsers obj of the active table
         newCurrentTables[tableId].tableUsers[seat] = newTableUser;
         newCurrentTables[tableId].currentSeat = seat;
@@ -166,19 +178,19 @@ const gamesReducer = (state = initialState, action) => {
 
 
 
-    case LEAVE_SEAT:{
-      console.log(action.payload);
-      const {seat, tableId} = action.payload
-      const newCurrentTables = { ...newState.currentTables };
+    // case LEAVE_SEAT:{
+    //   console.log(action.payload);
+    //   const {seat, tableId} = action.payload
+    //   const newCurrentTables = { ...newState.currentTables };
 
-      // Check if the active table exists in newCurrentTables
-      if (newCurrentTables[tableId]) {
-        // Remove the seat from the tableUsers object
-        delete newCurrentTables[tableId].tableUsers[seat];
-      }
+    //   // Check if the active table exists in newCurrentTables
+    //   if (newCurrentTables[tableId]) {
+    //     // Remove the seat from the tableUsers object
+    //     delete newCurrentTables[tableId].tableUsers[seat];
+    //   }
 
-      return { ...newState, currentTables: newCurrentTables };
-    }
+    //   return { ...newState, currentTables: newCurrentTables };
+    // }
 
     
 

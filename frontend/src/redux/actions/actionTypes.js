@@ -44,6 +44,7 @@ export const RESCIND_INSURANCE = 'games/RESCIND_INSURANCE';
 
 export const UPDATE_TABLE = 'game/UPDATE_TABLE';
 export const VIEW_TABLE = 'game/VIEW_TABLE';
+export const JOIN_TABLE = 'game/JOIN_TABLE';
 export const LEAVE_TABLE = 'game/LEAVE_TABLE';
 
 export const LEAVE_SEAT = 'game/LEAVE_SEAT';

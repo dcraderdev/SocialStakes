@@ -14,7 +14,8 @@ import {
   collectBetsAction,
   viewTableAction,
   offerInsuranceAction, 
-  rescindInsuranceAction
+  rescindInsuranceAction,
+  joinTableAction
 } from '../redux/actions/gameActions';
 
 
@@ -55,6 +56,10 @@ const SocketProvider = ({ children }) => {
       
       socket.on('view_table', (table) => {
         dispatch(viewTableAction(table));
+      }); 
+
+      socket.on('join_table', (table) => {
+        dispatch(joinTableAction(table));
       }); 
 
       socket.on('get_updated_table', (updateObject) => {

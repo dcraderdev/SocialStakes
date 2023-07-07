@@ -102,7 +102,7 @@ module.exports = function (io) {
             console.log(`Refunding pending bet for user ${username}`);
             rooms[tableId].seats[seat].tableBalance += rooms[tableId].seats[seat].pendingBet;
             rooms[tableId].seats[seat].pendingBet = 0;
-          }
+          } 
 
           let messageObj = {
             user: { username: 'Room', id: 1 },
@@ -140,15 +140,22 @@ module.exports = function (io) {
               content: `${username} did not reconnect in time.`,
               room: tableId,
             }; 
+
+            if(rooms[tableId] && rooms[tableId].seats[seat]){
+              delete rooms[tableId].seats[seat];
+            }  
+            emitUpdatedTable(tableId, io)
   
             io.in(tableId).emit('new_message', messageObj);
-            io.in(tableId).emit('remove_player', {seat, tableId});
+            // io.in(tableId).emit('remove_player', {seat, tableId});
           }
         }
         await gameController.removeUserFromTables(userId);
 
       }, timer); 
     });
+
+    
 
     socket.on('join_room', async (room) => {
       console.log('--- join_room ---');
@@ -208,7 +215,7 @@ module.exports = function (io) {
       console.log(updateObj);
 
       socket.join(room);
-      socket.emit('view_table', updatedTable);
+      socket.emit('join_table', updatedTable);
       socket.emit('get_updated_table', updateObj);
       io.in(room).emit('new_message', messageObj);
       
@@ -227,7 +234,12 @@ module.exports = function (io) {
     socket.on('message', async (messageObj) => {
       const { room, message } = messageObj;
       io.in(room).emit('new_message', messageObj);
+      console.log('room',room);
+
       // io.in(userId).emit('message', messageObj);
+      if(rooms[room]){
+        rooms[room].messages.push(message)
+      }
 
       console.log('--------------');
       console.log(`Message received from ${room}`);
@@ -358,6 +370,8 @@ module.exports = function (io) {
         
         const leaveSeat = await gameController.leaveSeat(leaveSeatObj)
         if(!leaveSeat) return
+        emitUpdatedTable(tableId, io)
+
         io.in(room).emit('player_leave', leaveSeatObj);
 
       } else {
@@ -370,9 +384,14 @@ module.exports = function (io) {
           userId:user.id,
           tableBalance,
         }
+        // Remove the player from the room state
+        if(rooms[tableId] && rooms[tableId].seats[seat]){
+          delete rooms[tableId].seats[seat];
+        }  
         const leaveSeat = await gameController.leaveSeat(leaveSeatObj)
         if(!leaveSeat) return
         io.in(room).emit('player_leave', leaveSeatObj);
+        emitUpdatedTable(tableId, io)
         
       }
 
@@ -1323,6 +1342,7 @@ module.exports = function (io) {
     
 
     async function processForfeitedPlayers(tableId, io) {
+      let room = tableId
 
       
        
@@ -1367,18 +1387,27 @@ module.exports = function (io) {
             console.log('yes player in that seat!');
             console.log('yes player in that seat!');
             delete rooms[tableId].seats[seat];
-          }  
-    
-          let leaveSeatObj = {
-            tableId,
-            seat,
-            userTableId,
-            userId,
-            tableBalance,
-          }
-    
-          await gameController.leaveSeat(leaveSeatObj);
-          io.in(tableId).emit('remove_player', leaveSeatObj);
+                    // Remove the player from the room state
+        if(rooms[tableId] && rooms[tableId].seats[seat]){
+          delete rooms[tableId].seats[seat];
+        }  
+        // const leaveSeat = await gameController.leaveSeat(leaveSeatObj)
+        // if(!leaveSeat) return
+        // emitUpdatedTable(tableId, io)
+      }  
+      
+      let leaveSeatObj = {
+        tableId,
+        seat,
+        userTableId,
+        userId,
+        tableBalance,
+      }
+      emitUpdatedTable(tableId, io)
+      
+      await gameController.leaveSeat(leaveSeatObj);
+      io.in(room).emit('player_leave', leaveSeatObj);
+          // io.in(tableId).emit('remove_player', leaveSeatObj);
         }
       }
     }

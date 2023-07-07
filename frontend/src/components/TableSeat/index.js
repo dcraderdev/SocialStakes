@@ -8,7 +8,7 @@ import { ModalContext } from '../../context/ModalContext';
 import Card from '../Card'
 import cardConverter from '../../utils/cardConverter';
 
-const TableSeat = ({seatNumber, player}) => {
+const TableSeat = ({seatNumber}) => {
 
   const dispatch = useDispatch()
   const activeTable = useSelector(state=>state.games.activeTable)
@@ -29,6 +29,9 @@ const TableSeat = ({seatNumber, player}) => {
   const [handValues, setHandValues] = useState(null);
 
 
+  const [player, setPlayer] = useState(null);
+
+
   const [isCurrentUser, setIsCurrentUser] = useState(false);
   const [isUserInAnySeat, setIsUserInAnySeat] = useState(false);
   const [isActiveSeat, setIsActiveSeat] = useState(false);
@@ -37,16 +40,30 @@ const TableSeat = ({seatNumber, player}) => {
   const [isForfeited, setIsForfeited] = useState(false);
 
 
+
+  useEffect(() => {
+    if(currentTables && activeTable && currentTables[activeTable.id].tableUsers){
+      if( currentTables[activeTable.id].tableUsers[seatNumber]){
+        setPlayer(currentTables[activeTable.id].tableUsers[seatNumber]);
+      } else {
+        setPlayer(null);
+      }
+    }
+
+  }, [currentTables, activeTable, seatNumber]);
+
+
+
   useEffect(() => {
 
-    let userDisconnectTimer = currentTables[activeTable.id]?.tableUsers[seatNumber]?.disconnectTimer;
+    let userDisconnectTimer = currentTables[activeTable.id]?.tableUsers?.[seatNumber]?.disconnectTimer;
     let userActionTimer = currentTables[activeTable.id].actionTimer;
-    let userPendingBet = currentTables[activeTable.id]?.tableUsers[seatNumber]?.pendingBet;
-    let userCurrentBet = currentTables[activeTable.id]?.tableUsers[seatNumber]?.currentBet;
-    let userCurrentBalance = currentTables[activeTable.id]?.tableUsers[seatNumber]?.tableBalance;
-    let userCards = currentTables[activeTable.id]?.tableUsers[seatNumber]?.cards;
-    let userHands = currentTables[activeTable.id]?.tableUsers[seatNumber]?.hands;
-    let userForfeited = currentTables[activeTable.id]?.tableUsers[seatNumber]?.forfeit;
+    let userPendingBet = currentTables[activeTable.id]?.tableUsers?.[seatNumber]?.pendingBet;
+    let userCurrentBet = currentTables[activeTable.id]?.tableUsers?.[seatNumber]?.currentBet;
+    let userCurrentBalance = currentTables[activeTable.id]?.tableUsers?.[seatNumber]?.tableBalance;
+    let userCards = currentTables[activeTable.id]?.tableUsers?.[seatNumber]?.cards;
+    let userHands = currentTables[activeTable.id]?.tableUsers?.[seatNumber]?.hands;
+    let userForfeited = currentTables[activeTable.id]?.tableUsers?.[seatNumber]?.forfeit;
   
     setPendingBet(userPendingBet)
     setCurrentBet(userCurrentBet)
@@ -66,7 +83,7 @@ const TableSeat = ({seatNumber, player}) => {
 
   useEffect(() => {
     let userInAnySeat = Object.values(currentTables[activeTable.id]?.tableUsers || {}).some(seat => seat.username === user.username);
-    let userInSeat = currentTables[activeTable.id]?.tableUsers[seatNumber]?.username === user.username;
+    let userInSeat = currentTables[activeTable.id]?.tableUsers?.[seatNumber]?.username === user.username;
     let userInActiveSeat = currentTables[activeTable.id]?.actionSeat === seatNumber;
     let handInProgress = currentTables[activeTable.id]?.handInProgress;
     let currActionHand = currentTables[activeTable.id]?.actionHand;
@@ -117,11 +134,6 @@ const TableSeat = ({seatNumber, player}) => {
       if (actionTimerId) clearInterval(actionTimerId);
     };
   }, [actionTimer]);
-
-  console.log(6*52);
-  console.log(4*52);
-
-
 
 
 

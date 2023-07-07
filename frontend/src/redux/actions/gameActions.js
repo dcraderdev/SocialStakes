@@ -2,7 +2,7 @@ import {
   GET_GAME_BY_ID, GET_GAMES,
   GET_TABLE_BY_ID, GET_TABLES, GET_TABLES_BY_TYPE,
   UPDATE_TABLE,
-  VIEW_TABLE, LEAVE_TABLE,
+  VIEW_TABLE, LEAVE_TABLE, JOIN_TABLE,
   TAKE_SEAT, LEAVE_SEAT, CHANGE_SEAT, FORFEIT_SEAT,
   SHOW_GAMES, SHOW_TABLES, SHOW_ACTIVE_TABLES,
   ADD_MESSAGE, TOGGLE_SHOW_MESSAGES,
@@ -71,6 +71,14 @@ export const updateTableAction = (data) => {
     console.log(data);
     return {
       type: VIEW_TABLE,
+      payload: data,
+    };
+  };
+
+  export const joinTableAction = (data) => {
+    console.log(data);
+    return {
+      type: JOIN_TABLE,
       payload: data,
     };
   };

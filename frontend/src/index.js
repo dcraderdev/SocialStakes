@@ -28,13 +28,13 @@ function Root(){
   return(
     <Provider store={store}>
       <BrowserRouter>
-          <SocketProvider> 
-          <WindowProvider> 
-            <ModalProvider> 
-              <App />
-            </ModalProvider> 
-          </WindowProvider> 
-          </SocketProvider> 
+          <ModalProvider> 
+            <SocketProvider> 
+              <WindowProvider> 
+                  <App />
+              </WindowProvider> 
+            </SocketProvider> 
+          </ModalProvider> 
       </BrowserRouter>
     </Provider>
   );

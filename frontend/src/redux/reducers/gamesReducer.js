@@ -12,7 +12,9 @@ import {
   REMOVE_PLAYER,
   PLAYER_ADD_TABLE_FUNDS,
   UPDATE_TABLE_COUNTDOWN,
-  COLLECT_BETS
+  COLLECT_BETS,
+  OFFER_INSURANCE,
+  RESCIND_INSURANCE
  } from '../actions/actionTypes'
 
 const initialState = {
@@ -383,6 +385,27 @@ const gamesReducer = (state = initialState, action) => {
       return { ...newState, currentTables: newCurrentTables };
     }
     
+
+    case OFFER_INSURANCE: {
+      const tableId = action.payload;
+      const newCurrentTables = { ...newState.currentTables };
+      const newCurrentTable = { ...newCurrentTables[tableId] };
+      newCurrentTable.insuranceOffered = true
+      newCurrentTables[tableId] = newCurrentTable;
+      return { ...newState, currentTables: newCurrentTables };
+    }
+
+    case RESCIND_INSURANCE: {
+      const tableId = action.payload;
+      const newCurrentTables = { ...newState.currentTables };
+      const newCurrentTable = { ...newCurrentTables[tableId] };
+      newCurrentTable.insuranceOffered = false
+      newCurrentTables[tableId] = newCurrentTable;
+      return { ...newState, currentTables: newCurrentTables };
+    }
+
+
+
   
     default:
       return newState;

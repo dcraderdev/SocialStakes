@@ -12,7 +12,8 @@ import {
   REMOVE_PLAYER,
   PLAYER_ADD_TABLE_FUNDS,
   UPDATE_TABLE_COUNTDOWN,
-  COLLECT_BETS
+  COLLECT_BETS,
+  OFFER_INSURANCE, RESCIND_INSURANCE
 
 } from './actionTypes'
 
@@ -208,9 +209,6 @@ export const playerAddTableFundsAction = (seatObj) => {
 
 
 export const updateTableCountdownAction = (countdownObj) => {
-  console.log('here');
-  console.log('here');
-  console.log('here');
   return {
     type: UPDATE_TABLE_COUNTDOWN,
     payload: countdownObj
@@ -218,11 +216,23 @@ export const updateTableCountdownAction = (countdownObj) => {
 };
 
 export const collectBetsAction = (countdownObj) => {
-  console.log('here');
-  console.log('here');
-  console.log('here');
   return {
     type: COLLECT_BETS,
     payload: countdownObj
+  };
+};
+
+
+export const offerInsuranceAction = (tableId) => {
+  return {
+    type: OFFER_INSURANCE,
+    payload: tableId
+  };
+};
+
+export const rescindInsuranceAction = (tableId) => {
+  return {
+    type: RESCIND_INSURANCE,
+    payload: tableId
   };
 };

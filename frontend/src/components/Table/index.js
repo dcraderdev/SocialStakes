@@ -11,6 +11,7 @@ import Card from '../Card';
 import cardConverter from '../../utils/cardConverter'
 
 import { ModalContext } from '../../context/ModalContext';
+import { SocketContext } from '../../context/SocketContext';
 
 
 const Table = () => {
@@ -26,12 +27,17 @@ const Table = () => {
   const [countdown, setCountdown] = useState(null);
   const [cards, setCards] = useState([]);
   const [currentSeat, setCurrentSeat] = useState(null);
+  const [isHandInProgress, setIsHandInProgress] = useState(false);
 
 
-  
-  const { modal, openModal, closeModal, updateObj, setUpdateObj} = useContext(ModalContext);
-
+ 
   useEffect(()=>{
+
+
+    if(currentTables && activeTable && currentTables[activeTable.id]?.handInProgress){
+      setIsHandInProgress(true)
+    }
+
     setCurrentSeat(null)
 
     if(activeTable && currentTables){
@@ -61,20 +67,6 @@ const Table = () => {
   },[currentTables, activeTable]);
 
 
-  useEffect(()=>{
-    if(cards && cards.length === 1){
-      console.log('we got one card!');
-    }
-
-
-    if(cards && cards.length === 1 && cardConverter[cards[0]].value === 11){
-      console.log('we got an ace!');
-      if(!user) return
-      if(!currentSeat) return
-      setUpdateObj({tableId:activeTable.id, seatNumber:currentSeat, type:'insurance'})
-      openModal('insuranceModal')
-    }
-  },[cards]);
 
 
 

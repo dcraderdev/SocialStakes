@@ -1,12 +1,13 @@
 .insurancemodal-wrapper {
   z-index: 1000;
   position: absolute;
+  top: 150px;
   border: 1px solid rgb(0, 0, 0);
   background-color: #2d2e2c;
   padding: 20px;
   border-radius: 5px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  width: 450px;
+  width: 250px;
   height: 120px;
 }
 

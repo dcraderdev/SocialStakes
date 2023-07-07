@@ -34,6 +34,12 @@ export const PLAYER_ADD_TABLE_FUNDS = 'games/PLAYER_ADD_TABLE_FUNDS';
 
 export const UPDATE_TABLE_COUNTDOWN = 'games/START_TABLE_COUNTDOWN';
 export const COLLECT_BETS = 'games/COLLECT_BETS';
+export const OFFER_INSURANCE = 'games/OFFER_INSURANCE';
+export const RESCIND_INSURANCE = 'games/RESCIND_INSURANCE';
+
+
+
+
 
 
 export const UPDATE_TABLE = 'game/UPDATE_TABLE';

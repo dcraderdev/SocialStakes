@@ -25,8 +25,7 @@ function BalanceModal() {
   const INIT_DEPOSIT_INSUFFICIENT_FUNDS = 'user/INITIAL_DEPOSIT_INSUFFICIENT_FUNDS'
   const INIT_DEPOSIT_SUFFICIENT_FUNDS = 'user/INITIAL_DEPOSIT_SUFFICIENT'
   const ADD_DEPOSIT = 'user/ADDITIONAL_DEPOSIT'
-
-
+  const INSURANCE_INSUFFICIENT_FUNDS = 'user/INSURANCE_INSUFFICIENT_FUNDS'
 
 
   const handleSetFunding = (e) => {
@@ -105,6 +104,8 @@ function BalanceModal() {
 
       }
       if(updateObj.type === 'addDeposit'){setModalType(ADD_DEPOSIT)}
+
+      if(updateObj.type === 'insufficientInsurance'){setModalType(INSURANCE_INSUFFICIENT_FUNDS)}
     }
   }, [updateObj]);
 
@@ -205,6 +206,20 @@ function BalanceModal() {
               Submit
             </div>
           </div>
+        </div>
+      )}
+
+
+{modalType === INSURANCE_INSUFFICIENT_FUNDS && (
+        <div className="balancemodal-container flex center">
+          <div className="balancemodal-header flex center">
+            Insufficient Table Balance!
+          </div>
+          <div className="balancemodal-subheader flex center">
+            {`Insurance cost: $${updateObj.insuranceCost}`}
+          </div>
+
+            <div className='balancemodal-ok flex center' onClick={cancel}>Ok</div>
         </div>
       )}
 

@@ -1,7 +1,7 @@
 import React, { createContext, useEffect, useState, useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import io from 'socket.io-client';
-
+import { ModalContext } from './ModalContext';
 import * as gameActions from '../redux/middleware/games';
 import {
   updateTableAction,
@@ -12,7 +12,9 @@ import {
   playerAddTableFundsAction,
   updateTableCountdownAction,
   collectBetsAction,
-  viewTableAction
+  viewTableAction,
+  offerInsuranceAction, 
+  rescindInsuranceAction
 } from '../redux/actions/gameActions';
 
 
@@ -22,6 +24,7 @@ const SocketProvider = ({ children }) => {
   const dispatch = useDispatch()
   
   const [socket, setSocket] = useState(null);
+  const { updateObj, setUpdateObj} = useContext(ModalContext);
   
   const user = useSelector((state) => state.users.user);
 
@@ -36,20 +39,14 @@ const SocketProvider = ({ children }) => {
     const socketConnection = io(backendUrl, {
       query: { userId, username },
     });
-
-
     
     setSocket(socketConnection);
     
-
-
     return () => {
-      
       socketConnection.disconnect();
     };
   }, [user]); 
 
-  console.log(socket);
 
 
 
@@ -60,14 +57,14 @@ const SocketProvider = ({ children }) => {
         dispatch(viewTableAction(table));
       }); 
 
-      socket.on('get_updated_table', (updateObj) => {
+      socket.on('get_updated_table', (updateObject) => {
 
 
         console.log('-=-=-=-=-=');
         console.log('-=-=-=-=-=');
         console.log('-=-=-=-=-=');
         console.log('-=-=-=-=-=');
-        console.log(updateObj);
+        console.log(updateObject);
         console.log('-=-=-=-=-=');
         console.log('-=-=-=-=-=');
         console.log('-=-=-=-=-=');
@@ -76,7 +73,7 @@ const SocketProvider = ({ children }) => {
 
 
 
-        dispatch(updateTableAction(updateObj)); 
+        dispatch(updateTableAction(updateObject)); 
       }); 
       
 
@@ -115,9 +112,16 @@ const SocketProvider = ({ children }) => {
         console.log(betObj);
         dispatch(removeAllBetAction(betObj)); 
       });  
+ 
 
+      socket.on('offer_insurance', (tableId) => {
+        console.log('offer_insurance');
+        dispatch(offerInsuranceAction(tableId)); 
+      });  
 
-
+      socket.on('remove_insurance_offer', (tableId) => {
+        dispatch(rescindInsuranceAction(tableId)); 
+      }); 
 
 
       socket.on('player_disconnected', ({seat, tableId, timer}) => {

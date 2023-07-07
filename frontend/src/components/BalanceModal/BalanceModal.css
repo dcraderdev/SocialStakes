@@ -56,7 +56,7 @@
   height: 50px;
 }
 
-
+.balancemodal-ok,
 .balancemodal-addbalance,
 .balancemodal-cancel{
   border-radius: 5px;
@@ -75,6 +75,11 @@
 
 .balancemodal-cancel{
   width: 30%;
+}
+
+.balancemodal-ok{
+  width: 30%;
+  height: 40px;
 }
 
 

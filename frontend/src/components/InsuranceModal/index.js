@@ -35,14 +35,12 @@ function InsuranceModal() {
       tableId
     }
     
+
+
     socket.emit('accept_insurance', seatObj)
     closeModal()
     setUpdateObj(null)
     return
-
-
-
-
   }
 
 

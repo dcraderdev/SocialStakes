@@ -29,6 +29,9 @@ import { ModalContext } from '../../context/ModalContext';
     const [isHandInProgress, setIsHandInProgress] = useState(false);
     const [isActiveSeat, setIsActiveSeat] = useState(false);
     const [actionHand, setActionHand] = useState(null);
+
+    const [isInsuranceOffered, setIsInsuranceOffered] = useState(null);
+
   
     
     const {socket} = useContext(SocketContext)
@@ -60,31 +63,18 @@ import { ModalContext } from '../../context/ModalContext';
     let userInActiveSeat = currentTables[activeTable.id]?.actionSeat === currentSeat && currentSeat !== null;
     let handInProgress = currentTables[activeTable.id]?.handInProgress;
     let currActionHand = currentTables[activeTable.id]?.actionHand;
+    let insuranceOffered = currentTables[activeTable.id]?.insuranceOffered;
 
 
     setActionHand(currActionHand)
     setIsActiveSeat(userInActiveSeat)
     setIsHandInProgress(handInProgress)
+    setIsInsuranceOffered(insuranceOffered);
+
+
+    
 
   }, [currentTables, activeTable.id]);
-
-
-  // useEffect(() => {
-  //   if(!user) return
-  //   if(!isSitting) return
-  //   if(!isActiveSeat) return
-
-
-  //   if(isActiveSeat){
-
-  //   }
-
-
-  // }, [isSitting, currentTables, activeTable, isActiveSeat]);
-
-
-
-
 
 
 
@@ -95,8 +85,6 @@ import { ModalContext } from '../../context/ModalContext';
       setLastBets([])
     }
   }, [isHandInProgress]);
-
-
 
 
 
@@ -201,6 +189,42 @@ const rebet = (multiplier) => {
 
 
 
+  const acceptInsurance = () => {
+    if(!user) return
+    if(!isSitting) return
+
+    let bet = lastTotalBet
+    let insuranceCost = Math.ceil(bet/2)
+
+
+    console.log(bet);
+    console.log(insuranceCost);
+
+    if(insuranceCost >= tableBalance){
+      console.log('not enough balance!');
+      setUpdateObj({insuranceCost, type:'insufficientInsurance'})
+      openModal('balanceModal')
+      return
+    }
+
+    const betObj={
+      bet,
+      insuranceCost,
+      tableId: activeTable.id,
+      seat: currentSeat
+    }
+    socket.emit('accept_insurance', betObj)
+
+  };
+
+  const declineInsurance = () => {
+    if(!user) return
+    if(!isSitting) return
+
+    setIsInsuranceOffered(false)
+
+  };
+
   const handleAction = (action) => {
     if(!user) return
     if(!isSitting) return
@@ -286,13 +310,24 @@ const rebet = (multiplier) => {
                 </div>
               )}
 
-              {isActiveSeat &&(
+              {isActiveSeat && !isInsuranceOffered &&(
                 <div className="section right flex center">
                   <div className="decision-option-container">
                     <div className="action" onClick={()=>handleAction('hit')}>Hit</div>
                     <div className="action" onClick={()=>handleAction('stay')}>Stay</div>
                     <div className="action" onClick={()=>handleAction('double')}>Double</div>
                     <div className="action" onClick={()=>handleAction('split')}>Split</div>
+                  </div>
+
+                </div>
+              )}
+
+
+              {isInsuranceOffered &&(
+                <div className="section right flex center">
+                  <div className="decision-option-container">
+                    <div className="action" onClick={acceptInsurance}>Accept</div>
+                    <div className="action" onClick={declineInsurance}>Decline</div>
                   </div>
 
                 </div>

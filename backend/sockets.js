@@ -805,6 +805,17 @@ module.exports = function (io) {
 
         let dealerVisibleCard = rooms[tableId].dealerCards.visibleCards[0]
         let dealerHiddenCard = rooms[tableId].dealerCards.hiddenCards[0]
+
+        let convertedVis = cardConverter[dealerVisibleCard]
+        let convertedHid = cardConverter[dealerHiddenCard]
+
+        console.log('------- converted cards -------');
+        console.log(convertedVis);
+        console.log(convertedHid);
+        console.log('------- ------------ -------');        
+
+
+
         let isAce = cardConverter[dealerVisibleCard].value === 11
         let isMonkey = cardConverter[dealerHiddenCard].value === 10
 

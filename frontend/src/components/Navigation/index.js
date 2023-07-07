@@ -41,8 +41,6 @@ function Navigation(){
     dispatch(showGamesAction())
   };
 
-let a = 'e10d8de4-f4c2-4d28-9324-56aa9c920801'
-let b = 'e10d8de4-f4c2-4d28-9324-56aa9c920801'
 
 
   const handleLogoClick = () => {

@@ -1393,7 +1393,6 @@ module.exports = function (io) {
 
     async function calculateAndSavePlayerHand(player, bestDealerValue, tableId, io) {
       let room = tableId
-      let currentBalance = player.tableBalance;
       let totalWinnings = 0;
       let totalProfitLoss = 0;
     
@@ -1418,23 +1417,16 @@ module.exports = function (io) {
         totalProfitLoss += insuranceProfitLoss;
 
     
-        // Save the results
         let handObj = {
           handId: key,
           userTableId: player.id,
           cards: JSON.stringify(cards),
           result,
           totalProfitLoss,
-          totalWinnings,
           hasInsuranceBet
         }
-
-        console.log('------- profitLoss -------');
-        console.log(profitLoss);
-        console.log('----------------------');
-
-
-
+        
+        // Save the results
         await gameController.savePlayerHand(handObj)
     
         //Update the hands bet to show profit/loss

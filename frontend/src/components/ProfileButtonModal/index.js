@@ -4,6 +4,7 @@ import { useDispatch, useSelector  } from 'react-redux';
 import * as sessionActions from '../../redux/middleware/users';
 import { ModalContext } from '../../context/ModalContext';
 import { WindowContext } from '../../context/WindowContext';
+import { showGamesAction } from '../../redux/actions/gameActions';
 
 
 import './ProfileButtonModal.css';
@@ -20,6 +21,7 @@ function ProfileButtonModal() {
 
 
   const logout = (e) => {
+    dispatch(showGamesAction())
     dispatch(sessionActions.logout());
     history.push('/');
     closeModal();

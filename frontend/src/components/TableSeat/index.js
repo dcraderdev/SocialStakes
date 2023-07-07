@@ -118,6 +118,10 @@ const TableSeat = ({seatNumber, player}) => {
     };
   }, [actionTimer]);
 
+  console.log(6*52);
+  console.log(4*52);
+
+
 
 
 

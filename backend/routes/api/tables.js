@@ -31,15 +31,16 @@ router.get('/:tableId', async (req, res, next) => {
   console.log(tableId);
 
   const table = await gameController.getTableById(tableId)
-
   if (!table) {
     const err = new Error('table not found');
+    console.log(err);
+    console.log(err.status);
     err.statusCode = 404;
     err.status = 404;
     return next(err);
   }
 
-  return res.status(200).json({'hi':'hi', table });
+  return res.status(200).json({ table });
 });
 
 // Join table by tableId

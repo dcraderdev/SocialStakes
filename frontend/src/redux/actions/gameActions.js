@@ -1,10 +1,20 @@
 import { 
   GET_GAME_BY_ID, GET_GAMES,
   GET_TABLE_BY_ID, GET_TABLES, GET_TABLES_BY_TYPE,
+  UPDATE_TABLE,
   VIEW_TABLE, LEAVE_TABLE,
-  TAKE_SEAT, LEAVE_SEAT, CHANGE_SEAT,
+  TAKE_SEAT, LEAVE_SEAT, CHANGE_SEAT, FORFEIT_SEAT,
   SHOW_GAMES, SHOW_TABLES, SHOW_ACTIVE_TABLES,
-  ADD_MESSAGE, TOGGLE_SHOW_MESSAGES
+  ADD_MESSAGE, TOGGLE_SHOW_MESSAGES,
+  ADD_BALANCE,
+  ADD_BET, REMOVE_LAST_BET, REMOVE_ALL_BET,
+  PLAYER_DISCONNECT, PLAYER_RECONNECT,
+  REMOVE_PLAYER,
+  PLAYER_ADD_TABLE_FUNDS,
+  UPDATE_TABLE_COUNTDOWN,
+  COLLECT_BETS,
+  OFFER_INSURANCE, RESCIND_INSURANCE
+
 } from './actionTypes'
 
 
@@ -39,7 +49,6 @@ export const getTableByIdAction = (data) => {
 };
 
 export const getTablesByTypeAction = (data) => {
-  console.log(data.tables);
   return {
     type: GET_TABLES_BY_TYPE,
     payload: data.tables,
@@ -49,37 +58,48 @@ export const getTablesByTypeAction = (data) => {
 
 
 
+export const updateTableAction = (data) => {
+  console.log(data);
+  return {
+    type: UPDATE_TABLE,
+    payload: data,
+  };
+};
+
+
   export const viewTableAction = (data) => {
     console.log(data);
-
-    console.log(data.table);
     return {
       type: VIEW_TABLE,
-      payload: data.table,
+      payload: data,
     };
   };
 
   export const leaveTableAction = (tableId) => {
-  console.log('leaving');
-
     return {
       type: LEAVE_TABLE,
       payload: tableId,
     };
   };
 
-export const takeSeatAction = (data) => {
-  console.log(data.table);
+export const takeSeatAction = (seatObj) => {
   return {
     type: TAKE_SEAT,
-    payload: data.table,
+    payload: seatObj,
   };
 };
 
-export const leaveSeatAction = (table) => {
+export const leaveSeatAction = (seatObj) => {
   return {
     type: LEAVE_SEAT,
-    payload: table,
+    payload: seatObj,
+  };
+};
+
+export const forfeitSeatAction = (leaveSeatObj) => {
+  return {
+    type: FORFEIT_SEAT,
+    payload: leaveSeatObj,
   };
 };
 
@@ -126,5 +146,93 @@ export const addMessageAction = (messageObj) => {
   return {
     type: ADD_MESSAGE,
     payload: messageObj
+  };
+};
+
+
+export const addBalanceAction = () => {
+  return {
+    type: ADD_BALANCE
+  };
+};
+
+
+export const addBetAction = (betObj) => {
+  return {
+    type: ADD_BET,
+    payload: betObj
+  };
+};
+
+export const removeLastBetAction = (betObj) => {
+  return {
+    type: REMOVE_LAST_BET,
+    payload: betObj
+  };
+};
+
+export const removeAllBetAction = (betObj) => {
+  return {
+    type: REMOVE_ALL_BET,
+    payload: betObj
+  };
+};
+
+export const playerDisconnectAction = ({seat, tableId, timer}) => {
+  return {
+    type: PLAYER_DISCONNECT,
+    payload: {seat, tableId, timer}
+  };
+};
+
+
+export const playerReconnectAction = ({seat, tableId, timer}) => {
+  return {
+    type: PLAYER_RECONNECT,
+    payload: {seat, tableId, timer}
+  };
+};
+
+export const removePlayerAction = (leaveSeatObj) => {
+  return {
+    type: REMOVE_PLAYER,
+    payload: leaveSeatObj
+  };
+};
+
+export const playerAddTableFundsAction = (seatObj) => {
+  return {
+    type: PLAYER_ADD_TABLE_FUNDS,
+    payload: seatObj
+  };
+};
+
+
+export const updateTableCountdownAction = (countdownObj) => {
+  return {
+    type: UPDATE_TABLE_COUNTDOWN,
+    payload: countdownObj
+  };
+};
+
+export const collectBetsAction = (countdownObj) => {
+  return {
+    type: COLLECT_BETS,
+    payload: countdownObj
+  };
+};
+
+
+export const offerInsuranceAction = (tableId) => {
+  return {
+    type: OFFER_INSURANCE,
+    payload: tableId
+  };
+};
+
+export const rescindInsuranceAction = (tableId) => {
+  return {
+    type: RESCIND_INSURANCE,
+    payload: tableId
   };
 };

@@ -1,0 +1,98 @@
+.leavemodal-wrapper {
+  z-index: 1000;
+  position: absolute;
+  border: 1px solid rgb(0, 0, 0);
+  background-color: #2d2e2c;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 450px;
+  height: 120px;
+}
+
+
+
+.leavemodal-container{
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  
+}
+
+.leavemodal-header{
+  width: 100%;
+  font-size: 25px;
+  color: rgb(200, 57, 13);
+}
+
+.leavemodal-subheader{
+  width: 100%;
+  font-size: 22px;
+  color: rgb(200, 57, 13);
+}
+
+.white{
+  color: white;
+}
+
+.leavemodal-memo-container{
+  font-size: 20px;
+  width: 150px;
+  font-size: 20px;
+}
+
+.leavemodal-memo{
+  color: rgb(255, 255, 255);
+}
+.leavemodal-balance{
+  color: rgb(200, 57, 13);
+}
+
+
+.leavemodal-user-buttons{
+  width: 80%;
+  height: 50px;
+}
+
+
+.leavemodal-addbalance,
+.leavemodal-cancel{
+  border-radius: 5px;
+  cursor: pointer;
+  border: solid 1px rgb(255, 255, 255);
+  height: 100%;
+  color: white;
+}
+
+.leavemodal-addbalance{
+  width: 40%;
+}
+
+
+
+
+.leavemodal-cancel{
+  width: 30%;
+}
+
+
+.leavemodal-addbalance:hover{
+  color: rgb(1, 83, 21);
+  border: solid green 1px;
+}
+
+.leavemodal-cancel:hover{
+  color: rgb(200, 57, 13);
+
+  border: solid rgb(200, 57, 13) 1px;
+}
+
+
+.disabled{
+  color: rgba(255, 255, 255, 0.297);
+  border: solid 1px rgba(255, 255, 255, 0.278);
+}
+.disabled:hover{
+  color: rgba(255, 255, 255, 0.149);
+  border: solid 1px rgba(255, 255, 255, 0.118);
+}

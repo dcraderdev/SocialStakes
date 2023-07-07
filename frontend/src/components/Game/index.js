@@ -8,13 +8,9 @@ import './Game.css'
 
 const Game = () => {
 
-  const activeTable = useSelector(state => state.games.activeTable);
 
-  const seats = 6
-  const game = 'blackjack'
   return (
     <div className='game-wrapper'>
-
  
       <Table />
       <PlayerBetOptions /> 

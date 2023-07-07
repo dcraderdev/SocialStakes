@@ -22,8 +22,11 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: () => uuid.v4(), 
     },
     userTableId: DataTypes.UUID,
-    roundId: DataTypes.UUID,
-    hand: DataTypes.STRING
+    roundId: DataTypes.INTEGER,
+    cards: DataTypes.STRING,
+    result: DataTypes.STRING,
+    profitLoss: DataTypes.INTEGER,
+    insuranceBet: DataTypes.BOOLEAN,
   }, {
     sequelize,
     modelName: 'Hand',

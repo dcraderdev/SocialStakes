@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Round.belongsTo(models.Table, {foreignKey:'tableId'})
       Round.hasMany(models.Hand, { foreignKey: 'roundId' });
-      Round.belongsTo(models.Action, { foreignKey: 'roundId' });
+      // Round.belongsTo(models.Action, { foreignKey: 'roundId' });
 
 
 
@@ -19,8 +19,8 @@ module.exports = (sequelize, DataTypes) => {
   Round.init({
     tableId: DataTypes.UUID,
     active: DataTypes.BOOLEAN,
-    phase: DataTypes.STRING,
-    cards: DataTypes.STRING
+    cards: DataTypes.STRING,
+    nonce: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Round',

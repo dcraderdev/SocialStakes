@@ -13,20 +13,25 @@
   height: 100%;
   max-width: 1000px;
   margin: 0 auto;
+  border: yellow solid 5px;
 }
 
 
 
 .table-content{
-  margin: 0 auto;
   max-width: 1000px;
-  min-width: 800px;
-
-  position: absolute;
-  left: 50%;
-  transform: translate(-50%, 0);
+  min-width: 600px;
   width: 100%;
   height: 100%;
+  
+  
+  
+  border-bottom: black solid 1px;
+  position: absolute;
+
+  margin: 0 auto;
+  left: 50%;
+  transform: translate(-50%, 0);
   border-bottom-left-radius: 320px;
   border-bottom-right-radius: 320px;
   overflow: hidden;
@@ -55,9 +60,18 @@
 }
 
 
-.table-content{
-  border-bottom: black solid 1px;
+.table-countdown{
+  left: 50%;
+  top: 20%;
+  transform: translate(-50%, 0);
+  position: absolute;
+  border: black solid 1px;
+  width: 120px;
+  height: 120px;
 }
+
+
+
 
 .top-seats{
   position: relative;
@@ -84,16 +98,7 @@
   height: 30%;
 }
 
-.seat-container{
-  border: white solid 1px;
-  width: 100px;
-  min-width: 100px;
-  height: 100px;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-} 
+
 
 .seat1{
   left: 20px;
@@ -124,5 +129,15 @@
   top: 100px;
   width: 80px;
   height: 40px;
+  border: solid 1px white;
+}
+
+.dealer-cards{
+  left: 50%;
+  top: 10%;
+  transform: translate(-50%, 0);
+  position: absolute;
+  width: 200px;
+  height: 80px;
   border: solid 1px white;
 }

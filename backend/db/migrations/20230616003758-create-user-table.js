@@ -38,6 +38,21 @@ module.exports = {
         type: Sequelize.INTEGER,
         defaultValue: 0
       },
+      currentBet:{
+        type: Sequelize.INTEGER,
+        defaultValue: 0
+      },
+      pendingBet:{
+        type: Sequelize.INTEGER,
+        defaultValue: 0
+      },
+      disconnectTimer:{
+        type: Sequelize.INTEGER,
+        defaultValue: 0
+      },
+      active:{
+        type: Sequelize.BOOLEAN
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

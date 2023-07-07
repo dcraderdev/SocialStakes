@@ -108,7 +108,7 @@
 
   cursor: pointer;
   width: 200px;
-  font-size: 4.0vh;
+  font-size: 30px;
   text-shadow: -1px 0 black, 0 3px black, 3px 0 black, 0 -1px black;
   font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
 }

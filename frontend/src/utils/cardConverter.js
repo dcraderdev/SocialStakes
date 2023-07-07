@@ -261,12 +261,7 @@ let cardConverter = {
   },
 };
 
-
-module.exports = {
-  cardConverter,
-};
-
-
+export default cardConverter
 
 // let serverSeeds = [
 //   {
@@ -315,6 +310,3 @@ module.exports = {
 // console.log(deck1);
 
 
-
-// console.log(cardConverter[2]);
-// console.log(cardConverter[22]);

@@ -4,6 +4,8 @@ import SignupModal from './components/SignupModal';
 import GameFloor from './components/GameFloor';
 import Game from './components/Game';
 import Table from './components/Table';
+import BalanceModal from './components/BalanceModal';
+import LeaveModal from './components/LeaveModal';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { React, useState, useEffect, useContext } from 'react';
@@ -14,6 +16,7 @@ import { io } from 'socket.io-client';
 import { ModalContext } from './context/ModalContext';
 import { SocketContext } from './context/SocketContext';
 import * as sessionActions from './redux/middleware/users';
+import InsuranceModal from './components/InsuranceModal';
 
 function App() {
 
@@ -22,9 +25,7 @@ function App() {
   const [loaded, isLoaded] = useState(false);
   const { modal, openModal, closeModal, setUpdateObj } = useContext(ModalContext);
   // const {  } = useContext(SocketContext);
-  const user = useSelector((state) => {
-    return state.users.user;
-  });
+  const user = useSelector((state) => state.users.user);
 
 
   
@@ -65,6 +66,22 @@ function App() {
           {modal === 'signup' && <SignupModal />}
         </div>
       )}
+      {modal  === 'balanceModal' && (
+        <div className='modal-container'>
+          {modal === 'balanceModal' && <BalanceModal />}
+        </div>
+      )}
+      {modal  === 'leaveModal' && (
+        <div className='modal-container'>
+          {modal === 'leaveModal' && <LeaveModal />}
+        </div>
+      )}
+      {modal  === 'insuranceModal' && (
+        <div className='modal-container'>
+          {modal === 'insuranceModal' && <InsuranceModal />}
+        </div>
+      )}
+
 
 
 

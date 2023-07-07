@@ -3,7 +3,9 @@ import {
   getAllTablesAction, getTablesByTypeAction, getTableByIdAction,
   viewTableAction, leaveTableAction, 
   takeSeatAction, leaveSeatAction, changeSeatAction,
-  addMessageAction
+  addMessageAction, addBalanceAction,
+  addBetAction, removeBetAction
+
   } 
   from '../actions/gameActions'
 import { csrfFetch } from './csrf';
@@ -21,7 +23,7 @@ export const getAllGames = () => async (dispatch) => {
     return {data, response};
   };
   
-  export const getAllTables = () => async (dispatch) => {
+  export const getAllTables = (gameId) => async (dispatch) => {
     console.log('here before fail');
     try{
       const response = await csrfFetch(`/api/games/${gameId}/tables`, {
@@ -124,38 +126,11 @@ export const getAllGames = () => async (dispatch) => {
   };
 
 
-  export const leaveTable = (tableId) => async (dispatch) => {
-    console.log('leaving');
-    dispatch(leaveTableAction(tableId));
-  };
+  // export const leaveTable = (tableId) => async (dispatch) => {
+  //   console.log('leaving');
+  //   dispatch(leaveTableAction(tableId));
+  // };
 
-
-
-export const takeSeat = (seatObj) => async (dispatch) => {
-  const { room, seat, user } = seatObj;
-  let tableId = room
-  console.log(seat);
-  
-  try{
-    const response = await csrfFetch(`/api/tables/${tableId}/join`, {
-      method: 'POST',
-      body: JSON.stringify({
-        seat
-      })
-    });
-    const data = await response.json();
-
-    console.log('-=-=-=-=');
-    console.log(data); 
-    console.log('-=-=-=-=');
- 
-    dispatch(takeSeatAction(data));
-    return {data, response};
-
-  }catch(error){
-    console.log(error);
-  } 
-};
 
 
 export const changeSeat = (tableId, seat) => async (dispatch) => {
@@ -214,6 +189,32 @@ export const addMessage = (messageObj) => async (dispatch) => {
       method: 'POST',
       body: JSON.stringify({
         content
+      })
+    });
+    const data = await response.json();
+
+    console.log('-=-=-=-=');
+    console.log(data); 
+    console.log('-=-=-=-='); 
+    if(data){
+      return data;
+    }
+
+  }catch(error){
+    console.log(error);
+  } 
+}; 
+
+
+export const addBalance = (userId, newBalance) => async (dispatch) => {
+
+  dispatch(addBalanceAction());
+  if(user.username === 'Room') return
+  try{
+    const response = await csrfFetch(`/api/users/${userId}/addbalance`, {
+      method: 'PUT',
+      body: JSON.stringify({
+        newBalance
       })
     });
     const data = await response.json();

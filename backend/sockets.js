@@ -673,6 +673,10 @@ module.exports = function (io) {
 
         let roundId, deck
 
+        console.log('------- dealObj -------');
+        console.log(dealObj);
+        console.log('------------------------');
+
         // if no deck or deck cursor is past shuffle point
         // increment nonce and create new deck
         if(rooms[tableId].cursor >= rooms[tableId].shufflePoint || !rooms[tableId].deck){
@@ -738,6 +742,10 @@ module.exports = function (io) {
         console.log(newDeck);
         console.log('------------------------');
 
+        console.log('------- drawnCards -------');
+        console.log(drawnCards);
+        console.log('------------------------');
+
         rooms[tableId].deck = newDeck
 
         if(handIds && drawnCards){  
@@ -763,6 +771,9 @@ module.exports = function (io) {
                   }
                   // Distribute the cards to the dealer
                   let nextCard = drawnCards.shift()
+                  console.log('------- nextCard -------');
+                  console.log(nextCard);
+                  console.log('------------------------');
                   if(j===1){
                     rooms[tableId].dealerCards.hiddenCards.push(nextCard)
                   }else {

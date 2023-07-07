@@ -603,14 +603,31 @@ module.exports = function (io) {
 
 
     socket.on('accept_insurance', async (betObj) => {
-      const { bet, insuranceCost, seat, tableId } = betObj
+      const { bet, insuranceCost, tableId, seat } = betObj
+
       let room = tableId
+      let currentHandId = Object.keys(rooms[tableId].seats[seat].hands)[0]
+
 
       // remove insurance cost form players tableBalance
       rooms[tableId].seats[seat].tableBalance -= insuranceCost 
+      //update hand to show insurance was accepted
+
+       
+      console.log('------- INSURANCE CHECK -------');
+      console.log('currentHandId', currentHandId);
+      console.log('rooms[tableId].seats[seat]',rooms[tableId].seats[seat]);
+      console.log('rooms[tableId].seats[seat]',rooms[tableId].seats[seat].hands);
+      // console.log('rooms[tableId].seats[seat].hands',rooms[tableId].seats[seat].hands); 
+      console.log('------------------------');
+
+      rooms[tableId].seats[seat].hands[currentHandId]['insurance'] = {accepted: true, bet:bet}
 
       // Add player to insured players array
       rooms[tableId].insuredPlayers[seat] = insuranceCost
+
+      
+ 
       emitUpdatedTable(tableId, io)
 
 
@@ -620,7 +637,7 @@ module.exports = function (io) {
     });
  
  
-
+ 
 
       // starts game of blackjack for multiple players
       async function dealCards(tableId, io) {
@@ -764,16 +781,7 @@ module.exports = function (io) {
         let dealerVisibleCard = rooms[tableId].dealerCards.visibleCards[0]
         let dealerHiddenCard = rooms[tableId].dealerCards.hiddenCards[0]
         let isAce = cardConverter[dealerVisibleCard].value === 11
-        let isMonkey = cardConverter[dealerHiddenCard].value === 8
-
-        console.log(dealerHiddenCard);
-        console.log(cardConverter[dealerHiddenCard]);
-
-
-        console.log(isAce);
-        console.log(isMonkey);
- 
- 
+        let isMonkey = cardConverter[dealerHiddenCard].value === 10
 
         if(isAce){
           socket.emit('offer_insurance', tableId)
@@ -830,17 +838,6 @@ module.exports = function (io) {
       io.in(room).emit('get_updated_table', updateObj);
 
       }
-
-
-
-
-
-
-
-
-
-
-
 
 
       async function gameLoop(tableId, io) {
@@ -1300,7 +1297,7 @@ module.exports = function (io) {
         result = 'PUSH';
         profitLoss = 0;
         winnings = bet; 
-      } else if (bestPlayerValue === 21){
+      } else if (blackjack){
         result = 'BLACKJACK';
         profitLoss = bet * 1.5;
         winnings = bet * 2.5;
@@ -1394,52 +1391,53 @@ module.exports = function (io) {
       rooms[tableId].seats[player.seat].currentBet = 0;
     }
 
-    async function calculateAndSavePlayerHand(player, bestDealerValue, insuranceWinnings, insuranceBet, tableId, io) {
+    async function calculateAndSavePlayerHand(player, bestDealerValue, tableId, io) {
       let room = tableId
       let currentBalance = player.tableBalance;
       let totalWinnings = 0;
+      let totalProfitLoss = 0;
     
       let playerHands = Object.entries(player.hands);
       for(let [key, handData] of playerHands){
         let { cards, bet } = handData;
         let playerHand = await handSummary(cards);
         let bestPlayerValue = await bestValue(playerHand.values);
+
+
+        // Determine the result of any insurance
+        const {insuranceWinnings, insuranceProfitLoss, hasInsuranceBet} = handleInsurancePayout(tableId, player.seat);
     
-        // Determine the result of the hand and update the chips on table accordingly
-        let { result, profitLoss, winnings } = await determineResult(bestPlayerValue, bestDealerValue, bet, playerHand.blackjack);
+        // Determine the result of the hand 
+        const { result, profitLoss, winnings } = await determineResult(bestPlayerValue, bestDealerValue, bet, playerHand.blackjack);
+
+
         totalWinnings += winnings;
         totalWinnings += insuranceWinnings;
-        profitLoss += insuranceWinnings;
 
+        totalProfitLoss += profitLoss
+        totalProfitLoss += insuranceProfitLoss;
 
- 
-        console.log('------- winnings -------');
-        console.log(winnings);
-        console.log('----------------------');
-        console.log('------- insuranceWinnings -------');
-        console.log(insuranceWinnings);
-        console.log('----------------------');
-        console.log('------- totalWinnings -------');
-        console.log(totalWinnings);
-        console.log('----------------------');
-
-        console.log('------- profitLoss -------');
-        console.log(profitLoss);
-        console.log('----------------------');
     
         // Save the results
         let handObj = {
           handId: key,
+          userTableId: player.id,
           cards: JSON.stringify(cards),
           result,
-          profitLoss,
+          totalProfitLoss,
           totalWinnings,
-          userTableId: player.id,
-          insuranceBet
+          hasInsuranceBet
         }
+
+        console.log('------- profitLoss -------');
+        console.log(profitLoss);
+        console.log('----------------------');
+
+
+
         await gameController.savePlayerHand(handObj)
     
-        //Update each hands bet to show profit/loss
+        //Update the hands bet to show profit/loss
         rooms[tableId].seats[player.seat].hands[key].bet += profitLoss;
 
         // Display winnings or losses of each bet
@@ -1457,8 +1455,7 @@ module.exports = function (io) {
       }
     
       return {
-        totalWinnings,
-        player,
+        totalWinnings
       };
     }
 
@@ -1500,22 +1497,26 @@ module.exports = function (io) {
     
 
 
-    function checkPayOutInsurance(tableId, seat) {
+    function handleInsurancePayout(tableId, seat) {
       let naturalBlackjack = rooms[tableId].dealerCards.naturalBlackjack;
-      let insuranceBet = false
+      let bet = rooms[tableId].insuredPlayers[seat]
+      let hasInsuranceBet = false
       let insuranceWinnings = 0
+      let insuranceProfitLoss = 0
 
 
       if(rooms[tableId].insuredPlayers[seat]){
-        insuranceBet = true
-        
+        hasInsuranceBet = true
         if(naturalBlackjack){
-          insuranceWinnings = rooms[tableId].insuredPlayers[seat] * 2
+          insuranceWinnings = bet * 2
+          insuranceProfitLoss = bet
         } else {
-          insuranceWinnings = -rooms[tableId].insuredPlayers[seat]
+          insuranceWinnings = 0
+          insuranceProfitLoss = -bet
         }
+        
     }
-      return {insuranceWinnings, insuranceBet}
+      return {insuranceWinnings, insuranceProfitLoss, hasInsuranceBet}
     }
 
     
@@ -1543,15 +1544,8 @@ module.exports = function (io) {
         console.log('----------------------');
 
 
-        const {insuranceWinnings, insuranceBet} = checkPayOutInsurance(tableId, player.seat);
 
-
-
-        console.log('------- insuranceWinnings -------');
-        console.log(insuranceWinnings);
-        console.log('----------------------');
-
-        let { totalWinnings } = await calculateAndSavePlayerHand(player, bestDealerValue, insuranceWinnings, insuranceBet, tableId, io);
+        let { totalWinnings } = await calculateAndSavePlayerHand(player, bestDealerValue, tableId, io);
 
 
         console.log('------- totalWinnings -------');
@@ -1602,7 +1596,6 @@ module.exports = function (io) {
     
       console.log('HAND OVER');
     }
-    
 
 
   });

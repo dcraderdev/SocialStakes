@@ -187,6 +187,7 @@ const rebet = (multiplier) => {
     // dispatch(addBetAction(betObj));
   };
 
+  console.log(actionHand);
 
 
   const acceptInsurance = () => {
@@ -207,11 +208,12 @@ const rebet = (multiplier) => {
       return
     }
 
+
     const betObj={
       bet,
       insuranceCost,
       tableId: activeTable.id,
-      seat: currentSeat
+      seat: currentSeat,
     }
     socket.emit('accept_insurance', betObj)
 

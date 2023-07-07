@@ -32,7 +32,7 @@ function InsuranceModal() {
     // socket emit the seat taken, tableID, seat number, player info
     const seatObj = {
       seat:seatNumber,
-      tableId
+      tableId,
     }
     
 

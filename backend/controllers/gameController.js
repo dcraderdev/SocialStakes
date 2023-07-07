@@ -390,7 +390,7 @@ async createHand(userTableId, roundId) {
 
 // Save hand at end of blackjack round
   async savePlayerHand(handObj) {
-    const{handId, cards, result, profitLoss, userTableId, winnings, insuranceBet} = handObj
+    const{handId, userTableId, cards, result, totalProfitLoss, totalWinnings, hasInsuranceBet} = handObj
 
     const handToUpdate = await Hand.findByPk(handId);
     const userTableToUpdate = await UserTable.findByPk(userTableId);
@@ -400,11 +400,11 @@ async createHand(userTableId, roundId) {
 
     handToUpdate.result = result
     handToUpdate.cards = cards
-    handToUpdate.profitLoss = profitLoss
-    handToUpdate.insuranceBet = insuranceBet
+    handToUpdate.profitLoss = totalProfitLoss
+    handToUpdate.hasInsuranceBet = hasInsuranceBet
     await handToUpdate.save();
 
-    userTableToUpdate.tableBalance += winnings
+    userTableToUpdate.tableBalance += totalProfitLoss
     await userTableToUpdate.save();
 
     return 

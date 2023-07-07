@@ -755,7 +755,8 @@ module.exports = function (io) {
                     let seat = sortedSeats[i];
                     // Get the next card and remove it from the drawnCards array
                     let nextCard = drawnCards.shift()
-                    seat.cards.push(nextCard);
+                    let modCard = nextCard % 51
+                    seat.cards.push(modCard);
                       // Create a newHand inside the handsObj in case we need to split during the hand
                       // Use the map we created to get the handIds
                       if(!seat.hands[`${handIds[i]}`]){
@@ -766,18 +767,19 @@ module.exports = function (io) {
                           summary: null
                         }   
                       }
-                      seat.hands[`${handIds[i]}`].cards.push(nextCard);
+                      seat.hands[`${handIds[i]}`].cards.push(modCard);
                       seat.hands[`${handIds[i]}`].bet = seat.currentBet;
                   }
                   // Distribute the cards to the dealer
                   let nextCard = drawnCards.shift()
-                  console.log('------- nextCard -------');
-                  console.log(nextCard);
+                  let modCard = nextCard % 51
+                  console.log('------- modCard -------');
+                  console.log(modCard);
                   console.log('------------------------');
                   if(j===1){
-                    rooms[tableId].dealerCards.hiddenCards.push(nextCard)
+                    rooms[tableId].dealerCards.hiddenCards.push(modCard)
                   }else {
-                    rooms[tableId].dealerCards.visibleCards.push(nextCard)
+                    rooms[tableId].dealerCards.visibleCards.push(modCard)
                   } 
                 }   
         } 
@@ -813,20 +815,13 @@ module.exports = function (io) {
         console.log(rooms[tableId].dealerCards.hiddenCards[0]);
         console.log('------- ------------ -------');
 
-
         let dealerVisibleCard = rooms[tableId].dealerCards.visibleCards[0]
         let dealerHiddenCard = rooms[tableId].dealerCards.hiddenCards[0]
 
-        let convertedVis = cardConverter[dealerVisibleCard]
-        let convertedHid = cardConverter[dealerHiddenCard]
-
-        console.log('------- converted cards -------');
-        console.log(convertedVis);
-        console.log(convertedHid);
-        console.log('------- ------------ -------');        
 
 
 
+ 
         let isAce = cardConverter[dealerVisibleCard].value === 11
         let isMonkey = cardConverter[dealerHiddenCard].value === 10
 

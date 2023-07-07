@@ -339,7 +339,9 @@ console.log(drawnCards);
     let aceCount = 0
     let nonAceTotal = 0; 
     for(let card of cards){
-      let convertedCard = cardConverter[card]
+      let modCard = card % 51
+
+      let convertedCard = cardConverter[modCard]
       console.log(convertedCard);
       if(convertedCard.value === 11){
         aceCount++;

@@ -15,7 +15,8 @@ function Card({card}) {
     if(card === 'hidden'){return}
 
     setConvertedCard(()=>{
-      return cardConverter[card]
+      let modCard = card % 51
+      return cardConverter[modCard]
     })
   },[card])
 

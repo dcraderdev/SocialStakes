@@ -1548,7 +1548,7 @@ module.exports = function (io) {
         // Update and clear player data
         updateAndClearPlayerData(player, totalWinnings, tableId);
     
-
+ 
         await new Promise(resolve => setTimeout(resolve, 3000));
     
         // Display any winnings going to tableBalance

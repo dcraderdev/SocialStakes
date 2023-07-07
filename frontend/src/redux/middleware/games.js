@@ -206,27 +206,27 @@ export const addMessage = (messageObj) => async (dispatch) => {
 }; 
 
 
-export const addBalance = (userId, newBalance) => async (dispatch) => {
+// export const addBalance = (userId, newBalance) => async (dispatch) => {
 
-  dispatch(addBalanceAction());
-  if(user.username === 'Room') return
-  try{
-    const response = await csrfFetch(`/api/users/${userId}/addbalance`, {
-      method: 'PUT',
-      body: JSON.stringify({
-        newBalance
-      })
-    });
-    const data = await response.json();
+//   dispatch(addBalanceAction());
+//   if(user.username === 'Room') return
+//   try{
+//     const response = await csrfFetch(`/api/users/${userId}/addbalance`, {
+//       method: 'PUT',
+//       body: JSON.stringify({
+//         newBalance
+//       })
+//     });
+//     const data = await response.json();
 
-    console.log('-=-=-=-=');
-    console.log(data); 
-    console.log('-=-=-=-='); 
-    if(data){
-      return data;
-    }
+//     console.log('-=-=-=-=');
+//     console.log(data); 
+//     console.log('-=-=-=-='); 
+//     if(data){
+//       return data;
+//     }
 
-  }catch(error){
-    console.log(error);
-  } 
-}; 
+//   }catch(error){
+//     console.log(error);
+//   } 
+// }; 

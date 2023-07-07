@@ -98,7 +98,6 @@ function GameFloor() {
   const leaveSeat = (table) =>{
     console.log('leaving seat');
     dispatch(gameActions.leaveSeat(table.id))
-    leaveTable(table)
   }
 
   const startPrivateGame = () =>{

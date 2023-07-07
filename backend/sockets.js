@@ -756,7 +756,7 @@ module.exports = function (io) {
                           bet: null,
                           turnEnded: false,
                           summary: null
-                        }  
+                        }   
                       }
                       seat.hands[`${handIds[i]}`].cards.push(nextCard);
                       seat.hands[`${handIds[i]}`].bet = seat.currentBet;
@@ -795,6 +795,12 @@ module.exports = function (io) {
         };
         console.log(updateObj);
         io.in(room).emit('get_updated_table', updateObj);
+
+
+        console.log('------- dealer cards -------');
+        console.log(rooms[tableId].dealerCards.visibleCards[0]);
+        console.log(rooms[tableId].dealerCards.hiddenCards[0]);
+        console.log('------- ------------ -------');
 
 
         let dealerVisibleCard = rooms[tableId].dealerCards.visibleCards[0]

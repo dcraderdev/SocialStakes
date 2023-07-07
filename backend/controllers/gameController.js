@@ -305,20 +305,8 @@ console.log('CURRENT BALANCE: ', userToUpdate.balance);
     const {tableId,gameSessionId, blockHash, nonce, decksUsed} = dealObj
 
     console.log('-=-=-=-=DEALING CARDS-=-=-=-=-=');
-    console.log('-=-=-=-=DEALING CARDS-=-=-=-=-=');
-    console.log('-=-=-=-=DEALING CARDS-=-=-=-=-=');
-    console.log('-=-=-=-=DEALING CARDS-=-=-=-=-=');
-    console.log('-=-=-=-=DEALING CARDS-=-=-=-=-=');
-    console.log('-=-=-=-=DEALING CARDS-=-=-=-=-=');
-
     console.log(dealObj);
-    console.log('-=-=-=-=DEALING CARDS-=-=-=-=-=');
-    console.log('-=-=-=-=DEALING CARDS-=-=-=-=-=');
-    console.log('-=-=-=-=DEALING CARDS-=-=-=-=-=');
-    console.log('-=-=-=-=DEALING CARDS-=-=-=-=-=');
-    console.log('-=-=-=-=DEALING CARDS-=-=-=-=-=');
-    console.log('-=-=-=-=DEALING CARDS-=-=-=-=-=');
-    console.log('-=-=-=-=DEALING CARDS-=-=-=-=-=');
+
 
 
     const newRound = await Round.create({tableId, active:true})

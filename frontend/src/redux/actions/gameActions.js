@@ -67,11 +67,11 @@ export const updateTableAction = (data) => {
 };
 
 
-  export const viewTableAction = (data) => {
-    console.log(data);
+  export const viewTableAction = (tableId) => {
+    console.log(tableId);
     return {
       type: VIEW_TABLE,
-      payload: data,
+      payload: tableId,
     };
   };
 

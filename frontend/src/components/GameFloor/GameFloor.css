@@ -34,7 +34,6 @@
   left: 50%;
   transform: translate(-50%,0);
 
-  border: rgb(146, 44, 44) solid 1px;
   width: 95%;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -46,7 +45,6 @@
 }
 
 .available-tables-grid {
-  border: white solid 1px;
   display: flex;
   flex-direction: column;
   grid-gap: 16px;
@@ -79,7 +77,6 @@
   left: 50%;
   transform: translate(-50%,0);
   top: -140px;
-  border: white solid 1px;
 }
 
 .private-game-button{

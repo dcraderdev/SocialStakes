@@ -1,0 +1,57 @@
+.gamebar-table-tab{
+  width: 180px;
+  height: 98%;
+  border: solid 1px rgb(0, 0, 0);
+  border-top: solid 1px rgb(0, 0, 0);
+  border-bottom: solid 1px rgb(0, 0, 0);
+  position: relative;
+  cursor: pointer;
+
+
+
+  background: rgb(58,59,57);
+  background: linear-gradient(90deg, rgba(58,59,57,1) 8%, rgba(56,58,54,1) 48%, rgba(58,59,57,1) 82%);
+}
+
+.gamebar-table-tab:hover{
+  background: rgb(58,59,57);
+  background: linear-gradient(90deg, rgba(58,59,57,1) 8%, rgba(68,71,66,1) 48%, rgba(58,59,57,1) 82%);
+  background: linear-gradient(90deg, rgba(68,71,66,1) 8%, rgb(61, 62, 60) 48%, rgba(68,71,66,1) 82%);
+}
+
+.active-tab{
+  border: solid 1px rgb(200, 57, 13);
+  border-top: solid 2px rgb(200, 57, 13);
+}
+
+
+.gamebar-close-button{
+  position: absolute;
+  top: 0px;
+  right: 2px;
+}
+
+.gamebar-close-button:hover{
+  color: white;
+}
+
+
+
+.card-container{
+  height: 44px;
+}
+.gamebar-card{
+  width: 30px;
+  height: 40px;
+
+}
+
+.wager-container{
+  flex-direction: column;
+  position: absolute;
+  left: 0px;
+}
+
+.min-wager{
+  border-bottom: solid 1px black;
+}

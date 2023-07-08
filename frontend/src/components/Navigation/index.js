@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Route, Router, Switch, NavLink } from 'react-router-dom';
 import './Navigation.css';
 import ProfileButtonModal from '../ProfileButtonModal'
+import ActiveGameBar from '../ActiveGameBar'
 
 import { showGamesAction } from '../../redux/actions/gameActions';
 
@@ -24,12 +25,19 @@ function Navigation(){
   const { modal, openModal, closeModal, needsRerender, setNeedsRerender } = useContext(ModalContext);
   const { windowWidth, profileBtnRef} = useContext(WindowContext);
 
-  const [loaded, isLoaded] = useState(false);
+  const [hasCurrentTables, setHasCurrentTables] = useState(false);
 
   const user = useSelector(state=> state.users.user)
   const balance = useSelector(state=> state.users.balance)
+  const currentTables = useSelector(state => state.games.currentTables);
+
  
   const wideScreen = windowWidth > 600
+
+
+  useEffect(()=>{
+    setHasCurrentTables(Object.entries(currentTables).length > 0)
+  },[currentTables])
 
 
 
@@ -62,7 +70,11 @@ function Navigation(){
 
   return (
     <>
+        <div className={`nav-active-games ${hasCurrentTables ? 'gametabs-expanded' : ' gametabs-shrunk'}`}>
+            <ActiveGameBar/>
+        </div>
       <nav className="nav-bar style2-color1">
+
         <div className='nav-buttons'>
 
           <div className='logo-container flex center'>

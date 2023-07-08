@@ -70,13 +70,18 @@ function GameFloor() {
         return
       }
       if(user){ 
-        // dispatch(gameActions.viewTable(table.id)).then(()=>{
+        if(currentTables[table.id]){
+          socket.emit('view_room', table.id);
+        } else {
           socket.emit('join_room', table.id);
+        }
+        
+        // dispatch(gameActions.viewTable(table.id)).then(()=>{
         // })
       }
   }
 
-
+console.log(currentTables);
 
 //   const leaveTable = (table) =>{
 //     console.log('leaving table');

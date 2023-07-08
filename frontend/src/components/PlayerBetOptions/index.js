@@ -248,8 +248,14 @@ const rebet = (multiplier) => {
   const addBalance = () => {
       if(!user) return
       if(!currentSeat) return
-      setUpdateObj({minBet:activeTable.Game.minBet, seatNumber:currentSeat, type:'addDeposit'})
-      openModal('balanceModal')
+
+      if(currentTables && activeTable){
+        let currMinBet = currentTables[activeTable.id].Game.minBet
+        setUpdateObj({minBet:currMinBet, seatNumber:currentSeat, type:'addDeposit'})
+        openModal('balanceModal')
+      }
+      // setUpdateObj({minBet:activeTable.Game.minBet, seatNumber:currentSeat, type:'addDeposit'})
+      // openModal('balanceModal')
   };
 
 

@@ -139,10 +139,14 @@ const TableSeat = ({seatNumber}) => {
 
   const takeSeat = () => {
     if(!user) return
-    
     if(player || isUserInAnySeat) return
-    setUpdateObj({minBet:activeTable.Game.minBet, seatNumber, type:'initDeposit'})
-    openModal('balanceModal')
+
+
+    if(currentTables && activeTable){
+      let currMinBet = currentTables[activeTable.id].Game.minBet
+      setUpdateObj({minBet:currMinBet, seatNumber, type:'initDeposit'})
+      openModal('balanceModal')
+    }
   }
 
 

@@ -223,6 +223,16 @@ module.exports = function (io) {
       console.log('-=-=-=-=-=-=-=-=-=');
     });
 
+    socket.on('view_room', async (tableId) => {
+      console.log('--- view_room ---');
+      let room = tableId
+      let table = {id: tableId}
+
+      socket.emit('view_table', table);
+    });
+
+
+
     socket.on('leave_room', (room) => {
       console.log('--- leave_room ---');
       console.log(`${username} is leaving room ${room}.`);
@@ -301,7 +311,7 @@ module.exports = function (io) {
     });
 
 
-
+ 
     
     socket.on('leave_seat', async (seatObj) => {
                
@@ -530,7 +540,7 @@ module.exports = function (io) {
       console.log('--------------');
     });
 
-
+ 
     socket.on('remove_all_bet', async (betObj) => {
       const { tableId, seat, lastBet } = betObj
       let room = tableId
@@ -951,7 +961,7 @@ module.exports = function (io) {
           rooms[tableId].sortedFinishedPlayers.push(nextPlayer)
           // await gameLoop(tableId, io) 
           return
-        }
+        } 
 
         for(let [key, handData] of playerHands){
  
@@ -959,12 +969,12 @@ module.exports = function (io) {
                 console.log(player);
                 console.log(handData);
                 console.log('-=-=-=-=-=-'); 
-      
+       
                 if (handData.turnEnded) continue;
 
                 let cards = handData.cards
-                let playerHand = await handSummary(cards)
-                // Assign handSummary to hand
+                let playerHand = await handSummary(cards) 
+                // Assign handSummary to hand 
                 handData.summary = playerHand;
 
 
@@ -975,7 +985,7 @@ module.exports = function (io) {
                 }
 
                 // Create actionTimer 
-                rooms[tableId].actionTimer = 5000;
+                rooms[tableId].actionTimer = 500000;
         
                 // Set action seat
                 rooms[tableId].actionSeat = player.seat
@@ -1095,7 +1105,7 @@ module.exports = function (io) {
           deck: rooms[tableId].deck,
           cardsToDraw,
           cursor:rooms[tableId].cursor
-        }
+        } 
 
 
 
@@ -1226,9 +1236,7 @@ module.exports = function (io) {
       }
 
 
-      async function playerInsurance(actionObj, io){
-        const {tableId, action, seat, handId } = actionObj
-      }
+
  
 
       async function handleDealerTurn(tableId, io) {
@@ -1389,8 +1397,8 @@ module.exports = function (io) {
 
 
           const {userId, seat } = player;
-          let userTableId = rooms[tableId].seats[seat].id;
-          let tableBalance = rooms[tableId].seats[seat].tableBalance;
+          let userTableId = rooms[tableId]?.seats?.[seat].id;
+          let tableBalance = rooms[tableId]?.seats?.[seat].tableBalance;
     
           // Remove the player from the room state
           if(rooms[tableId] && rooms[tableId].seats[seat]){

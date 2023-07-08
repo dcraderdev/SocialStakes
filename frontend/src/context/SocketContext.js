@@ -54,8 +54,8 @@ const SocketProvider = ({ children }) => {
   useEffect(() => {
     if(socket){
       
-      socket.on('view_table', (table) => {
-        dispatch(viewTableAction(table));
+      socket.on('view_table', (tableId) => {
+        dispatch(viewTableAction(tableId));
       }); 
 
       socket.on('join_table', (table) => {

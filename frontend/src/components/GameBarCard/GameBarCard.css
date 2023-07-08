@@ -1,44 +1,33 @@
-.card {
+.gamebarcard {
   user-select: none;
   border-radius: 5px;
   background-color: #f0ead6;
   border: .5px solid rgb(2, 1, 0);
   position: relative;
-  width: 40px;
-  height: 60px;
+  width: 28px;
+  height: 37px;
+  top: 2px;
   
 }
 
 
-.card.hidden{
+.gamebarcard.hidden{
   background-color: #302a17;
   
 }
 
 
-.card-suit {
+.gamebarcard-suit {
   position: absolute;
-  top: 2px;
-  left: 5px;
-  width: 20px;
-  height: 20px;
-  font-size: 10px;
+  top: 70%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 13px;
 }
 
-.card-suit-flip {
-  transform: rotate(180deg);
+.gamebarcard-rank {
   position: absolute;
-  bottom: 2px;
-  left: 15px;
-  width: 20px;
-  height: 20px;
-  font-size: 10px;
-}
-
-
-.card-rank {
-  position: absolute;
-  top: 50%;
+  top: 30%;
   left: 50%;
   transform: translate(-50%, -50%);
   font-size: 15px;

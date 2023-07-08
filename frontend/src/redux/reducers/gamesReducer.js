@@ -120,9 +120,7 @@ const gamesReducer = (state = initialState, action) => {
 
     case VIEW_TABLE:{
       console.log(action.payload);
-      let newCurrentTables = {...newState.currentTables}
-      newCurrentTables[action.payload.id] = action.payload
-      return {...newState, currentTables: newCurrentTables, activeTable:action.payload, showGames: false, showTables: false, showActiveTable: true}
+      return {...newState, activeTable:action.payload, showGames: false, showTables: false, showActiveTable: true}
     }
 
 

@@ -5,7 +5,7 @@ import './LeaveModal.css';
 import { ModalContext } from '../../context/ModalContext';
 import { SocketContext } from '../../context/SocketContext';
 import * as sessionActions from '../../redux/middleware/users';
-import { showGamesAction } from '../../redux/actions/gameActions';
+import { showGamesAction, leaveTableAction } from '../../redux/actions/gameActions';
 
 function LeaveModal() {
   const dispatch = useDispatch();
@@ -39,15 +39,16 @@ function LeaveModal() {
   
 
   const leaveSeat = () => {
-    const {seatNumber, tableBalance} = updateObj
+    const {seat, tableId, type} = updateObj
     // dispatch(gameActions.leaveSeat(table.id, seatNumber))
+    if(type && type==='leaveTableViaTab'){
+      dispatch(leaveTableAction(tableId))
+    }
     
     // socket emit the seat taken, tableID, seat number, player info
     const seatObj = {
-      room: table.id,
-      seat:seatNumber,
-      user: user,
-      tableBalance
+      tableId,
+      seat,
     }
     
     socket.emit('leave_seat', seatObj)

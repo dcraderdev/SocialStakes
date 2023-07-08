@@ -152,9 +152,7 @@ const TableSeat = ({seatNumber}) => {
 
 
   const leaveSeat = () => {
-    console.log(seatNumber);
-    let tableBalance = pendingBet + currentBalance
-    setUpdateObj({seatNumber, tableBalance})
+    setUpdateObj({seat:seatNumber, tableId:activeTable.id})
     openModal('leaveModal')
   }
 

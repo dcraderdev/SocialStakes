@@ -2,12 +2,13 @@ import { React, useState, useRef, useEffect, useContext } from 'react';
 import { Route, Router, Switch, NavLink, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import * as gameActions from '../../redux/middleware/games';
-import { showGamesAction, showTablesAction } from '../../redux/actions/gameActions';
+import { showGamesAction, showTablesAction, leaveTableAction } from '../../redux/actions/gameActions';
 import GameTile from '../GameTile';
 import TableTile from '../TableTile';
 import GameBarCard from '../GameBarCard';
 
 import { SocketContext } from '../../context/SocketContext';
+import { ModalContext } from '../../context/ModalContext';
 
 import './ActiveGameBar.css'
 
@@ -19,31 +20,26 @@ const ActiveGameBar = () => {
   const dispatch = useDispatch();
   
   const user = useSelector(state => state.users.user);
-  const allGames = useSelector((state) => state.games.games);
-  const openTablesByGameType = useSelector((state) => state.games.openTablesByGameType);
+  // const allGames = useSelector((state) => state.games.games);
+  // const openTablesByGameType = useSelector((state) => state.games.openTablesByGameType);
   const currentTables = useSelector((state) => state.games.currentTables);
   
-  const showGames = useSelector((state) => state.games.showGames);
-  const showTables = useSelector((state) => state.games.showTables);
+  // const showGames = useSelector((state) => state.games.showGames);
+  // const showTables = useSelector((state) => state.games.showTables);
   const activeTable = useSelector((state) => state.games.activeTable);
   
-  const [isLoaded, setIsLoaded] = useState(false);
   
-  const [tables, setTables] = useState({});
+  // const [actionHand, setActionHand] = useState(null);
+  // const [needsNotification, setNeedsNotification] = useState(null);
 
+  const { modal, openModal, closeModal, updateObj, setUpdateObj} = useContext(ModalContext);
 
-  const [actionHand, setActionHand] = useState(null);
-  const [needsNotification, setNeedsNotification] = useState(null);
-
-  useEffect(() => {
-    if(activeTable && user && currentTables && currentTables?.[activeTable.id]?.tableUsers){
-      let currActionHand = currentTables[activeTable.id]?.actionHand;
-      setActionHand(currActionHand)
-    }
-  }, [currentTables, activeTable]);
-
-
-console.log(actionHand);
+  // useEffect(() => {
+  //   if(activeTable && user && currentTables && currentTables?.[activeTable.id]?.tableUsers){
+  //     let currActionHand = currentTables[activeTable.id]?.actionHand;
+  //     setActionHand(currActionHand)
+  //   }
+  // }, [currentTables, activeTable]);
 
 
 
@@ -53,7 +49,31 @@ console.log(actionHand);
   const closeTable = (e,tableId) => {
     e.preventDefault()
     e.stopPropagation()
-    socket.emit('view_room', tableId);
+
+    let seatNumber = checkForSeat(tableId)
+    if(seatNumber){
+      setUpdateObj({seat:seatNumber, tableId:activeTable.id, type:'leaveTableViaTab'})
+      openModal('leaveModal')
+    }
+    else {
+      dispatch(leaveTableAction(tableId))
+      // delete currentTables[tableId]
+    }
+
+  }
+  
+  const checkForSeat=(tableId)=>{
+    let seat
+    let hasSeat = Object.entries(currentTables[tableId].tableUsers).some(([seatId, seatData], index) => {
+      if(seatData.userId === user.id){
+        seat = seatId
+        return true
+      }
+    })
+    if(hasSeat){
+      return seat
+    }
+    return false
   }
 
 
@@ -61,7 +81,6 @@ console.log(actionHand);
   return (
     <div className='gamebar-container flex'>
 {Object.entries(currentTables).map(([tableId, tableData], index) => {
-  console.log(tableData);
   let userCards;
   let handNeedsAttention = tableData.actionSeat === tableData.currentSeat
   console.log(tableData.Game.minBet);

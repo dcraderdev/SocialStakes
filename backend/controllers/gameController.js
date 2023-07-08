@@ -174,12 +174,20 @@ console.log('CURRENT BALANCE: ', userToUpdate.balance);
         active: true
       },
     });
+
+    const userAlreadySitting = await UserTable.findOne({
+      where: { 
+        tableId,
+        userId:user.id,
+        active: true
+      },
+    });
   
     // If there's an active user in the seat, return false
-    if (activeUserInSeat) {
+    if (activeUserInSeat || userAlreadySitting) {
       console.log('Seat is active');
       return false;
-    }
+    } 
   
     // update user's unplayed balance
     userToUpdate.balance -= amount;

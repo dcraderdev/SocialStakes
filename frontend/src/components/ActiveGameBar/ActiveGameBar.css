@@ -6,6 +6,7 @@
   border-bottom: solid 1px rgb(0, 0, 0);
   position: relative;
   cursor: pointer;
+  color: white;
 
 
 
@@ -49,9 +50,10 @@
 .wager-container{
   flex-direction: column;
   position: absolute;
-  left: 0px;
+  left: 1px;
 }
 
 .min-wager{
-  border-bottom: solid 1px black;
+
+  border-bottom: solid 1px rgb(255, 255, 255);
 }

@@ -14,8 +14,10 @@ import {
   UPDATE_TABLE_COUNTDOWN,
   COLLECT_BETS,
   OFFER_INSURANCE,
-  RESCIND_INSURANCE
+  RESCIND_INSURANCE, REMOVE_USER
  } from '../actions/actionTypes'
+
+
 
 const initialState = {
   games:{},
@@ -48,7 +50,10 @@ const gamesReducer = (state = initialState, action) => {
       return {...newState, openTablesByGameType: action.payload, showGames: false, showTables: true, showActiveTable: false}
     }
 
-
+    case REMOVE_USER:{
+      const newGames = {...newState.games}
+      return {...initialState, games: newGames}
+    }
 
 
 

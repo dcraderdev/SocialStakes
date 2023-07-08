@@ -95,6 +95,8 @@ import { ModalContext } from '../../context/ModalContext';
   };
 
   const leaveTable = () => {
+    console.log('here');
+
     dispatch(leaveTableAction(activeTable.id));
   };
 
@@ -187,7 +189,7 @@ const rebet = (multiplier) => {
     // dispatch(addBetAction(betObj));
   };
 
-  console.log(actionHand);
+
 
 
   const acceptInsurance = () => {

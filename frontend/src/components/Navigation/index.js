@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Route, Router, Switch, NavLink } from 'react-router-dom';
 import './Navigation.css';
 import ProfileButtonModal from '../ProfileButtonModal'
+import ActiveGameBar from '../ActiveGameBar'
 
 import { showGamesAction } from '../../redux/actions/gameActions';
 
@@ -63,6 +64,11 @@ function Navigation(){
   return (
     <>
       <nav className="nav-bar style2-color1">
+
+        <div className='nav-active-games'>
+            <ActiveGameBar/>
+
+        </div>
         <div className='nav-buttons'>
 
           <div className='logo-container flex center'>

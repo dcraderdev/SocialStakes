@@ -7,8 +7,21 @@
   top: 0px;
   z-index: 1000000;
   border-bottom: 1px solid black;
-
 }
+
+.nav-active-games {
+  position: fixed;
+  display: flex;
+  height: 44px;
+  width: 100%;
+  left: 0px;
+  top: 50px;
+  z-index: 1000000;
+  border-bottom: 1px solid black;
+}
+
+
+
 
 
 .nav-buttons{
@@ -118,7 +131,6 @@
   .logo-name{
     font-size: 40px;
     width: 270px;
-
   }
 }
 

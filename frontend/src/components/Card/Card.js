@@ -35,6 +35,8 @@ function Card({card}) {
     )
   }
 
+  console.log(card);
+
   return (
     <div className="card">
       <div className={`card-suit ${suit}`}>{rank}{suit}</div>

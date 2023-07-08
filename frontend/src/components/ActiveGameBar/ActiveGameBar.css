@@ -1,0 +1,11 @@
+.gamebar-table-tab{
+  border: white solid 1px;
+  width: 250px;
+  height: 250px;
+}
+
+.card-container{
+  border: rgb(208, 40, 40) solid 1px;
+  width: 250px;
+  height: 250px;
+}

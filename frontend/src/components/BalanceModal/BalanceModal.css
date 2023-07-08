@@ -95,14 +95,7 @@
 }
 
 
-.disabled{
-  color: rgba(255, 255, 255, 0.297);
-  border: solid 1px rgba(255, 255, 255, 0.278);
-}
-.disabled:hover{
-  color: rgba(255, 255, 255, 0.149);
-  border: solid 1px rgba(255, 255, 255, 0.118);
-}
+
 
 
 .balancemodal-funding-input{

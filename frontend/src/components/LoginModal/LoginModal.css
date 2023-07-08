@@ -13,6 +13,23 @@
   border-radius: 5px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   width: 450px;
+
+
+  z-index: 1;
+  position: absolute;
+  border: 1px solid rgb(0, 0, 0);
+  background-color: rgb(53, 49, 49);
+  padding: 20px;
+  color: white;
+  text-shadow: -1px 0 black, 0 3px black, 3px 0 black, 0 -1px black;
+
+
+
+  font-size:20px;
+  border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 450px;
+  justify-content: center;
 }
 
 
@@ -41,10 +58,10 @@
 
 
 .signinDiv-button {
-
   width: 99%;
   padding: 10px;
   font-size: 15px;
+  cursor: pointer;
 }
 
 
@@ -60,19 +77,13 @@
 
 .login-signup-link {
   position: relative;
-  right: 21px;
-
+  top: 10px;
+  cursor: pointer;
 }
 
 
-.login-forgot-password-link {
-  position: relative;
-  right: 21px;
-}
-
-.demo-user-singin{
-  left: 14px;
-  display: block;
+.login-signup-link:hover {
+text-decoration: underline;
 }
 
 

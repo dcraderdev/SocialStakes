@@ -7,6 +7,7 @@ import GameTile from '../GameTile';
 import TableTile from '../TableTile';
 
 import { SocketContext } from '../../context/SocketContext';
+import { ModalContext } from '../../context/ModalContext';
 
 
 import './GameFloor.css';
@@ -15,6 +16,7 @@ import Game from '../Game';
 function GameFloor() {
   
   const { socket } = useContext(SocketContext);
+  const { openModal } = useContext(ModalContext);
   const location = useLocation();
   const dispatch = useDispatch();
 
@@ -67,6 +69,7 @@ function GameFloor() {
       //join table's socket
 
       if(!user){ 
+        openModal('login')
         return
       }
       if(user){ 

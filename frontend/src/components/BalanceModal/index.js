@@ -200,7 +200,7 @@ function BalanceModal() {
               Cancel
             </div>
             <div
-             className={`balancemodal-addbalance flex center ${amount < updateObj.minBet ? ' disabled' : ''}`} 
+             className={`balancemodal-addbalance flex center ${amount < updateObj.minBet ? ' balancemodal-disabled' : ''}`} 
              onClick={fundTable}
             >
               Submit

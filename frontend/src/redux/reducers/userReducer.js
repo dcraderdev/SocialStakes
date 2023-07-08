@@ -22,6 +22,8 @@ const userReducer = (state = initialState, action) => {
   switch (action.type) {
 
     case SET_USER:
+      console.log(action.payload);
+
       let newBalance = action.payload.balance
       return {
         ...newState,

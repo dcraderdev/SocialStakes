@@ -335,20 +335,10 @@ module.exports = function (io) {
           tableBalance: player.tableBalance,
         }
 
-
-        console.log('----- anyPlayersLeft -------');
-        console.log('----------------------------');
-        console.log(anyPlayersLeft);
-        console.log('----------------------------');
-        console.log('----------------------------');
-
-
         // If the user disconnects during a hand, add them to the forfeited players
         if (handInProgress) {
           rooms[tableId].forfeitedPlayers.push({userId, seat});
           io.in(room).emit('player_forfeit', leaveSeatObj);
-
-
 
           if(!anyPlayersLeft){
             await endRound(tableId,io)
@@ -358,46 +348,19 @@ module.exports = function (io) {
               handData.turnEnded = true
             }
             await gameLoop(tableId, io)
-            
           }
-
-
-
         } else {
 
-          console.log('----- Refund pending bet -------');
-          console.log('----------------------------');
-          console.log(rooms[tableId].seats[seat].pendingBet);
-          console.log(rooms[tableId].seats[seat].tableBalance);
-          console.log('----------------------------');
-          console.log('----------------------------');
-          
-
         // Refund pending bet(if exists) for user 
-
         player.tableBalance += rooms[tableId].seats[seat].pendingBet;
         rooms[tableId].seats[seat].pendingBet = 0;
         leaveSeatObj.tableBalance = player.tableBalance
-
-        console.log('----- New Balance -------');
-        console.log('----------------------------');
-        console.log(rooms[tableId].seats[seat].pendingBet);
-        console.log(rooms[tableId].seats[seat].tableBalance);
-        console.log('----------------------------');
-        console.log('----------------------------');
-
-
 
         // Remove the player from the room state
         if(rooms[tableId] && rooms[tableId].seats[seat]){
           delete rooms[tableId].seats[seat];
         }  
 
-        console.log('----- leaveSeatObj -------');
-        console.log('----------------------------');
-        console.log(leaveSeatObj);
-        console.log('----------------------------');
-        console.log('----------------------------');
         const leaveSeat = await gameController.leaveSeat(leaveSeatObj)
         if(!leaveSeat) return
         io.in(room).emit('player_leave', leaveSeatObj);
@@ -409,7 +372,6 @@ module.exports = function (io) {
         console.log('NO BETS!');
         stopTimer(tableId);
       }
-
     });
 
       
@@ -1534,6 +1496,7 @@ module.exports = function (io) {
 
 
     function emitUpdatedTable(tableId, io) {
+      if(!rooms[tableId])return
       let room = tableId
       let updateObj = {
         tableId,

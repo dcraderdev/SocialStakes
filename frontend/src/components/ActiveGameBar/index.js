@@ -5,7 +5,7 @@ import * as gameActions from '../../redux/middleware/games';
 import { showGamesAction, showTablesAction } from '../../redux/actions/gameActions';
 import GameTile from '../GameTile';
 import TableTile from '../TableTile';
-import Card from '../Card';
+import GameBarCard from '../GameBarCard';
 
 import { SocketContext } from '../../context/SocketContext';
 
@@ -32,26 +32,39 @@ const ActiveGameBar = () => {
   const [tables, setTables] = useState({});
 
 
-  console.log(currentTables);
+  const [actionHand, setActionHand] = useState(null);
+  const [needsNotification, setNeedsNotification] = useState(null);
 
-  useEffect(()=>{
-    if(currentTables){
-      setTables
+  useEffect(() => {
+    if(activeTable && user && currentTables && currentTables?.[activeTable.id]?.tableUsers){
+      let currActionHand = currentTables[activeTable.id]?.actionHand;
+      setActionHand(currActionHand)
     }
+  }, [currentTables, activeTable]);
 
-  },[currentTables, activeTable])
+
+console.log(actionHand);
+
+
 
   const viewTable = (tableId) => {
     socket.emit('view_room', tableId);
   }
-  
+  const closeTable = (e,tableId) => {
+    e.preventDefault()
+    e.stopPropagation()
+    socket.emit('view_room', tableId);
+  }
 
 
 
   return (
-    <div className='flex'>
+    <div className='gamebar-container flex'>
 {Object.entries(currentTables).map(([tableId, tableData], index) => {
+  console.log(tableData);
   let userCards;
+  let handNeedsAttention = tableData.actionSeat === tableData.currentSeat
+  console.log(tableData.Game.minBet);
   
   // check if currentTables and current tableId exist
   if (currentTables && currentTables[tableId]?.tableUsers) {
@@ -64,18 +77,37 @@ const ActiveGameBar = () => {
   }
 
 
-        // let userCards = currentTables[activeTable.id]?.tableUsers?.[seatNumber]?.cards;
+        // let userCards = currentTables[activeTable.id]?.tableUsers?.[seatNumber]?.cards; 
       return(
-        <div onClick={()=>viewTable(tableId)} className='gamebar-table-tab flex' key={index}>
+        <div onClick={()=>viewTable(tableId)} className={`gamebar-table-tab flex center ${handNeedsAttention ? ' active-tab' : ''}`} key={index}>
+          <div onClick={
+            (e)=>{
+
+              closeTable(e,tableId)
+            }} 
+            className='gamebar-close-button'
+            >
+            x
+          </div>
+          <div className='wager-container flex center'>
+          <div className='min-wager'>
+            {tableData.Game.minBet}
+          </div>
+          <div>
+          {tableData.Game.maxBet}
+          </div>
+          </div>
           {userCards &&( 
-          <div className='card-container'>
-            {userCards.map((card,i)=>{
-              console.log(card);
-             return card && <Card key={i} card={card}/>
-            })}
-            </div>)
-            }
-          {/* {tableId} */}
+            <div className='card-container flex center'>
+              {userCards.map((card,i)=>{
+              return card !== undefined && 
+              <div className='gamebar-card'>
+                < GameBarCard key={i} card={card}/>
+              </div>
+
+              })}
+            </div>
+          )}
 
         </div>
       )

@@ -9,15 +9,28 @@
   border-bottom: 1px solid black;
 }
 
+
+
+
 .nav-active-games {
   position: fixed;
   display: flex;
-  height: 44px;
   width: 100%;
   left: 0px;
   top: 50px;
   z-index: 1000000;
   border-bottom: 1px solid black;
+  justify-content: center;
+  background-color: #2d2e2c;
+  transition: all .5s ease;
+}
+
+.gametabs-shrunk {
+  height: 0px;
+}
+
+.gametabs-expanded{
+  height: 44px;
 }
 
 

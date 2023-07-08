@@ -961,7 +961,7 @@ module.exports = function (io) {
           rooms[tableId].sortedFinishedPlayers.push(nextPlayer)
           // await gameLoop(tableId, io) 
           return
-        }
+        } 
 
         for(let [key, handData] of playerHands){
  
@@ -969,12 +969,12 @@ module.exports = function (io) {
                 console.log(player);
                 console.log(handData);
                 console.log('-=-=-=-=-=-'); 
-      
+       
                 if (handData.turnEnded) continue;
 
                 let cards = handData.cards
-                let playerHand = await handSummary(cards)
-                // Assign handSummary to hand
+                let playerHand = await handSummary(cards) 
+                // Assign handSummary to hand 
                 handData.summary = playerHand;
 
 
@@ -985,7 +985,7 @@ module.exports = function (io) {
                 }
 
                 // Create actionTimer 
-                rooms[tableId].actionTimer = 5000;
+                rooms[tableId].actionTimer = 500000;
         
                 // Set action seat
                 rooms[tableId].actionSeat = player.seat
@@ -1236,9 +1236,7 @@ module.exports = function (io) {
       }
 
 
-      async function playerInsurance(actionObj, io){
-        const {tableId, action, seat, handId } = actionObj
-      }
+
  
 
       async function handleDealerTurn(tableId, io) {

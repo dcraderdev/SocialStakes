@@ -4,7 +4,7 @@ import {
   UPDATE_TABLE,
   VIEW_TABLE, LEAVE_TABLE, JOIN_TABLE,
   TAKE_SEAT, LEAVE_SEAT, CHANGE_SEAT, FORFEIT_SEAT,
-  SHOW_GAMES, SHOW_TABLES, SHOW_ACTIVE_TABLES,
+  SHOW_GAMES, SHOW_TABLES, SHOW_ACTIVE_TABLES, SHOW_CREATING_GAME,
   ADD_MESSAGE, TOGGLE_SHOW_MESSAGES,
   ADD_BALANCE,
   ADD_BET, REMOVE_LAST_BET, REMOVE_ALL_BET,
@@ -130,6 +130,12 @@ export const showGamesAction = () => {
 export const showTablesAction = () => {
   return {
     type: SHOW_TABLES
+  };
+};
+
+export const showCreatingGameAction = () => {
+  return {
+    type: SHOW_CREATING_GAME
   };
 };
 

@@ -58,6 +58,7 @@ export const FORFEIT_SEAT = 'game/FORFEIT_SEAT';
 export const SHOW_GAMES = 'game/SHOW_GAMES';
 export const SHOW_TABLES = 'game/SHOW_TABLES';
 export const SHOW_ACTIVE_TABLES = 'game/SHOW_ACTIVE_TABLES';
+export const SHOW_CREATING_GAME = 'game/SHOW_CREATING_GAME'
 
 
 export const ADD_MESSAGE = 'game/ADD_MESSAGE';

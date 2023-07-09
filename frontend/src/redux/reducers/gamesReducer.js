@@ -4,7 +4,7 @@ import {
   UPDATE_TABLE,
   VIEW_TABLE, LEAVE_TABLE, JOIN_TABLE,
   LEAVE_SEAT, TAKE_SEAT, FORFEIT_SEAT,
-  SHOW_GAMES, SHOW_TABLES, SHOW_ACTIVE_TABLES,
+  SHOW_GAMES, SHOW_TABLES, SHOW_ACTIVE_TABLES, SHOW_CREATING_GAME,
   ADD_MESSAGE, TOGGLE_SHOW_MESSAGES,
   ADD_BALANCE,
   ADD_BET, REMOVE_LAST_BET, REMOVE_ALL_BET,
@@ -28,6 +28,7 @@ const initialState = {
   showGames: true,
   showTables: false,
   showMessages: true,
+  showCreatingGame: false
 }
 
 const gamesReducer = (state = initialState, action) => {
@@ -219,11 +220,16 @@ const gamesReducer = (state = initialState, action) => {
 
 
     case SHOW_GAMES:{
-      return {...newState, showGames: true, showTables: false, activeTable: null}
+      return {...newState, showCreatingGame:false, showGames: true, showTables: false, activeTable: null}
     }
     case SHOW_TABLES:{
-      return {...newState, showGames: false, showTables: true, activeTable: null}
+      return {...newState, showCreatingGame:false, showGames: false, showTables: true, activeTable: null}
     }
+
+    case SHOW_CREATING_GAME:{
+      return {...newState, showCreatingGame:true, showGames: false, showTables: false, activeTable: null}
+    }
+
     case TOGGLE_SHOW_MESSAGES:{
       let toggle = !newState.showMessages
       return {...newState, showMessages: toggle}

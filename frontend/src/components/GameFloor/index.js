@@ -127,14 +127,11 @@ console.log(currentTables);
           {!activeTable && (
             <div>
             <div className='private-game-buttons'>
-              <div className='private-game-button' onClick={startPrivateGame}>Start Private Game</div>
-              <div className='private-game-button' onClick={joinPrivateGame}>Join Private Game</div>
+                <div className='private-game-button flex center' onClick={startPrivateGame}>Start Private Game</div>
+                
+              <div className='private-game-button flex center' onClick={joinPrivateGame}>Join Private Game</div>
             </div>
-            <div className='gamefloor-back-button-container'>
-              <div className='gamefloor-back-button flex center' onClick={goBack}>
-                <i className="fa-solid fa-arrow-left-long"></i>
-              </div>
-            </div>
+
 
             </div>
           )}
@@ -169,6 +166,44 @@ console.log(currentTables);
 {/* SHOW AVAILABLE TABLES PER GAME TYPE */}
                 {isLoaded && showTables && (
                       <div className="available-tables-grid">
+                        <div className='available-tables-sort-container flex'>
+                        <div className=' status-playercount-container flex center'>
+
+
+
+<div className='playercount-sort-container flex center'>
+    <div className='playercount-curr'>Players</div>
+    <div className='arrow-container flex'>
+    <i className="sort-arrow fa-solid fa-angle-up"></i>
+    <i className="sort-arrow fa-solid fa-angle-down"></i>
+  </div>
+</div>
+
+
+
+
+<div className='deck-sort-container flex center'>
+  <div className='deck-sort-text'>Deck</div>
+  <div className='arrow-container flex'>
+    <i className="sort-arrow fa-solid fa-angle-up"></i>
+    <i className="sort-arrow fa-solid fa-angle-down"></i>
+  </div>
+
+</div>
+
+</div>
+
+
+<div className='betsize-sort-container flex center'>
+  <div>min/max</div>
+  <div className='arrow-container flex'>
+    <i className="sort-arrow fa-solid fa-angle-up"></i>
+    <i className="sort-arrow fa-solid fa-angle-down"></i>
+  </div>
+</div>
+
+
+                        </div>
                         {openTablesByGameType && openTablesByGameType.map((table, index) => (
                           <TableTile key={index} table={table} viewTable={viewTable}/>
                         ))}

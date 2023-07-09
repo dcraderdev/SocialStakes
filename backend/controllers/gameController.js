@@ -45,7 +45,10 @@ const gameController = {
         {
           model: User,
           as: 'players',
-          through: UserTable,
+          through: {
+            model: UserTable,
+            where: { active: true },
+          },
           attributes: ['id', 'username', 'rank'],
         },
       ],
@@ -57,6 +60,35 @@ const gameController = {
     }
     return tables;
   },
+
+  // async getTablesByType(gameType) {
+  //   const tables = await Table.findAll({
+  //     where: {
+  //       active: true,
+  //     },
+  //     include: [
+  //       {
+  //         model: Game,
+  //         where: { gameType },
+  //         attributes: {
+  //           exclude: ['createdAt', 'updatedAt', 'rake']
+  //         },
+  //       },
+  //       {
+  //         model: UserTable,
+  //         where:{active:true},
+  //         required: false, 
+  //         attributes: ['id'],
+  //       },
+  //     ],
+  //     attributes: ['id','private'],
+  //   });
+
+  //   if (!tables) {
+  //     return false;
+  //   }
+  //   return tables;
+  // },
 
   async getTableById(tableId) {
     const table = await Table.findByPk(tableId, {

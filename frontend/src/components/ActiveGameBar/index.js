@@ -83,8 +83,6 @@ const ActiveGameBar = () => {
 {Object.entries(currentTables).map(([tableId, tableData], index) => {
   let userCards;
   let handNeedsAttention = tableData.actionSeat === tableData.currentSeat
-  console.log(tableData.Game.minBet);
-  
   // check if currentTables and current tableId exist
   if (currentTables && currentTables[tableId]?.tableUsers) {
     userCards = Object.values(currentTables[tableId]?.tableUsers).map(seat => {

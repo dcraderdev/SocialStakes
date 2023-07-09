@@ -32,6 +32,7 @@
   position: relative;
 
   left: 50%;
+  top: -50px;
   transform: translate(-50%,0);
 
   width: 95%;
@@ -128,6 +129,7 @@
 }
 .sort-arrow {
   font-size: 15px;
+  z-index: 100;
   cursor: pointer;
 }
 
@@ -168,6 +170,3 @@
   justify-content: space-between;
 }
 
-@media screen {
-  
-}

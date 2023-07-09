@@ -166,3 +166,8 @@
     left: 980px;
   }
 }
+
+.profilemenu-hidden {
+  display: none;
+
+}

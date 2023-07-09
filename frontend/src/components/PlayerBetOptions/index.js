@@ -14,7 +14,9 @@ import { ModalContext } from '../../context/ModalContext';
   } from '../../redux/actions/gameActions';
   
   import { changeTableThemeAction } from '../../redux/actions/userActions';
-  
+  import cardConverter from '../../utils/cardConverter';  
+
+
   const PlayerBetOptions = () => {
     const dispatch = useDispatch();
     
@@ -32,6 +34,13 @@ import { ModalContext } from '../../context/ModalContext';
 
     const [isInsuranceOffered, setIsInsuranceOffered] = useState(null);
 
+    const [canSplit, setCanSplit] = useState(null);
+    const [canDouble, setCanDouble] = useState(null);
+    const [chipSizes, setChipSizes] = useState([1,5,25,100])
+    
+    const [hasBet, setHasBet] = useState(false);
+
+
   
     
     const {socket} = useContext(SocketContext)
@@ -41,6 +50,9 @@ import { ModalContext } from '../../context/ModalContext';
     const activeTable = useSelector((state) => state.games.activeTable);
     const showMessages = useSelector((state) => state.games.showMessages);
     const user = useSelector((state) => state.users.user);
+
+
+    console.log(actionHand);
 
 
   useEffect(()=>{
@@ -60,21 +72,65 @@ import { ModalContext } from '../../context/ModalContext';
 
 
   useEffect(() => {
-    let userInActiveSeat = currentTables[activeTable.id]?.actionSeat === currentSeat && currentSeat !== null;
-    let handInProgress = currentTables[activeTable.id]?.handInProgress;
-    let currActionHand = currentTables[activeTable.id]?.actionHand;
-    let insuranceOffered = currentTables[activeTable.id]?.insuranceOffered;
+    if(currentTables && activeTable){
+      let userInActiveSeat = currentTables[activeTable.id]?.actionSeat === currentSeat && currentSeat !== null;
+      let handInProgress = currentTables[activeTable.id]?.handInProgress;
+      let currActionHand = currentTables[activeTable.id]?.actionHand;
+      let insuranceOffered = currentTables[activeTable.id]?.insuranceOffered;
+      let minBet = currentTables[activeTable.id].Game.minBet
+      let maxBet = currentTables[activeTable.id].Game.maxBet
+
+      let chip1, chip2, chip3, chip4
+
+      chip1 = minBet
+
+      
+      if(maxBet<=500){
+        chip2 = 5
+        chip3 =25
+        chip4 =50
+      }
+      
+      if(maxBet>500){
+        chip2 = 25
+        chip3 =50
+        chip4 =100
+      }
 
 
-    setActionHand(currActionHand)
-    setIsActiveSeat(userInActiveSeat)
-    setIsHandInProgress(handInProgress)
-    setIsInsuranceOffered(insuranceOffered);
+
+      setChipSizes([chip1,chip2,chip3,chip4])
+      setActionHand(currActionHand)
+      setIsActiveSeat(userInActiveSeat)
+      setIsHandInProgress(handInProgress)
+      setIsInsuranceOffered(insuranceOffered);
+
+    }
 
 
     
 
-  }, [currentTables, activeTable.id]);
+  }, [currentTables, activeTable]);
+
+
+
+  useEffect(() => {
+    let hasHand = currentTables?.[activeTable.id]?.tableUsers?.[currentSeat]?.hands?.[actionHand]
+    if(hasHand){
+      let cards = hasHand.cards
+      if(cards.length === 2){
+        let convertedCardOne = cardConverter[cards[0]]
+        let convertedCardTwo = cardConverter[cards[1]]
+        if(convertedCardOne.value === convertedCardTwo.value){
+          setCanSplit(true)
+        }
+        setCanDouble(true)
+      }
+    }
+
+  }, [actionHand, currentSeat, currentTables, activeTable]);  
+
+
 
 
 
@@ -84,6 +140,12 @@ import { ModalContext } from '../../context/ModalContext';
       setLastTotalBet(lastBets.reduce((acc,add)=> acc += add, 0))
       setLastBets([])
     }
+
+    if(!isHandInProgress){
+      setHasBet(false)
+    }
+
+
   }, [isHandInProgress]);
 
 
@@ -101,19 +163,19 @@ import { ModalContext } from '../../context/ModalContext';
   };
 
 const rebet = (multiplier) => {
-  console.log('clik');
-
+  
   if(!user) console.log('!user');
   if(!isSitting) console.log('!isSitting');
   if(lastTotalBet === 0) console.log('lastBets.length === 0');
-
-
-
+  
+  
+  
   if(!user) return
   if(!isSitting) return
   if(lastTotalBet === 0) return
-
-
+  
+  
+  setHasBet(true)
   console.log(multiplier);
 
   let bet = lastTotalBet;
@@ -152,6 +214,7 @@ const rebet = (multiplier) => {
 
 
     if(currPendingBet === 0){
+      setHasBet(false)
       return
     }
     const betObj={
@@ -161,6 +224,8 @@ const rebet = (multiplier) => {
     }
 
     if(multiplier){
+      setHasBet(false)
+
       socket.emit('remove_all_bet', betObj)
 
       // dispatch(removeAllBetAction(betObj));
@@ -186,6 +251,8 @@ const rebet = (multiplier) => {
       setLastBets([...lastBets, bet])
     }
     socket.emit('place_bet', betObj)
+    setHasBet(true)
+
     // dispatch(addBetAction(betObj));
   };
 
@@ -302,20 +369,25 @@ const rebet = (multiplier) => {
 
               {!isHandInProgress && (
                 <div className="section right flex center">
-                  <div className="rebet-option-container">
-                    <div className="rebet regular" onClick={()=>rebet(false)}>Rebet</div>
-                    <div className="rebet double" onClick={()=>rebet(true)}>Rebet x2</div>
+
+                  {!hasBet &&(
+                    <div className="rebet-option-container flex">
+                      <div className="rebet regular" onClick={()=>rebet(false)}>Rebet</div>
+                      <div className="rebet double" onClick={()=>rebet(true)}>Rebet x2</div>
+                    </div>
+                  )}
+                  {hasBet &&(
+                  <div className="undo-bet-container flex">
+                    <div className="undo one flex center" onClick={()=>undoBet(false)}>Undo</div>
+                    <div className="undo all flex center" onClick={()=>undoBet(true)}>Undo all</div>
                   </div>
-                  <div className="undo-bet-container">
-                    <div className="undo one" onClick={()=>undoBet(false)}>Undo</div>
-                    <div className="undo all" onClick={()=>undoBet(true)}>Undo all</div>
-                  </div>
+                  )}
+
                   <div className="chips-option-container">
-                    <div className="chip" onClick={()=>addBet(1)}>1</div>
-                    <div className="chip" onClick={()=>addBet(5)}>5</div>
-                    <div className="chip" onClick={()=>addBet(25)}>25</div>
-                    <div className="chip" onClick={()=>addBet(100)}>100</div>
-                    <div className="chip" onClick={()=>addBet(500)}>500</div>
+                    <div className="chip one" onClick={()=>addBet(chipSizes[0])}>{chipSizes[0]}</div>
+                    <div className="chip two" onClick={()=>addBet(chipSizes[2])}>{chipSizes[1]}</div>
+                    <div className="chip three" onClick={()=>addBet(chipSizes[1])}>{chipSizes[2]}</div>
+                    <div className="chip four" onClick={()=>addBet(chipSizes[3])}>{chipSizes[3]}</div>
                   </div>
                 </div>
               )}
@@ -325,8 +397,8 @@ const rebet = (multiplier) => {
                   <div className="decision-option-container">
                     <div className="action" onClick={()=>handleAction('hit')}>Hit</div>
                     <div className="action" onClick={()=>handleAction('stay')}>Stay</div>
-                    <div className="action" onClick={()=>handleAction('double')}>Double</div>
-                    <div className="action" onClick={()=>handleAction('split')}>Split</div>
+                    {canDouble && <div className="action" onClick={()=>handleAction('double')}>Double</div>}
+                    {canSplit && <div className="action" onClick={()=>handleAction('split')}>Split</div>}
                   </div>
 
                 </div>
@@ -347,6 +419,9 @@ const rebet = (multiplier) => {
             </div>
 )}
             
+
+
+
 
 
 

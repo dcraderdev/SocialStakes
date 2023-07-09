@@ -1415,6 +1415,7 @@ module.exports = function (io) {
     }
 
     async function calculateAndSavePlayerHand(player, bestDealerValue, tableId, io) {
+      
       let room = tableId
       let totalWinnings = 0;
       let totalProfitLoss = 0;

@@ -50,7 +50,7 @@ router.post('/', validateSignup, async (req, res, next) => {
     });
   }
   return res.status(200).json({what:'whaaaat'});
-
+ 
 
 });
 

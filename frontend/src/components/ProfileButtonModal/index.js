@@ -51,12 +51,14 @@ function ProfileButtonModal() {
     };
   }, []);
 
+  console.log(modal);
+
 
 
   return (
     
     <>
-      <ul className='profilemenu' ref={formRef}>
+      <ul className={`profilemenu`}ref={formRef}>
         {user ? (
           <div>
             <div className='profilemenu-user-welcome flex'>

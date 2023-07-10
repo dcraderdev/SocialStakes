@@ -23,10 +23,6 @@ module.exports = {
         },
         onDelete: 'CASCADE'
       },
-      cutPoint: {
-        allowNull: false,
-        type: Sequelize.INTEGER,
-      },
       shufflePoint: {
         allowNull: false,
         type: Sequelize.INTEGER,

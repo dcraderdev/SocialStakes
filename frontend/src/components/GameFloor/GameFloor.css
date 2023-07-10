@@ -170,3 +170,20 @@
   justify-content: space-between;
 }
 
+.available-game-types{
+  flex-direction: row;
+  border: white solid 1px;  
+}
+
+
+.creatinggame-container{
+  position: absolute;
+  left: 50%;
+  top: -50px;
+  transform: translate(-50%,0);
+  width: 95%;
+  height: calc(100vh - 250px);
+  transition: all .5s ease;
+}
+
+

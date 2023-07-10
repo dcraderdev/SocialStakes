@@ -43,6 +43,32 @@ router.get('/:tableId', async (req, res, next) => {
   return res.status(200).json({ table });
 });
 
+// Get table by type/gameId
+router.post('/create', async (req, res, next) => {
+
+  
+  const {tableObj} = req.body
+
+  console.log('=-=-=-=-=-=-');
+  console.log('=-=-=-=-=-=-');
+  console.log('=-=-=-=-=-=-');
+  console.log(tableObj);
+  console.log('=-=-=-=-=-=-');
+  console.log('=-=-=-=-=-=-');
+  console.log('=-=-=-=-=-=-');
+
+  const table = await gameController.createTable(tableObj)
+
+  if (!table) {
+    const err = new Error('table not created');
+    err.statusCode = 404;
+    err.status = 404;
+    return next(err);
+  }
+
+  return res.status(200).json({ table });
+});
+
 // Join table by tableId
 router.post('/:tableId/join', requireAuth, async (req, res, next) => {
   const {tableId} = req.params

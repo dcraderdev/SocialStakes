@@ -63,6 +63,7 @@ function GameFloor() {
   };
 
   const checkTables = (gameType) => {
+    console.log('clik');
     dispatch(gameActions.getTablesByType(gameType));
   };
 
@@ -87,7 +88,7 @@ function GameFloor() {
   };
 
   console.log(currentTables);
-
+console.log(allGames);
   //   const leaveTable = (table) =>{
   //     console.log('leaving table');
   //     //join table's socket
@@ -109,7 +110,6 @@ function GameFloor() {
   };
 
   const startPrivateGame = () => {
-    console.log('clik');
     dispatch(showCreatingGameAction());
   };
 
@@ -171,14 +171,16 @@ function GameFloor() {
             {/* SHOW AVAILABLE TABLES PER GAME TYPE */}
             {isLoaded && showTables && (
               <div className="available-tables-grid">
+
+                <div className='flex'>
                 {allGames &&
                   Object.values(allGames).map((game, index) => (
-                    <GameTile
-                      key={index}
-                      game={game}
-                      checkTables={checkTables}
-                    />
-                  ))}
+                    <div className='flex available-game-types' onClick={()=>checkTables(game.gameType)}>
+                      {game.id}
+                    </div>
+                  ))
+                }
+                </div>
 
                 <div className="available-tables-sort-container flex">
                   <div className=" status-playercount-container flex center">
@@ -225,7 +227,7 @@ function GameFloor() {
 
             {/* SHOW SELECTED TABLE */}
             {isLoaded && showCreatingGame && (
-              <div className={`creatinggame-container`}>
+              <div className='creatinggame-container'>
                 <CreatingGameView/>
               </div>
             )}

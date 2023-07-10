@@ -14,7 +14,7 @@ const {
   UserPot,
 } = require('../db/models');
 
-const {generateDeck} = require('./cardController')
+const {generateDeck, shuffle, fetchLatestBlock, generateSeed} = require('./cardController')
 
 const gameController = {
   async getGames() {
@@ -61,34 +61,6 @@ const gameController = {
     return tables;
   },
 
-  // async getTablesByType(gameType) {
-  //   const tables = await Table.findAll({
-  //     where: {
-  //       active: true,
-  //     },
-  //     include: [
-  //       {
-  //         model: Game,
-  //         where: { gameType },
-  //         attributes: {
-  //           exclude: ['createdAt', 'updatedAt', 'rake']
-  //         },
-  //       },
-  //       {
-  //         model: UserTable,
-  //         where:{active:true},
-  //         required: false, 
-  //         attributes: ['id'],
-  //       },
-  //     ],
-  //     attributes: ['id','private'],
-  //   });
-
-  //   if (!tables) {
-  //     return false;
-  //   }
-  //   return tables;
-  // },
 
   async getTableById(tableId) {
     const table = await Table.findByPk(tableId, {
@@ -100,19 +72,6 @@ const gameController = {
           },
 
         },
-        // {
-        //   model: UserTable,
-        //   where:{active:true},
-        //   required: false, 
-        //   as: 'tableUsers',
-        //   attributes: ['userId', 'currentBet', 'pendingBet', 'seat', 'disconnectTimer', 'tableBalance'],
-        // },
-        // {
-        //   model: User,
-        //   as: 'players',
-        //   through: UserTable,
-        //   attributes: ['id', 'username', 'rank'],
-        // },
         {
           model: GameSession,
           as: 'gameSessions',
@@ -126,32 +85,111 @@ const gameController = {
       return false;
     }
 
-  
-    // const returnedTable = table.toJSON();
-    
-    // // Add usernames to tableUsers
-    // for (let userTable of returnedTable.tableUsers) {
-    //   for (let player of returnedTable.players) {
-    //     if (player.id === userTable.userId) {
-    //       userTable.username = player.username;
-    //       break;
-    //     }
-    //   }
-    // }
 
-    // // Normalize the tableUsers array into an object
-    // const normalizedTableUsers = returnedTable.tableUsers.reduce((acc, user) => {
-    //   acc[user.seat] = user;
-    //   return acc;
-    // }, {})
-
-
-    // returnedTable.tableUsers = normalizedTableUsers
-
-    
-    // return returnedTable;
     return table;
   },
+
+  async createTable(tableObj) {
+    const {gameType, deckSize, betSizing, isPrivate, privateKey } = tableObj
+    let private = isPrivate
+    let shufflePoint
+    
+    const game = await Game.findOne({
+      where: {
+        gameType,
+        decksUsed: deckSize,
+        minBet: betSizing.minBet,
+        maxBet: betSizing.maxBet
+      }
+    });
+    if(!game){
+      return false
+    }
+
+    console.log(game);
+
+    if(deckSize === 1) shufflePoint = 25
+    if(deckSize === 4) shufflePoint = 136
+    if(deckSize === 6) shufflePoint = 180
+
+
+    console.log({
+      gameId:game.id,
+      private,
+      passCode: privateKey,
+      shufflePoint,
+      active: true
+    });
+
+    const table = await Table.create({
+      gameId:game.id,
+      shufflePoint,
+      private,
+      passCode: privateKey,
+    });
+
+    if (!table) {
+      console.log('NO TABLE');
+      console.log('NO TABLE');
+      console.log('NO TABLE');
+      console.log('NO TABLE');
+      return false;
+    }
+
+    let blockHash = await fetchLatestBlock()
+
+console.log({
+  tableId:table.id,
+  blockHash,
+  nonce:'1',
+});
+
+
+    const gameSession = await GameSession.create({
+      tableId:table.id,
+      blockHash,
+      nonce:'1',
+    });
+
+    if (!gameSession) {
+      console.log('NO GAME SESSION');
+      console.log('NO GAME SESSION');
+      console.log('NO GAME SESSION');
+      console.log('NO GAME SESSION');
+      return false;
+    }
+
+    let serverSeed = generateSeed()
+
+
+
+    console.log({
+      gameSessionId:gameSession.id,
+      serverSeed,
+      used: true
+    });
+    
+    const newServerSeed = await ServerSeed.create({
+      gameSessionId:gameSession.id,
+      serverSeed,
+    });
+
+    if(!newServerSeed){
+      console.log('NO SERVER SEED');
+      console.log('NO SERVER SEED');
+      console.log('NO SERVER SEED');
+      console.log('NO SERVER SEED');
+      console.log('NO SERVER SEED');
+      return false
+    }
+
+
+
+    return table;
+  },
+
+
+
 
 
 

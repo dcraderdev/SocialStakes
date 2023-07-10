@@ -41,7 +41,8 @@ export const RESCIND_INSURANCE = 'games/RESCIND_INSURANCE';
 
 
 
-
+export const CREATE_TABLE = 'game/CREATE_TABLE';
+export const DELETE_TABLE = 'game/DELETE_TABLE';
 export const UPDATE_TABLE = 'game/UPDATE_TABLE';
 export const VIEW_TABLE = 'game/VIEW_TABLE';
 export const JOIN_TABLE = 'game/JOIN_TABLE';

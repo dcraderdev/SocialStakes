@@ -385,8 +385,8 @@ const rebet = (multiplier) => {
 
                   <div className="chips-option-container">
                     <div className="chip one" onClick={()=>addBet(chipSizes[0])}>{chipSizes[0]}</div>
-                    <div className="chip two" onClick={()=>addBet(chipSizes[2])}>{chipSizes[1]}</div>
-                    <div className="chip three" onClick={()=>addBet(chipSizes[1])}>{chipSizes[2]}</div>
+                    <div className="chip two" onClick={()=>addBet(chipSizes[1])}>{chipSizes[1]}</div>
+                    <div className="chip three" onClick={()=>addBet(chipSizes[2])}>{chipSizes[2]}</div>
                     <div className="chip four" onClick={()=>addBet(chipSizes[3])}>{chipSizes[3]}</div>
                   </div>
                 </div>

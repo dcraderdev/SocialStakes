@@ -186,7 +186,7 @@ function BalanceModal() {
             className='balancemodal-funding-input'
             type="number"
             value={amount} 
-            onChange={(e)=> handleSetFunding(e)}
+            onInput={(e)=> handleSetFunding(e)}
             
             placeholder="Enter amount"
             max={balance}

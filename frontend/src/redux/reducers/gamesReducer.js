@@ -1,7 +1,7 @@
 import { 
   GET_GAMES, GET_GAME_BY_ID,
   GET_TABLES, GET_TABLES_BY_TYPE, GET_TABLE_BY_ID,
-  UPDATE_TABLE,
+  CREATE_TABLE, DELETE_TABLE, UPDATE_TABLE,
   VIEW_TABLE, LEAVE_TABLE, JOIN_TABLE,
   LEAVE_SEAT, TAKE_SEAT, FORFEIT_SEAT,
   SHOW_GAMES, SHOW_TABLES, SHOW_ACTIVE_TABLES, SHOW_CREATING_GAME,
@@ -57,7 +57,15 @@ const gamesReducer = (state = initialState, action) => {
     }
 
 
+    case CREATE_TABLE:{
+      const newGames = {...newState.games}
+      return {...initialState, games: newGames}
+    }
 
+    case DELETE_TABLE:{
+      const newGames = {...newState.games}
+      return {...initialState, games: newGames}
+    }
 
 
 

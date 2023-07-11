@@ -1,4 +1,9 @@
-.balancemodal-wrapper {
+.jointable-form{
+  flex-direction: column;
+}
+
+
+.jointable-wrapper {
   z-index: 1000;
   position: absolute;
   border: 1px solid rgb(0, 0, 0);
@@ -12,20 +17,20 @@
 
 
 
-.balancemodal-container{
+.jointable-container{
   flex-direction: column;
   justify-content: space-between;
   height: 170px;
   
 }
 
-.balancemodal-header{
+.jointable-header{
   width: 100%;
   font-size: 25px;
   color: rgb(200, 57, 13);
 }
 
-.balancemodal-subheader{
+.jointable-subheader{
   width: 100%;
   font-size: 22px;
   color: rgb(200, 57, 13);
@@ -35,13 +40,13 @@
   color: white;
 }
 
-.balancemodal-memo-container{
+.jointable-memo-container{
   font-size: 20px;
   width: 150px;
   font-size: 20px;
 }
 
-.balancemodal-memo{
+.jointable-memo{
   color: rgb(255, 255, 255);
 }
 .green{
@@ -51,14 +56,14 @@
   color: rgb(200, 57, 13);
 }
 
-.balancemodal-user-buttons{
+.jointable-user-buttons{
   width: 80%;
   height: 50px;
 }
 
-.balancemodal-ok,
-.balancemodal-addbalance,
-.balancemodal-cancel{
+.jointable-ok,
+.jointable-addbalance,
+.jointable-cancel{
   border-radius: 5px;
   cursor: pointer;
   border: solid 1px rgb(255, 255, 255);
@@ -71,22 +76,22 @@
 
 
 
-.balancemodal-cancel{
+.jointable-cancel{
   width: 40%;
 }
 
-.balancemodal-ok{
+.jointable-ok{
   width: 40%;
   height: 40px;
 }
 
 
-.balancemodal-addbalance:hover{
+.jointable-addbalance:hover{
   color: rgb(1, 83, 21);
   border: solid green 1px;
 }
 
-.balancemodal-cancel:hover{
+.jointable-cancel:hover{
   color: rgb(200, 57, 13);
 
   border: solid rgb(200, 57, 13) 1px;
@@ -96,6 +101,6 @@
 
 
 
-.balancemodal-funding-input{
+.jointable-funding-input{
   width: 150px;
 }

@@ -58,6 +58,7 @@ export const getTablesByTypeAction = (data) => {
 
 export const createTableAction = (data) => {
   console.log(data);
+  
   return {
     type: CREATE_TABLE,
     payload: data,

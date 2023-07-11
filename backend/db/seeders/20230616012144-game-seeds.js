@@ -17,7 +17,7 @@ module.exports = {
         {
           id: 'blackjack_1_deck_low_stakes_multi',
           gameType: 'multi_blackjack',
-          variant: '1_deck_low_stakes',
+          variant: 'American 21',
           decksUsed: 1,
           active: true,
           minNumPlayers: 1,
@@ -30,7 +30,7 @@ module.exports = {
         {
           id: 'blackjack_4_deck_low_stakes_multi',
           gameType: 'multi_blackjack',
-          variant: '4_deck_low_stakes',
+          variant: 'American 21',
           decksUsed: 4,
           active: true,
           minNumPlayers: 1,
@@ -43,7 +43,7 @@ module.exports = {
         {
           id: 'blackjack_6_deck_low_stakes_multi',
           gameType: 'multi_blackjack',
-          variant: '6_deck_low_stakes',
+          variant: 'American 21',
           decksUsed: 6,
           active: true,
           minNumPlayers: 1,
@@ -57,7 +57,7 @@ module.exports = {
         {
           id: 'blackjack_1_deck_mid_stakes_multi',
           gameType: 'multi_blackjack',
-          variant: '1_deck_mid_stakes',
+          variant: 'American 21',
           decksUsed: 1,
           active: true,
           minNumPlayers: 1,
@@ -70,7 +70,7 @@ module.exports = {
         {
           id: 'blackjack_4_deck_mid_stakes_multi',
           gameType: 'multi_blackjack',
-          variant: '4_deck_mid_stakes',
+          variant: 'American 21',
           decksUsed: 4,
           active: true,
           minNumPlayers: 1,
@@ -83,7 +83,7 @@ module.exports = {
         {
           id: 'blackjack_6_deck_mid_stakes_multi',
           gameType: 'multi_blackjack',
-          variant: '6_deck_mid_stakes',
+          variant: 'American 21',
           decksUsed: 6,
           active: true,
           minNumPlayers: 1,
@@ -98,7 +98,7 @@ module.exports = {
         {
           id: 'blackjack_1_deck_high_stakes_multi',
           gameType: 'multi_blackjack',
-          variant: '1_deck_high_stakes',
+          variant: 'American 21',
           decksUsed: 1,
           active: true,
           minNumPlayers: 1,
@@ -111,7 +111,7 @@ module.exports = {
         {
           id: 'blackjack_4_deck_high_stakes_multi',
           gameType: 'multi_blackjack',
-          variant: '4_deck_high_stakes',
+          variant: 'American 21',
           decksUsed: 4,
           active: true,
           minNumPlayers: 1,
@@ -124,7 +124,7 @@ module.exports = {
         {
           id: 'blackjack_6_deck_high_stakes_multi',
           gameType: 'multi_blackjack',
-          variant: '6_deck_high_stakes',
+          variant: 'American 21',
           decksUsed: 6,
           active: true,
           minNumPlayers: 1,
@@ -139,7 +139,7 @@ module.exports = {
 {
   id: 'blackjack_1_deck_low_stakes_single',
   gameType: 'single_blackjack',
-  variant: '1_deck_low_stakes',
+  variant: 'American 21',
   decksUsed: 1,
   active: true,
   minNumPlayers: 1,
@@ -152,7 +152,7 @@ module.exports = {
 {
   id: 'blackjack_4_deck_low_stakes_single',
   gameType: 'single_blackjack',
-  variant: '4_deck_low_stakes',
+  variant: 'American 21',
   decksUsed: 4,
   active: true,
   minNumPlayers: 1,
@@ -165,7 +165,7 @@ module.exports = {
 {
   id: 'blackjack_6_deck_low_stakes_single',
   gameType: 'single_blackjack',
-  variant: '6_deck_low_stakes',
+  variant: 'American 21',
   decksUsed: 6,
   active: true,
   minNumPlayers: 1,
@@ -179,7 +179,7 @@ module.exports = {
 {
   id: 'blackjack_1_deck_mid_stakes_single',
   gameType: 'single_blackjack',
-  variant: '1_deck_mid_stakes',
+  variant: 'American 21',
   decksUsed: 1,
   active: true,
   minNumPlayers: 1,
@@ -192,7 +192,7 @@ module.exports = {
 {
   id: 'blackjack_4_deck_mid_stakes_single',
   gameType: 'single_blackjack',
-  variant: '4_deck_mid_stakes',
+  variant: 'American 21',
   decksUsed: 4,
   active: true,
   minNumPlayers: 1,
@@ -205,7 +205,7 @@ module.exports = {
 {
   id: 'blackjack_6_deck_mid_stakes_single',
   gameType: 'single_blackjack',
-  variant: '6_deck_mid_stakes',
+  variant: 'American 21',
   decksUsed: 6,
   active: true,
   minNumPlayers: 1,
@@ -220,7 +220,7 @@ module.exports = {
 {
   id: 'blackjack_1_deck_high_stakes_single',
   gameType: 'single_blackjack',
-  variant: '1_deck_high_stakes',
+  variant: 'American 21',
   decksUsed: 1,
   active: true,
   minNumPlayers: 1,
@@ -233,7 +233,7 @@ module.exports = {
 {
   id: 'blackjack_4_deck_high_stakes_single',
   gameType: 'single_blackjack',
-  variant: '4_deck_high_stakes',
+  variant: 'American 21',
   decksUsed: 4,
   active: true,
   minNumPlayers: 1,
@@ -246,7 +246,7 @@ module.exports = {
 {
   id: 'blackjack_6_deck_high_stakes_single',
   gameType: 'single_blackjack',
-  variant: '6_deck_high_stakes',
+  variant: 'American 21',
   decksUsed: 6,
   active: true,
   minNumPlayers: 1,
@@ -264,8 +264,8 @@ module.exports = {
 
         {
           id: 'spanish21',
-          gameType: 'spanish_21',
-          variant: 'blackjack',
+          gameType: 'multi_blackjack',
+          variant: 'Spanish',
           decksUsed: 2,
           active: false,
           minNumPlayers: 1,
@@ -276,7 +276,7 @@ module.exports = {
         {
           id: 'rouletteAmerican',
           gameType: 'roulette',
-          variant: 'american',
+          variant: 'American',
           decksUsed: 0,
           active: false,
           minNumPlayers: 1,

@@ -1,3 +1,4 @@
+
 import { 
   GET_GAMES, GET_GAME_BY_ID,
   GET_TABLES, GET_TABLES_BY_TYPE, GET_TABLE_BY_ID,
@@ -15,7 +16,7 @@ import {
   COLLECT_BETS,
   OFFER_INSURANCE,
   RESCIND_INSURANCE, REMOVE_USER
- } from '../actions/actionTypes'
+} from '../actions/actionTypes'
 
 
 
@@ -58,17 +59,28 @@ const gamesReducer = (state = initialState, action) => {
 
 
     case CREATE_TABLE:{
-      const newGames = {...newState.games}
-      return {...initialState, games: newGames}
+      
+      console.log(action.payload.table);
+      const table = action.payload.table
+
+      let updatedCurrentTables = {...newState.currentTables};
+      updatedCurrentTables[table.id] = table
+      updatedCurrentTables[table.id].messages = []
+
+
+      return {...newState, currentTables:updatedCurrentTables, showCreatingGame:false, showGames: false, showTables: false, showActiveTable: true}
     }
+
+
+
 
     case DELETE_TABLE:{
       const newGames = {...newState.games}
-      return {...initialState, games: newGames}
+      return {...newState, games: newGames}
     }
 
 
-
+ 
     
     case UPDATE_TABLE:{
       const {tableId, table} = action.payload
@@ -83,7 +95,6 @@ const gamesReducer = (state = initialState, action) => {
       console.log(updatedCurrentTables);
 
       if (updatedCurrentTables[tableId]) {
-        console.log('yes');
         const currentTable = updatedCurrentTables[tableId];
 
         // console.log(currentTable.tableUsers[4]?.cards);
@@ -101,42 +112,17 @@ const gamesReducer = (state = initialState, action) => {
         if(action.payload.table.handInProgress !== null && action.payload.table.handInProgress !== undefined){
           currentTable.handInProgress = action.payload.table.handInProgress;
         }
-    
-        // for(let seat in currentTable.tableUsers) {
-
-        //   // console.log(seat);
-        //   // console.log(table.seats[seat].pendingBet);
-
-        //   // If the incoming table has data for this seat, update it in the currentTable
-        //   if (table.seats[seat] && table.seats[seat].hands) {
-        //     currentTable.tableUsers[seat].hands = table.seats[seat].hands;
-        //   }
-
-        //   if (table.seats[seat]) {
-        //     currentTable.tableUsers[seat].cards = table.seats[seat].cards;
-        //     // currentTable.tableUsers[seat].hands = table.seats[seat].hands;
-        //     currentTable.tableUsers[seat].pendingBet = table.seats[seat].pendingBet;
-        //     currentTable.tableUsers[seat].currentBet = table.seats[seat].currentBet;
-        //     currentTable.tableUsers[seat].tableBalance = table.seats[seat].tableBalance;
-        //   }
-        // } 
-
-        console.log(currentTable);
-    
         // Replace the table in currentTables with the updated table
         updatedCurrentTables[tableId] = currentTable;
       }
-    
       return {...newState, currentTables: updatedCurrentTables}
     }
     
-
 
     case VIEW_TABLE:{
       console.log(action.payload);
       return {...newState, activeTable:action.payload, showGames: false, showTables: false, showActiveTable: true}
     }
-
 
     case JOIN_TABLE:{
       console.log(action.payload);
@@ -145,8 +131,6 @@ const gamesReducer = (state = initialState, action) => {
       newCurrentTables[action.payload.id].messages = []
       return {...newState, currentTables: newCurrentTables, activeTable:action.payload, showGames: false, showTables: false, showActiveTable: true}
     }
-
-
 
 
     case LEAVE_TABLE: {

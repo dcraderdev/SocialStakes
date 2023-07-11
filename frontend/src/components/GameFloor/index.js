@@ -37,7 +37,7 @@ function GameFloor() {
 
   const [isLoaded, setIsLoaded] = useState(false);
 
-  const [tables, setTables] = useState({});
+  const [currTables, setCurrTables] = useState({});
 
   const [isPickingGameType, setIsPickingGameType] = useState(false);
   const [isPickingBetSizing, setIsPickingBetSizing] = useState(false);
@@ -63,7 +63,8 @@ function GameFloor() {
   };
 
   const checkTables = (gameType) => {
-    console.log('clik');
+    // if(gameType === currTables) return
+    setCurrTables(gameType)
     dispatch(gameActions.getTablesByType(gameType));
   };
 
@@ -82,27 +83,10 @@ function GameFloor() {
         socket.emit('join_room', table.id);
       }
 
-      // dispatch(gameActions.viewTable(table.id)).then(()=>{
-      // })
     }
   };
 
-  console.log(currentTables);
-console.log(allGames);
-  //   const leaveTable = (table) =>{
-  //     console.log('leaving table');
-  //     //join table's socket
-  //     socket.emit('leave_room', table.id);
-  //     dispatch(gameActions.leaveTable(table))
-  // }
 
-  // // Take/change seat
-  // const takeSeat = (seat) =>{
-  //   console.log('joining table');
-  //   let tableId = activeTable?.id
-  //   dispatch(gameActions.takeSeat(tableId, seat))
-  //   // then show seat taken, emit to socket
-  // }
 
   const leaveSeat = (table) => {
     console.log('leaving seat');
@@ -110,10 +94,21 @@ console.log(allGames);
   };
 
   const startPrivateGame = () => {
+    if(!user){
+      openModal('login')
+      return
+    }
     dispatch(showCreatingGameAction());
   };
 
-  const joinPrivateGame = () => {};
+  const joinPrivateGame = () => {
+    if(!user){
+      openModal('login')
+      return
+    }
+    openModal('joinPrivateGame');
+
+  };
 
   return (
     <>
@@ -172,10 +167,10 @@ console.log(allGames);
             {isLoaded && showTables && (
               <div className="available-tables-grid">
 
-                <div className='flex'>
+                <div className='available-game-types-container flex'>
                 {allGames &&
                   Object.values(allGames).map((game, index) => (
-                    <div className='flex available-game-types' onClick={()=>checkTables(game.gameType)}>
+                    <div key={index} className='flex available-game-types' onClick={()=>checkTables(game.gameType)}>
                       {game.id}
                     </div>
                   ))

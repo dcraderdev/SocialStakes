@@ -43,8 +43,8 @@ router.get('/:tableId', async (req, res, next) => {
   return res.status(200).json({ table });
 });
 
-// Get table by type/gameId
-router.post('/create', async (req, res, next) => {
+// Create new custom table
+router.post('/create',requireAuth, async (req, res, next) => {
 
   
   const {tableObj} = req.body
@@ -97,6 +97,25 @@ router.put('/:tableId/seat', requireAuth, async (req, res, next) => {
   const {user} = req
 
   const table = await gameController.changeSeat(tableId, user, seat)
+
+  if (!table) {
+    const err = new Error('table not found');
+    err.statusCode = 403;
+    err.status = 403;
+    return next(err);
+  }
+
+  return res.status(200).json({ table });
+});
+
+
+// Join private table by tableId/password
+router.put('/:tableId/private', requireAuth, async (req, res, next) => {
+
+  const {tableId} = req.params
+  const {password} = req.body
+
+  const table = await gameController.checkTableCredentials(tableId, password)
 
   if (!table) {
     const err = new Error('table not found');

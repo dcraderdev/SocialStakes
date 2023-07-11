@@ -52,7 +52,7 @@ const gameController = {
           attributes: ['id', 'username', 'rank'],
         },
       ],
-      attributes: ['id','private'],
+      attributes: ['id','private', 'tableName'],
     });
 
     if (!tables) {
@@ -89,10 +89,22 @@ const gameController = {
     return table;
   },
 
+  async checkTableCredentials(tableId, password){
+    const table = await Table.findByPk(tableId)
+    if(!table) return false
+    if(!table.password) return true
+    if(table.password && table.password !== password){ 
+      return false
+    } else return true
+
+  },
+
   async createTable(tableObj) {
-    const {gameType, deckSize, betSizing, isPrivate, privateKey } = tableObj
+    const {gameType, deckSize, betSizing, isPrivate, privateKey, tableName } = tableObj
     let private = isPrivate
+    let nickname = tableName.length ? tableName : null
     let shufflePoint
+    
     
     const game = await Game.findOne({
       where: {
@@ -106,44 +118,24 @@ const gameController = {
       return false
     }
 
-    console.log(game);
 
     if(deckSize === 1) shufflePoint = 25
     if(deckSize === 4) shufflePoint = 136
     if(deckSize === 6) shufflePoint = 180
-
-
-    console.log({
-      gameId:game.id,
-      private,
-      passCode: privateKey,
-      shufflePoint,
-      active: true
-    });
 
     const table = await Table.create({
       gameId:game.id,
       shufflePoint,
       private,
       passCode: privateKey,
+      tableName: nickname
     });
 
     if (!table) {
-      console.log('NO TABLE');
-      console.log('NO TABLE');
-      console.log('NO TABLE');
-      console.log('NO TABLE');
       return false;
     }
 
     let blockHash = await fetchLatestBlock()
-
-console.log({
-  tableId:table.id,
-  blockHash,
-  nonce:'1',
-});
-
 
     const gameSession = await GameSession.create({
       tableId:table.id,
@@ -152,40 +144,26 @@ console.log({
     });
 
     if (!gameSession) {
-      console.log('NO GAME SESSION');
-      console.log('NO GAME SESSION');
-      console.log('NO GAME SESSION');
-      console.log('NO GAME SESSION');
       return false;
     }
 
     let serverSeed = generateSeed()
 
-
-
-    console.log({
-      gameSessionId:gameSession.id,
-      serverSeed,
-      used: true
-    });
-    
     const newServerSeed = await ServerSeed.create({
       gameSessionId:gameSession.id,
       serverSeed,
     });
 
     if(!newServerSeed){
-      console.log('NO SERVER SEED');
-      console.log('NO SERVER SEED');
-      console.log('NO SERVER SEED');
-      console.log('NO SERVER SEED');
-      console.log('NO SERVER SEED');
       return false
     }
 
+    let tableData = table.toJSON();
 
+    tableData.Game = game;
+    tableData.gameSession = gameSession;
 
-    return table;
+    return tableData;
   },
 
 

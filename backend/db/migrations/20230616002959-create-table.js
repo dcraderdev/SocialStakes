@@ -46,6 +46,11 @@ module.exports = {
       tableBalance: {
         type: Sequelize.INTEGER,
       },
+      tableName: {
+        type: Sequelize.STRING,
+        defaultValue: null
+
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

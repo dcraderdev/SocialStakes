@@ -170,9 +170,20 @@
   justify-content: space-between;
 }
 
+.available-game-types-container{
+  width: 100%;
+  border: rgb(164, 41, 41) solid 1px;  
+  justify-content: space-around;
+
+}
+
 .available-game-types{
   flex-direction: row;
   border: white solid 1px;  
+  width: 15%;
+  height: 50px;
+  overflow: hidden;
+  word-wrap: break-word;
 }
 
 
@@ -184,6 +195,7 @@
   width: 95%;
   height: calc(100vh - 250px);
   transition: all .5s ease;
+
 }
 
 

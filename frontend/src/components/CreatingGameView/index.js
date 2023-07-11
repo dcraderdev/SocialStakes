@@ -17,12 +17,14 @@ import './CreatingGameView.css';
 
 const CreatingGameView = () => {
   const dispatch = useDispatch();
+  const {socket} = useContext(SocketContext)
 
   const [isPickingGameType, setIsPickingGameType] = useState(true);
   const [isPickingVariant, setIsPickingVariant] = useState(true);
   const [isPickingBetSizing, setIsPickingBetSizing] = useState(false);
   const [isPickingPrivate, setIsPickingPrivate] = useState(false);
   const [privateKey, setPrivateKey] = useState('');
+  const [tableName, setTableName] = useState('');
 
   const [gameType, setGameType] = useState(false);
   const [deckSize, setDeckSize] = useState(false);
@@ -108,12 +110,13 @@ const CreatingGameView = () => {
       betSizing,
       isPrivate,
       privateKey,
+      tableName
     };
-    dispatch(gameActions.createTable(tableObj));
+    dispatch(gameActions.createTable(tableObj, socket));
   };
 
   return (
-    <div className="creatinggameview-container">
+    <div className="creatinggameview-container flex center">
       {isPickingGameType && (
         <div className="creatinggameview-isPickingGameType-container flex center">
           {allGames &&
@@ -158,35 +161,51 @@ const CreatingGameView = () => {
       )}
 
       {isPickingPrivate && (
-        <div className="creatinggameview-isPickingPrivate-container flex center">
-          <div
-            className="creatinggameview-options flex center"
-            onClick={() => setIsPrivate(true)}
-          >
-            Private?
-          </div>
-          <div
-            className="creatinggameview-options flex center"
-            onClick={() => setIsPrivate(false)}
-          >
-            Public?
-          </div>
-          {isPrivate && (
-            <div>
-              <form>
-                <input
-                  className="creatinggameview-privatekey"
-                  type="text"
-                  value={privateKey}
-                  onInput={(e) => setPrivateKey(e.target.value)}
-                  placeholder="Set private key"
-                />
-              </form>
-            </div>
-          )}
 
-          <div onClick={createTable}>Create Table</div>
-        </div>
+        <div className="creatinggameview-isPickingPrivate-container flex center">
+          <div className='private-open-buttons-container flex'>
+
+                    <div
+                      className="creatinggameview-options flex center"
+                      onClick={() => setIsPrivate(false)}
+                    >
+                      Public
+                    </div>
+                    <div
+                      className="creatinggameview-options flex center"
+                      onClick={() => setIsPrivate(true)}
+                    >
+                      Private
+                    </div>
+
+          </div>
+          <div className='creatinggameview-tablename-container flex'>
+            <input
+              className="creatinggameview-tablename"
+              type="text"
+              value={tableName}
+              onChange={(e) => setTableName(e.target.value)}
+              placeholder="Table name (optional)"
+            />
+
+          <input
+            className="creatinggameview-privatekey"
+            type="text"
+            value={privateKey}
+            onChange={(e) => setPrivateKey(e.target.value)}
+            placeholder="Set private key"
+          />
+
+          </div>
+
+
+
+
+
+
+
+          <div className='creatinggameview-create-button' onClick={createTable}>Create Table</div>
+    </div>
       )}
     </div>
   );

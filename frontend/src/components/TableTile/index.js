@@ -26,7 +26,8 @@ const TableTile = ({table, viewTable}) => {
   const [decksUsed, setDecksUsed] = useState('');
   const [minBet, setMinBet] = useState(0);
   const [maxBet, setMaxBet] = useState(0);
-  const [gameType, setGameType] = useState('Blackjack');
+  const [tableName, setTableName] = useState('');
+  const [gameType, setGameType] = useState('');
 
   useEffect(()=>{
     setStatus('Open')
@@ -37,11 +38,23 @@ const TableTile = ({table, viewTable}) => {
     setMaxBet(0);
 
     if(table){
+      console.log(table);
       setPlayerCount(table.players.length);
       setMaxPlayers(table.Game.maxNumPlayers);
       setDecksUsed(`${table.Game.decksUsed} Deck`);
       setMinBet(table.Game.minBet);
       setMaxBet(table.Game.maxBet);
+
+      if(table.tableName){
+        setTableName(table.tableName)
+      } else {
+        setTableName(table.Game.variant)
+
+      }
+
+      if(table.Game.id.split('_')[0]==='blackjack'){
+        setGameType('Blackjack')
+      }
 
       if(table.private){
         setIsPrivate(true)
@@ -64,7 +77,7 @@ const TableTile = ({table, viewTable}) => {
     }
 
 
-  },[isPrivate, playerCount, maxPlayers, decksUsed, minBet, maxBet])
+  },[isPrivate, playerCount, maxPlayers, table])
 
 
 
@@ -74,7 +87,7 @@ const TableTile = ({table, viewTable}) => {
         <div className='tabletile-container'>
           <div className='tabletile-content flex center'>
 
-<div className=' status-playercount-container flex center'>
+<div className=' status-playercount-container flex'>
 
             <div className='status-container flex center'>
               <div className='status-icon flex center'>
@@ -93,6 +106,7 @@ const TableTile = ({table, viewTable}) => {
             </div>
 
             <div className='game-deck-container flex'>
+              <div className='tablename-text'>{tableName}</div>
               <div className='game-text'>{gameType}</div>
               <div className='deck-text'>{decksUsed}</div>
             </div>
@@ -100,7 +114,7 @@ const TableTile = ({table, viewTable}) => {
 </div>
 
           
-            <div className='betsize-container flex center'>
+            <div className='betsize-container flex'>
               <div>${minBet}</div>
               <div>/</div>
               <div className='betsize-maxbet'>${maxBet}</div>

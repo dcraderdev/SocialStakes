@@ -1364,22 +1364,7 @@ module.exports = function (io) {
           let tableBalance = rooms[tableId]?.seats?.[seat].tableBalance;
     
           // Remove the player from the room state
-          if(rooms[tableId] && rooms[tableId].seats[seat]){
-            console.log('yes player in that seat!');
-            console.log('yes player in that seat!');
-            console.log('yes player in that seat!');
-            console.log('yes player in that seat!');
-            console.log('yes player in that seat!');
-            console.log('yes player in that seat!');
-            console.log('yes player in that seat!');
-            console.log('yes player in that seat!');
-            console.log('yes player in that seat!');
-            console.log('yes player in that seat!');
-            console.log('yes player in that seat!');
-            console.log('yes player in that seat!');
-            console.log('yes player in that seat!');
-            console.log('yes player in that seat!');
-            console.log('yes player in that seat!');
+          if(rooms[tableId] && rooms[tableId]?.seats?.[seat]){
             delete rooms[tableId].seats[seat];
                     // Remove the player from the room state
         if(rooms[tableId] && rooms[tableId].seats[seat]){

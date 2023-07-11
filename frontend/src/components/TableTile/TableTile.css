@@ -10,12 +10,15 @@
   box-shadow: rgba(0, 0, 0, 0.1) 0px 3px 6px, rgba(0, 0, 0, 0.1) 0px 3px 6px;
   background-color: #28292b;
 }
+.tabletile-wrapper:last-child {
+margin-bottom: 20px;
+}
+
 
 .tabletile-content {
   justify-content: space-between;
-  top: 50%;
-  transform: translate(0%, -20%);
   position: relative;
+
 }
 
 .status-playercount-container {
@@ -25,7 +28,7 @@
 
 .playercount-container {
   width: 100px;
-  height: 60px;
+
 }
 .playercount-ring {
   border: #7a7b7c solid 3px;
@@ -34,10 +37,12 @@
   border-radius: 40px;
   font-size: 22px;
   color: #7a7b7c;
+
 }
 
 .status-container {
   width: 50px;
+
 }
 
 .status-icon {
@@ -56,9 +61,10 @@
   border: rgb(124, 36, 9) solid 1px;
   background-color: rgb(200, 57, 13);
 }
+
 .private {
   border: rgb(74, 17, 124) solid 1px;
-  background-color: rgb(115, 31, 188) solid 1px;
+  background-color: rgb(115, 31, 188);
 }
 
 .game-deck-container {   
@@ -67,19 +73,35 @@
   margin-left: 10px;
   color: #fdfcfc;
   flex-direction: column;
+  justify-content: space-around;
 }
+
+
+.tablename-text{
+  width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 10px;
+}
+
+.game-text{
+  font-size: 21px;
+  margin-top: 13px;
+}
+
 
 .deck-text {
-  font-size: 20px;
-  margin-top: 10px;
+  font-size: 15px;
 
 }
+
 
 .betsize-container {
   position: relative;
   justify-content: space-between;
   right: 30px;
-  top: 25px;
+  top: 35px;
   font-size: 25px;
   /* color: rgb(200, 57, 13); */
 

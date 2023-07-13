@@ -1,7 +1,85 @@
 .settingsmodal-wrapper{
   border: solid white 1px;
-  width: 400px;
-  height: 400px;
+  width: 450px;
+  height: 270px;
   background-color: #1d1e1c;
+  background-color: #2d2e2c;
+  border: 1px solid rgb(0, 0, 0);
+  border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
 
+
+.settingsmodal-table-name-container{
+  color: white;
+  width: 100%;
+}
+
+
+.table-name-header{
+  font-size: 25px;
+  position: relative;
+  align-items: center;
+}
+
+
+.table-edit-input,
+.table-edit-button {
+  position: relative;
+  font-size: 15px;
+  align-items: center;
+  top: 5px;
+  left: 5px;
+  cursor: pointer;
+}
+
+
+.settingsmodal-table-felt-container,
+.settingsmodal-table-neon-container{
+  align-items: center;
+  width: 220px;
+  justify-content: space-between;
+  color: white;
+}
+
+.theme-button{
+  top: 0px;
+  background-color: transparent;
+  color: white;
+  width: 100px;
+  border: rgba(255, 255, 255, 0.195) solid 1px;
+  cursor: pointer;
+}
+
+
+
+.tableid-container{
+  position: relative;
+  top: 240px;
+  left: -10px;
+  width: 370px;
+  justify-content: space-between;
+}
+
+.settingsmodal-invite-container{
+  position: relative;
+  top: 30px;
+  width: 100%;
+
+}
+
+.invite-friends-button{
+  width: 150px;
+  height: 60px;
+  border: black solid 1px;
+  cursor: pointer;
+  color: white;
+  border-bottom: rgba(255, 217, 0, 0.466) solid .5px;
+  border-top: rgba(255, 217, 0, 0.466) solid .5px;
+  box-shadow: rgba(0, 0, 0, 0.5) 0px 3px 6px, rgba(0, 0, 0, 0.5) 0px 3px 6px;
+}
+
+.invite-friends-button:hover{
+  box-shadow: rgba(0, 0, 0) 0px 3px 6px, rgba(0, 0, 0) 0px 3px 6px;
 }

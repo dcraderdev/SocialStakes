@@ -17,7 +17,6 @@ const TableTile = ({table, viewTable}) => {
   const user = useSelector(state => state.users.user)
 
 
-
  
   const [status, setStatus] = useState(' open');
   const [isPrivate, setIsPrivate] = useState(false);

@@ -52,7 +52,7 @@ const gameController = {
           attributes: ['id', 'username', 'rank'],
         },
       ],
-      attributes: ['id','private', 'tableName'],
+      attributes: ['id','private', 'tableName', 'userId'],
     });
 
     if (!tables) {
@@ -78,7 +78,7 @@ const gameController = {
           attributes: ['id','nonce','blockHash'],
         },
       ],
-      attributes: ['id','private', 'shufflePoint'],
+      attributes: ['id','private', 'shufflePoint', 'tableName', 'userId'],
     });
 
     if (!table) {
@@ -100,30 +100,12 @@ const gameController = {
   },
 
   async createTable(tableObj) {
-    console.log('create table');
-    console.log('create table');
-    console.log('create table');
-    console.log('create table');
-    console.log('create table');
-    console.log('create table');
-    const {gameType, deckSize, betSizing, isPrivate, privateKey, tableName } = tableObj
+
+    const {gameType, deckSize, betSizing, isPrivate, privateKey, tableName, userId } = tableObj
     let private = isPrivate
     let nickname = tableName.length ? tableName : null
     let shufflePoint
     let decksUsed = parseInt(deckSize.split(' ')[0])
-
-
-    console.log(';before game');
-    console.log(';before game');
-    console.log(';before game');
-    console.log(';before gamev');
-
-
-    console.log(gameType);
-    console.log(decksUsed);
-    console.log(betSizing.minBet);
-    console.log(betSizing.maxBet);
-    
     
     const game = await Game.findOne({
       where: {
@@ -133,18 +115,9 @@ const gameController = {
         maxBet: betSizing.maxBet
       }
     });
-
-
-
-
-
     if(!game){
       return false
     }
-
-
-
-console.log('after game');
 
     if(decksUsed === 1) shufflePoint = 25
     if(decksUsed === 4) shufflePoint = 136
@@ -152,6 +125,7 @@ console.log('after game');
 
     const table = await Table.create({
       gameId:game.id,
+      userId: userId,
       shufflePoint,
       private,
       passCode: privateKey,
@@ -161,9 +135,6 @@ console.log('after game');
     if (!table) {
       return false;
     }
-console.log('after table');
-
-
     let blockHash = await fetchLatestBlock()
 
     const gameSession = await GameSession.create({
@@ -175,9 +146,6 @@ console.log('after table');
     if (!gameSession) {
       return false;
     }
-console.log('after gameSession');
-
-
     let serverSeed = generateSeed()
 
     const newServerSeed = await ServerSeed.create({
@@ -188,19 +156,23 @@ console.log('after gameSession');
     if(!newServerSeed){
       return false
     }
-console.log('after newServerSeed');
-
-
     let tableData = table.toJSON();
-
     tableData.Game = game;
     tableData.gameSession = gameSession;
-
     return tableData;
   },
 
 
+  async editTableById(tableObj){
+    const {tableId, tableName, userId} = tableObj
+    const table = await Table.findByPk(tableId)
+    if(!table) return false
 
+    table.tableName = tableName
+    await table.save()
+    return table
+
+  },
 
 
 

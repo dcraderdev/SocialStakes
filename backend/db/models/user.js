@@ -65,6 +65,7 @@ module.exports = (sequelize, DataTypes) => {
       User.hasMany(models.Action, { foreignKey: 'userId'});
 
       User.belongsToMany(models.Pot, { through: 'UserPot', foreignKey: 'userId', as: 'pots' });
+      User.hasMany(models.Table, {foreignKey:'userId'})
 
     }
 

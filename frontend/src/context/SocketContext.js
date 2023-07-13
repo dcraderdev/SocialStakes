@@ -5,6 +5,7 @@ import { ModalContext } from './ModalContext';
 import * as gameActions from '../redux/middleware/games';
 import {
   updateTableAction,
+  updateTableNameAction,
   takeSeatAction, leaveSeatAction, forfeitSeatAction,
   addBetAction, removeLastBetAction, removeAllBetAction,
   playerDisconnectAction, playerReconnectAction,
@@ -62,6 +63,10 @@ const SocketProvider = ({ children }) => {
         dispatch(joinTableAction(table));
       }); 
 
+      socket.on('update_table_name', (updateObject) => {
+        dispatch(updateTableNameAction(updateObject));
+      }); 
+
       socket.on('get_updated_table', (updateObject) => {
 
 
@@ -74,9 +79,6 @@ const SocketProvider = ({ children }) => {
         console.log('-=-=-=-=-=');
         console.log('-=-=-=-=-=');
         console.log('-=-=-=-=-=');
-
-
-
 
         dispatch(updateTableAction(updateObject)); 
       }); 

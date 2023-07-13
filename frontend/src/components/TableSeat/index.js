@@ -9,14 +9,16 @@ import Card from '../Card'
 import cardConverter from '../../utils/cardConverter';
 
 const TableSeat = ({seatNumber}) => {
+  const {socket} = useContext(SocketContext)
+  const { modal, openModal, closeModal, updateObj, setUpdateObj} = useContext(ModalContext);
 
   const dispatch = useDispatch()
   const activeTable = useSelector(state=>state.games.activeTable)
   const currentTables = useSelector(state=>state.games.currentTables)
   const user = useSelector(state => state.users.user)
   const balance = useSelector(state => state.users.balance)
-  const {socket} = useContext(SocketContext)
-  const { modal, openModal, closeModal, updateObj, setUpdateObj} = useContext(ModalContext);
+  const neonTheme = useSelector(state=>state.users.neonTheme)
+  const tableTheme = useSelector(state=>state.users.tableTheme)
 
   const [disconnectTimer, setDisconnectTimer] = useState(0)
   const [actionTimer, setActionTimer] = useState(0)
@@ -136,6 +138,17 @@ const TableSeat = ({seatNumber}) => {
   }, [actionTimer]);
 
 
+  useEffect(() => {
+    console.log(tableTheme);
+    if(tableTheme === 'black'){
+      seat
+
+    }
+
+  
+  }, [neonTheme, tableTheme]);
+
+
 
   const takeSeat = () => {
     if(!user) return
@@ -211,9 +224,7 @@ return(
       {!player && !isCurrentUser && !isUserInAnySeat && (
         <div className='flex center' >Take seat</div>
       )}
-      {/* {!player && !isCurrentUser && isUserInAnySeat && (
-        <div className='flex center' >Change seat</div>
-      )} */}
+
       {player && isCurrentUser && (
         <>
           <button className='seat-leave-button' onClick={leaveSeat}>Leave seat</button>

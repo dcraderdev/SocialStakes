@@ -81,23 +81,26 @@ import { ModalContext } from '../../context/ModalContext';
 
       let chip1, chip2, chip3, chip4
 
+      
       chip1 = minBet
-
+      chip2 = minBet * 2
+      chip3 = minBet * 4
+      chip4 = minBet * 20
       
-      if(maxBet<=500){
-        chip2 = 5
-        chip3 =25
-        chip4 =50
-      }
-      
-      if(maxBet>500){
-        chip2 = 25
-        chip3 =50
-        chip4 =100
+      if(minBet === 1){
+        chip1 = minBet
+        chip2 = minBet * 5
+        chip3 = minBet * 25
+        chip4 = minBet * 100
       }
 
-
-
+      if(minBet === 100){
+        chip1 = minBet
+        chip2 = minBet * 5
+        chip3 = minBet * 10
+        chip4 = minBet * 50
+      }
+  
       setChipSizes([chip1,chip2,chip3,chip4])
       setActionHand(currActionHand)
       setIsActiveSeat(userInActiveSeat)
@@ -341,7 +344,7 @@ const rebet = (multiplier) => {
             <div className="section left">
               <div className="bet-user-settings">
                 <div className="gamefloor-add-balance" onClick={addBalance}>
-                  +
+                 <i className="fa-solid fa-dollar-sign"></i>+
                 </div>
                 <div className="gamefloor-leave-button" onClick={leaveTable}>
                   <i className="fa-solid fa-right-to-bracket"></i>
@@ -349,7 +352,7 @@ const rebet = (multiplier) => {
 
                 <div className="gamefloor-leave-button" onClick={openSettings}>
                   {/* <i className="fa-solid fa-right-to-bracket"></i> */}
-                  Settings
+                  <i className="fa-solid fa-gears"></i>
                 </div>
                 <div
                   className="chatbox-minimize-button"

@@ -92,6 +92,13 @@ margin-bottom: 20px;
   margin-top: 15px;
 }
 
+@media screen and (min-width: 700px) {
+  .tablename-text{
+    width: 350px;
+  }
+
+}
+
 .game-text{
   font-size: 21px;
   margin-top: 5px;

@@ -2,6 +2,7 @@ import {
 
   createTableAction,
   deleteTableAction,
+  updateTableAction, updateTableNameAction,
   getAllGamesAction, getGameByIdAction,
   getAllTablesAction, getTablesByTypeAction, getTableByIdAction,
   viewTableAction, leaveTableAction, 
@@ -158,7 +159,7 @@ export const getAllGames = () => async (dispatch) => {
   };
 
   export const deleteTable = (tableObj) => async (dispatch) => {
-    console.log('view table');
+    console.log('delete table');
     try{
       const response = await csrfFetch(`/api/tables/create`, {
         method: 'DELETE'
@@ -179,12 +180,14 @@ export const getAllGames = () => async (dispatch) => {
     } 
   };
 
-  export const editTable = (tableObj) => async (dispatch) => {
-    console.log('view table');
+
+  export const editTableName = (tableObj, socket) => async (dispatch) => {
+    console.log('edit table');
     const {tableId } = tableObj
     try{
-      const response = await csrfFetch(`/api/tables/${tableId}`, {
-        method: 'PUT'
+      const response = await csrfFetch(`/api/tables/${tableId}/edit`, {
+        method: 'PUT',
+        body: JSON.stringify({tableObj})
       });
  
 
@@ -194,7 +197,11 @@ export const getAllGames = () => async (dispatch) => {
       console.log(data); 
       console.log('-=-=-=-=');
    
-      dispatch(createTableAction(data));
+      let updateObj = {
+        tableId: data.table.id,
+        tableName: data.table.tableName
+      }
+      socket.emit('update_table_name', updateObj)
       return {data, response};
   
     }catch(error){
@@ -203,7 +210,7 @@ export const getAllGames = () => async (dispatch) => {
   };
 
 
-  export const joinPrivateTable = (tableId, password, socket) => async (dispatch) => {
+  export const joinPrivateTable = (tableId, password) => async (dispatch) => {
     try{
       const response = await csrfFetch(`/api/tables/${tableId}/private`, {
         method: 'PUT',

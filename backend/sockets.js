@@ -155,9 +155,7 @@ module.exports = function (io) {
       }, timer); 
     });
 
-    
-
-    socket.on('join_room', async (room) => {
+      socket.on('join_room', async (room) => {
       console.log('--- join_room ---');
       console.log(`${username} is joining room ${room}.`);
       let tableId = room
@@ -220,6 +218,27 @@ module.exports = function (io) {
       io.in(room).emit('new_message', messageObj);
       
 
+      console.log('-=-=-=-=-=-=-=-=-=');
+    });
+
+    socket.on('update_table_name', async (updateObj) => {
+      console.log('--- update_room ---');
+      const {tableId, tableName} = updateObj
+      let room = tableId
+
+      let messageObj = {
+        user: {username: 'Room',id: 1,},
+        content: `${username} has updated the table name to ${tableName}.`,
+        room,
+      };
+
+    
+      console.log(updateObj);
+
+
+      io.in(room).emit('update_table_name', updateObj);
+      io.in(room).emit('new_message', messageObj);
+    
       console.log('-=-=-=-=-=-=-=-=-=');
     });
 
@@ -937,11 +956,11 @@ module.exports = function (io) {
 
                 let cards = handData.cards
                 let playerHand = await handSummary(cards) 
+                let playerBestValue = await bestValue(playerHand.values) 
                 // Assign handSummary to hand 
                 handData.summary = playerHand;
 
-
-                if(playerHand.blackjack || playerHand.busted){
+                if(playerHand.blackjack || playerHand.busted || playerBestValue === 21){
                   handData.turnEnded = true;
                   clearInterval(rooms[tableId].timerId);
                   continue

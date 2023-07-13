@@ -1,7 +1,7 @@
 import { 
   GET_GAME_BY_ID, GET_GAMES,
   GET_TABLE_BY_ID, GET_TABLES, GET_TABLES_BY_TYPE,
-  UPDATE_TABLE, CREATE_TABLE, DELETE_TABLE,
+  UPDATE_TABLE, CREATE_TABLE, DELETE_TABLE, UPDATE_TABLE_NAME,
   VIEW_TABLE, LEAVE_TABLE, JOIN_TABLE,
   TAKE_SEAT, LEAVE_SEAT, CHANGE_SEAT, FORFEIT_SEAT,
   SHOW_GAMES, SHOW_TABLES, SHOW_ACTIVE_TABLES, SHOW_CREATING_GAME,
@@ -74,7 +74,13 @@ export const deleteTableAction = (data) => {
 };
 ;
 
-
+export const updateTableNameAction = (data) => {
+  console.log(data);
+  return {
+    type: UPDATE_TABLE_NAME,
+    payload: data,
+  };
+};
 
 export const updateTableAction = (data) => {
   console.log(data);

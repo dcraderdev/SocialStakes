@@ -103,7 +103,7 @@ function GameFloor() {
     if (gameType === 'multi_blackjack') {
       return (
         <div className="gameicon-container flex center">
-          <i class="fa-solid fa-user-group"></i>
+          <i className="fa-solid fa-user-group"></i>
           <div className="gameicon-text">
             <div className="gameicon-text flex center">Multi Player</div>
             <div className="gameicon-text flex center">Blackjack</div>
@@ -114,7 +114,7 @@ function GameFloor() {
     if (gameType === 'single_blackjack') {
       return (
         <div className="gameicon-container flex center">
-          <i class="fa-solid fa-user"></i>
+          <i className="fa-solid fa-user"></i>
           <div className="gameicon-text">
             <div className="gameicon-text flex center">Single Player</div>
             <div className="gameicon-text flex center">Blackjack</div>
@@ -125,7 +125,7 @@ function GameFloor() {
     if (gameType === 'poker') {
       return (
         <div className="gameicon-container flex center">
-          <i class="fa-solid fa-user-group"></i>
+          <i className="fa-solid fa-user-group"></i>
           <div className="gameicon-text">
             <div className="gameicon-text flex center">Texas</div>
             <div className="gameicon-text flex center">Hold 'em</div>
@@ -136,7 +136,7 @@ function GameFloor() {
     if (gameType === 'acey_duecey') {
       return (
         <div className="gameicon-container flex center">
-          <i class="fa-solid fa-user-group"></i>
+          <i className="fa-solid fa-user-group"></i>
           <div className="gameicon-text">
             <div className="gameicon-text flex center">Acey</div>
             <div className="gameicon-text flex center">Duecey</div>
@@ -147,7 +147,7 @@ function GameFloor() {
     if (gameType === 'coin_flip') {
       return (
         <div className="gameicon-container flex center">
-          <i class="fa-solid fa-user-group"></i>
+          <i className="fa-solid fa-user-group"></i>
           <div className="gameicon-text">
             <div className="gameicon-text flex center">Coin</div>
             <div className="gameicon-text flex center">Flip</div>
@@ -158,7 +158,7 @@ function GameFloor() {
     if (gameType === 'hi_lo') {
       return (
         <div className="gameicon-container flex center">
-          <i class="fa-solid fa-user-group"></i>
+          <i className="fa-solid fa-user-group"></i>
           <div className="gameicon-text">
             <div className="gameicon-text flex center">Hi Lo</div>
           </div>
@@ -277,14 +277,22 @@ function GameFloor() {
                     </div>
                   </div>
                 </div>
-                {openTablesByGameType &&
+
+                {openTablesByGameType.length > 0 &&
                   openTablesByGameType.map((table, index) => (
                     <TableTile
                       key={index}
                       table={table}
                       viewTable={viewTable}
                     />
-                  ))}
+                ))}
+
+                {!openTablesByGameType.length &&
+                  <div className='tables-coming-soon-container flex center'>Tables coming soon!</div>
+                }
+
+
+
               </div>
             )}
 

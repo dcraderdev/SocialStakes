@@ -108,7 +108,7 @@ const CreatingGameView = () => {
   };
 
   const gameSelect = (gameType) => {
-    setGameType(getName(gameType));
+    setGameType(gameType);
     setIsPickingGameType(false);
     setIsPickingVariant(true);
   };
@@ -181,7 +181,7 @@ const CreatingGameView = () => {
           onClick={() => navTo('gameType')}
         >
           <div>Game type</div>
-          <div>{!gameType ? '-' : `${gameType}`}</div>
+          <div>{!gameType ? '-' : `${getName(gameType)}`}</div>
         </div>
         <div
           className={`optionsnav flex center variant ${

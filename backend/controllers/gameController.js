@@ -100,28 +100,55 @@ const gameController = {
   },
 
   async createTable(tableObj) {
+    console.log('create table');
+    console.log('create table');
+    console.log('create table');
+    console.log('create table');
+    console.log('create table');
+    console.log('create table');
     const {gameType, deckSize, betSizing, isPrivate, privateKey, tableName } = tableObj
     let private = isPrivate
     let nickname = tableName.length ? tableName : null
     let shufflePoint
+    let decksUsed = parseInt(deckSize.split(' ')[0])
+
+
+    console.log(';before game');
+    console.log(';before game');
+    console.log(';before game');
+    console.log(';before gamev');
+
+
+    console.log(gameType);
+    console.log(decksUsed);
+    console.log(betSizing.minBet);
+    console.log(betSizing.maxBet);
     
     
     const game = await Game.findOne({
       where: {
         gameType,
-        decksUsed: deckSize,
+        decksUsed,
         minBet: betSizing.minBet,
         maxBet: betSizing.maxBet
       }
     });
+
+
+
+
+
     if(!game){
       return false
     }
 
 
-    if(deckSize === 1) shufflePoint = 25
-    if(deckSize === 4) shufflePoint = 136
-    if(deckSize === 6) shufflePoint = 180
+
+console.log('after game');
+
+    if(decksUsed === 1) shufflePoint = 25
+    if(decksUsed === 4) shufflePoint = 136
+    if(decksUsed === 6) shufflePoint = 180
 
     const table = await Table.create({
       gameId:game.id,
@@ -134,6 +161,8 @@ const gameController = {
     if (!table) {
       return false;
     }
+console.log('after table');
+
 
     let blockHash = await fetchLatestBlock()
 
@@ -146,6 +175,8 @@ const gameController = {
     if (!gameSession) {
       return false;
     }
+console.log('after gameSession');
+
 
     let serverSeed = generateSeed()
 
@@ -157,6 +188,8 @@ const gameController = {
     if(!newServerSeed){
       return false
     }
+console.log('after newServerSeed');
+
 
     let tableData = table.toJSON();
 

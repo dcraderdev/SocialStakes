@@ -13,7 +13,6 @@ import { ModalContext } from '../../context/ModalContext';
    changeActiveTablesAction
   } from '../../redux/actions/gameActions';
   
-  import { changeTableThemeAction } from '../../redux/actions/userActions';
   import cardConverter from '../../utils/cardConverter';  
 
 
@@ -327,6 +326,15 @@ const rebet = (multiplier) => {
       // openModal('balanceModal')
   };
 
+  const openSettings = () => {
+    
+    console.log(activeTable);
+    openModal('tableSettings')
+
+  }
+
+
+
 
   return (
     <>
@@ -343,6 +351,11 @@ const rebet = (multiplier) => {
                 <div className="gamefloor-leave-button" onClick={leaveTable}>
                   <i className="fa-solid fa-right-to-bracket"></i>
                 </div>
+
+                <div className="gamefloor-leave-button" onClick={openSettings}>
+                  {/* <i className="fa-solid fa-right-to-bracket"></i> */}
+                  Settings
+                </div>
                 <div
                   className="chatbox-minimize-button"
                   onClick={() => dispatch(toggleShowMessages())}
@@ -353,6 +366,10 @@ const rebet = (multiplier) => {
                     <i className="fa-solid fa-comment"></i>
                   )}
                 </div>
+
+
+
+
               </div>
 
               <div
@@ -420,19 +437,6 @@ const rebet = (multiplier) => {
 )}
             
 
-
-
-
-
-
-
-            {/* <div className='flex'>
-            <div className='theme-button' onClick={()=>handleTableThemeChange('black')}>black</div>
-            <div className='theme-button' onClick={()=>handleTableThemeChange('darkgreen')}>darkgreen</div>
-            <div className='theme-button' onClick={()=>handleTableThemeChange('lightgreen')}>lightgreen</div>
-            <div className='theme-button' onClick={()=>handleTableThemeChange('red')}>red</div>
-            <div className='theme-button' onClick={()=>handleTableThemeChange('realfelt')}>realfelt</div>
-          </div> */}
           </div>
         </div>
       </div>

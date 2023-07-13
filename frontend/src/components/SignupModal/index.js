@@ -11,7 +11,7 @@ import "./SignupModal.css";
 function SignupModal() {
 
   const { modal, openModal, closeModal, updateObj, setUpdateObj } = useContext(ModalContext);
-  const sessionUser = useSelector((state) => state.users.user);
+  const user = useSelector((state) => state.users.user);
   const dispatch = useDispatch();
   const history = useHistory()
   const formRef = useRef()

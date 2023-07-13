@@ -17,10 +17,10 @@ import './CreatingGameView.css';
 
 const CreatingGameView = () => {
   const dispatch = useDispatch();
-  const {socket} = useContext(SocketContext)
+  const { socket } = useContext(SocketContext);
 
   const [isPickingGameType, setIsPickingGameType] = useState(true);
-  const [isPickingVariant, setIsPickingVariant] = useState(true);
+  const [isPickingVariant, setIsPickingVariant] = useState(false);
   const [isPickingBetSizing, setIsPickingBetSizing] = useState(false);
   const [isPickingPrivate, setIsPickingPrivate] = useState(false);
   const [privateKey, setPrivateKey] = useState('');
@@ -34,9 +34,9 @@ const CreatingGameView = () => {
   const user = useSelector((state) => state.users.user);
   const allGames = useSelector((state) => state.games.games);
 
-  const blackjackDeckSizes = [1, 4, 6];
+  const blackjackDeckSizes = ['1 Deck', '4 Deck', '6 Deck'];
   const blackjackDict = {
-    1: {
+    '1 Deck': {
       betSizes: [
         {
           minBet: 1,
@@ -52,7 +52,7 @@ const CreatingGameView = () => {
         },
       ],
     },
-    4: {
+    '4 Deck': {
       betSizes: [
         {
           minBet: 1,
@@ -68,7 +68,7 @@ const CreatingGameView = () => {
         },
       ],
     },
-    6: {
+    '6 Deck': {
       betSizes: [
         {
           minBet: 1,
@@ -86,8 +86,29 @@ const CreatingGameView = () => {
     },
   };
 
+  const getName = (gameType) => {
+    if (gameType === 'multi_blackjack') {
+      return `Multi Player Blackjack`;
+    }
+    if (gameType === 'single_blackjack') {
+      return `Single Player Blackjack`;
+    }
+    if (gameType === 'poker') {
+      return `Texas Hold 'em`;
+    }
+    if (gameType === 'acey_duecey') {
+      return `Acey Duecey`;
+    }
+    if (gameType === 'coin_flip') {
+      return `Coin Flip`;
+    }
+    if (gameType === 'hi_lo') {
+      return 'Hi Lo';
+    }
+  };
+
   const gameSelect = (gameType) => {
-    setGameType(gameType);
+    setGameType(getName(gameType));
     setIsPickingGameType(false);
     setIsPickingVariant(true);
   };
@@ -110,25 +131,97 @@ const CreatingGameView = () => {
       betSizing,
       isPrivate,
       privateKey,
-      tableName
+      tableName,
     };
     dispatch(gameActions.createTable(tableObj, socket));
   };
 
+  const navTo = (nav) => {
+    if (nav === 'gameType') {
+      setIsPickingGameType(true);
+      setIsPickingVariant(false);
+      setIsPickingBetSizing(false);
+      setIsPickingPrivate(false);
+    }
+    if (nav === 'variant') {
+      if (!gameType) {
+        navTo('gameType');
+        return;
+      }
+      setIsPickingGameType(false);
+      setIsPickingVariant(true);
+      setIsPickingBetSizing(false);
+      setIsPickingPrivate(false);
+    }
+    if (nav === 'betSizes') {
+      if (!deckSize) {
+        navTo('variant');
+        return;
+      }
+      setIsPickingGameType(false);
+      setIsPickingVariant(false);
+      setIsPickingBetSizing(true);
+      setIsPickingPrivate(false);
+    }
+    if (nav === 'private') {
+      setIsPickingGameType(false);
+      setIsPickingVariant(false);
+      setIsPickingBetSizing(false);
+      setIsPickingPrivate(true);
+    }
+  };
+
   return (
     <div className="creatinggameview-container flex center">
+      <div className="options-nav flex center">
+        <div
+          className={`optionsnav flex center gametype ${
+            isPickingGameType ? ' highlite' : ''
+          }`}
+          onClick={() => navTo('gameType')}
+        >
+          <div>Game type</div>
+          <div>{!gameType ? '-' : `${gameType}`}</div>
+        </div>
+        <div
+          className={`optionsnav flex center variant ${
+            isPickingVariant ? ' highlite' : ''
+          }`}
+          onClick={() => navTo('variant')}
+        >
+          <div>Variant</div>
+          <div>{!deckSize ? '-' : `${deckSize}`}</div>
+        </div>
+        <div
+          className={`optionsnav flex center betsize ${
+            isPickingBetSizing ? ' highlite' : ''
+          }`}
+          onClick={() => navTo('betSizes')}
+        >
+          <div>Bet Sizes</div>
+          <div>
+            {!betSizing ? '-' : `${betSizing.minBet}/${betSizing.maxBet}`}
+          </div>
+        </div>
+        <div
+          className={`optionsnav flex center privateoption ${
+            isPickingPrivate ? ' highlite' : ''
+          }`}
+          onClick={() => navTo('private')}
+        >
+          <div>Private</div>
+          <div>{isPrivate ? 'Private' : 'Open'}</div>
+        </div>
+      </div>
+
       {isPickingGameType && (
-        <div className="creatinggameview-isPickingGameType-container flex center">
-          {allGames &&
-            Object.values(allGames).map((game, index) => (
-              <div
-                key={index}
-                className="flex center creatinggameview-options"
-                onClick={() => gameSelect(game.gameType)}
-              >
-                {game.gameType}
-              </div>
-            ))}
+        <div className="creatinggameview-isPickingGameType-wrapper flex center">
+          <div className="creatinggameview-isPickingGameType-container flex center">
+            {allGames &&
+              Object.values(allGames).map((game, index) => (
+                <GameTile key={index} game={game} cbFunc={gameSelect} />
+              ))}
+          </div>
         </div>
       )}
 
@@ -161,25 +254,27 @@ const CreatingGameView = () => {
       )}
 
       {isPickingPrivate && (
-
         <div className="creatinggameview-isPickingPrivate-container flex center">
-          <div className='private-open-buttons-container flex'>
-
-                    <div
-                      className="creatinggameview-options flex center"
-                      onClick={() => setIsPrivate(false)}
-                    >
-                      Public
-                    </div>
-                    <div
-                      className="creatinggameview-options flex center"
-                      onClick={() => setIsPrivate(true)}
-                    >
-                      Private
-                    </div>
-
+          <div className="private-open-buttons-container flex">
+            <div
+              className="creatinggameview-options flex center"
+              onClick={() => setIsPrivate(false)}
+            >
+              Public
+            </div>
+            <div
+              className="creatinggameview-options flex center"
+              onClick={() => setIsPrivate(true)}
+            >
+              Private
+            </div>
           </div>
-          <div className='creatinggameview-tablename-container flex'>
+
+          <div
+            className={`creatinggameview-tablename-container flex center ${
+              isPrivate ? '' : ' centered'
+            }`}
+          >
             <input
               className="creatinggameview-tablename"
               type="text"
@@ -188,24 +283,21 @@ const CreatingGameView = () => {
               placeholder="Table name (optional)"
             />
 
-          <input
-            className="creatinggameview-privatekey"
-            type="text"
-            value={privateKey}
-            onChange={(e) => setPrivateKey(e.target.value)}
-            placeholder="Set private key"
-          />
-
+            {isPrivate && (
+              <input
+                className="creatinggameview-privatekey"
+                type="text"
+                value={privateKey}
+                onChange={(e) => setPrivateKey(e.target.value)}
+                placeholder="Set private key"
+              />
+            )}
           </div>
 
-
-
-
-
-
-
-          <div className='creatinggameview-create-button' onClick={createTable}>Create Table</div>
-    </div>
+          <div className="creatinggameview-create-button" onClick={createTable}>
+            Create Table
+          </div>
+        </div>
       )}
     </div>
   );

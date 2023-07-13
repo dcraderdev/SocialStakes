@@ -7,6 +7,8 @@
   top: 0px;
   z-index: 1000000;
   border-bottom: 1px solid black;
+  background-color: #1d1e1c;
+
 }
 
 
@@ -22,6 +24,8 @@
   border-bottom: 1px solid black;
   justify-content: center;
   background-color: #2d2e2c;
+  background-color: #1d1e1c;
+
   transition: all .5s ease;
 }
 
@@ -75,14 +79,20 @@
 .nav-user-button .fa-user:hover,
 .nav-user-button:hover{
   color: rgb(200, 57, 13);
+  color: goldenrod;
 }
 
 .nav-user-button:hover > .profile-icon-container{
   border: rgb(200, 57, 13) 1px solid;
+  border: goldenrod 1px solid;
+  color: goldenrod;
+
 }
 
 .profile-icon-container:hover > .nav-user-button .fa-user {
   color: rgb(200, 57, 13);
+  color: goldenrod;
+
 }
 
 

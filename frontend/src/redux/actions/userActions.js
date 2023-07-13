@@ -24,6 +24,7 @@ export const setThemes = (data) => {
 };
 
 export const changeNeonThemeAction = (theme) => {
+  console.log(theme);
   return {
     type: CHANGE_NEON_THEME,
     payload: theme
@@ -31,6 +32,7 @@ export const changeNeonThemeAction = (theme) => {
 };
 
 export const changeTableThemeAction = (theme) => {
+  console.log(theme);
   return {
     type: CHANGE_TABLE_THEME,
     payload: theme

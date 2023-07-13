@@ -45,7 +45,6 @@ router.get('/:tableId', async (req, res, next) => {
 
 // Create new custom table
 router.post('/create',requireAuth, async (req, res, next) => {
-
   
   const {tableObj} = req.body
 

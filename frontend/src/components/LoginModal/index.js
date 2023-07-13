@@ -119,11 +119,10 @@ function LoginModal() {
 
   return (
     <div className="signin-form-page-container" ref={formRef}>
-      <div className="signinHeader">Sign In</div>
 
       <form onSubmit={handleSubmit} className="signinDiv">
         <label className="user">
-          Username
+        <div className='flex center'>Username</div>
           <input
             className="userField"
             type="text"
@@ -134,7 +133,8 @@ function LoginModal() {
           />
         </label>
         <label className="pass">
-          Password
+
+            <div className='flex center'>Password</div>
           <input
             className="passwordField"
             type="password"
@@ -153,14 +153,9 @@ function LoginModal() {
         </button>
       </form>
       <div className="altLinks">
-        <div className="login-forgot-password-link link" onClick={handleForgotPassword}>
-          Forgot password?
-        </div>
+
         <div className="login-signup-link link" onClick={handleSignUp}>
           Sign Up
-        </div>
-        <div className="demo-user-singin link" onClick={demoUser}>
-        Demo User
         </div>
       </div>
     </div>

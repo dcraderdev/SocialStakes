@@ -1,18 +1,129 @@
 .tabletile-wrapper {
-  border: black solid 1px;
-  background-color: #fff;
+  /* border: black solid 1px;
+  border-radius: 14px; */
   position: relative;
   display: flex;
   flex-direction: column;
-  color: inherit;
   cursor: pointer;
   width: 100%;
   height: 100px;
-  border-radius: 14px;
+  box-shadow: rgba(0, 0, 0, 0.5) 0px 3px 6px, rgba(0, 0, 0, 0.5) 0px 3px 6px;
+  background-color: #28292b;
+  background-color: #1d1e1c;
+
+  border-bottom: rgba(255, 217, 0, 0.466) solid .5px;
+  border-top: rgba(255, 217, 0, 0.466) solid .5px;
+
+  
+
+}
+.tabletile-wrapper:last-child {
+margin-bottom: 20px;
 }
 
 
+.tabletile-content {
+  justify-content: space-between;
+  position: relative;
 
-.table-tile:hover {
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 3px 6px, rgba(0, 0, 0, 0.1) 0px 3px 6px;
+}
+
+.status-playercount-container {
+  position: relative;
+  left: 10px;
+}
+
+.playercount-container {
+  width: 100px;
+
+}
+.playercount-ring {
+  border: #7a7b7c solid 3px;
+  width: 90px;
+  height: 50px;
+  border-radius: 40px;
+  font-size: 22px;
+  color: #7a7b7c;
+
+}
+
+.status-container {
+  width: 50px;
+
+}
+
+.status-icon {
+  position: relative;
+  width: 20px;
+  height: 20px;
+  border: rgb(26, 59, 167) solid 1px;
+  border-radius: 50%;
+}
+
+.open {
+  border: rgb(8, 67, 20) solid 1px;
+  background-color: green;
+}
+.full {
+  border: rgb(124, 36, 9) solid 1px;
+  background-color: rgb(200, 57, 13);
+}
+
+.private {
+  border: rgb(74, 17, 124) solid 1px;
+  background-color: rgb(115, 31, 188);
+}
+
+.game-deck-container {   
+  font-size: 25px;
+  width: 120px;
+  margin-left: 10px;
+  color: #fdfcfc;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+
+.tablename-text{
+  width: 270px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 15px;
+}
+
+.game-text{
+  font-size: 21px;
+  margin-top: 5px;
+}
+
+
+.deck-text {
+  font-size: 15px;
+
+}
+
+
+.betsize-container {
+  position: relative;
+  justify-content: space-between;
+  right: 5px;
+  top: 35px;
+  font-size: 25px;
+  /* color: rgb(200, 57, 13); */
+
+  background: radial-gradient(
+    circle,
+    rgba(217, 46, 46, 1) 4%,
+    rgba(217, 46, 46, 1) 8%,
+    rgba(187, 46, 47, 1) 48%,
+    rgba(217, 46, 46, 1) 82%,
+    rgba(202, 46, 47, 1) 91%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.betsize-maxbet{
+  margin-left: 5px;
 }

@@ -112,7 +112,7 @@ function Navigation(){
           )}
         </div>
         
-            <div className='profile-modal'>
+            <div className={`profile-modal ${modal === 'profileModal' ? '' : ' profilemenu-hidden'}`} >
               {modal === 'profileModal' && <ProfileButtonModal />}
             </div>
         

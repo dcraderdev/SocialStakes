@@ -14,7 +14,7 @@ const {
   UserPot,
 } = require('../db/models');
 
-const {generateDeck} = require('./cardController')
+const {generateDeck, shuffle, fetchLatestBlock, generateSeed} = require('./cardController')
 
 const gameController = {
   async getGames() {
@@ -45,11 +45,14 @@ const gameController = {
         {
           model: User,
           as: 'players',
-          through: UserTable,
+          through: {
+            model: UserTable,
+            where: { active: true },
+          },
           attributes: ['id', 'username', 'rank'],
         },
       ],
-      attributes: ['id','private'],
+      attributes: ['id','private', 'tableName'],
     });
 
     if (!tables) {
@@ -57,6 +60,7 @@ const gameController = {
     }
     return tables;
   },
+
 
   async getTableById(tableId) {
     const table = await Table.findByPk(tableId, {
@@ -68,19 +72,6 @@ const gameController = {
           },
 
         },
-        // {
-        //   model: UserTable,
-        //   where:{active:true},
-        //   required: false, 
-        //   as: 'tableUsers',
-        //   attributes: ['userId', 'currentBet', 'pendingBet', 'seat', 'disconnectTimer', 'tableBalance'],
-        // },
-        // {
-        //   model: User,
-        //   as: 'players',
-        //   through: UserTable,
-        //   attributes: ['id', 'username', 'rank'],
-        // },
         {
           model: GameSession,
           as: 'gameSessions',
@@ -94,32 +85,89 @@ const gameController = {
       return false;
     }
 
-  
-    // const returnedTable = table.toJSON();
-    
-    // // Add usernames to tableUsers
-    // for (let userTable of returnedTable.tableUsers) {
-    //   for (let player of returnedTable.players) {
-    //     if (player.id === userTable.userId) {
-    //       userTable.username = player.username;
-    //       break;
-    //     }
-    //   }
-    // }
 
-    // // Normalize the tableUsers array into an object
-    // const normalizedTableUsers = returnedTable.tableUsers.reduce((acc, user) => {
-    //   acc[user.seat] = user;
-    //   return acc;
-    // }, {})
-
-
-    // returnedTable.tableUsers = normalizedTableUsers
-
-    
-    // return returnedTable;
     return table;
   },
+
+  async checkTableCredentials(tableId, password){
+    const table = await Table.findByPk(tableId)
+    if(!table) return false
+    if(!table.password) return true
+    if(table.password && table.password !== password){ 
+      return false
+    } else return true
+
+  },
+
+  async createTable(tableObj) {
+    const {gameType, deckSize, betSizing, isPrivate, privateKey, tableName } = tableObj
+    let private = isPrivate
+    let nickname = tableName.length ? tableName : null
+    let shufflePoint
+    
+    
+    const game = await Game.findOne({
+      where: {
+        gameType,
+        decksUsed: deckSize,
+        minBet: betSizing.minBet,
+        maxBet: betSizing.maxBet
+      }
+    });
+    if(!game){
+      return false
+    }
+
+
+    if(deckSize === 1) shufflePoint = 25
+    if(deckSize === 4) shufflePoint = 136
+    if(deckSize === 6) shufflePoint = 180
+
+    const table = await Table.create({
+      gameId:game.id,
+      shufflePoint,
+      private,
+      passCode: privateKey,
+      tableName: nickname
+    });
+
+    if (!table) {
+      return false;
+    }
+
+    let blockHash = await fetchLatestBlock()
+
+    const gameSession = await GameSession.create({
+      tableId:table.id,
+      blockHash,
+      nonce:'1',
+    });
+
+    if (!gameSession) {
+      return false;
+    }
+
+    let serverSeed = generateSeed()
+
+    const newServerSeed = await ServerSeed.create({
+      gameSessionId:gameSession.id,
+      serverSeed,
+    });
+
+    if(!newServerSeed){
+      return false
+    }
+
+    let tableData = table.toJSON();
+
+    tableData.Game = game;
+    tableData.gameSession = gameSession;
+
+    return tableData;
+  },
+
+
+
 
 
 
@@ -174,12 +222,20 @@ console.log('CURRENT BALANCE: ', userToUpdate.balance);
         active: true
       },
     });
+
+    const userAlreadySitting = await UserTable.findOne({
+      where: { 
+        tableId,
+        userId:user.id,
+        active: true
+      },
+    });
   
     // If there's an active user in the seat, return false
-    if (activeUserInSeat) {
+    if (activeUserInSeat || userAlreadySitting) {
       console.log('Seat is active');
       return false;
-    }
+    } 
   
     // update user's unplayed balance
     userToUpdate.balance -= amount;

@@ -1,9 +1,7 @@
-.profileMenu {
-  cursor: pointer;
+.profilemenu {
   position: relative;
   top: -18px;
   right: 5px;
-  transform: scale(1);
   border: 1px solid rgb(0, 0, 0,0.1);
   border-top: none;
   background-color: white;
@@ -16,6 +14,7 @@
   overflow: hidden;
   z-index: 411;
 }
+
 
 
 .div-link {
@@ -36,10 +35,8 @@
   background-color: rgb(226, 226, 226);
 }
 
-.profile-user-welcome {
+.profilemenu-user-welcome {
   position: relative;
-  display: flex;
-  align-items: center;
   padding: 20px;
   background-color: #f0f0f0;
   border-bottom: 1px solid #dcdcdc;
@@ -47,87 +44,79 @@
   left: -40px;
   width: 230px;
   height: 30px;
+  
+  flex-direction: column;
 }
 
-.profile-icon {
+
+
+.profilemenu-hello {
+  width: 100%;
+  left: -10px;
   position: relative;
-  left: 160px;
-  top: 0px;
-  transform: scale(2.7);
-}
-
-.profile-hello {
-  width: fit-content;
-  position: absolute;
   margin-bottom: 4px;
-  left: 3px;
   font-size: 20px;
 }
 
-
-
-.profile-email {
-  position: absolute;
-  width: fit-content;
-  left: 5px;
-  top: 45px;
-  font-size: 14px;
-  color: rgb(119, 119, 119);
-  font-weight: 600;
-  margin-bottom: 4px;
+.profilemenu-icon{
+  margin-right: 5px;
 }
-.profile-favorites,
-.profile-messages,
-.profile-reservations {
+
+.profilemenu-balance {
+  position: relative;
+  bottom: 2px;
+  left: -5px;
+}
+
+
+
+.profilemenu-option{
   position: relative;
   transition: background-color 0.2s ease;
   padding: 5px;
-  left: -40px;
   width: 230px;
-  border-bottom-left-radius: 1px;
-  border-bottom-right-radius: 1px;
+  left: -40px;
+  cursor: pointer;
+
 }
 
 
-.profile-messages:hover,
-.profile-reservations:hover {
+.profilemenu-option:hover{
   background-color: rgba(228, 228, 228, 0.2508);
 }
 
-.profile-menu-logout-button{
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.profilemenu-logout-container{
+  height: 40px;
+}
+
+.profilemenu-logout-button{
   position: relative;
   width: 80%;
-  height: 30%;
+  height: 30px;
   bottom: 10%;
-  left: 0%;
-  background-color: rgb(74, 113, 186);
+  left: -20px;
+  background-color: #2d2e2c;
+
   color: white;
   font-weight: bold;
-  border: none;
   border-radius: 3px;
   cursor: pointer;
   transition: .1s background-color;
   font-size: 12px;
   bottom: 1px;
-}
-
-
-.profile-menu-logout-button:hover {
-  background-color: #3b75e2;
 
 }
-.profile-menu-logout-button:active {
+
+
+.profilemenu-logout-button:hover {
+  background-color: #363736;
+}
+
+.profilemenu-logout-button:active {
   transform: scale(.95);
   background-color: rgb(74, 113, 186);
 
 }
 
 
-.profile-user-welcome:hover{
-  background-color: rgba(228, 228, 228, 0.2508);
-
-}
 

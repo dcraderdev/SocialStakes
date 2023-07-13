@@ -186,7 +186,7 @@ function BalanceModal() {
             className='balancemodal-funding-input'
             type="number"
             value={amount} 
-            onChange={(e)=> handleSetFunding(e)}
+            onInput={(e)=> handleSetFunding(e)}
             
             placeholder="Enter amount"
             max={balance}
@@ -200,7 +200,7 @@ function BalanceModal() {
               Cancel
             </div>
             <div
-             className={`balancemodal-addbalance flex center ${amount < updateObj.minBet ? ' disabled' : ''}`} 
+             className={`balancemodal-addbalance flex center ${amount < updateObj.minBet ? ' balancemodal-disabled' : ''}`} 
              onClick={fundTable}
             >
               Submit
@@ -247,7 +247,7 @@ function BalanceModal() {
             className='balancemodal-funding-input'
             type="number"
             value={amount} 
-            onChange={(e)=> handleSetFunding(e)}
+            onInput={(e)=> handleSetFunding(e)}
             
             placeholder="Enter amount"
             max={balance}

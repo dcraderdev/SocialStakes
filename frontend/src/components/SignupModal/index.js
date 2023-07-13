@@ -11,7 +11,7 @@ import "./SignupModal.css";
 function SignupModal() {
 
   const { modal, openModal, closeModal, updateObj, setUpdateObj } = useContext(ModalContext);
-  const sessionUser = useSelector((state) => state.users.user);
+  const user = useSelector((state) => state.users.user);
   const dispatch = useDispatch();
   const history = useHistory()
   const formRef = useRef()
@@ -139,11 +139,10 @@ function SignupModal() {
 
   return (
       <div className="signup-form-page-container" ref={formRef}>
-        <div className="signupHeader">Sign Up</div>
         <form onSubmit={handleSubmit} className="signupDiv">
 
         <label>
-            First Name
+            <div className='flex center'>First Name</div>
             <input
               className="firstnameField"
               type="text"
@@ -154,7 +153,8 @@ function SignupModal() {
             />
           </label>
           <label>
-            Last Name
+            
+            <div className='flex center'>Last Name</div>
             <input
               className="lastnameField"
               type="text"
@@ -166,7 +166,8 @@ function SignupModal() {
           </label>
 
           <label className="emailLabel">
-            Email
+            
+            <div className='flex center'>Email</div>
             <input
               className={emailClass}
               type="text"
@@ -183,7 +184,8 @@ function SignupModal() {
 
 
           <label>
-            Username
+            
+            <div className='flex center'>Username</div>
             <input
               className={usernameClass}
               type="text"
@@ -199,7 +201,8 @@ function SignupModal() {
 
           
           <label>
-            Password
+            
+            <div className='flex center'>Password</div>
             <input
               className="passwordField"
               type="password"
@@ -211,7 +214,7 @@ function SignupModal() {
             />
           </label>
           <label>
-            Confirm Password
+            <div className='flex center'>Confirm Password</div>
             <input
               className="confirmPasswordField"
               type="password"

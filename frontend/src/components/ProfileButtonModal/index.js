@@ -16,6 +16,7 @@ function ProfileButtonModal() {
   const formRef = useRef(null);
 
   const user = useSelector(state => state.users.user);
+  const balance = useSelector(state=> state.users.balance)
 
   const {profileBtnRef} = useContext(WindowContext);
 
@@ -50,36 +51,47 @@ function ProfileButtonModal() {
     };
   }, []);
 
+  console.log(modal);
+
 
 
   return (
     
     <>
-      <ul className='profileMenu' ref={formRef}>
+      <ul className={`profilemenu`}ref={formRef}>
         {user ? (
           <div>
-            <div className='profile-user-welcome'>
-              <div className='profile-icon'> <i className="fa-solid fa-user" /></div>
-              <div className='profile-hello'>Hello, {user.username}!</div>
+            <div className='profilemenu-user-welcome flex'>
 
+              <div className='profilemenu-hello flex'>
+                <div className='profilemenu-icon'>
+                    <i className="fa-solid fa-user" />
+                </div>
+                {user.username}
+                </div>
+              <div className='profilemenu-balance'>$ {balance}</div>
             </div>
 
 
-            <div className='profile-messages'>
+            <div className='profilemenu-option'>
             Friends
             </div>
 
-            <div className='profile-messages'>
+            <div className='profilemenu-option'>
             Invites
             </div>
 
-            <div className='profile-messages'>
-            <div>Balance:</div><div>${user.balance}</div>
+            <div className='profilemenu-option'>
+            Stats
             </div>
 
-            <button className='profile-menu-logout-button' onClick={logout}>
-              Logout
-            </button>
+          
+            <div className='profilemenu-logout-container flex center'>
+
+              <div className='profilemenu-logout-button flex center' onClick={logout}>
+                Logout
+              </div>
+            </div>
 
           </div>
 

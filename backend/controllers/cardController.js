@@ -79,6 +79,8 @@ async function fetchLatestBlock() {
     console.error('Error:', error);
   }
 }
+
+
 async function fetchSpecificBlockHash(blockHeight) {
   const url = `https://blockchain.info/block-height/${blockHeight}?format=json`;
   const options = {
@@ -245,62 +247,6 @@ async function main() {
   return cardsDrawn;
 }
 
-// let draws = main().catch(console.error).then(()=>console.log(draws));
-// // console.log(draws);
-
-// main().then(draws => {
-//   console.log(draws);
-// }).catch(console.error);
-
-
-// async function drawCards(deck, totalNumberOfDraws, serverSeed, blockHash, nonce) {
-
-//   let localDeck = [...deck];
-//   const cardsDrawn = [];
-
-//   for(let i=0; i<totalNumberOfDraws; i++) {
-//     const drawFloat = generateFloats({
-//       serverSeed: serverSeed,
-//       blockHash: blockHash,
-//       nonce: nonce,
-//       cursor: i,
-//     });
-
-//     // Get card index based on current deck size
-//     const drawIndex = Math.floor(drawFloat * localDeck.length);
-    
-//     // Add drawn card to drawn array and remove it from the deck
-//     cardsDrawn.push(localDeck[drawIndex]);
-//     localDeck.splice(drawIndex, 1);
-//   }
-
-//   return cardsDrawn;
-// }
-
-
-// async function drawCards(deck, totalNumberOfDraws, serverSeed, blockHash, nonce, cursor) {
-//   const draws = generateFloats({
-//     serverSeed: serverSeed,
-//     blockHash: blockHash,
-//     nonce: nonce,
-//     cursor: cursor,
-//     count: totalNumberOfDraws,
-//   }).map(float => Math.floor(float * deck.length)); // Use the current deck length
-
-//   const cardsDrawn = [];
-
-//   // Sort the draw indexes in descending order. This way, removing cards from the deck doesn't shift
-//   // the positions of the cards we haven't drawn yet.
-//   draws.sort((a, b) => b - a);
-
-//   // Draw the cards and remove them from the deck
-//   draws.forEach(draw => {
-//     cardsDrawn.push(deck[draw]);
-//     deck.splice(draw, 1);
-//   });
-
-//   return cardsDrawn;
-// }
 
 function drawCards(drawObj) {
   const {deck, cardsToDraw, cursor} = drawObj

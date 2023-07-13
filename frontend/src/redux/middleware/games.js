@@ -1,4 +1,7 @@
 import { 
+
+  createTableAction,
+  deleteTableAction,
   getAllGamesAction, getGameByIdAction,
   getAllTablesAction, getTablesByTypeAction, getTableByIdAction,
   viewTableAction, leaveTableAction, 
@@ -118,6 +121,79 @@ export const getAllGames = () => async (dispatch) => {
       console.log('-=-=-=-=');
    
       dispatch(viewTableAction(data));
+
+      return {data, response};
+  
+    }catch(error){
+      console.log(error);
+    } 
+  };
+
+  export const createTable = (tableObj, socket) => async (dispatch) => {
+    console.log('view table');
+    console.log(tableObj);
+    try{
+      const response = await csrfFetch(`/api/tables/create`, {
+        method: 'POST',
+        body: JSON.stringify({
+          tableObj
+        })
+      });
+ 
+
+      const data = await response.json();
+      
+      console.log('-=-=-=-=');
+      console.log(data); 
+      console.log('-=-=-=-=');
+      
+      dispatch(createTableAction(data));
+      let tableId = data.table.id
+      socket.emit('join_room', tableId);
+      return {data, response};
+  
+    }catch(error){
+      console.log(error);
+    } 
+  };
+
+  export const deleteTable = (tableObj) => async (dispatch) => {
+    console.log('view table');
+    try{
+      const response = await csrfFetch(`/api/tables/create`, {
+        method: 'DELETE'
+      });
+ 
+
+      const data = await response.json();
+  
+      console.log('-=-=-=-=');
+      console.log(data); 
+      console.log('-=-=-=-=');
+   
+      dispatch(createTableAction(data));
+      return {data, response};
+  
+    }catch(error){
+      console.log(error);
+    } 
+  };
+
+  export const editTable = (tableObj) => async (dispatch) => {
+    console.log('view table');
+    try{
+      const response = await csrfFetch(`/api/tables/${tableId}`, {
+        method: 'PUT'
+      });
+ 
+
+      const data = await response.json();
+  
+      console.log('-=-=-=-=');
+      console.log(data); 
+      console.log('-=-=-=-=');
+   
+      dispatch(createTableAction(data));
       return {data, response};
   
     }catch(error){
@@ -126,10 +202,28 @@ export const getAllGames = () => async (dispatch) => {
   };
 
 
-  // export const leaveTable = (tableId) => async (dispatch) => {
-  //   console.log('leaving');
-  //   dispatch(leaveTableAction(tableId));
-  // };
+  export const joinPrivateTable = (tableId, password, socket) => async (dispatch) => {
+    try{
+      const response = await csrfFetch(`/api/tables/${tableId}/private`, {
+        method: 'PUT',
+        body: JSON.stringify({
+          tableId,
+          password
+        })
+      });
+      const data = await response.json();
+  
+      console.log('-=-=-=-=');
+      console.log(data); 
+      console.log('-=-=-=-=');
+  
+      dispatch(viewTableAction(data));
+      return {data, response};
+  
+    }catch(error){
+      console.log(error);
+    }
+  }; 
 
 
 

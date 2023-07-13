@@ -17,6 +17,8 @@ import { ModalContext } from './context/ModalContext';
 import { SocketContext } from './context/SocketContext';
 import * as sessionActions from './redux/middleware/users';
 import InsuranceModal from './components/InsuranceModal';
+import JoinPrivateGameModal from './components/JoinPrivateGameModal';
+import SettingsModal from './components/SettingsModal';
 
 function App() {
 
@@ -82,8 +84,18 @@ function App() {
         </div>
       )}
 
+      {modal  === 'joinPrivateGame' && (
+        <div className='modal-container'>
+          {modal === 'joinPrivateGame' && <JoinPrivateGameModal />}
+        </div>
+      )}
 
 
+      {modal  === 'tableSettings' && (
+        <div className='modal-container'>
+          {modal === 'tableSettings' && <SettingsModal />}
+        </div>
+      )}
 
       <div>
 

@@ -1,4 +1,9 @@
-.leavemodal-wrapper {
+.jointable-form{
+  flex-direction: column;
+}
+
+
+.jointable-wrapper {
   z-index: 1000;
   position: absolute;
   border: 1px solid rgb(0, 0, 0);
@@ -7,25 +12,25 @@
   border-radius: 5px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   width: 450px;
-  height: 120px;
+  height: 170px;
 }
 
 
 
-.leavemodal-container{
+.jointable-container{
   flex-direction: column;
   justify-content: space-between;
-  height: 100%;
+  height: 170px;
   
 }
 
-.leavemodal-header{
+.jointable-header{
   width: 100%;
   font-size: 25px;
   color: rgb(200, 57, 13);
 }
 
-.leavemodal-subheader{
+.jointable-subheader{
   width: 100%;
   font-size: 22px;
   color: rgb(200, 57, 13);
@@ -35,56 +40,67 @@
   color: white;
 }
 
-.leavemodal-memo-container{
+.jointable-memo-container{
   font-size: 20px;
   width: 150px;
   font-size: 20px;
 }
 
-.leavemodal-memo{
+.jointable-memo{
   color: rgb(255, 255, 255);
 }
-.leavemodal-balance{
+.green{
+  color: rgb(25, 141, 60);
+}
+.red{
   color: rgb(200, 57, 13);
 }
 
-
-.leavemodal-user-buttons{
+.jointable-user-buttons{
   width: 80%;
   height: 50px;
 }
 
-
-.leavemodal-addbalance,
-.leavemodal-cancel{
+.jointable-ok,
+.jointable-addbalance,
+.jointable-cancel{
   border-radius: 5px;
   cursor: pointer;
   border: solid 1px rgb(255, 255, 255);
   height: 100%;
   color: white;
-}
-
-.leavemodal-addbalance{
   width: 40%;
 }
 
 
 
 
-.leavemodal-cancel{
-  width: 30%;
+
+.jointable-cancel{
+  width: 40%;
+}
+
+.jointable-ok{
+  width: 40%;
+  height: 40px;
 }
 
 
-.leavemodal-addbalance:hover{
+.jointable-addbalance:hover{
   color: rgb(1, 83, 21);
   border: solid green 1px;
 }
 
-.leavemodal-cancel:hover{
+.jointable-cancel:hover{
   color: rgb(200, 57, 13);
 
   border: solid rgb(200, 57, 13) 1px;
 }
 
 
+
+
+
+.jointable-funding-input{
+  width: 150px;
+}

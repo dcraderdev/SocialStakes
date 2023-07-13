@@ -94,7 +94,7 @@ const Table = () => {
   return (
     <div className='table-wrapper'>
     <div className='table-container '>
-      <div className='table-content flex center'>
+      <div className={`table-content flex center ${neonTheme}`}>
         {themes[tableTheme] && <img src={themes[tableTheme].url} alt='table'></img>}
       </div>
       <div className='table-countdown'>{countdown > 0 ? countdown : ''}</div>

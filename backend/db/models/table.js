@@ -26,10 +26,10 @@ module.exports = (sequelize, DataTypes) => {
     },
     active: DataTypes.BOOLEAN,
     gameId: DataTypes.STRING,
-    cutPoint: DataTypes.INTEGER,
     shufflePoint: DataTypes.INTEGER,
     passCode: DataTypes.STRING,
     private: DataTypes.BOOLEAN,
+    tableName: DataTypes.STRING,
     tableBalance: DataTypes.INTEGER,
   }, {
     sequelize,

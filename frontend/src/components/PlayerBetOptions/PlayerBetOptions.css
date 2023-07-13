@@ -48,9 +48,7 @@
 
 
 
-.undo-bet-container,
-.chips-option-container,
-.rebet-option-container,
+
 .decision-option-container{
   width: 150px;
   height: 200px;
@@ -63,9 +61,8 @@
   flex-direction: row;
 }
 
-.undo,
+
 .rebet,
-.chip,
 .action{
   display: flex;
   justify-content: center;
@@ -74,3 +71,70 @@
   height: 35px;
   border: white solid 1px;
 }
+
+
+
+.chips-option-container{
+  position: relative;
+  left: 30px;
+  width: 160px;
+  height: 200px;
+  border: white solid 1px;
+}
+
+.chip{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 70px;
+  height: 70px;
+  border: white solid 1px;
+  border-radius: 50%;
+}
+
+.chip.one{
+  position: relative;
+  left: 5px;
+  top: 30px;
+
+}
+
+.chip.two{
+  position: relative;
+  left: 5px;
+  top: 45px;
+}
+
+.chip.three{
+  position: relative;
+  left: 85px;
+  top: -135px;
+}
+
+.chip.four{
+  position: relative;
+  left: 85px;
+  top: -120px;
+}
+
+
+.rebet-option-container,
+.undo-bet-container{
+  width: 400px;
+  height: 100px;
+  border: white solid 1px;
+}
+
+
+
+.rebet,
+.undo{
+  border: black solid 1px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50%;
+  height: 70px;
+}
+
+

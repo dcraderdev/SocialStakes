@@ -23,10 +23,6 @@ module.exports = {
         },
         onDelete: 'CASCADE'
       },
-      cutPoint: {
-        allowNull: false,
-        type: Sequelize.INTEGER,
-      },
       shufflePoint: {
         allowNull: false,
         type: Sequelize.INTEGER,
@@ -49,6 +45,11 @@ module.exports = {
       },
       tableBalance: {
         type: Sequelize.INTEGER,
+      },
+      tableName: {
+        type: Sequelize.STRING,
+        defaultValue: null
+
       },
       createdAt: {
         allowNull: false,

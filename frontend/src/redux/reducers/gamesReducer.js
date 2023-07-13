@@ -1,10 +1,11 @@
+
 import { 
   GET_GAMES, GET_GAME_BY_ID,
   GET_TABLES, GET_TABLES_BY_TYPE, GET_TABLE_BY_ID,
-  UPDATE_TABLE,
+  CREATE_TABLE, DELETE_TABLE, UPDATE_TABLE,
   VIEW_TABLE, LEAVE_TABLE, JOIN_TABLE,
   LEAVE_SEAT, TAKE_SEAT, FORFEIT_SEAT,
-  SHOW_GAMES, SHOW_TABLES, SHOW_ACTIVE_TABLES,
+  SHOW_GAMES, SHOW_TABLES, SHOW_ACTIVE_TABLES, SHOW_CREATING_GAME,
   ADD_MESSAGE, TOGGLE_SHOW_MESSAGES,
   ADD_BALANCE,
   ADD_BET, REMOVE_LAST_BET, REMOVE_ALL_BET,
@@ -14,8 +15,10 @@ import {
   UPDATE_TABLE_COUNTDOWN,
   COLLECT_BETS,
   OFFER_INSURANCE,
-  RESCIND_INSURANCE
- } from '../actions/actionTypes'
+  RESCIND_INSURANCE, REMOVE_USER
+} from '../actions/actionTypes'
+
+
 
 const initialState = {
   games:{},
@@ -26,6 +29,7 @@ const initialState = {
   showGames: true,
   showTables: false,
   showMessages: true,
+  showCreatingGame: false
 }
 
 const gamesReducer = (state = initialState, action) => {
@@ -48,13 +52,35 @@ const gamesReducer = (state = initialState, action) => {
       return {...newState, openTablesByGameType: action.payload, showGames: false, showTables: true, showActiveTable: false}
     }
 
+    case REMOVE_USER:{
+      const newGames = {...newState.games}
+      return {...initialState, games: newGames}
+    }
+
+
+    case CREATE_TABLE:{
+      
+      console.log(action.payload.table);
+      const table = action.payload.table
+
+      let updatedCurrentTables = {...newState.currentTables};
+      updatedCurrentTables[table.id] = table
+      updatedCurrentTables[table.id].messages = []
+
+
+      return {...newState, currentTables:updatedCurrentTables, showCreatingGame:false, showGames: false, showTables: false, showActiveTable: true}
+    }
 
 
 
 
+    case DELETE_TABLE:{
+      const newGames = {...newState.games}
+      return {...newState, games: newGames}
+    }
 
 
-
+ 
     
     case UPDATE_TABLE:{
       const {tableId, table} = action.payload
@@ -69,7 +95,6 @@ const gamesReducer = (state = initialState, action) => {
       console.log(updatedCurrentTables);
 
       if (updatedCurrentTables[tableId]) {
-        console.log('yes');
         const currentTable = updatedCurrentTables[tableId];
 
         // console.log(currentTable.tableUsers[4]?.cards);
@@ -87,42 +112,17 @@ const gamesReducer = (state = initialState, action) => {
         if(action.payload.table.handInProgress !== null && action.payload.table.handInProgress !== undefined){
           currentTable.handInProgress = action.payload.table.handInProgress;
         }
-    
-        // for(let seat in currentTable.tableUsers) {
-
-        //   // console.log(seat);
-        //   // console.log(table.seats[seat].pendingBet);
-
-        //   // If the incoming table has data for this seat, update it in the currentTable
-        //   if (table.seats[seat] && table.seats[seat].hands) {
-        //     currentTable.tableUsers[seat].hands = table.seats[seat].hands;
-        //   }
-
-        //   if (table.seats[seat]) {
-        //     currentTable.tableUsers[seat].cards = table.seats[seat].cards;
-        //     // currentTable.tableUsers[seat].hands = table.seats[seat].hands;
-        //     currentTable.tableUsers[seat].pendingBet = table.seats[seat].pendingBet;
-        //     currentTable.tableUsers[seat].currentBet = table.seats[seat].currentBet;
-        //     currentTable.tableUsers[seat].tableBalance = table.seats[seat].tableBalance;
-        //   }
-        // } 
-
-        console.log(currentTable);
-    
         // Replace the table in currentTables with the updated table
         updatedCurrentTables[tableId] = currentTable;
       }
-    
       return {...newState, currentTables: updatedCurrentTables}
     }
     
-
 
     case VIEW_TABLE:{
       console.log(action.payload);
       return {...newState, activeTable:action.payload, showGames: false, showTables: false, showActiveTable: true}
     }
-
 
     case JOIN_TABLE:{
       console.log(action.payload);
@@ -133,26 +133,29 @@ const gamesReducer = (state = initialState, action) => {
     }
 
 
-
-
     case LEAVE_TABLE: {
       console.log('leaving');
     
       console.log(action.payload);
       let newCurrentTables = { ...newState.currentTables };
+      let activeTable = { ...newState.activeTable}
 
       delete newCurrentTables[action.payload];
-        //Check if any tables left, if so switch to the first one
+
+
+      // if active table still exists dont switch
+      if(newCurrentTables[activeTable.id]){
+        return { ...newState, currentTables: newCurrentTables, activeTable};
+      } else {
+      //Check if any tables left, if so switch to the first one
       const tableIds = Object.keys(newCurrentTables);
       let activeTable = null;
-      console.log(newCurrentTables);
-      
       if (tableIds.length > 0) {
-        activeTable = newCurrentTables[tableIds[0]];
-        return { ...newState, currentTables: newCurrentTables, activeTable };
+          activeTable = newCurrentTables[tableIds[0]];
+          return { ...newState, currentTables: newCurrentTables, activeTable };
       }
       return { ...newState, currentTables: newCurrentTables, activeTable, showGames: true, showTables: false };
-    
+      }
     }
 
     case TAKE_SEAT: {
@@ -209,11 +212,16 @@ const gamesReducer = (state = initialState, action) => {
 
 
     case SHOW_GAMES:{
-      return {...newState, showGames: true, showTables: false, activeTable: null}
+      return {...newState, showCreatingGame:false, showGames: true, showTables: false, activeTable: null}
     }
     case SHOW_TABLES:{
-      return {...newState, showGames: false, showTables: true, activeTable: null}
+      return {...newState, showCreatingGame:false, showGames: false, showTables: true, activeTable: null}
     }
+
+    case SHOW_CREATING_GAME:{
+      return {...newState, showCreatingGame:true, showGames: false, showTables: false, activeTable: null}
+    }
+
     case TOGGLE_SHOW_MESSAGES:{
       let toggle = !newState.showMessages
       return {...newState, showMessages: toggle}

@@ -1,10 +1,10 @@
 import { 
   GET_GAME_BY_ID, GET_GAMES,
   GET_TABLE_BY_ID, GET_TABLES, GET_TABLES_BY_TYPE,
-  UPDATE_TABLE,
+  UPDATE_TABLE, CREATE_TABLE, DELETE_TABLE,
   VIEW_TABLE, LEAVE_TABLE, JOIN_TABLE,
   TAKE_SEAT, LEAVE_SEAT, CHANGE_SEAT, FORFEIT_SEAT,
-  SHOW_GAMES, SHOW_TABLES, SHOW_ACTIVE_TABLES,
+  SHOW_GAMES, SHOW_TABLES, SHOW_ACTIVE_TABLES, SHOW_CREATING_GAME,
   ADD_MESSAGE, TOGGLE_SHOW_MESSAGES,
   ADD_BALANCE,
   ADD_BET, REMOVE_LAST_BET, REMOVE_ALL_BET,
@@ -54,7 +54,25 @@ export const getTablesByTypeAction = (data) => {
     payload: data.tables,
  
   };
+}
+
+export const createTableAction = (data) => {
+  console.log(data);
+  
+  return {
+    type: CREATE_TABLE,
+    payload: data,
+  };
 };
+
+export const deleteTableAction = (data) => {
+  console.log(data);
+  return {
+    type: DELETE_TABLE,
+    payload: data,
+  };
+};
+;
 
 
 
@@ -130,6 +148,12 @@ export const showGamesAction = () => {
 export const showTablesAction = () => {
   return {
     type: SHOW_TABLES
+  };
+};
+
+export const showCreatingGameAction = () => {
+  return {
+    type: SHOW_CREATING_GAME
   };
 };
 

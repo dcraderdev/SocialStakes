@@ -19,9 +19,15 @@ const initialState = {
 const userReducer = (state = initialState, action) => {
   const newState = { ...state };
 
+  console.log(action);
+
+  console.log(action.type);
+
   switch (action.type) {
 
     case SET_USER:
+      console.log(action.payload);
+
       let newBalance = action.payload.balance
       return {
         ...newState,
@@ -44,12 +50,17 @@ const userReducer = (state = initialState, action) => {
       };   
     }
     case CHANGE_TABLE_THEME:{
+      console.log(action.payload)
       return {
         ...newState,
         tableTheme: action.payload,
       };   
     } 
+
+
     case CHANGE_NEON_THEME:{
+      console.log(action);
+      console.log(action.payload) 
       return {
         ...newState,
         neonTheme: action.payload,

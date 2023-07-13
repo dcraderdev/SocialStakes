@@ -64,21 +64,19 @@
   border: solid 1px rgb(255, 255, 255);
   height: 100%;
   color: white;
-}
-
-.balancemodal-addbalance{
   width: 40%;
 }
 
 
 
 
+
 .balancemodal-cancel{
-  width: 30%;
+  width: 40%;
 }
 
 .balancemodal-ok{
-  width: 30%;
+  width: 40%;
   height: 40px;
 }
 
@@ -95,14 +93,7 @@
 }
 
 
-.disabled{
-  color: rgba(255, 255, 255, 0.297);
-  border: solid 1px rgba(255, 255, 255, 0.278);
-}
-.disabled:hover{
-  color: rgba(255, 255, 255, 0.149);
-  border: solid 1px rgba(255, 255, 255, 0.118);
-}
+
 
 
 .balancemodal-funding-input{

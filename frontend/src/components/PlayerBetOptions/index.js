@@ -150,11 +150,6 @@ import { ModalContext } from '../../context/ModalContext';
 
 
 
-  const handleTableThemeChange = (tableTheme) => {
-    console.log(tableTheme);
-    dispatch(changeTableThemeAction(tableTheme));
-  };
-
   const leaveTable = () => {
     console.log('here');
 

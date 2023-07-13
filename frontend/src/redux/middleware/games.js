@@ -181,6 +181,7 @@ export const getAllGames = () => async (dispatch) => {
 
   export const editTable = (tableObj) => async (dispatch) => {
     console.log('view table');
+    const {tableId } = tableObj
     try{
       const response = await csrfFetch(`/api/tables/${tableId}`, {
         method: 'PUT'

@@ -1,0 +1,50 @@
+.unknown-container {
+  width: 100%;
+  height: calc(100% - 60px);
+  position: absolute;
+  left: 0px;
+  top: 55px;
+}
+
+.unknown-image-container {
+  background-image: url('../../images/socialstakes-logo-cards2.svg');
+  background-repeat: repeat;
+  background-size: 260px 260px;
+  width: 100%;
+  height: 100%; 
+  cursor: pointer;
+}
+
+.unknown-text-container{
+  position: absolute;
+  color: goldenrod;
+  border: rgb(9, 9, 9) solid 1px;
+  width: 50%;
+  height: 25%;
+  top: 30%;
+  background-color: rgb(81, 82, 82);
+
+}
+
+.unknown-text{
+  text-align: center;
+  position: absolute;
+  color: goldenrod;
+  font-size: min(5vw, 5vh);
+  width: 90%;
+  padding: 2%;
+  height: 70%;
+  top: -1%;
+
+
+}
+
+.unknown-arrow{
+  position: absolute;
+  font-size: min(5vw, 5vh);
+  width: fit-content;
+  padding: 2%;
+  height: fit-content;
+  top: 65%;
+  cursor: pointer;
+}

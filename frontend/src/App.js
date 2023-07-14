@@ -21,6 +21,8 @@ import JoinPrivateGameModal from './components/JoinPrivateGameModal';
 import SettingsModal from './components/SettingsModal';
 import CloseTableModal from './components/CloseTableModal';
 import TableClosedModal from './components/TableClosedModal';
+import FriendsPage from './components/FriendsPage';
+import UnknownRoutePage from './components/UnknownRoutePage';
 
 function App() {
 
@@ -120,13 +122,14 @@ function App() {
             <GameFloor />
           </Route>
 
-          <Route path="/table/:tableId" exact>
-            <Game />
+          <Route path="/friends" exact>
+            <FriendsPage />
           </Route>
 
 
           <Route>
             <h1>404:Unknown Route</h1>
+            <UnknownRoutePage/>
           </Route>
         </Switch>
 

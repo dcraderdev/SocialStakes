@@ -10,7 +10,6 @@
   height: 100%;
   width: 100%;
   display: flex;
-  border: rgb(57, 32, 201) solid 1px;
 }
 
 .chatbox-wrapper {
@@ -27,7 +26,6 @@
 
 
 .bet-user-settings{
-  border: rgb(32, 201, 66) solid 1px;
 
   width: 60px;
   height: fit-content;
@@ -37,27 +35,25 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  color: rgba(218, 165, 32, 0.394);
 }
 
 
-.gamefloor-add-balance{
-  border: white solid 1px;
-}
 
 
 .bet-content{
   display: flex;
   flex-direction: row;
-  border: rgb(201, 32, 32) solid 1px;
 }
 
 
 
 
 .decision-option-container{
-  width: 150px;
+  width: 350px;
   height: 200px;
-  border: white solid 1px;
+  margin-left: 50px;
+  justify-content: space-around;
 }
 
 
@@ -74,7 +70,26 @@
   align-items: center;
   width: 100%;
   height: 35px;
-  border: white solid 1px;
+
+
+
+  color: white;
+  border-bottom: rgba(255, 217, 0, 0.466) solid .5px;
+  border-top: rgba(255, 217, 0, 0.466) solid .5px;
+  box-shadow: rgba(0, 0, 0, 0.5) 0px 3px 6px, rgba(0, 0, 0, 0.5) 0px 3px 6px;
+  cursor: pointer;
+
+  
+
+}
+
+.undo:hover,
+.chip:hover,
+.rebet:hover,
+.action:hover{
+  color: white;
+  border-bottom: rgba(255, 217, 0, 0.8) solid .5px;
+  border-top: rgba(255, 217, 0, 0.8) solid .5px;
 }
 
 
@@ -84,7 +99,6 @@
   left: 30px;
   width: 160px;
   height: 200px;
-  border: white solid 1px;
 }
 
 .chip{
@@ -93,8 +107,11 @@
   align-items: center;
   width: 70px;
   height: 70px;
-  border: white solid 1px;
   border-radius: 50%;
+  color: white;
+  border-top: rgba(255, 217, 0, 0.466) solid .5px;
+  box-shadow: rgba(0, 0, 0, 0.5) 0px 3px 6px, rgba(0, 0, 0, 0.5) 0px 3px 6px;
+  cursor: pointer;
 }
 
 .chip.one{
@@ -127,7 +144,8 @@
 .undo-bet-container{
   width: 400px;
   height: 100px;
-  border: white solid 1px;
+
+
 }
 
 
@@ -140,6 +158,11 @@
   align-items: center;
   width: 50%;
   height: 70px;
+  color: white;
+  border-bottom: rgba(255, 217, 0, 0.466) solid .5px;
+  border-top: rgba(255, 217, 0, 0.466) solid .5px;
+  box-shadow: rgba(0, 0, 0, 0.5) 0px 3px 6px, rgba(0, 0, 0, 0.5) 0px 3px 6px;
+cursor: pointer;
 }
 
 

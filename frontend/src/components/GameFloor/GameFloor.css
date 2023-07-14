@@ -120,12 +120,14 @@
 
 .tables-coming-soon-container{
   width: 100%;
-  border-bottom: rgba(255, 217, 0, 0.466) solid .5px;
-  border-top: rgba(255, 217, 0, 0.466) solid .5px;
+
   height: calc(100vh - 400px);
   font-size: 30px;
-  color: white;
 
+  color: white;
+  border-bottom: rgba(255, 217, 0, 0.466) solid .5px;
+  border-top: rgba(255, 217, 0, 0.466) solid .5px;
+  
 }
 
 

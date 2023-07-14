@@ -108,6 +108,10 @@ const CreatingGameView = () => {
   };
 
   const gameSelect = (gameType) => {
+    let nonActiveGames = ['single_blackjack', 'poker', 'acey_duecey', 'coin_flip', 'hi_lo']
+    if(nonActiveGames.includes(gameType)){
+      return
+    }
     setGameType(gameType);
     setIsPickingGameType(false);
     setIsPickingVariant(true);

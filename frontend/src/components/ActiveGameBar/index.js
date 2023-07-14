@@ -1,10 +1,6 @@
 import { React, useState, useRef, useEffect, useContext } from 'react';
-import { Route, Router, Switch, NavLink, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import * as gameActions from '../../redux/middleware/games';
-import { showGamesAction, showTablesAction, leaveTableAction } from '../../redux/actions/gameActions';
-import GameTile from '../GameTile';
-import TableTile from '../TableTile';
+import { leaveTableAction } from '../../redux/actions/gameActions';
 import GameBarCard from '../GameBarCard';
 
 import { SocketContext } from '../../context/SocketContext';
@@ -15,31 +11,16 @@ import './ActiveGameBar.css'
 
 
 const ActiveGameBar = () => {
+  const { modal, openModal, closeModal, updateObj, setUpdateObj} = useContext(ModalContext);
   const { socket } = useContext(SocketContext);
-  const location = useLocation();
+
   const dispatch = useDispatch();
   
   const user = useSelector(state => state.users.user);
-  // const allGames = useSelector((state) => state.games.games);
-  // const openTablesByGameType = useSelector((state) => state.games.openTablesByGameType);
   const currentTables = useSelector((state) => state.games.currentTables);
-  
-  // const showGames = useSelector((state) => state.games.showGames);
-  // const showTables = useSelector((state) => state.games.showTables);
   const activeTable = useSelector((state) => state.games.activeTable);
-  
-  
-  // const [actionHand, setActionHand] = useState(null);
-  // const [needsNotification, setNeedsNotification] = useState(null);
 
-  const { modal, openModal, closeModal, updateObj, setUpdateObj} = useContext(ModalContext);
 
-  // useEffect(() => {
-  //   if(activeTable && user && currentTables && currentTables?.[activeTable.id]?.tableUsers){
-  //     let currActionHand = currentTables[activeTable.id]?.actionHand;
-  //     setActionHand(currActionHand)
-  //   }
-  // }, [currentTables, activeTable]);
 
 
 
@@ -57,7 +38,6 @@ const ActiveGameBar = () => {
     }
     else {
       dispatch(leaveTableAction(tableId))
-      // delete currentTables[tableId]
     }
 
   }
@@ -90,11 +70,10 @@ const ActiveGameBar = () => {
         return Object.values(seat.hands)[0]?.cards;
       }
       return null;
-    }).flat();
+    }).flat().filter(card => card !== null);
   }
 
 
-        // let userCards = currentTables[activeTable.id]?.tableUsers?.[seatNumber]?.cards; 
       return(
         <div onClick={()=>viewTable(tableId)} className={`gamebar-table-tab flex center ${handNeedsAttention ? ' active-tab' : ''}`} key={index}>
           <div onClick={
@@ -118,8 +97,8 @@ const ActiveGameBar = () => {
             <div className='card-container flex center'>
               {userCards.map((card,i)=>{
               return card !== undefined && 
-              <div className='gamebar-card'>
-                < GameBarCard key={i} card={card}/>
+              <div key={i} className='gamebar-card'>
+                < GameBarCard card={card}/>
               </div>
 
               })}

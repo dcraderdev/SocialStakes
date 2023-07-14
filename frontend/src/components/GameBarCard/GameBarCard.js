@@ -11,6 +11,9 @@ function GameBarCard({card}) {
   const [suit, setSuit] = useState('')
   const [rank, setRank] = useState('')
 
+  console.log(card);
+
+
   useEffect(()=>{
     if(card === 'hidden'){return}
 

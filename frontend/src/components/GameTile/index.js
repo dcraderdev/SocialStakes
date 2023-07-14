@@ -7,6 +7,7 @@ import gameTileBackground from '../../images/game-tile-background.jpeg'
 
 const GameTile = ({game, cbFunc}) => {
 
+  const [isActive, setIsActive] = useState(true)
 
   const getIcon = (gameType) => {
     if(!gameType){
@@ -75,14 +76,25 @@ const GameTile = ({game, cbFunc}) => {
     }
   };
 
+  useEffect(()=>{
+    let nonActiveGames = ['single_blackjack', 'poker', 'acey_duecey', 'coin_flip', 'hi_lo']
+    if(game){
+      if(nonActiveGames.includes(game.gameType)){
+        setIsActive(false)
+      }
+    }
 
+
+  },[game])
 
 
   return (
     <div>
       <div className='game-tile pulse rounded' onClick={() => cbFunc(game.gameType)}>
         <div className='game-name'>{getIcon(game.gameType)}</div>
-        
+        {!isActive && (
+          <div style={{position:'absoulte', color:'red', top:'50px'}}>Game coming soon</div>
+        )}
         <img src={gameTileBackground} alt='game tile'></img>
       </div>
     </div>

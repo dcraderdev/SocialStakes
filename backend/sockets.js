@@ -73,9 +73,12 @@ module.exports = function (io) {
           let seat = table.seat;
           let timer = 0;
           let messageObj = {
-            user: { username: 'Room', id: 1 },
-            content: `${username} has reconnected.`,
-            room: tableId,
+            tableId,
+            user: { username: 'Room', id: 1, rank: 0 },
+            message:{
+              content: `${username} has reconnected.`,
+              id: 0,
+            }
           };
 
           io.in(tableId).emit('new_message', messageObj);
@@ -106,10 +109,14 @@ module.exports = function (io) {
             rooms[tableId].seats[seat].pendingBet = 0;
           }
 
+
           let messageObj = {
-            user: { username: 'Room', id: 1 },
-            content: `${username} has disconnected.`,
-            room: tableId,
+            tableId,
+            user: { username: 'Room', id: 1, rank: 0 },
+            message:{
+              content: `${username} has disconnected.`,
+              id: 0,
+            }
           };
 
           io.in(tableId).emit('new_message', messageObj);
@@ -137,10 +144,15 @@ module.exports = function (io) {
             ) {
               rooms[tableId].forfeitedPlayers.push({ userId, seat });
             }
+
+
             let messageObj = {
-              user: { username: 'Room', id: 1 },
-              content: `${username} did not reconnect in time.`,
-              room: tableId,
+              tableId,
+              user: { username: 'Room', id: 1, rank: 0 },
+              message:{
+                content: `${username} did not reconnect in time.`,
+                id: 0,
+              }
             };
 
             if (rooms[tableId] && rooms[tableId].seats[seat]) {
@@ -161,10 +173,14 @@ module.exports = function (io) {
       console.log(`${username} is joining room ${room}.`);
       let tableId = room;
 
+
       let messageObj = {
-        user: { username: 'Room', id: 1 },
-        content: `${username} has joined the room.`,
-        room,
+        tableId,
+        user: { username: 'Room', id: 1, rank: 0 },
+        message:{
+          content: `${username} has joined the room.`,
+          id: 0,
+        }
       };
 
       let updatedTable = await gameController.getTableById(tableId);
@@ -220,11 +236,17 @@ module.exports = function (io) {
       const { tableId, tableName } = updateObj;
       let room = tableId;
 
+
       let messageObj = {
-        user: { username: 'Room', id: 1 },
-        content: `${username} has updated the table name to ${tableName}.`,
-        room,
+        tableId,
+        user: { username: 'Room', id: 1, rank: 0 },
+        message:{
+          content: `${username} has updated the table name to ${tableName}.`,
+          id: 0,
+        }
       };
+
+      
 
       console.log(updateObj);
 
@@ -282,42 +304,61 @@ module.exports = function (io) {
     socket.on('message', async (messageObj) => {
       const { user, tableId, message } = messageObj;
       let room = tableId
+      console.log('creating message');      
+      console.log('creating message');      
+      console.log('creating message');      
+      console.log('creating message');      
+      console.log('creating message');      
+      console.log('creating message');      
+
       const newMessage = await chatController.createMessage(messageObj)
       if(!newMessage) return false
 
-      io.in(room).emit('new_message', messageObj);
-      console.log('room', room);
-
-      // io.in(userId).emit('message', messageObj);
-      if (rooms[room]) {
-        rooms[room].messages.push({message, messageId: newMessage.id});
+      newMessageObj = {
+        tableId,
+        user:{
+          username: user.username,
+          id: user.id,
+          rank: user.rank
+        },
+        message:{
+          content: newMessage.content, 
+          id: newMessage.id
+        }
       }
 
+      if (rooms[room]) {
+        rooms[room].messages.push(newMessageObj);
+      }
+      
+      io.in(room).emit('new_message', newMessageObj);
       console.log('--------------');
       console.log(`Message received from ${room}`);
       console.log('--------------');
     });
+
+
 
     // Edit message in specific room
     socket.on('edit_message', async (messageObj) => {
-      const { user, tableId, message } = messageObj;
+      const {tableId, userId,  messageId, newContent } = messageObj;
       let room = tableId
-      await chatController.createMessage(messageObj)
+      await chatController.editMessage(messageObj)
 
-      io.in(room).emit('new_message', messageObj);
-      console.log('room', room);
+      io.in(room).emit('edit_message', messageObj);
 
-      // io.in(userId).emit('message', messageObj);
-      if (rooms[room]) {
-        rooms[room].messages.push(message);
-      }
-
-      console.log('--------------');
-      console.log(`Message received from ${room}`);
-      console.log('--------------');
     });
 
 
+    // Edit message in specific room
+    socket.on('delete_message', async (messageObj) => {
+      const {tableId, userId,  messageId } = messageObj;
+      let room = tableId
+      await chatController.deleteMessage(messageObj)
+
+      io.in(room).emit('delete_message', messageObj);
+
+    });
 
 
 
@@ -325,10 +366,14 @@ module.exports = function (io) {
       const { room, seat, user, amount } = seatObj;
       let tableId = room;
 
+
       let messageObj = {
-        user: { username: 'Room', id: 1 },
-        content: `${username} has taken seat ${seat}.`,
-        room,
+        tableId,
+        user: { username: 'Room', id: 1, rank: 0 },
+        message:{
+          content: `${username} has taken seat ${seat}.`,
+          id: 0,
+        }
       };
 
       const takeSeat = await gameController.takeSeat(
@@ -1029,9 +1074,12 @@ module.exports = function (io) {
       let room = tableId;
 
       let messageObj = {
-        user: { username: 'Room', id: 1 },
-        content: `${username} has ${action}.`,
-        room: tableId,
+        tableId,
+        user: { username: 'Room', id: 1, rank: 0 },
+        message:{
+          content: `${username} has ${action}.`,
+          id: 0,
+        }
       };
 
       // Reset the timer whenever a player takes an action

@@ -7,7 +7,7 @@ import {
   getAllTablesAction, getTablesByTypeAction, getTableByIdAction,
   viewTableAction, leaveTableAction, 
   takeSeatAction, changeSeatAction,
-  addMessageAction, addBalanceAction,
+  addBalanceAction,
   addBetAction, removeBetAction
 
   } 

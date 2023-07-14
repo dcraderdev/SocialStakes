@@ -1,14 +1,30 @@
 
 import {
-  ADD_MESSAGE, EDIT_MESSAGE, REMOVE_MESSAGE_ADMIN, REMOVE_MESSAGE_USER
+  ADD_MESSAGE, EDIT_MESSAGE, DELETE_MESSAGE
 } from './actionTypes'
 
 
-export const removeMessage_user = (message) => {
-  console.log('here');
-  console.log(message);
+
+
+export const addMessageAction = (messageObj) => {
   return {
-    type: REMOVE_MESSAGE_USER,
-    payload: message,
+    type: ADD_MESSAGE,
+    payload: messageObj
   };
 };
+
+export const editMessageAction = (messageObj) => {
+  return {
+    type: EDIT_MESSAGE,
+    payload: messageObj
+  };
+};
+
+export const deleteMessageAction = (messageObj) => {
+  return {
+    type: DELETE_MESSAGE,
+    payload: messageObj
+  };
+};
+
+

@@ -3,6 +3,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import io from 'socket.io-client';
 import { ModalContext } from './ModalContext';
 import * as gameActions from '../redux/middleware/games';
+
+import {addMessageAction, editMessageAction,deleteMessageAction} from '../redux/actions/chatActions';
+
+
+
 import {
   updateTableAction,
   updateTableNameAction,
@@ -82,8 +87,16 @@ const SocketProvider = ({ children }) => {
       
 
       socket.on('new_message', (messageObj) => {
-        dispatch(gameActions.addMessage(messageObj));
+        dispatch(addMessageAction(messageObj));
       });
+
+      socket.on('edit_message', (messageObj) => {
+        dispatch(editMessageAction(messageObj));
+      })
+
+      socket.on('delete_message', (messageObj) => {
+        dispatch(deleteMessageAction(messageObj));
+      })
 
       socket.on('new_player', (seatObj) => {
         console.log(seatObj);
@@ -176,6 +189,8 @@ const SocketProvider = ({ children }) => {
         socket.off('update_table_name');
         socket.off('get_updated_table');
         socket.off('new_message');
+        socket.off('edit_message');
+        socket.off('delete_message');
         socket.off('new_player');
         socket.off('player_leave');
         socket.off('player_forfeit');

@@ -38,6 +38,8 @@ async createMessage(messageObj) {
   const {user,tableId, content} = messageObj
   let userId = user.id
 
+  console.log(user,tableId, content);
+
   const newMessage = await Message.create({
     userId, 
     tableId, 
@@ -52,29 +54,29 @@ async createMessage(messageObj) {
 
 
 async editMessage(messageObj) {
-  const {messageId, content} = messageObj
+  const {userId, messageId, newContent} = messageObj
 
   const newMessage = await Message.findByPk(messageId);
 
-  if(!newMessage){
+  if(!newMessage || newMessage.userId !== userId){
     return false
   } 
 
-  newMessage.content = content
+  newMessage.content = newContent
   await newMessage.save()
   return newMessage
 }, 
 
+
 async deleteMessage(messageObj) {
-  const {messageId} = messageObj
+  const {userId, messageId} = messageObj
 
   const message = await Message.findByPk(messageId);
 
-  if(!message){
+  if(!message || message.userId !== userId){
     return false
   } 
 
-  message.content = content
   await message.destroy();
   return true
 }, 

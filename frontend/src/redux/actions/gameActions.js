@@ -177,15 +177,15 @@ export const changeActiveTablesAction = () => {
     type: SHOW_ACTIVE_TABLES
   };
 };
-export const addMessageAction = (messageObj) => {
-  console.log('here');
-  console.log(messageObj);
+// export const addMessageAction = (messageObj) => {
+//   console.log('here');
+//   console.log(messageObj);
 
-  return {
-    type: ADD_MESSAGE,
-    payload: messageObj
-  };
-};
+//   return {
+//     type: ADD_MESSAGE,
+//     payload: messageObj
+//   };
+// };
 
 
 export const addBalanceAction = () => {

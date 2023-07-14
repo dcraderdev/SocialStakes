@@ -20,6 +20,7 @@ import InsuranceModal from './components/InsuranceModal';
 import JoinPrivateGameModal from './components/JoinPrivateGameModal';
 import SettingsModal from './components/SettingsModal';
 import CloseTableModal from './components/CloseTableModal';
+import TableClosedModal from './components/TableClosedModal';
 
 function App() {
 
@@ -101,6 +102,12 @@ function App() {
       {modal  === 'closeTable' && (
         <div className='modal-container'>
           {modal === 'closeTable' && <CloseTableModal />}
+        </div>
+      )}
+
+      {modal  === 'tableClosedModal' && (
+        <div className='modal-container'>
+          {modal === 'tableClosedModal' && <TableClosedModal />}
         </div>
       )}
 

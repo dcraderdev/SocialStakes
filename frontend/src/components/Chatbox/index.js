@@ -28,7 +28,7 @@ const Chatbox = ({showMessages}) => {
       if (!user) return;
       const newMessageObj = {}
       newMessageObj.content = newMessage
-      newMessageObj.room = activeTable.id
+      newMessageObj.tableId = activeTable.id
       newMessageObj.user = user
 
       socket.emit('message', newMessageObj);

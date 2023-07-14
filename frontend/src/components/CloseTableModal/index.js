@@ -56,7 +56,6 @@ function CloseTableModal() {
       setShowValidationError(true)
       setTimeout(() => {
         setShowValidationError(false)
-        return
       }, 3000);
       return
     }

@@ -6,7 +6,7 @@ import {
   getAllGamesAction, getGameByIdAction,
   getAllTablesAction, getTablesByTypeAction, getTableByIdAction,
   viewTableAction, leaveTableAction, 
-  takeSeatAction, leaveSeatAction, changeSeatAction,
+  takeSeatAction, changeSeatAction,
   addMessageAction, addBalanceAction,
   addBetAction, removeBetAction
 
@@ -258,26 +258,6 @@ export const changeSeat = (tableId, seat) => async (dispatch) => {
 }; 
 
 
-export const leaveSeat = (tableId, seat) => async (dispatch) => {
-
-  try{
-    const response = await csrfFetch(`/api/tables/${tableId}/leave`, {
-      method: 'DELETE',
-    });
-    const data = await response.json();
-
-    console.log('-=-=-=-=');
-    console.log(data); 
-    console.log('-=-=-=-='); 
-    if(data){
-      dispatch(leaveSeatAction(tableId, seat));
-    }
-    return {data, response};
-
-  }catch(error){
-    console.log(error);
-  } 
-}; 
 
 export const addMessage = (messageObj) => async (dispatch) => {
   console.log(messageObj);

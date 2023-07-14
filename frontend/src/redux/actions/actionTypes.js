@@ -64,5 +64,7 @@ export const SHOW_CREATING_GAME = 'game/SHOW_CREATING_GAME'
 
 
 export const ADD_MESSAGE = 'game/ADD_MESSAGE';
+export const EDIT_MESSAGE = 'game/EDIT_MESSAGE';
+export const DELETE_MESSAGE = 'game/DELETE_MESSAGE';
 export const TOGGLE_SHOW_MESSAGES = 'game/TOGGLE_SHOW_MESSAGES';
 

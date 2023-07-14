@@ -174,6 +174,23 @@ const gameController = {
 
   },
 
+  async closeTable(tableId) {
+    console.log('-=-=-=-=-=-=-=-');
+    console.log('-=-=-=-=-=-=-=-');
+    console.log('Closing table', tableId);
+    console.log('-=-=-=-=-=-=-=-');
+    console.log('-=-=-=-=-=-=-=-');
+
+    const table = await Table.findByPk(tableId);
+    if (!table) {
+      return false;
+    }
+    
+    table.active = false;
+    await table.save();
+    return true;
+  },
+
 
 
   async getUserTables(userId) {
@@ -290,6 +307,11 @@ console.log('CURRENT BALANCE: ', userToUpdate.balance);
     const { userId, userTableId, tableBalance } = leaveSeatObj
     const userTable = await UserTable.findByPk(userTableId);
     const userToUpdate = await User.findByPk(userId);
+
+
+    console.log(userId);
+    console.log(userTableId);
+    console.log(tableBalance);
 
     if (!userTable || !userToUpdate) {
       return false;

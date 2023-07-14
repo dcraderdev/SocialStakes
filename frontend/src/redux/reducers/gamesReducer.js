@@ -82,8 +82,20 @@ const gamesReducer = (state = initialState, action) => {
 
     
     case DELETE_TABLE:{
-      const newGames = {...newState.games}
-      return {...newState, games: newGames}
+      console.log(action.payload);
+      const tableId = action.payload
+      let updatedCurrentTables = {...newState.currentTables};
+      delete updatedCurrentTables[tableId]
+
+      //Check if any tables left, if so switch to the first one
+      const tableIds = Object.keys(updatedCurrentTables);
+      let activeTable = null;
+      if (tableIds.length > 0) {
+        activeTable = updatedCurrentTables[tableIds[0]];
+        return { ...newState, currentTables: updatedCurrentTables, activeTable };
+      }
+      return { ...newState, currentTables: updatedCurrentTables, activeTable, showGames: true, showTables: false };
+
     }
 
 
@@ -186,19 +198,6 @@ const gamesReducer = (state = initialState, action) => {
 
 
 
-    // case LEAVE_SEAT:{
-    //   console.log(action.payload);
-    //   const {seat, tableId} = action.payload
-    //   const newCurrentTables = { ...newState.currentTables };
-
-    //   // Check if the active table exists in newCurrentTables
-    //   if (newCurrentTables[tableId]) {
-    //     // Remove the seat from the tableUsers object
-    //     delete newCurrentTables[tableId].tableUsers[seat];
-    //   }
-
-    //   return { ...newState, currentTables: newCurrentTables };
-    // }
 
     
 
@@ -234,21 +233,21 @@ const gamesReducer = (state = initialState, action) => {
       return {...newState, showMessages: toggle}
     }
 
-    case ADD_MESSAGE: {
-      console.log('adding message');
-      console.log(action.payload);
-      const { room, content, user } = action.payload;
-      const newCurrentTables = { ...newState.currentTables };
+    // case ADD_MESSAGE: {
+    //   console.log('adding message');
+    //   console.log(action.payload);
+    //   const { room, content, user } = action.payload;
+    //   const newCurrentTables = { ...newState.currentTables };
     
-      if (newCurrentTables[room]) {
-        const newMessage = { content, user: {username: user.username, id: user.id} };
-        newCurrentTables[room].messages.push(newMessage);
-      }
+    //   if (newCurrentTables[room]) {
+    //     const newMessage = { content, user: {username: user.username, id: user.id} };
+    //     newCurrentTables[room].messages.push(newMessage);
+    //   }
 
-      console.log(newCurrentTables);
+    //   console.log(newCurrentTables);
     
-      return { ...newState, currentTables: newCurrentTables };
-    }
+    //   return { ...newState, currentTables: newCurrentTables };
+    // }
 
     case ADD_BET: {
       const { bet, tableId, seat } = action.payload;

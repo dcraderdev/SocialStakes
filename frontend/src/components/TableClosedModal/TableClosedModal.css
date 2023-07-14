@@ -1,0 +1,68 @@
+.tableclosed-wrapper {
+  z-index: 1000;
+  position: absolute;
+  border: 1px solid rgb(0, 0, 0);
+  background-color: #2d2e2c;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 450px;
+  height: 120px;
+}
+
+
+.tableclosed-container{
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  
+}
+
+.tableclosed-header{
+  width: 100%;
+  font-size: 25px;
+  color: rgb(200, 57, 13);
+}
+
+
+
+.white{
+  color: white;
+}
+
+.tableclosed-memo-container{
+  font-size: 20px;
+  width: 150px;
+  font-size: 20px;
+}
+
+
+
+.tableclosed-user-buttons{
+  width: 80%;
+  height: 50px;
+}
+
+
+.tableclosed-confirm{
+  border-radius: 5px;
+  cursor: pointer;
+  border: solid 1px rgb(255, 255, 255);
+  height: 100%;
+  color: white;
+}
+
+.tableclosed-confirm{
+  width: 40%;
+}
+
+
+
+
+
+.tableclosed-confirm:hover{
+  color: rgb(1, 83, 21);
+  border: solid green 1px;
+}
+
+

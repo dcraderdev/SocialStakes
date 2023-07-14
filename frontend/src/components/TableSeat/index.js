@@ -141,7 +141,7 @@ const TableSeat = ({seatNumber}) => {
   useEffect(() => {
     console.log(tableTheme);
     if(tableTheme === 'black'){
-      seat
+      // seat
 
     }
 

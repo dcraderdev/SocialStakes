@@ -22,8 +22,8 @@ const SettingsModal = () => {
   const activeTable = useSelector(state=>state.games.activeTable)
   const currentTables = useSelector(state=>state.games.currentTables)
   const user = useSelector(state => state.users.user)
-  const tableTheme = useSelector(state => state.users.tableTheme);
-  const neonTheme = useSelector(state => state.users.neonTheme);
+  const tableTheme = useSelector(state => state.users.tableTheme || '');
+  const neonTheme = useSelector(state => state.users.neonTheme || '');
 
 
   const [tableName, setTableName] = useState('')
@@ -39,7 +39,7 @@ const SettingsModal = () => {
       let handInProgress = currentTables[activeTable.id]?.handInProgress;
       setIsHandInProgress(handInProgress)
 
-      setTableName(currentTables[activeTable.id].tableName)
+      setTableName(currentTables[activeTable.id].tableName || '')
       setTableCreator(currentTables[activeTable.id].userId)
     }
   }, [currentTables, activeTable]);
@@ -58,13 +58,11 @@ const SettingsModal = () => {
 
   const handleTableThemeChange = (event) => {
     const tableTheme = event.target.value;
-    console.log(tableTheme);
     dispatch(changeTableThemeAction(tableTheme));
   };
 
   const handleNeonThemeChange = (event) => {
     const neonTheme = event.target.value;
-    console.log(neonTheme);
     dispatch(changeNeonThemeAction(neonTheme));
   };
 

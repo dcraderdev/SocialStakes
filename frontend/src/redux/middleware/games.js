@@ -259,33 +259,33 @@ export const changeSeat = (tableId, seat) => async (dispatch) => {
 
 
 
-export const addMessage = (messageObj) => async (dispatch) => {
-  console.log(messageObj);
-  const {content, room,  user} = messageObj
-  let tableId = room
+// export const addMessage = (messageObj) => async (dispatch) => {
+//   console.log(messageObj);
+//   const {content, room,  user} = messageObj
+//   let tableId = room
 
-  dispatch(addMessageAction(messageObj));
-  if(user.username === 'Room') return
-  try{
-    const response = await csrfFetch(`/api/tables/${tableId}/message`, {
-      method: 'POST',
-      body: JSON.stringify({
-        content
-      })
-    });
-    const data = await response.json();
+//   dispatch(addMessageAction(messageObj));
+//   if(user.username === 'Room') return
+//   try{
+//     const response = await csrfFetch(`/api/tables/${tableId}/message`, {
+//       method: 'POST',
+//       body: JSON.stringify({
+//         content
+//       })
+//     });
+//     const data = await response.json();
 
-    console.log('-=-=-=-=');
-    console.log(data); 
-    console.log('-=-=-=-='); 
-    if(data){
-      return data;
-    }
+//     console.log('-=-=-=-=');
+//     console.log(data); 
+//     console.log('-=-=-=-='); 
+//     if(data){
+//       return data;
+//     }
 
-  }catch(error){
-    console.log(error);
-  } 
-}; 
+//   }catch(error){
+//     console.log(error);
+//   } 
+// }; 
 
 
 // export const addBalance = (userId, newBalance) => async (dispatch) => {

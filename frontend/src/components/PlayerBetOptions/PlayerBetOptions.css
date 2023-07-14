@@ -40,6 +40,11 @@
 }
 
 
+.gamefloor-add-balance{
+  border: white solid 1px;
+}
+
+
 .bet-content{
   display: flex;
   flex-direction: row;

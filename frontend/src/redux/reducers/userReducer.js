@@ -87,7 +87,7 @@ const userReducer = (state = initialState, action) => {
     case LEAVE_SEAT: {
       console.log(action.payload);
 
-      const {seat, tableId, userId, tableBalance } = action.payload
+      const { userId, tableBalance } = action.payload
 
       // Update new user balance
       if (newState.user.id === userId) {

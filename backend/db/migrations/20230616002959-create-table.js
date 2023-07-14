@@ -23,6 +23,15 @@ module.exports = {
         },
         onDelete: 'CASCADE'
       },
+      userId: {
+        type: Sequelize.UUID,
+        defaultValue: null,
+        references: {
+          model: 'Users',
+        },
+        onDelete: 'CASCADE'
+      },
+
       shufflePoint: {
         allowNull: false,
         type: Sequelize.INTEGER,
@@ -49,8 +58,8 @@ module.exports = {
       tableName: {
         type: Sequelize.STRING,
         defaultValue: null
-
       },
+
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

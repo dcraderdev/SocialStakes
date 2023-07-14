@@ -1,4 +1,4 @@
-.leavemodal-wrapper {
+.tableclosed-wrapper {
   z-index: 1000;
   position: absolute;
   border: 1px solid rgb(0, 0, 0);
@@ -11,52 +11,40 @@
 }
 
 
-
-.leavemodal-container{
+.tableclosed-container{
   flex-direction: column;
   justify-content: space-between;
   height: 100%;
   
 }
 
-.leavemodal-header{
+.tableclosed-header{
   width: 100%;
   font-size: 25px;
   color: rgb(200, 57, 13);
 }
 
-.leavemodal-subheader{
-  width: 100%;
-  font-size: 22px;
-  color: rgb(200, 57, 13);
-}
+
 
 .white{
   color: white;
 }
 
-.leavemodal-memo-container{
+.tableclosed-memo-container{
   font-size: 20px;
   width: 150px;
   font-size: 20px;
 }
 
-.leavemodal-memo{
-  color: rgb(255, 255, 255);
-}
-.leavemodal-balance{
-  color: rgb(200, 57, 13);
-}
 
 
-.leavemodal-user-buttons{
+.tableclosed-user-buttons{
   width: 80%;
   height: 50px;
 }
 
 
-.leavemodal-addbalance,
-.leavemodal-cancel{
+.tableclosed-confirm{
   border-radius: 5px;
   cursor: pointer;
   border: solid 1px rgb(255, 255, 255);
@@ -64,27 +52,17 @@
   color: white;
 }
 
-.leavemodal-addbalance{
+.tableclosed-confirm{
   width: 40%;
 }
 
 
 
 
-.leavemodal-cancel{
-  width: 40%;
-}
 
-
-.leavemodal-addbalance:hover{
+.tableclosed-confirm:hover{
   color: rgb(1, 83, 21);
   border: solid green 1px;
-}
-
-.leavemodal-cancel:hover{
-  color: rgb(200, 57, 13);
-
-  border: solid rgb(200, 57, 13) 1px;
 }
 
 

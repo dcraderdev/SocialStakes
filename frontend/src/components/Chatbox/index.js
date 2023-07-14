@@ -18,8 +18,14 @@ const Chatbox = ({showMessages}) => {
   const friends = useSelector(state => state.users.friends);
   const activeTable = useSelector(state => state.games.activeTable);
   const currentTables = useSelector(state => state.games.currentTables);
+  const conversations = useSelector(state => state.chats.conversations);
   const { socket } = useContext(SocketContext);
   const bottomRef = useRef(null);
+
+  const [isEditingMessage, setIsEditingMessage] = useState(false)
+  const [isDeletingMessage, setIsDeletingMessage] = useState(false)
+  const [editedMessageId, setEditedMessageId] = useState(null)
+  const [editedMessageContent, setEditedMessageContent] = useState('')
 
 
     // Handle Sending Messages
@@ -28,7 +34,7 @@ const Chatbox = ({showMessages}) => {
       if (!user) return;
       const newMessageObj = {}
       newMessageObj.content = newMessage
-      newMessageObj.room = activeTable.id
+      newMessageObj.tableId = activeTable.id
       newMessageObj.user = user
 
       socket.emit('message', newMessageObj);
@@ -36,22 +42,27 @@ const Chatbox = ({showMessages}) => {
     }
   
 
-
-
-
     useEffect(()=>{
-      if(currentTables && currentTables[activeTable.id]){
-        setMessages(currentTables[activeTable.id].messages)
+      if(conversations && conversations[activeTable.id]){
+        setMessages(conversations[activeTable.id].messages)
       }
       if (bottomRef.current) {
         bottomRef.current.scrollIntoView({ behavior: 'smooth' });
       }
-    },[currentTables])
+    },[conversations])
+
+
+    // useEffect(()=>{
+    //   if(currentTables && currentTables[activeTable.id]){
+    //     setMessages(currentTables[activeTable.id].messages)
+    //   }
+    //   if (bottomRef.current) {
+    //     bottomRef.current.scrollIntoView({ behavior: 'smooth' });
+    //   }
+    // },[currentTables])
  
-   
-
-
     const sendFriendRequest = () => {
+      return
       if (!user) return;
   
       const userId = user.id;
@@ -82,6 +93,94 @@ const Chatbox = ({showMessages}) => {
       socket.emit('send_friend_request', friendRequestObj);
     };
 
+
+    console.log(selectedMessage);
+    console.log(selectedMessage?.message?.id);
+    console.log(selectedMessage?.message?.content);
+
+    console.log(editedMessageContent);
+    
+    
+    const confirmDeleteMessage = () => {
+      if (!user) return;
+      if(user.id !== selectedMessage.user.id) return
+      setIsDeletingMessage(true)
+      setEditedMessageId(selectedMessage.message.id)
+      setEditedMessageContent(' Delete message?')
+    };
+
+
+    const deleteMessage = () => {
+      if (!user) return;
+      if(user.id !== selectedMessage.user.id) return
+
+      let editMessageObj = {
+        tableId: activeTable?.id,
+        userId: user.id,
+        messageId : editedMessageId,
+        newContent: editedMessageContent
+      };
+      socket.emit('delete_message', editMessageObj);
+
+      setIsDeletingMessage(false)
+      setEditedMessageId(null)
+      setEditedMessageContent('')
+    };
+
+
+    const cancelDeleteMessage = () => {
+      if (!user) return;
+      if(user.id !== selectedMessage.user.id) return
+      setIsDeletingMessage(false)
+      setEditedMessageId(null)
+      setEditedMessageContent('')
+    };
+
+
+
+
+    const editMessage = () => {
+      if (!user) return;
+      if(user.id !== selectedMessage.user.id) return
+      setIsEditingMessage(true)
+      setEditedMessageId(selectedMessage.message.id)
+      setEditedMessageContent(selectedMessage.message.content)
+    };
+
+
+
+    const saveMessage = (e) => {
+      e.preventDefault()
+      if (!user) return;
+      if(user.id !== selectedMessage.user.id) return
+
+  
+      let editMessageObj = {
+        tableId: activeTable?.id,
+        userId: user.id,
+        messageId : editedMessageId,
+        newContent: editedMessageContent
+      };
+
+      socket.emit('edit_message', editMessageObj);
+      setIsEditingMessage(false)
+      setEditedMessageId(null)
+      setEditedMessageContent('')
+    };
+
+    const cancelEdit = () => {
+      if (!user) return;
+      if(user.id !== selectedMessage.user.id) return
+
+      setIsEditingMessage(false)
+      setEditedMessageId(null)
+      setEditedMessageContent('')
+    };
+
+
+console.log(editedMessageId);
+
+
   return(
 
   <div className='chatbox-wrapper'> 
@@ -91,13 +190,17 @@ const Chatbox = ({showMessages}) => {
                 <div
                   key={index}
                   className="chat-message"
-                  // onClick={() => setSelectedMessage(message)}
-                  // onMouseOver={() => setSelectedMessage(message)}
-                  // onMouseLeave={() => setSelectedMessage(null)}
+                  onClick={() => setSelectedMessage(message)}
+                  onMouseOver={() => setSelectedMessage(message)}
+                  onMouseLeave={() => setSelectedMessage(null)}
                 >
 
 
-                  {selectedMessage === message && (
+                  {user && selectedMessage === message &&
+                  selectedMessage.user.id !== 1 &&
+                  user.id !== selectedMessage.user.id &&
+                  !isDeletingMessage && !isEditingMessage &&
+                  (
                       <div
                         className="chat-message-add-friend"
                         onClick={sendFriendRequest}
@@ -106,13 +209,123 @@ const Chatbox = ({showMessages}) => {
                       </div>
                     )}
 
+
+
+                  {user && selectedMessage === message &&
+                  user.id === selectedMessage.user.id &&
+                  !isDeletingMessage && !isEditingMessage &&
+                  (
+                    <div className='flex center chat-message-buttons-container'>
+                      <div
+                        className="chat-message-option"
+                        onClick={editMessage}
+                      >
+                        <i className="fa-regular fa-pen-to-square"></i>
+                      </div>
+
+                      <div
+                      className="chat-message-option"
+                      onClick={confirmDeleteMessage}
+                      >
+                      <i className="delete-x fa-solid fa-x"></i>
+                      </div>
+                    </div>
+                    )}
+
+                  {user && selectedMessage === message &&
+                    user.id === selectedMessage.user.id &&
+                    isEditingMessage &&
+                    (
+                      <div className='flex center chat-message-buttons-container'>
+
+                          <div
+                            className="chat-message-option"
+                            onClick={(e)=>saveMessage(e)}
+                          >
+                            <i className="delete-check fa-solid fa-check"></i>
+                          </div>
+
+                          <div
+                          className="chat-message-option"
+                          onClick={cancelEdit}
+                          >
+                          <i className="delete-x fa-solid fa-x"></i>
+                          </div>
+                        </div>
+                  )}
+
+
+
+                  {user && selectedMessage === message &&
+                  user.id === selectedMessage.user.id &&
+                  isDeletingMessage &&
+                  (
+                    <div className='flex center chat-message-buttons-container'>
+
+                        <div
+                          className="chat-message-option"
+                          onClick={deleteMessage}
+                        >
+                          <i className="delete-check fa-solid fa-check"></i>
+                        </div>
+
+                        <div
+                        className="chat-message-option"
+                        onClick={cancelDeleteMessage}
+                        >
+                        <i className="delete-x fa-solid fa-x"></i>
+                        </div>
+                      </div>
+                )}
+
+
+
+
+
+
+
                   <div className="username-container">
                     <div className="chat-message-username">
                       {message?.user?.username + ':'}
                     </div>
                   </div>
 
-                  <div className="chat-message-content">{message?.content}</div>
+
+                    {message.message.id !== editedMessageId && (<div className="chat-message-content">{message?.message?.content}{message.id}</div>)}
+
+                    {message.message.id === editedMessageId && isEditingMessage &&  (
+
+                      // <div className="chat-message-content">asdasdfgasdgfasdgasdgasdg</div>
+                      <form 
+                      onSubmit={(e)=>saveMessage(e)}
+                      
+                      >
+                        <input
+                          className='editmessage-input'
+                          type="text"
+                          value={editedMessageContent} 
+                          onInput={(e)=> setEditedMessageContent(e.target.value)}
+                          
+                          placeholder={editedMessageContent}
+  
+                          />
+
+                          <button type='submit' style={{display:'none'}}></button>
+                      </form>
+
+                    )}
+
+                    {message.message.id === editedMessageId && isDeletingMessage &&  (
+
+                    <div className="chat-message-content">{editedMessageContent}</div>
+
+                    )}
+                  
+
+
+
+
+
                 </div>
               ))}
               <div className="chat-bottom-ref" ref={bottomRef}></div>

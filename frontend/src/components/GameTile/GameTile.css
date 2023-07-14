@@ -23,7 +23,7 @@
 }
 
 
-.game-tile p {
+.game-name{
   color: white;
   position: absolute;
   font-size: 25px;

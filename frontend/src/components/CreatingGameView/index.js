@@ -125,7 +125,9 @@ const CreatingGameView = () => {
   };
 
   const createTable = () => {
+    if(!user) return
     let tableObj = {
+      userId: user.id,
       gameType,
       deckSize,
       betSizing,
@@ -180,8 +182,8 @@ const CreatingGameView = () => {
           }`}
           onClick={() => navTo('gameType')}
         >
-          <div>Game type</div>
-          <div>{!gameType ? '-' : `${getName(gameType)}`}</div>
+          <div className='flex center'>Game type</div>
+          <div className='flex center'>{!gameType ? '-' : `${getName(gameType)}`}</div>
         </div>
         <div
           className={`optionsnav flex center variant ${

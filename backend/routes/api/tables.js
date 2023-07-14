@@ -68,6 +68,28 @@ router.post('/create',requireAuth, async (req, res, next) => {
   return res.status(200).json({ table });
 });
 
+
+// Get table by tableId
+router.put('/:tableId/edit', async (req, res, next) => {
+
+  const {tableId} = req.params
+  const {tableObj} = req.body
+
+  const table = await gameController.editTableById(tableObj)
+  if (!table) {
+    const err = new Error('table not found');
+    console.log(err);
+    console.log(err.status);
+    err.statusCode = 404;
+    err.status = 404;
+    return next(err);
+  }
+
+  return res.status(200).json({ table });
+});
+
+
+
 // Join table by tableId
 router.post('/:tableId/join', requireAuth, async (req, res, next) => {
   const {tableId} = req.params

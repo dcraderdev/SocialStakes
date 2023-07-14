@@ -11,7 +11,7 @@
 
 .border{
 
-  border: solid rgb(74, 74, 74) 1px;
+  border: solid rgb(0, 0, 0) 1px;
 } 
 
 
@@ -22,12 +22,6 @@
   bottom: 0px;
   border: white solid 1px;
 }
-
-
-
-
-
-
 
 
 

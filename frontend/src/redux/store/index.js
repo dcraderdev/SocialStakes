@@ -2,10 +2,12 @@ import { createStore, applyMiddleware, compose, combineReducers } from 'redux';
 import thunk from 'redux-thunk';
 import userReducer from '../reducers/userReducer';
 import gamesReducer from '../reducers/gamesReducer';
+import chatReducer from '../reducers/chatReducer';
 
 const rootReducer = combineReducers({
   users: userReducer,
   games: gamesReducer,
+  chats: chatReducer,
 });
 
 // const logger = require('redux-logger').default;

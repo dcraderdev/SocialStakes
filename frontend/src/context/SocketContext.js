@@ -3,8 +3,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import io from 'socket.io-client';
 import { ModalContext } from './ModalContext';
 import * as gameActions from '../redux/middleware/games';
+
+import {addMessageAction, editMessageAction,deleteMessageAction} from '../redux/actions/chatActions';
+
+
+
 import {
   updateTableAction,
+  updateTableNameAction,
+  deleteTableAction,
   takeSeatAction, leaveSeatAction, forfeitSeatAction,
   addBetAction, removeLastBetAction, removeAllBetAction,
   playerDisconnectAction, playerReconnectAction,
@@ -25,7 +32,7 @@ const SocketProvider = ({ children }) => {
   const dispatch = useDispatch()
   
   const [socket, setSocket] = useState(null);
-  const { updateObj, setUpdateObj} = useContext(ModalContext);
+  const { openModal, updateObj, setUpdateObj} = useContext(ModalContext);
   
   const user = useSelector((state) => state.users.user);
 
@@ -62,29 +69,34 @@ const SocketProvider = ({ children }) => {
         dispatch(joinTableAction(table));
       }); 
 
+      socket.on('close_table', (leaveSeatObj) => {
+        const { tableId } = leaveSeatObj
+        openModal('tableClosedModal')
+        dispatch(deleteTableAction(tableId));
+        dispatch(leaveSeatAction(leaveSeatObj)); 
+      }); 
+
+
+      socket.on('update_table_name', (updateObject) => {
+        dispatch(updateTableNameAction(updateObject));
+      }); 
+
       socket.on('get_updated_table', (updateObject) => {
-
-
-        console.log('-=-=-=-=-=');
-        console.log('-=-=-=-=-=');
-        console.log('-=-=-=-=-=');
-        console.log('-=-=-=-=-=');
-        console.log(updateObject);
-        console.log('-=-=-=-=-=');
-        console.log('-=-=-=-=-=');
-        console.log('-=-=-=-=-=');
-        console.log('-=-=-=-=-=');
-
-
-
-
         dispatch(updateTableAction(updateObject)); 
       }); 
       
 
       socket.on('new_message', (messageObj) => {
-        dispatch(gameActions.addMessage(messageObj));
+        dispatch(addMessageAction(messageObj));
       });
+
+      socket.on('edit_message', (messageObj) => {
+        dispatch(editMessageAction(messageObj));
+      })
+
+      socket.on('delete_message', (messageObj) => {
+        dispatch(deleteMessageAction(messageObj));
+      })
 
       socket.on('new_player', (seatObj) => {
         console.log(seatObj);
@@ -167,22 +179,30 @@ const SocketProvider = ({ children }) => {
         console.log(countdownObj);
         let tableId = countdownObj.tableId
         dispatch(collectBetsAction(countdownObj)); 
-        // socket.emit('deal_cards', tableId)
       });  
 
       return () => {
-
+        
         socket.off('view_table');
+        socket.off('join_table');
+        socket.off('close_table');
+        socket.off('update_table_name');
+        socket.off('get_updated_table');
         socket.off('new_message');
+        socket.off('edit_message');
+        socket.off('delete_message');
         socket.off('new_player');
         socket.off('player_leave');
         socket.off('player_forfeit');
         socket.off('new_bet');
+        socket.off('remove_last_bet');
+        socket.off('remove_all_bet');
+        socket.off('offer_insurance');
+        socket.off('remove_insurance_offer');
         socket.off('player_disconnected');
         socket.off('player_reconnected');
         socket.off('player_add_table_funds');
         socket.off('remove_player');
-        socket.off('get_updated_table');
         socket.off('countdown_update');
         socket.off('collect_bets');
 

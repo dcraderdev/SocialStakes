@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Table.belongsToMany(models.User, { through: 'UserTables', foreignKey: 'tableId', as: 'players' });
       Table.belongsTo(models.Game, {foreignKey:'gameId'})
+      Table.belongsTo(models.User, {foreignKey:'userId'})
       Table.hasMany(models.Message, {foreignKey:'tableId'})
       Table.hasMany(models.UserTable, {foreignKey:'tableId', as: 'tableUsers'})
       Table.hasMany(models.GameSession, {foreignKey:'tableId', as: 'gameSessions'})
@@ -26,6 +27,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     active: DataTypes.BOOLEAN,
     gameId: DataTypes.STRING,
+    userId: DataTypes.UUID,
     shufflePoint: DataTypes.INTEGER,
     passCode: DataTypes.STRING,
     private: DataTypes.BOOLEAN,

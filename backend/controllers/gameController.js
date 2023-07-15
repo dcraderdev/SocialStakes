@@ -230,6 +230,19 @@ const gameController = {
 
 
   async removeUserFromTables(userId) {
+
+    console.log('REMOVING');
+    console.log('REMOVING');
+    console.log('REMOVING');
+    console.log('REMOVING');
+    console.log('REMOVING');
+    console.log('REMOVING');
+    console.log('REMOVING');
+    console.log('REMOVING');
+    console.log('REMOVING');
+    console.log('REMOVING');
+    console.log('REMOVING');
+
     const userTables = await UserTable.findAll({where:{userId,active:true}})
     const userToUpdate = await User.findByPk(userId);
 

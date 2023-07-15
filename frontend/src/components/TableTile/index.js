@@ -35,7 +35,9 @@ const TableTile = ({table, viewTable}) => {
     setDecksUsed('');
     setMinBet(0);
     setMaxBet(0);
+    setIsPrivate(false);
 
+    
     if(table){
       setPlayerCount(table.players.length);
       setMaxPlayers(table.Game.maxNumPlayers);

@@ -210,7 +210,7 @@ export const getAllGames = () => async (dispatch) => {
   };
 
 
-  export const joinPrivateTable = (tableId, tableName, password) => async (dispatch) => {
+  export const joinPrivateTable = (tableId, tableName, password, socket) => async (dispatch) => {
     try{
       const response = await csrfFetch(`/api/tables/private`, {
         method: 'POST',
@@ -221,12 +221,10 @@ export const getAllGames = () => async (dispatch) => {
         })
       });
       const data = await response.json();
-  
-      console.log('-=-=-=-=');
-      console.log(data); 
-      console.log('-=-=-=-=');
-  
-      dispatch(joinTableAction(data.table));
+
+      // dispatch(joinTableAction(data.table));
+      let fetchedTableId = data.table.id
+      socket.emit('join_room',fetchedTableId)
       return {data, response};
   
     }catch(error){

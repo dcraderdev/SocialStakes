@@ -22,7 +22,7 @@ import TableSortBar from '../TableSortBar';
 
 function GameFloor() {
   const { socket } = useContext(SocketContext);
-  const { openModal } = useContext(ModalContext);
+  const { openModal, setUpdateObj, updateObj } = useContext(ModalContext);
   const location = useLocation();
   const dispatch = useDispatch();
 
@@ -84,7 +84,13 @@ function GameFloor() {
       if (currentTables[table.id]) {
         socket.emit('view_room', table.id);
       } else {
-        socket.emit('join_room', table.id);
+        console.log(table);
+        if(table.private){
+          setUpdateObj({tableId:table.id})
+          openModal('joinPrivateGame');
+        } else {
+          socket.emit('join_room', table.id);
+        }
       }
     }
   };

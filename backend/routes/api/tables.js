@@ -28,25 +28,17 @@ router.get('/game/:gameId', async (req, res, next) => {
     
     
     const {tableId,tableName,password} = req.body
-    console.log(tableId,tableName);
-    console.log(tableId,tableName);
-    console.log(tableId,tableName);
-    console.log(tableId,tableName);
 
-    const tableObj = await gameController.checkTableCredentials(tableId,tableName, password)
+    const table = await gameController.checkTableCredentials(tableId,tableName, password)
 
-    if (!tableObj.canJoin) {
+    if (!table.canJoin) {
       const err = new Error('Cannot join table');
       err.statusCode = 403;
       err.status = 403;
       return next(err);
     }
 
-    let fetchedTableId = tableObj.table.id
-    const table = await gameController.getTableById(fetchedTableId) 
-
-
-    return res.status(200).json({ table });
+    return res.status(200).json(table);
   })
 
 

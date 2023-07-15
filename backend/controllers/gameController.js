@@ -107,7 +107,7 @@ const gameController = {
       }
     }
 
-    if(!table.password || table.password === '' || table.password === password){
+    if(!table.passCode || table.passCode === '' || table.passCode === password){
       return { 
         canJoin: true,
         table: table

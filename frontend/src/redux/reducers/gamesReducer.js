@@ -60,6 +60,9 @@ const gamesReducer = (state = initialState, action) => {
     
       tablesToSort.sort((a, b) => {
         switch (sortBy) {
+          case 'private':
+            // Sort by the length of players array
+            return direction === 'high' ? b.private - a.private : a.private - b.private;
           case 'players':
             // Sort by the length of players array
             return direction === 'high' ? b.players.length - a.players.length : a.players.length - b.players.length;

@@ -22,8 +22,13 @@
 .minimize {
   width: 0px;
   transition: width 1s ease;
+  cursor: pointer;
 }
 
+.minimize:hover {
+  box-shadow: 2px 0px 5px rgba(218, 165, 32, 0.335);
+
+}
 
 .bet-user-settings{
 
@@ -38,7 +43,10 @@
   color: rgba(218, 165, 32, 0.394);
 }
 
-
+.bet-setting-button{
+  cursor: pointer;
+  width: fit-content;
+}
 
 
 .bet-content{
@@ -99,6 +107,7 @@
   left: 30px;
   width: 160px;
   height: 200px;
+  
 }
 
 .chip{

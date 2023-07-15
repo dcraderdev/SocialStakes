@@ -17,6 +17,9 @@ import { ModalContext } from '../../context/ModalContext';
 
 
   const PlayerBetOptions = () => {
+    const {socket} = useContext(SocketContext)
+    const {openModal, closeModal, setUpdateObj} = useContext(ModalContext)
+
     const dispatch = useDispatch();
     
     const [sitOutSelected, setSitOutSelected] = useState(false);
@@ -40,18 +43,13 @@ import { ModalContext } from '../../context/ModalContext';
     const [hasBet, setHasBet] = useState(false);
 
 
-  
-    
-    const {socket} = useContext(SocketContext)
-    const {openModal, closeModal, setUpdateObj} = useContext(ModalContext)
+
+
 
     const currentTables = useSelector((state) => state.games.currentTables);
     const activeTable = useSelector((state) => state.games.activeTable);
     const showMessages = useSelector((state) => state.games.showMessages);
     const user = useSelector((state) => state.users.user);
-
-
-    console.log(actionHand);
 
 
   useEffect(()=>{
@@ -72,6 +70,7 @@ import { ModalContext } from '../../context/ModalContext';
 
   useEffect(() => {
     if(currentTables && activeTable){
+
       let userInActiveSeat = currentTables[activeTable.id]?.actionSeat === currentSeat && currentSeat !== null;
       let handInProgress = currentTables[activeTable.id]?.handInProgress;
       let currActionHand = currentTables[activeTable.id]?.actionHand;
@@ -108,18 +107,18 @@ import { ModalContext } from '../../context/ModalContext';
       setIsInsuranceOffered(insuranceOffered);
 
     }
+  }, [currentTables, activeTable, currentSeat]);
 
 
-    
-
-  }, [currentTables, activeTable]);
 
 
 
   useEffect(() => {
     let hasHand = currentTables?.[activeTable.id]?.tableUsers?.[currentSeat]?.hands?.[actionHand]
+
     if(hasHand){
       let cards = hasHand.cards
+
       if(cards.length === 2){
         let convertedCardOne = cardConverter[cards[0]]
         let convertedCardTwo = cardConverter[cards[1]]
@@ -343,19 +342,19 @@ const rebet = (multiplier) => {
 
             <div className="section left">
               <div className="bet-user-settings">
-                <div className="gamefloor-add-balance" onClick={addBalance}>
+                <div className="bet-setting-button" onClick={addBalance}>
                  <i className="fa-solid fa-dollar-sign"></i>+
                 </div>
-                <div className="gamefloor-leave-button" onClick={leaveTable}>
+                <div className="bet-setting-button" onClick={leaveTable}>
                   <i className="fa-solid fa-right-to-bracket"></i>
                 </div>
 
-                <div className="gamefloor-leave-button" onClick={openSettings}>
+                <div className="bet-setting-button" onClick={openSettings}>
                   {/* <i className="fa-solid fa-right-to-bracket"></i> */}
                   <i className="fa-solid fa-gears"></i>
                 </div>
                 <div
-                  className="chatbox-minimize-button"
+                  className="bet-setting-button"
                   onClick={() => dispatch(toggleShowMessages())}
                 >
                   {showMessages ? (
@@ -372,6 +371,7 @@ const rebet = (multiplier) => {
 
               <div
                 className={`chatbox-wrapper ${showMessages ? '' : 'minimize'}`}
+                onClick={showMessages ? null : () => dispatch(toggleShowMessages())}
               >
                 <Chatbox showMessages={showMessages} />
               </div>

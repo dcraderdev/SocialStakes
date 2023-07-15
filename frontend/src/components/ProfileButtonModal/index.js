@@ -3,6 +3,7 @@ import { useHistory} from 'react-router-dom';
 import { useDispatch, useSelector  } from 'react-redux';
 import * as sessionActions from '../../redux/middleware/users';
 import { ModalContext } from '../../context/ModalContext';
+import { SocketContext } from '../../context/SocketContext';
 import { WindowContext } from '../../context/WindowContext';
 import { showGamesAction } from '../../redux/actions/gameActions';
 
@@ -13,6 +14,7 @@ function ProfileButtonModal() {
   const history = useHistory();
   const dispatch = useDispatch();
   const { modal, openModal, closeModal, needsRerender, setNeedsRerender } = useContext(ModalContext);
+  const { socket } = useContext(SocketContext);
   const formRef = useRef(null);
 
   const user = useSelector(state => state.users.user);
@@ -22,6 +24,7 @@ function ProfileButtonModal() {
 
 
   const logout = (e) => {
+    socket.emit('disconnect_user')
     dispatch(showGamesAction())
     dispatch(sessionActions.logout());
     history.push('/');

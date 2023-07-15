@@ -64,10 +64,6 @@ module.exports = {
     await queryInterface.bulkInsert(options, gameSessions);
 
 
-    console.log(gameSessions);
-    console.log(gameSessions[0].id);
-
-
     options.tableName = 'ServerSeeds';
 
     let serverSeeds = []

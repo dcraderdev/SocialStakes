@@ -14,10 +14,13 @@ export const SET_CSRF_TOKEN = 'set/SET_CSRF_TOKEN';
 
 //game
 export const GET_GAMES = 'games/GET_GAMES';
-export const GET_TABLES = 'game/GET_ACTIVE_TABLES';
-export const GET_GAME_BY_ID = 'games/GET_TABLE_BY_ID';
+export const GET_GAME_BY_ID = 'games/GET_GAME_BY_ID';
+
+
+export const GET_TABLES = 'game/GET_TABLES';
 export const GET_TABLE_BY_ID = 'games/GET_TABLE_BY_ID';
 export const GET_TABLES_BY_TYPE = 'games/GET_TABLES_BY_TYPE';
+export const SORT_TABLES = 'game/SORT_TABLES';
 
 export const ADD_BALANCE = 'games/ADD_BALANCE';
 export const ADD_BET = 'games/ADD_BET';
@@ -36,8 +39,6 @@ export const UPDATE_TABLE_COUNTDOWN = 'games/START_TABLE_COUNTDOWN';
 export const COLLECT_BETS = 'games/COLLECT_BETS';
 export const OFFER_INSURANCE = 'games/OFFER_INSURANCE';
 export const RESCIND_INSURANCE = 'games/RESCIND_INSURANCE';
-
-
 
 
 
@@ -63,6 +64,7 @@ export const SHOW_ACTIVE_TABLES = 'game/SHOW_ACTIVE_TABLES';
 export const SHOW_CREATING_GAME = 'game/SHOW_CREATING_GAME'
 
 
+// chat
 export const ADD_MESSAGE = 'game/ADD_MESSAGE';
 export const EDIT_MESSAGE = 'game/EDIT_MESSAGE';
 export const DELETE_MESSAGE = 'game/DELETE_MESSAGE';

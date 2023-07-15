@@ -15,6 +15,8 @@ function JoinPrivateGameModal() {
 
   const [password, setPassword] = useState('');
   const [tableId, setTableId] = useState('');
+  const [tableName, setTableName] = useState('');
+  const [showError, setShowError] = useState(false);
 
   const { socket } = useContext(SocketContext);
   const { modal, openModal, closeModal, updateObj, setUpdateObj } =
@@ -24,7 +26,6 @@ function JoinPrivateGameModal() {
   const balance = useSelector((state) => state.users.balance);
   const table = useSelector((state) => state.games.activeTable);
 
-  //Hanlde clicking outside of modal
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (formRef.current && !formRef.current.contains(event.target)) {
@@ -38,9 +39,20 @@ function JoinPrivateGameModal() {
     };
   }, []);
 
-  // Add 1k to user balance
-  const joinTable = () => {
-    dispatch(gameActions.joinPrivateTable(tableId, password, socket));
+  const joinTable = async () => {
+    let join = await dispatch(
+      gameActions.joinPrivateTable(tableId, tableName, password, socket)
+    );
+    if (join) {
+      console.log(join);
+      if (join.status > 200) {
+        setShowError(true);
+        setTimeout(() => {
+          setShowError(false);
+        }, 3000);
+      }
+    }
+    closeModal()
     setUpdateObj(null);
   };
 
@@ -55,14 +67,23 @@ function JoinPrivateGameModal() {
         <div className="jointable-header white flex center">
           Join Private Game
         </div>
-
-        <form className='flex jointable-form' onSubmit={joinTable}>
-        <input
+        {showError && (
+          <div className="jointable-error red">Could not join table.</div>
+        )}
+        <form className="flex jointable-form" onSubmit={joinTable}>
+          <input
             className="jointable-funding-input"
             type="text"
             value={tableId}
             onChange={(e) => setTableId(e.target.value)}
             placeholder="Enter table id"
+          />
+          <input
+            className="jointable-funding-input"
+            type="text"
+            value={tableName}
+            onChange={(e) => setTableName(e.target.value)}
+            placeholder="Enter table name"
           />
           <input
             className="jointable-funding-input"

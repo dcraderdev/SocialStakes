@@ -37,7 +37,6 @@ const TableTile = ({table, viewTable}) => {
     setMaxBet(0);
 
     if(table){
-      console.log(table);
       setPlayerCount(table.players.length);
       setMaxPlayers(table.Game.maxNumPlayers);
       setDecksUsed(`${table.Game.decksUsed} Deck`);

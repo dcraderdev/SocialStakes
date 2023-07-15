@@ -93,7 +93,7 @@ const GameTile = ({game, cbFunc}) => {
       <div className='game-tile pulse rounded' onClick={() => cbFunc(game.gameType)}>
         <div className='game-name'>{getIcon(game.gameType)}</div>
         {!isActive && (
-          <div style={{position:'absoulte', 'font-size': '13px' ,color:'red', top:'50px'}}>Game coming soon</div>
+          <div style={{position:'absoulte', 'fontSize': '13px' ,color:'red', top:'50px'}}>Game coming soon</div>
         )}
         <img src={gameTileBackground} alt='game tile'></img>
       </div>

@@ -1,5 +1,7 @@
 .jointable-form{
   flex-direction: column;
+  position: absolute;
+  top: 70px;
 }
 
 
@@ -15,7 +17,10 @@
   height: 170px;
 }
 
-
+.jointable-error{
+  position: absolute;
+  top: 47px;
+}
 
 .jointable-container{
   flex-direction: column;

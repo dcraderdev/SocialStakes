@@ -89,15 +89,41 @@ const gameController = {
     return table;
   },
 
-  async checkTableCredentials(tableId, password){
-    const table = await Table.findByPk(tableId)
-    if(!table) return false
-    if(!table.password) return true
-    if(table.password && table.password !== password){ 
-      return false
-    } else return true
+  async checkTableCredentials(tableId,tableName, password){
+
+    let table
+
+    if(tableId){
+      table = await Table.findByPk(tableId)
+    } 
+    else if(tableName){
+      table = await Table.findOne({where:{tableName}})
+    }
+
+    if(!table) {
+      return {
+        canJoin: false,
+        table: null
+      }
+    }
+
+    if(!table.password || table.password === '' || table.password === password){
+      return { 
+        canJoin: true,
+        table: table
+      }
+    }
+
+
+    return { 
+      canJoin: false,
+      table: table
+    }
+
 
   },
+
+
 
   async createTable(tableObj) {
 

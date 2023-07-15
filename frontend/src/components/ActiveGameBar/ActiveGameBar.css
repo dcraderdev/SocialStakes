@@ -4,23 +4,7 @@
   position: relative;
   cursor: pointer;
   color: white;
-  
-  border: solid 1px rgb(39, 39, 39);
-
   border: solid 1px rgba(0, 0, 0);
-
-
-/* 
-
-  background: rgb(58,59,57);
-
-  background: linear-gradient(90deg, rgba(58,59,57,1) 8%, rgba(56,58,54,1) 48%, rgba(58,59,57,1) 82%);
-  
-  
-  
-  
-  box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset; */
-
   background-color: #28292b;
 
 
@@ -28,12 +12,9 @@
 
 
 .gamebar-table-tab:hover{
-  /* background: rgb(58,59,57);
-  
-  background: linear-gradient(90deg, rgba(58,59,57,1) 8%, rgba(68,71,66,1) 48%, rgba(58,59,57,1) 82%);
-  background: linear-gradient(90deg, rgba(68,71,66,1) 8%, rgb(61, 62, 60) 48%, rgba(68,71,66,1) 82%); */
+  background: linear-gradient(90deg, rgba(68,71,66,1) 8%, rgb(61, 62, 60) 48%, rgba(68,71,66,1) 82%);
   background-color: #3b3c3f99;
-  border: solid 1px rgb(0, 0, 0);
+
   border: solid 1px rgb(89, 89, 89);
 
 }

@@ -43,10 +43,12 @@ function Navigation(){
 
   const handleFriendsClick = () => {
     dispatch(gameActions.showGamesAction())
-    history.push('/');
+    history.push('/friends');
   };
   const handleGameClick = () => {
     dispatch(showGamesAction())
+    history.push('/');
+
   };
 
 

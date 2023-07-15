@@ -94,12 +94,6 @@ const Chatbox = ({showMessages}) => {
     };
 
 
-    console.log(selectedMessage);
-    console.log(selectedMessage?.message?.id);
-    console.log(selectedMessage?.message?.content);
-
-    console.log(editedMessageContent);
-    
     
     const confirmDeleteMessage = () => {
       if (!user) return;

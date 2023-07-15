@@ -1,6 +1,6 @@
 
 import { 
-  GET_GAMES, GET_GAME_BY_ID,
+  GET_GAMES, GET_GAME_BY_ID, SORT_TABLES,
   GET_TABLES, GET_TABLES_BY_TYPE, GET_TABLE_BY_ID,
   CREATE_TABLE, DELETE_TABLE, UPDATE_TABLE, UPDATE_TABLE_NAME,
   VIEW_TABLE, LEAVE_TABLE, JOIN_TABLE,
@@ -48,9 +48,51 @@ const gamesReducer = (state = initialState, action) => {
     }
 
     case GET_TABLES_BY_TYPE:{
-      console.log(action.payload);
       return {...newState, openTablesByGameType: action.payload, showGames: false, showTables: true, showActiveTable: false}
     }
+
+
+    case SORT_TABLES: {
+      const {sortBy, direction} = action.payload
+
+      console.log(newState.openTablesByGameType);
+      let tablesToSort = [...newState.openTablesByGameType]
+    
+      tablesToSort.sort((a, b) => {
+        switch (sortBy) {
+          case 'private':
+            // Sort by the length of players array
+            return direction === 'high' ? b.private - a.private : a.private - b.private;
+          case 'players':
+            // Sort by the length of players array
+            return direction === 'high' ? b.players.length - a.players.length : a.players.length - b.players.length;
+          case 'tableName':
+            // Sort by table name alphabetically
+            let aName = a.tableName || "";  
+            let bName = b.tableName || ""; 
+          
+            if (aName.toLowerCase() < bName.toLowerCase()) return direction === 'high' ? 1 : -1;
+            if (aName.toLowerCase() > bName.toLowerCase()) return direction === 'high' ? -1 : 1;
+            return 0;
+          case 'deckSize':
+            // Sort by deck size
+            return direction === 'high' ? b.Game.decksUsed - a.Game.decksUsed : a.Game.decksUsed - b.Game.decksUsed;
+          case 'minMax':
+            // Sort by minMax
+            let aMinMax = a.Game.minBet + a.Game.maxBet;
+            let bMinMax = b.Game.minBet + b.Game.maxBet;
+            return direction === 'high' ? bMinMax - aMinMax : aMinMax - bMinMax;
+          default:
+            return 0;
+        }
+      });
+    
+      return { ...newState, openTablesByGameType: tablesToSort }
+    }
+    
+
+
+
 
     case REMOVE_USER:{
       const newGames = {...newState.games}
@@ -184,9 +226,9 @@ const gamesReducer = (state = initialState, action) => {
       const newCurrentTables = { ...newState.currentTables };
       // Check if the active table exists in newCurrentTables
       if (newCurrentTables[tableId]) {
-        console.log(newCurrentTables[tableId]);
-        console.log(newCurrentTables[tableId].tableUsers);
-        console.log(newCurrentTables[tableId].tableUsers[seat]);
+        if (!newCurrentTables[tableId].tableUsers) {
+          newCurrentTables[tableId].tableUsers = {}
+        }
         // Assign newTableUser to seat in tableUsers obj of the active table
         newCurrentTables[tableId].tableUsers[seat] = newTableUser;
         newCurrentTables[tableId].currentSeat = seat;

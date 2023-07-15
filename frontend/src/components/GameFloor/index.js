@@ -18,18 +18,17 @@ import Game from '../Game';
 import CreatingGameView from '../CreatingGameView';
 
 import gameTileBackground from '../../images/game-tile-background.jpeg';
+import TableSortBar from '../TableSortBar';
 
 function GameFloor() {
   const { socket } = useContext(SocketContext);
-  const { openModal } = useContext(ModalContext);
+  const { openModal, setUpdateObj, updateObj } = useContext(ModalContext);
   const location = useLocation();
   const dispatch = useDispatch();
 
   const user = useSelector((state) => state.users.user);
   const allGames = useSelector((state) => state.games.games);
-  const openTablesByGameType = useSelector(
-    (state) => state.games.openTablesByGameType
-  );
+  const openTablesByGameType = useSelector(state=> state.games.openTablesByGameType);
   const currentTables = useSelector((state) => state.games.currentTables);
 
   const showGames = useSelector((state) => state.games.showGames);
@@ -38,8 +37,15 @@ function GameFloor() {
   const activeTable = useSelector((state) => state.games.activeTable);
 
   const [isLoaded, setIsLoaded] = useState(false);
-
   const [currTables, setCurrTables] = useState('');
+
+
+  console.log(openTablesByGameType);
+
+
+
+
+
 
   // handle loading active games on component load
   useEffect(() => {
@@ -78,7 +84,13 @@ function GameFloor() {
       if (currentTables[table.id]) {
         socket.emit('view_room', table.id);
       } else {
-        socket.emit('join_room', table.id);
+        console.log(table);
+        if(table.private){
+          setUpdateObj({tableId:table.id})
+          openModal('joinPrivateGame');
+        } else {
+          socket.emit('join_room', table.id);
+        }
       }
     }
   };
@@ -103,69 +115,54 @@ function GameFloor() {
     if (gameType === 'multi_blackjack') {
       return (
         <div className="gameicon-container flex center">
-          <i className="fa-solid fa-user-group"></i>
-          <div className="gameicon-text">
             <div className="gameicon-text flex center">Multi Player</div>
             <div className="gameicon-text flex center">Blackjack</div>
-          </div>
         </div>
       );
     }
     if (gameType === 'single_blackjack') {
       return (
-        <div className="gameicon-container flex center">
-          <i className="fa-solid fa-user"></i>
-          <div className="gameicon-text">
+        <div className="gameicon-container flex">
             <div className="gameicon-text flex center">Single Player</div>
             <div className="gameicon-text flex center">Blackjack</div>
-          </div>
         </div>
       );
     }
     if (gameType === 'poker') {
       return (
         <div className="gameicon-container flex center">
-          <i className="fa-solid fa-user-group"></i>
-          <div className="gameicon-text">
             <div className="gameicon-text flex center">Texas</div>
             <div className="gameicon-text flex center">Hold 'em</div>
-          </div>
         </div>
       );
     }
     if (gameType === 'acey_duecey') {
       return (
         <div className="gameicon-container flex center">
-          <i className="fa-solid fa-user-group"></i>
-          <div className="gameicon-text">
             <div className="gameicon-text flex center">Acey</div>
             <div className="gameicon-text flex center">Duecey</div>
-          </div>
         </div>
       );
     }
     if (gameType === 'coin_flip') {
       return (
         <div className="gameicon-container flex center">
-          <i className="fa-solid fa-user-group"></i>
-          <div className="gameicon-text">
             <div className="gameicon-text flex center">Coin</div>
             <div className="gameicon-text flex center">Flip</div>
-          </div>
         </div>
       );
     }
     if (gameType === 'hi_lo') {
       return (
         <div className="gameicon-container flex center">
-          <i className="fa-solid fa-user-group"></i>
-          <div className="gameicon-text">
             <div className="gameicon-text flex center">Hi Lo</div>
-          </div>
         </div>
       );
     }
   };
+
+
+  
 
   return (
     <>
@@ -243,40 +240,10 @@ function GameFloor() {
                     ))}
                 </div>
 
-                <div className="available-tables-sort-container flex">
-                  <div className=" status-playercount-container flex center">
-                    <div className="playercount-sort-container flex center">
-                      <div className="playercount-curr">Players</div>
-                      <div className="arrow-container flex">
-                        <i className="sort-arrow fa-solid fa-angle-up"></i>
-                        <i className="sort-arrow fa-solid fa-angle-down"></i>
-                      </div>
-                    </div>
-                    <div className="tablename-sort-container flex center">
-                      <div className="deck-sort-text">Table Name</div>
-                      <div className="arrow-container flex">
-                        <i className="sort-arrow fa-solid fa-angle-up"></i>
-                        <i className="sort-arrow fa-solid fa-angle-down"></i>
-                      </div>
-                    </div>
 
-                    <div className="deck-sort-container flex center">
-                      <div className="deck-sort-text">Deck Size</div>
-                      <div className="arrow-container flex">
-                        <i className="sort-arrow fa-solid fa-angle-up"></i>
-                        <i className="sort-arrow fa-solid fa-angle-down"></i>
-                      </div>
-                    </div>
-                  </div>
+                <TableSortBar/>
 
-                  <div className="betsize-sort-container flex center">
-                    <div>min/max</div>
-                    <div className="arrow-container flex">
-                      <i className="sort-arrow fa-solid fa-angle-up"></i>
-                      <i className="sort-arrow fa-solid fa-angle-down"></i>
-                    </div>
-                  </div>
-                </div>
+
 
                 {openTablesByGameType.length > 0 &&
                   openTablesByGameType.map((table, index) => (
@@ -308,9 +275,7 @@ function GameFloor() {
               </div>
             )}
 
-            {/* {showCreatingGame && (
-  <div className={`creatinggame-container`}><div>
-)} */}
+
           </div>
         </div>
       </div>

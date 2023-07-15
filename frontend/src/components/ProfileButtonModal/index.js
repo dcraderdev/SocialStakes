@@ -51,7 +51,6 @@ function ProfileButtonModal() {
     };
   }, []);
 
-  console.log(modal);
 
 
 
@@ -73,16 +72,30 @@ function ProfileButtonModal() {
             </div>
 
 
-            <div className='profilemenu-option'>
+            <div 
+            className='profilemenu-option' 
+            onClick={()=>{
+              history.push('/friends')
+              closeModal()
+              }}>
             Friends
             </div>
 
-            <div className='profilemenu-option'>
+            <div 
+            className='profilemenu-option' 
+            onClick={()=>{
+              history.push('/friends')
+              closeModal()
+              }}>
             Invites
             </div>
 
             <div className='profilemenu-option'>
             Stats
+            </div>
+
+            <div className='profilemenu-option'>
+            Tables
             </div>
 
           

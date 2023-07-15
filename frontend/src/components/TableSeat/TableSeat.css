@@ -20,7 +20,6 @@
   height: 40px;
   position: absolute;
   bottom: 0px;
-  border: white solid 1px;
 }
 
 
@@ -51,14 +50,12 @@
   position: relative;
   top: -56px;
   flex-direction: column;
-  border: rgb(8, 15, 70) solid 1px;
 }
 
 
 .seat-card-area{
   width: fit-content;
   height: fit-content;
-  border: white solid 1px;
   display: flex;
   flex-direction: row;
 }

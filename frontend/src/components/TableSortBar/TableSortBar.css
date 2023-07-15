@@ -1,0 +1,70 @@
+
+.tablesortbar-wrapper{
+  width: 100%;
+  height: 35px;
+  position: relative;
+  background-color: #1d1e1c;
+  color: #fdfcfc;
+  border-bottom: rgba(255, 217, 0, 0.466) solid .5px;
+  border-top: rgba(255, 217, 0, 0.466) solid .5px;
+  box-shadow: rgba(0, 0, 0, 0.5) 0px 3px 6px, rgba(0, 0, 0, 0.5) 0px 3px 6px;
+  font-size: 15px;
+}
+
+.tablesortbar-container{
+  justify-content: space-between;
+  width: 100%;
+
+
+}
+
+
+.arrow-container{
+  flex-direction: column;
+  height: 30px;
+  margin-left: 5px;
+}
+
+.sort-arrow {
+  font-size: 15px;
+  z-index: 100;
+  cursor: pointer;
+}
+
+.sort-arrow:hover {
+  color: rgba(217, 46, 46, 1);
+}
+
+
+.tablesort-text{
+  font-size: 15px;
+}
+
+
+
+
+
+
+.tablesortbar-header-container{
+  width: fit-content;
+  height: 60px;
+  margin-left: 30px;
+  justify-content: space-between;
+}
+
+
+
+.tablesortbar-header-container:last-child{
+  margin-right: 10px;
+}
+
+
+
+
+
+
+@media screen and (min-width: 700px) {
+  .tablesort-text{
+    font-size: 20px;
+  }
+}

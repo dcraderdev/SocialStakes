@@ -5,7 +5,7 @@ import {
   updateTableAction, updateTableNameAction,
   getAllGamesAction, getGameByIdAction,
   getAllTablesAction, getTablesByTypeAction, getTableByIdAction,
-  viewTableAction, leaveTableAction, 
+  viewTableAction, leaveTableAction, joinTableAction,
   takeSeatAction, changeSeatAction,
   addBalanceAction,
   addBetAction, removeBetAction
@@ -210,26 +210,26 @@ export const getAllGames = () => async (dispatch) => {
   };
 
 
-  export const joinPrivateTable = (tableId, password) => async (dispatch) => {
+  export const joinPrivateTable = (tableId, tableName, password, socket) => async (dispatch) => {
     try{
-      const response = await csrfFetch(`/api/tables/${tableId}/private`, {
-        method: 'PUT',
+      const response = await csrfFetch(`/api/tables/private`, {
+        method: 'POST',
         body: JSON.stringify({
           tableId,
+          tableName,
           password
         })
       });
       const data = await response.json();
-  
-      console.log('-=-=-=-=');
-      console.log(data); 
-      console.log('-=-=-=-=');
-  
-      dispatch(viewTableAction(data));
+
+      // dispatch(joinTableAction(data.table));
+      let fetchedTableId = data.table.id
+      socket.emit('join_room',fetchedTableId)
       return {data, response};
   
     }catch(error){
       console.log(error);
+      return error
     }
   }; 
 

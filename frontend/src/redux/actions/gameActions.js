@@ -1,6 +1,6 @@
 import { 
   GET_GAME_BY_ID, GET_GAMES,
-  GET_TABLE_BY_ID, GET_TABLES, GET_TABLES_BY_TYPE,
+  GET_TABLE_BY_ID, GET_TABLES, GET_TABLES_BY_TYPE, SORT_TABLES,
   UPDATE_TABLE, CREATE_TABLE, DELETE_TABLE, UPDATE_TABLE_NAME,
   VIEW_TABLE, LEAVE_TABLE, JOIN_TABLE,
   TAKE_SEAT, LEAVE_SEAT, CHANGE_SEAT, FORFEIT_SEAT,
@@ -39,6 +39,15 @@ export const getAllTablesAction = () => {
     type: GET_TABLES,
   };
 };
+
+export const sortTablesAction = (sortBy, direction) => {
+  return {
+    type: SORT_TABLES,
+    payload: {sortBy, direction},
+  };
+};
+
+
 
 
 export const getTableByIdAction = (data) => {

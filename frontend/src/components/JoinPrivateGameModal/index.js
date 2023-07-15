@@ -15,6 +15,9 @@ function JoinPrivateGameModal() {
 
   const [password, setPassword] = useState('');
   const [tableId, setTableId] = useState('');
+  const [tableName, setTableName] = useState('');
+  const [showError, setShowError] = useState(false);
+  const [hasId, setHasId] = useState(false)
 
   const { socket } = useContext(SocketContext);
   const { modal, openModal, closeModal, updateObj, setUpdateObj } =
@@ -24,7 +27,14 @@ function JoinPrivateGameModal() {
   const balance = useSelector((state) => state.users.balance);
   const table = useSelector((state) => state.games.activeTable);
 
-  //Hanlde clicking outside of modal
+
+  useEffect(() => {
+    if(updateObj && updateObj.tableId){
+      setHasId(true)
+    }
+  }, [updateObj]);
+
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (formRef.current && !formRef.current.contains(event.target)) {
@@ -38,9 +48,27 @@ function JoinPrivateGameModal() {
     };
   }, []);
 
-  // Add 1k to user balance
-  const joinTable = () => {
-    dispatch(gameActions.joinPrivateTable(tableId, password, socket));
+  const joinTable = async (e) => {
+    e.preventDefault()
+
+    let join
+    if(hasId){
+      let setTableId = updateObj.tableId
+      join = await dispatch(gameActions.joinPrivateTable(setTableId, tableName, password, socket));
+
+    }else{
+      join = await dispatch(gameActions.joinPrivateTable(tableId, tableName, password, socket));
+    }
+    if (join) {
+      if (join.status > 200) {
+        setShowError(true);
+        setTimeout(() => {
+          setShowError(false);
+        }, 3000);
+        return
+      }
+    }
+    closeModal()
     setUpdateObj(null);
   };
 
@@ -55,15 +83,28 @@ function JoinPrivateGameModal() {
         <div className="jointable-header white flex center">
           Join Private Game
         </div>
-
-        <form className='flex jointable-form' onSubmit={joinTable}>
-        <input
+        {showError && (
+          <div className="jointable-error red">Could not join table.</div>
+        )}
+        <form className="flex jointable-form" onSubmit={joinTable}>
+          {!hasId &&  <input
             className="jointable-funding-input"
             type="text"
             value={tableId}
             onChange={(e) => setTableId(e.target.value)}
             placeholder="Enter table id"
           />
+          }
+          {!hasId &&  <input
+
+            className="jointable-funding-input"
+            type="text"
+            value={tableName}
+            onChange={(e) => setTableName(e.target.value)}
+            placeholder="Enter table name"
+            />
+          }
+
           <input
             className="jointable-funding-input"
             type="text"
@@ -81,7 +122,7 @@ function JoinPrivateGameModal() {
             className={`jointable-addbalance flex center ${
               password.length === 0 ? ' disabled' : ''
             }`}
-            onClick={joinTable}
+            onClick={(e)=>joinTable(e)}
           >
             Submit
           </div>

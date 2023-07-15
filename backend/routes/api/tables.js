@@ -23,25 +23,27 @@ router.get('/game/:gameId', async (req, res, next) => {
   return res.status(200).json({ tables });
 });
 
-// Get table by tableId
-router.get('/:tableId', async (req, res, next) => {
+  // Join private table by tableId/password
+  router.post('/private', requireAuth, async (req, res, next) => {
+    
+    
+    const {tableId,tableName,password} = req.body
 
-  const {tableId} = req.params
+    const table = await gameController.checkTableCredentials(tableId,tableName, password)
 
-  console.log(tableId);
+    if (!table.canJoin) {
+      const err = new Error('Cannot join table');
+      err.statusCode = 403;
+      err.status = 403;
+      return next(err);
+    }
 
-  const table = await gameController.getTableById(tableId)
-  if (!table) {
-    const err = new Error('table not found');
-    console.log(err);
-    console.log(err.status);
-    err.statusCode = 404;
-    err.status = 404;
-    return next(err);
-  }
+    return res.status(200).json(table);
+  })
 
-  return res.status(200).json({ table });
-});
+
+
+
 
 // Create new custom table
 router.post('/create',requireAuth, async (req, res, next) => {
@@ -76,6 +78,26 @@ router.put('/:tableId/edit', async (req, res, next) => {
   const {tableObj} = req.body
 
   const table = await gameController.editTableById(tableObj)
+  if (!table) {
+    const err = new Error('table not found');
+    console.log(err);
+    console.log(err.status);
+    err.statusCode = 404;
+    err.status = 404;
+    return next(err);
+  }
+
+  return res.status(200).json({ table });
+});
+
+// Get table by tableId
+router.get('/:tableId', async (req, res, next) => {
+
+  const {tableId} = req.params
+
+  console.log(tableId);
+
+  const table = await gameController.getTableById(tableId)
   if (!table) {
     const err = new Error('table not found');
     console.log(err);
@@ -130,23 +152,7 @@ router.put('/:tableId/seat', requireAuth, async (req, res, next) => {
 });
 
 
-// Join private table by tableId/password
-router.put('/:tableId/private', requireAuth, async (req, res, next) => {
 
-  const {tableId} = req.params
-  const {password} = req.body
-
-  const table = await gameController.checkTableCredentials(tableId, password)
-
-  if (!table) {
-    const err = new Error('table not found');
-    err.statusCode = 403;
-    err.status = 403;
-    return next(err);
-  }
-
-  return res.status(200).json({ table });
-});
 
 
 // Leave table by tableId

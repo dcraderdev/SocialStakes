@@ -35,8 +35,6 @@ function GameBarCard({card}) {
     )
   }
 
-  console.log(card);
-
   return (
     <div className="gamebarcard">
       <div className="gamebarcard-rank">{rank}</div>

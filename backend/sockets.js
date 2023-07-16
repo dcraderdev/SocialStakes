@@ -1356,10 +1356,6 @@ module.exports = function (io) {
       let bestDealerValue = rooms[tableId].dealerCards.bestValue;
       let room = tableId;
 
-
-      console.log(rooms[tableId].dealerCards);
-
-
       if (rooms[tableId] && rooms[tableId].forfeitedPlayers) {
         let forfeitedPlayers = rooms[tableId].forfeitedPlayers;
         for (let player of forfeitedPlayers) {
@@ -1394,7 +1390,7 @@ module.exports = function (io) {
           await gameController.leaveSeat(leaveSeatObj);
           // io.in(room).emit('player_leave', leaveSeatObj);
           io.in(userId).emit('player_leave', leaveSeatObj);
-          socket.leave(room);
+          // socket.leave(room);
         }
       } 
     }
@@ -1477,6 +1473,7 @@ module.exports = function (io) {
     }
 
     function resetRoomForNextHand(tableId) {
+
       rooms[tableId].dealerCards = {
         naturalBlackjack: false,
         hiddenCards: [],
@@ -1617,6 +1614,9 @@ module.exports = function (io) {
       // Check for any players that have left midgame and remove them
       await processForfeitedPlayers(tableId, io);
 
+
+      console.log('------- before resetRoomForNextHand -------');
+      console.log('------------------------');
       resetRoomForNextHand(tableId);
 
       // Emit updated table state one last time
@@ -1629,9 +1629,16 @@ module.exports = function (io) {
             visibleCards: rooms[tableId].dealerCards.visibleCards,
           },
         },
+        resetRoomForNextHand:'resetRoomForNextHand'
       };
 
       io.in(room).emit('get_updated_table', updateObj);
+
+      console.log(room);
+
+      console.log('------- get_updated_table -------');
+      console.log(updateObj);
+      console.log('------------------------');
 
       console.log('HAND OVER');
     }

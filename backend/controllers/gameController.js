@@ -201,11 +201,6 @@ const gameController = {
   },
 
   async closeTable(tableId) {
-    console.log('-=-=-=-=-=-=-=-');
-    console.log('-=-=-=-=-=-=-=-');
-    console.log('Closing table', tableId);
-    console.log('-=-=-=-=-=-=-=-');
-    console.log('-=-=-=-=-=-=-=-');
 
     const table = await Table.findByPk(tableId);
     if (!table) {
@@ -274,7 +269,6 @@ const gameController = {
   
     // If there's an active user in the seat, return false
     if (activeUserInSeat || userAlreadySitting) {
-      console.log('Seat is active');
       return false;
     } 
   

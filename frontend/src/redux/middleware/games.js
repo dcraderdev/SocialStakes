@@ -28,16 +28,15 @@ export const getAllGames = () => async (dispatch) => {
   };
   
   export const getAllTables = (gameId) => async (dispatch) => {
-    console.log('here before fail');
     try{
       const response = await csrfFetch(`/api/games/${gameId}/tables`, {
         method: 'GET',
       });
       const data = await response.json();
  
-      console.log('-=-=-=-=');
-      console.log(data); 
-      console.log('-=-=-=-=');
+      // console.log('-=-=-=-=');
+      // console.log(data); 
+      // console.log('-=-=-=-=');
 
       dispatch(getAllTablesAction(data));
       return {data, response};
@@ -54,9 +53,9 @@ export const getAllGames = () => async (dispatch) => {
       });
       const data = await response.json();
  
-      console.log('-=-=-=-=');
-      console.log(data); 
-      console.log('-=-=-=-=');
+      // console.log('-=-=-=-=');
+      // console.log(data); 
+      // console.log('-=-=-=-=');
 
       dispatch(getAllGamesAction(data));
       return {data, response};
@@ -73,9 +72,9 @@ export const getAllGames = () => async (dispatch) => {
       });
       const data = await response.json();
  
-      console.log('-=-=-=-=');
-      console.log(data); 
-      console.log('-=-=-=-=');
+      // console.log('-=-=-=-=');
+      // console.log(data); 
+      // console.log('-=-=-=-=');
 
       dispatch(getTablesByTypeAction(data));
       return {data, response};
@@ -95,9 +94,9 @@ export const getAllGames = () => async (dispatch) => {
       });
       const data = await response.json();
  
-      console.log('-=-=-=-=');
-      console.log(data); 
-      console.log('-=-=-=-=');
+      // console.log('-=-=-=-=');
+      // console.log(data); 
+      // console.log('-=-=-=-=');
 
       dispatch(getTableByIdAction(data));
       return {data, response};
@@ -117,9 +116,9 @@ export const getAllGames = () => async (dispatch) => {
 
       const data = await response.json();
   
-      console.log('-=-=-=-=');
-      console.log(data); 
-      console.log('-=-=-=-=');
+      // console.log('-=-=-=-=');
+      // console.log(data); 
+      // console.log('-=-=-=-=');
    
       dispatch(viewTableAction(data));
 
@@ -144,9 +143,9 @@ export const getAllGames = () => async (dispatch) => {
 
       const data = await response.json();
       
-      console.log('-=-=-=-=');
-      console.log(data); 
-      console.log('-=-=-=-=');
+      // console.log('-=-=-=-=');
+      // console.log(data); 
+      // console.log('-=-=-=-=');
       
       dispatch(createTableAction(data));
       let tableId = data.table.id
@@ -168,9 +167,9 @@ export const getAllGames = () => async (dispatch) => {
 
       const data = await response.json();
   
-      console.log('-=-=-=-=');
-      console.log(data); 
-      console.log('-=-=-=-=');
+      // console.log('-=-=-=-=');
+      // console.log(data); 
+      // console.log('-=-=-=-=');
    
       dispatch(createTableAction(data));
       return {data, response};
@@ -193,9 +192,9 @@ export const getAllGames = () => async (dispatch) => {
 
       const data = await response.json();
   
-      console.log('-=-=-=-=');
-      console.log(data); 
-      console.log('-=-=-=-=');
+      // console.log('-=-=-=-=');
+      // console.log(data); 
+      // console.log('-=-=-=-=');
    
       let updateObj = {
         tableId: data.table.id,
@@ -245,9 +244,9 @@ export const changeSeat = (tableId, seat) => async (dispatch) => {
     });
     const data = await response.json();
 
-    console.log('-=-=-=-=');
-    console.log(data); 
-    console.log('-=-=-=-=');
+    // console.log('-=-=-=-=');
+    // console.log(data); 
+    // console.log('-=-=-=-=');
 
     dispatch(changeSeatAction(data));
     return {data, response};

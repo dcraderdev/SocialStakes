@@ -66,8 +66,6 @@ export const getTablesByTypeAction = (data) => {
 }
 
 export const createTableAction = (data) => {
-  console.log(data);
-  
   return {
     type: CREATE_TABLE,
     payload: data,
@@ -75,7 +73,6 @@ export const createTableAction = (data) => {
 };
 
 export const deleteTableAction = (data) => {
-  console.log(data);
   return {
     type: DELETE_TABLE,
     payload: data,
@@ -84,7 +81,6 @@ export const deleteTableAction = (data) => {
 ;
 
 export const updateTableNameAction = (data) => {
-  console.log(data);
   return {
     type: UPDATE_TABLE_NAME,
     payload: data,
@@ -92,7 +88,6 @@ export const updateTableNameAction = (data) => {
 };
 
 export const updateTableAction = (data) => {
-  console.log(data);
   return {
     type: UPDATE_TABLE,
     payload: data,
@@ -101,7 +96,6 @@ export const updateTableAction = (data) => {
 
 
   export const viewTableAction = (tableId) => {
-    console.log(tableId);
     return {
       type: VIEW_TABLE,
       payload: tableId,
@@ -109,7 +103,6 @@ export const updateTableAction = (data) => {
   };
 
   export const joinTableAction = (data) => {
-    console.log(data);
     return {
       type: JOIN_TABLE,
       payload: data,
@@ -132,7 +125,6 @@ export const takeSeatAction = (seatObj) => {
 
 
 export const leaveSeatAction = (seatObj) => {
-  console.log(seatObj);
   return {
     type: LEAVE_SEAT,
     payload: seatObj,

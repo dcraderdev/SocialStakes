@@ -108,21 +108,10 @@ module.exports = function (io) {
 
 
       if (rooms[tableId] && rooms[tableId].seats[seat]) {
-
-
         let player = rooms[tableId].seats[seat];
-
-        let anyPlayersAfter = rooms[tableId].sortedActivePlayers.some(
-          (player) => player.seat < seat 
-        );
-
-        let anyPlayersBefore = rooms[tableId].sortedActivePlayers.some(
-          (player) => player.seat > seat 
-        );
-
+        let anyPlayersAfter = rooms[tableId].sortedActivePlayers.some(player => player.seat < seat );
+        let anyPlayersBefore = rooms[tableId].sortedActivePlayers.some(player => player.seat > seat );
         let leaveOnPlayerTurn = rooms[tableId].actionSeat === player.seat
-        
-
         let handInProgress = rooms[tableId].handInProgress;
         let leaveSeatObj = {
           tableId,
@@ -131,8 +120,6 @@ module.exports = function (io) {
           userId,
           tableBalance: player.tableBalance,
         }; 
-
-
 
         // If the user disconnects during a hand, add them to the forfeited players and update our hand's status
         if (handInProgress) {
@@ -152,14 +139,17 @@ module.exports = function (io) {
 
           //if no players left to act, end the round
           if (!anyPlayersBefore && !anyPlayersAfter) {
-            await endRound(tableId, io);
+        console.log(' C here before end round');
+        await endRound(tableId, io);
+        return
           }
           
           if(leaveOnPlayerTurn){
             clearInterval(rooms[tableId].timerId)
             await gameLoop(tableId, io);
+            return
           }
-          
+           
         } else {
 
           // Refund pending bet(if exists) for user
@@ -259,7 +249,6 @@ module.exports = function (io) {
         },
       };
 
-      console.log(updateObj);
 
       socket.join(room);
       socket.emit('join_table', updatedTable);
@@ -442,9 +431,9 @@ module.exports = function (io) {
     });
 
     socket.on('leave_seat', async (seatObj) => {
-      console.log('--------------');
-      console.log(`leave_seat`);
-      console.log('--------------');
+      // console.log('--------------');
+      // console.log(`leave_seat`);
+      // console.log('--------------');
       const { tableId, seat } = seatObj;
       if (rooms[tableId] && rooms[tableId].seats[seat]) {
         let player = rooms[tableId].seats[seat];
@@ -454,9 +443,9 @@ module.exports = function (io) {
 
 
     socket.on('leave_table', async (seatObj) => {
-      console.log('--------------');
-      console.log(`leave_table`);
-      console.log('--------------');
+      // console.log('--------------');
+      // console.log(`leave_table`);
+      // console.log('--------------');
       const { tableId, seat } = seatObj;
       if (rooms[tableId] && rooms[tableId].seats[seat]) {
         let player = rooms[tableId].seats[seat];
@@ -644,9 +633,9 @@ module.exports = function (io) {
         io.in(room).emit('player_add_table_funds', seatObj);
       }
 
-      console.log('--------------');
-      console.log(`Adding funds(${amount}) for ${username} @room ${room}`);
-      console.log('--------------');
+      // console.log('--------------');
+      // console.log(`Adding funds(${amount}) for ${username} @room ${room}`);
+      // console.log('--------------');
     });
 
     socket.on('accept_insurance', async (betObj) => {
@@ -659,15 +648,15 @@ module.exports = function (io) {
       rooms[tableId].seats[seat].tableBalance -= insuranceCost;
       //update hand to show insurance was accepted
 
-      console.log('------- INSURANCE CHECK -------');
-      console.log('currentHandId', currentHandId);
-      console.log('rooms[tableId].seats[seat]', rooms[tableId].seats[seat]);
-      console.log(
-        'rooms[tableId].seats[seat]',
-        rooms[tableId].seats[seat].hands
-      );
-      // console.log('rooms[tableId].seats[seat].hands',rooms[tableId].seats[seat].hands);
-      console.log('------------------------');
+      // console.log('------- INSURANCE CHECK -------');
+      // console.log('currentHandId', currentHandId);
+      // console.log('rooms[tableId].seats[seat]', rooms[tableId].seats[seat]);
+      // console.log(
+      //   'rooms[tableId].seats[seat]',
+      //   rooms[tableId].seats[seat].hands
+      // );
+      // // console.log('rooms[tableId].seats[seat].hands',rooms[tableId].seats[seat].hands);
+      // console.log('------------------------');
 
       rooms[tableId].seats[seat].hands[currentHandId]['insurance'] = {
         accepted: true,
@@ -679,11 +668,11 @@ module.exports = function (io) {
 
       emitUpdatedTable(tableId, io);
 
-      console.log('--------------');
-      console.log(
-        `Insurance accepted(${insuranceCost}) for ${username} @room ${room}`
-      );
-      console.log('--------------');
+      // console.log('--------------');
+      // console.log(
+      //   `Insurance accepted(${insuranceCost}) for ${username} @room ${room}`
+      // );
+      // console.log('--------------');
     });
 
     // starts game of blackjack for multiple players
@@ -832,7 +821,6 @@ module.exports = function (io) {
           },
         },
       };
-      console.log(updateObj);
       io.in(room).emit('get_updated_table', updateObj);
 
       // console.log('------- dealer cards -------');
@@ -864,6 +852,8 @@ module.exports = function (io) {
       // if dealer has blackjack, skip to end of round
       if (bestDealerValue === 21) {
         await handleDealerBlackjack(tableId);
+        console.log(' D here before end round');
+
         await endRound(tableId, io);
       } else {
         await gameLoop(tableId, io);
@@ -1149,7 +1139,6 @@ module.exports = function (io) {
         let existingHand = rooms[tableId].seats[seat].hands[handId];
 
         if (existingHand.cards.length < 2) {
-          console.error('Not enough cards to split.');
           return;
         }
 
@@ -1225,7 +1214,6 @@ module.exports = function (io) {
     }
 
     async function handleDealerTurn(tableId, io) {
-      console.log('HANDLING DEALER TURN');
 
       let room = tableId;
       let dealerCards = rooms[tableId].dealerCards;
@@ -1261,7 +1249,8 @@ module.exports = function (io) {
 
       // If all players have busted, end the round without drawing cards
       if (!anyPlayersLeft) {
-        console.log('ALL PLAYERS BUSTED');
+        console.log('No players left');
+        console.log(' A here before end round');
         await endRound(tableId, io);
         return;
       }
@@ -1290,6 +1279,7 @@ module.exports = function (io) {
           continue;
         }
 
+
         // Draw a card if dealer's best value is 16 or less, or the hand is a soft seventeen
         console.log('dealerHand.softSeventeen', dealerHand.softSeventeen);
         console.log('bestDealerValue', bestDealerValue);
@@ -1316,7 +1306,8 @@ module.exports = function (io) {
       }
 
       // Dealer's turn is finished, end the round
-      await endRound(tableId, io);
+        console.log(' B here before end round');
+        await endRound(tableId, io);
     }
 
     async function determineResult(
@@ -1541,6 +1532,13 @@ module.exports = function (io) {
     }
 
     async function endRound(tableId, io) {
+
+      console.log('END ROUND');
+      console.log('END ROUND');
+      console.log('END ROUND');
+      console.log('END ROUND');
+      console.log('END ROUND');
+
       let room = tableId;
       let bestDealerValue = rooms[tableId].dealerCards.bestValue;
       let finishedPlayers = rooms[tableId].sortedFinishedPlayers;
@@ -1586,10 +1584,19 @@ module.exports = function (io) {
       let visibleCards = dealerCards.visibleCards;
       let hiddenCards = dealerCards.hiddenCards;
       let otherCards = dealerCards.otherCards;
+      console.log('------- dealersCards 1 -------');
+      console.log(dealerCards);
+      console.log('----------------------');
 
       // Combine all dealer's cards
       let dealersCards = [...visibleCards, ...hiddenCards, ...otherCards].flat(5);
       // let dealersCards = rooms[tableId].dealerCards.visibleCards.flat(5);
+      console.log('------- dealersCards -------');
+      console.log(dealersCards);
+      console.log(visibleCards);
+      console.log(hiddenCards);
+      console.log(otherCards);
+      console.log('----------------------');
 
       let handObj = {
         id: rooms[tableId]?.roundId,
@@ -1597,6 +1604,14 @@ module.exports = function (io) {
         active: false,
         nonce: rooms[tableId].nonce,
       };
+
+      console.log('------- saveDealerHand -------');
+      console.log(handObj);
+      console.log('----------------------');
+      console.log('------- saveDealerHand -------');
+      console.log(handObj);
+      console.log('----------------------');
+
       await gameController.saveDealerHand(handObj);
 
       // Check for any players that have left midgame and remove them

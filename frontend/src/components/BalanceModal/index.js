@@ -38,8 +38,8 @@ function BalanceModal() {
   }
 
 
-  const fundTable = () => {
-    console.log(parseInt(amount));
+  const fundTable = (e) => {
+    e.preventDefault()
 
     if(amount<updateObj.minBet || amount === '' ){
       return
@@ -63,7 +63,6 @@ function BalanceModal() {
   };
 
   const addFundsToTable = () => {
-    console.log(parseInt(amount));
 
     if(amount<updateObj.minBet || amount === '' ){
       return
@@ -179,7 +178,7 @@ function BalanceModal() {
           </div>
 
         <form 
-        onSubmit={fundTable}
+        onSubmit={(e)=>fundTable(e)}
         
         >
           <input
@@ -192,6 +191,7 @@ function BalanceModal() {
             max={balance}
             min={0}
             />
+            <button type="submit" style={{ display: 'none' }}></button>
         </form>
 
 
@@ -201,7 +201,7 @@ function BalanceModal() {
             </div>
             <div
              className={`balancemodal-addbalance flex center ${amount < updateObj.minBet ? ' balancemodal-disabled' : ''}`} 
-             onClick={fundTable}
+             onClick={(e)=>fundTable(e)}
             >
               Submit
             </div>

@@ -75,7 +75,7 @@ function CloseTableModal() {
   }
 
 
-
+console.log('open');
 
 
  

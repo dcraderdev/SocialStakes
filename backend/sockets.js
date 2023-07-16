@@ -96,14 +96,14 @@ module.exports = function (io) {
       await gameController.removeUserFromTables(userId)
     });
 
-    async function handleDisconnect(playerSeat) {
+    async function handleDisconnect(playerSeatObj) {
       // console.log('-------handleDisconnect-------');
       // console.log('--------------');
 
-      let tableId = playerSeat.tableId;
-      let userTableId = playerSeat.id;
-      let userId = playerSeat.userId;
-      let seat = playerSeat.seat;
+      let tableId = playerSeatObj.tableId;
+      let userTableId = playerSeatObj.id;
+      let userId = playerSeatObj.userId;
+      let seat = playerSeatObj.seat;
       let room = tableId;
 
 
@@ -132,16 +132,7 @@ module.exports = function (io) {
           tableBalance: player.tableBalance,
         }; 
 
-        let messageObj = {
-          tableId,
-          user: { username: 'Room', id: 1, rank: 0 },
-          message: {
-            content: `${username} has disconnected.`,
-            id: 0,
-          },
-        };
- 
-        io.in(tableId).emit('new_message', messageObj);
+
 
         // If the user disconnects during a hand, add them to the forfeited players and update our hand's status
         if (handInProgress) {
@@ -184,8 +175,18 @@ module.exports = function (io) {
           const leaveSeat = await gameController.leaveSeat(leaveSeatObj);
           // const leaveSeat = await gameController.removeUserFromTables(userId)
           if (!leaveSeat) return;
-          io.in(room).emit('player_leave', leaveSeatObj);
           emitUpdatedTable(tableId, io);
+          console.log('giving', userId, 'their chips', leaveSeatObj.tableBalance);
+          console.log('giving', userId, 'their chips', leaveSeatObj.tableBalance);
+          console.log('giving', userId, 'their chips', leaveSeatObj.tableBalance);
+          console.log('giving', userId, 'their chips', leaveSeatObj.tableBalance);
+          console.log('giving', userId, 'their chips', leaveSeatObj.tableBalance);
+          console.log('giving', userId, 'their chips', leaveSeatObj.tableBalance);
+          console.log('giving', userId, 'their chips', leaveSeatObj.tableBalance);
+          console.log('giving', userId, 'their chips', leaveSeatObj.tableBalance);
+          console.log('giving', userId, 'their chips', leaveSeatObj.tableBalance);
+          console.log('giving', userId, 'their chips', leaveSeatObj.tableBalance);
+          io.in(userId).emit('player_leave', leaveSeatObj);
 
           // if theres other bets continue timer, otherwise cancel
           if (isNoBetsLeft(tableId)) {
@@ -208,6 +209,17 @@ module.exports = function (io) {
         const userTables = await gameController.getUserTables(userId);
         if (userTables) {
           for (let table of userTables) {
+            let tableId = table.tableId
+            let messageObj = {
+              tableId,
+              user: { username: 'Room', id: 1, rank: 0 },
+              message: {
+                content: `${username} has disconnected.`,
+                id: 0,
+              },
+            };
+     
+            io.in(tableId).emit('new_message', messageObj);
             handleDisconnect(table);
           }
         }
@@ -277,7 +289,6 @@ module.exports = function (io) {
         },
       };
 
-      console.log(updateObj);
 
       io.in(room).emit('update_table_name', updateObj);
       io.in(room).emit('new_message', messageObj);
@@ -307,7 +318,8 @@ module.exports = function (io) {
         };
 
         gameController.leaveSeat(leaveSeatObj);
-        socket.emit('close_table', leaveSeatObj);
+        // socket.emit('close_table', tableId);
+
         return;
       });
 
@@ -315,14 +327,12 @@ module.exports = function (io) {
       await gameController.closeTable(tableId);
 
       delete rooms[tableId];
+      io.to(room).emit('close_table', tableId)
+      console.log('--- close_table ---');
+      console.log(`${username} close_table ${room}.`);
+      console.log('-=-=-=-=-=-=-=-=-=');
     });
 
-    socket.on('leave_room', (room) => {
-      console.log('--- leave_room ---');
-      console.log(`${username} is leaving room ${room}.`);
-      console.log('-=-=-=-=-=-=-=-=-=');
-      socket.leave(room);
-    });
 
     // Broadcast message to specific room
     socket.on('message', async (messageObj) => {
@@ -431,15 +441,31 @@ module.exports = function (io) {
     });
 
     socket.on('leave_seat', async (seatObj) => {
-      // console.log('--------------');
-      // console.log(`leave_seat`);
-      // console.log('--------------');
+      console.log('--------------');
+      console.log(`leave_seat`);
+      console.log('--------------');
       const { tableId, seat } = seatObj;
       if (rooms[tableId] && rooms[tableId].seats[seat]) {
         let player = rooms[tableId].seats[seat];
         await handleDisconnect(player)
       }
     });
+
+
+    socket.on('leave_table', async (seatObj) => {
+      console.log('--------------');
+      console.log(`leave_table`);
+      console.log('--------------');
+      const { tableId, seat } = seatObj;
+      if (rooms[tableId] && rooms[tableId].seats[seat]) {
+        let player = rooms[tableId].seats[seat];
+        socket.leave(tableId);
+        await handleDisconnect(player)
+        // socket.emit('leave_table', tableId)
+
+      }
+    });
+
 
     socket.on('place_bet', async (betObj) => {
       const { bet, tableId, seat } = betObj;
@@ -460,8 +486,7 @@ module.exports = function (io) {
         rooms[tableId].seats[seat].tableBalance -= bet;
       }
 
-      console.log(rooms);
-      console.log(rooms[tableId]);
+
 
       // Countdown duration
       const countdownDuration = 5000; // 5 seconds
@@ -469,9 +494,6 @@ module.exports = function (io) {
       // Start a new countdown
       let countdownRemaining = countdownDuration;
 
-      if (rooms[tableId].countdownTimer) {
-        console.log(`Timer already running for table ${tableId}`);
-      }
 
       // Start a new countdown if one isn't already running
       if (!rooms[tableId].countdownTimer) {
@@ -481,7 +503,6 @@ module.exports = function (io) {
           if (countdownRemaining <= 0) {
             // if theres bets, start hand otherwise cancel
             if (isNoBetsLeft(tableId)) {
-              console.log('NO BETS!');
               stopTimer(tableId);
               return;
             }
@@ -528,9 +549,6 @@ module.exports = function (io) {
       io.in(room).emit('new_bet', betObj);
       io.in(room).emit('countdown_update', countdownObj);
 
-      console.log('--------------');
-      console.log(`Bet(${bet}) received from ${username} @room ${room}`);
-      console.log('--------------');
     });
 
     socket.on('remove_last_bet', async (betObj) => {
@@ -549,11 +567,7 @@ module.exports = function (io) {
         stopTimer(tableId);
       }
 
-      console.log('--------------');
-      console.log(
-        `Removing last bet(${lastBet}) received from ${username} @room ${room}`
-      );
-      console.log('--------------');
+
     });
 
     socket.on('remove_all_bet', async (betObj) => {
@@ -573,9 +587,6 @@ module.exports = function (io) {
         stopTimer(tableId);
       }
 
-      console.log('--------------');
-      console.log(`Removing all bets received from ${username} @room ${room}`);
-      console.log('--------------');
     });
 
     function isNoBetsLeft(tableId) {
@@ -597,6 +608,7 @@ module.exports = function (io) {
       if (rooms[tableId] && rooms[tableId].countdownTimer) {
         clearInterval(rooms[tableId].countdownTimer);
         delete rooms[tableId].countdownTimer;
+        rooms[tableId].countdownRemaining = 0
 
         let countdownObj = {
           countdownRemaining: 0,
@@ -604,7 +616,6 @@ module.exports = function (io) {
         };
 
         io.in(room).emit('countdown_update', countdownObj);
-        console.log(`Timer stopped for tableId: ${tableId}`);
       }
     }
 
@@ -678,7 +689,7 @@ module.exports = function (io) {
 
     // starts game of blackjack for multiple players
     async function dealCards(tableId, io) {
-      console.log('------- DEALING CARDS -------');
+      // console.log('------- DEALING CARDS -------');
       let room = tableId;
 
       let dealObj = {
@@ -691,9 +702,9 @@ module.exports = function (io) {
 
       let roundId, deck;
 
-      console.log('------- dealObj -------');
-      console.log(dealObj);
-      console.log('------------------------');
+      // console.log('------- dealObj -------');
+      // console.log(dealObj);
+      // console.log('------------------------');
 
       // if no deck or deck cursor is past shuffle point
       // increment nonce and create new deck
@@ -732,16 +743,16 @@ module.exports = function (io) {
       // Set sorted seats for gameLoop
       rooms[tableId].sortedActivePlayers = sortedSeats;
 
-      console.log('------- sortedSeats -------');
-      console.log(sortedSeats);
-      console.log('------------------------');
+      // console.log('------- sortedSeats -------');
+      // console.log(sortedSeats);
+      // console.log('------------------------');
 
       let userTableIds = sortedSeats.map((seat) => seat.id);
 
-      console.log('------- ROUND ID -------');
-      console.log(userTableIds);
-      console.log(roundId);
-      console.log('------------------------');
+      // console.log('------- ROUND ID -------');
+      // console.log(userTableIds);
+      // console.log(roundId);
+      // console.log('------------------------');
 
       // Create hand for each active player
       const handIds = await gameController.createHands(userTableIds, roundId);
@@ -757,13 +768,13 @@ module.exports = function (io) {
       const drawnCardsAndDeck = drawCards(drawObj);
       const { drawnCards, newDeck } = drawnCardsAndDeck;
 
-      console.log('------- newDeck -------');
-      console.log(newDeck);
-      console.log('------------------------');
+      // console.log('------- newDeck -------');
+      // console.log(newDeck);
+      // console.log('------------------------');
 
-      console.log('------- drawnCards -------');
-      console.log(drawnCards);
-      console.log('------------------------');
+      // console.log('------- drawnCards -------');
+      // console.log(drawnCards);
+      // console.log('------------------------');
 
       rooms[tableId].deck = newDeck;
 
@@ -792,9 +803,9 @@ module.exports = function (io) {
           // Distribute the cards to the dealer
           let nextCard = drawnCards.shift();
           let modCard = nextCard % 51;
-          console.log('------- modCard -------');
-          console.log(modCard);
-          console.log('------------------------');
+          // console.log('------- modCard -------');
+          // console.log(modCard);
+          // console.log('------------------------');
           if (j === 1) {
             rooms[tableId].dealerCards.hiddenCards.push(modCard);
           } else {
@@ -806,12 +817,12 @@ module.exports = function (io) {
       // Set new cursor point, setDealers cards
       rooms[tableId].cursor += cardsToDraw;
 
-      console.log('_*_*_*_*_*_*_*_*_*_*_*_**_');
-      console.log('_*_*_*_*_*_*_*_*_*_*_*_**_');
-      console.log('cardsToDraw:', cardsToDraw);
-      console.log('NEW CURSOR:', rooms[tableId].cursor);
-      console.log('_*_*_*_*_*_*_*_*_*_*_*_**_');
-      console.log('_*_*_*_*_*_*_*_*_*_*_*_**_');
+      // console.log('_*_*_*_*_*_*_*_*_*_*_*_**_');
+      // console.log('_*_*_*_*_*_*_*_*_*_*_*_**_');
+      // console.log('cardsToDraw:', cardsToDraw);
+      // console.log('NEW CURSOR:', rooms[tableId].cursor);
+      // console.log('_*_*_*_*_*_*_*_*_*_*_*_**_');
+      // console.log('_*_*_*_*_*_*_*_*_*_*_*_**_');
 
       let updateObj = {
         tableId,
@@ -825,10 +836,10 @@ module.exports = function (io) {
       console.log(updateObj);
       io.in(room).emit('get_updated_table', updateObj);
 
-      console.log('------- dealer cards -------');
-      console.log(rooms[tableId].dealerCards.visibleCards[0]);
-      console.log(rooms[tableId].dealerCards.hiddenCards[0]);
-      console.log('------- ------------ -------');
+      // console.log('------- dealer cards -------');
+      // console.log(rooms[tableId].dealerCards.visibleCards[0]);
+      // console.log(rooms[tableId].dealerCards.hiddenCards[0]);
+      // console.log('------- ------------ -------');
 
       let dealerVisibleCard = rooms[tableId].dealerCards.visibleCards[0];
       let dealerHiddenCard = rooms[tableId].dealerCards.hiddenCards[0];
@@ -841,7 +852,7 @@ module.exports = function (io) {
       rooms[tableId].dealerCards.handSummary = dealerHand;
       rooms[tableId].dealerCards.bestValue = bestDealerValue;
 
-      console.log(rooms[tableId].dealerCards);
+      // console.log(rooms[tableId].dealerCards);
 
       let isAce = cardConverter[dealerVisibleCard].value === 11;
  
@@ -899,12 +910,12 @@ module.exports = function (io) {
     }
 
     async function gameLoop(tableId, io) {
-      console.log('------- GAME LOOP -------');
-      console.log('------- CURSOR -------');
-      console.log('');
-      console.log(rooms[tableId].cursor);
-      console.log('');
-      console.log('----------------------');
+      // console.log('------- GAME LOOP -------');
+      // console.log('------- CURSOR -------');
+      // console.log('');
+      // console.log(rooms[tableId].cursor);
+      // console.log('');
+      // console.log('----------------------');
       let room = tableId;
 
       // // Emit latest decision to clients
@@ -915,7 +926,6 @@ module.exports = function (io) {
 
       // If none, handle dealer turn
       if (!nextPlayer) {
-        console.log('DEALERS TURN');
         await handleDealerTurn(tableId, io);
         return;
       }
@@ -929,7 +939,6 @@ module.exports = function (io) {
 
     //returns next player or false if all players have acted
     function getNextPlayer(tableId) {
-      console.log('------- GETTING NEXT PLAYER -------');
 
       let sortedActivePlayers = rooms[tableId].sortedActivePlayers;
       let nextPlayer;
@@ -944,7 +953,6 @@ module.exports = function (io) {
     }
 
     async function handlePlayerTurn(tableId, player, io) {
-      console.log('HANDLING PLAYER TURN');
       let room = tableId;
 
       //Iterate over each player's hand
@@ -965,11 +973,6 @@ module.exports = function (io) {
       }
 
       for (let [key, handData] of playerHands) {
-        console.log('-=-=-=-=-=-');
-        console.log(player);
-        console.log(handData);
-        console.log('-=-=-=-=-=-');
-
         if (handData.turnEnded) continue;
 
         let cards = handData.cards;
@@ -1019,12 +1022,16 @@ module.exports = function (io) {
         return new Promise((resolve, reject) => {
           rooms[tableId].timerId = setInterval(async () => {
             rooms[tableId].actionTimer -= 1000; // Decrement by 1 second
-            console.log('COUNTDOWN: ', rooms[tableId].actionTimer);
+            // console.log('COUNTDOWN: ', rooms[tableId].actionTimer);
+            // console.log('COUNTDOWN: ', rooms[tableId].actionTimer);
+            // console.log('COUNTDOWN: ', rooms[tableId].actionTimer);
+            // console.log('COUNTDOWN: ', rooms[tableId].actionTimer);
+            // console.log('COUNTDOWN: ', rooms[tableId].actionTimer);
+            // console.log('COUNTDOWN: ', rooms[tableId].actionTimer);
             // If timer reaches 0, clear interval and emit a timeout event
             if (rooms[tableId].actionTimer <= 0) {
               clearInterval(rooms[tableId].timerId);
 
-              console.log('TURN OVER');
               // Set turnEnded to true for this hand
               handData.turnEnded = true;
               resolve(); // Resolve the promise to let the game loop continue
@@ -1068,9 +1075,9 @@ module.exports = function (io) {
       io.in(room).emit('get_updated_table', updateObj);
       io.in(room).emit('new_message', messageObj);
 
-      console.log('--------------');
-      console.log(`Handling action(${action}) for ${username} @room ${room}`);
-      console.log('--------------');
+      // console.log('--------------');
+      // console.log(`Handling action(${action}) for ${username} @room ${room}`);
+      // console.log('--------------');
 
       if (action === 'hit') {
         await playerHit(actionObj, io);
@@ -1360,34 +1367,12 @@ module.exports = function (io) {
       let room = tableId;
 
 
-      console.log('processForfeitedPlayers');
-      console.log('processForfeitedPlayers');
-      console.log('processForfeitedPlayers');
-      console.log('processForfeitedPlayers');
-      console.log('processForfeitedPlayers');
-      console.log('processForfeitedPlayers');
-
-
       console.log(rooms[tableId].dealerCards);
 
 
       if (rooms[tableId] && rooms[tableId].forfeitedPlayers) {
-        console.log('-=-=-=-=-=-=-=--');
-        console.log('-=-=-=-=-=-=-=--');
-        console.log(rooms[tableId].forfeitedPlayers);
-        console.log('-=-=-=-=-=-=-=--');
-        console.log('-=-=-=-=-=-=-=--');
-        console.log('-=-=-=-=-=-=-=--');
         let forfeitedPlayers = rooms[tableId].forfeitedPlayers;
         for (let player of forfeitedPlayers) {
-
-          console.log('************');
-          console.log('************');
-          console.log(player);
-          console.log('************');
-          console.log('************');
-
-
 
           let { totalWinnings } = await calculateAndSavePlayerHand(
             player,
@@ -1398,25 +1383,9 @@ module.exports = function (io) {
 
           updateAndClearPlayerData(player, totalWinnings, tableId);
 
-
-          console.log('-=-=-=-=-=-=-=--');
-          console.log('-=-=-=-=-=-=-=--');
-          console.log(player);
-          console.log('-=-=-=-=-=-=-=--');
-          console.log('-=-=-=-=-=-=-=--');
-
-
           const { userId, seat } = player;
           let userTableId = player.id;
           let tableBalance = player.tableBalance;
-
-
-          console.log('-=-=-=-=-=-=-=--');
-          console.log('-=-=-=-=-=-=-=--');
-          console.log(tableBalance);
-          console.log(player);
-          console.log('-=-=-=-=-=-=-=--');
-          console.log('-=-=-=-=-=-=-=--');
 
           // Remove the player from the room state
           if (rooms[tableId] && rooms[tableId]?.seats?.[seat]) {
@@ -1433,8 +1402,9 @@ module.exports = function (io) {
           emitUpdatedTable(tableId, io);
 
           await gameController.leaveSeat(leaveSeatObj);
-          io.in(room).emit('player_leave', leaveSeatObj);
-          // io.in(tableId).emit('remove_player', leaveSeatObj);
+          // io.in(room).emit('player_leave', leaveSeatObj);
+          io.in(userId).emit('player_leave', leaveSeatObj);
+          socket.leave(room);
         }
       } 
     }
@@ -1572,7 +1542,6 @@ module.exports = function (io) {
     }
 
     async function endRound(tableId, io) {
-      console.log('------- END ROUND -------');
       let room = tableId;
       let bestDealerValue = rooms[tableId].dealerCards.bestValue;
       let finishedPlayers = rooms[tableId].sortedFinishedPlayers;
@@ -1589,9 +1558,9 @@ module.exports = function (io) {
       for (let player of finishedPlayers) {
         // Calculate and save player hand results
 
-        console.log('------- player -------');
-        console.log(player);
-        console.log('----------------------');
+        // console.log('------- player -------');
+        // console.log(player);
+        // console.log('----------------------');
 
         let { totalWinnings } = await calculateAndSavePlayerHand(
           player,
@@ -1600,9 +1569,9 @@ module.exports = function (io) {
           io
         );
 
-        console.log('------- totalWinnings -------');
-        console.log(totalWinnings);
-        console.log('----------------------');
+        // console.log('------- totalWinnings -------');
+        // console.log(totalWinnings);
+        // console.log('----------------------');
 
         // Update and clear player data
         updateAndClearPlayerData(player, totalWinnings, tableId);

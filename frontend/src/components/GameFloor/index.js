@@ -40,12 +40,6 @@ function GameFloor() {
   const [currTables, setCurrTables] = useState('');
 
 
-  console.log(openTablesByGameType);
-
-
-
-
-
 
   // handle loading active games on component load
   useEffect(() => {
@@ -61,19 +55,16 @@ function GameFloor() {
   }, [allGames]);
 
   const goBack = () => {
-    console.log('goBack');
     dispatch(showGamesAction());
   };
 
   const checkTables = (gameType) => {
     // if(gameType === currTables) return
-    console.log(gameType);
     setCurrTables(gameType);
     dispatch(gameActions.getTablesByType(gameType));
   };
 
   const viewTable = (table) => {
-    console.log('viewing table');
     //join table's socket
 
     if (!user) {
@@ -84,7 +75,6 @@ function GameFloor() {
       if (currentTables[table.id]) {
         socket.emit('view_room', table.id);
       } else {
-        console.log(table);
         if(table.private){
           setUpdateObj({tableId:table.id})
           openModal('joinPrivateGame');

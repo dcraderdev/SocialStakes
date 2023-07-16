@@ -120,21 +120,21 @@ const gamesReducer = (state = initialState, action) => {
 
 
     
-    case DELETE_TABLE:{
-      const tableId = action.payload
-      let updatedCurrentTables = {...newState.currentTables};
-      delete updatedCurrentTables[tableId]
+    // case DELETE_TABLE:{
+    //   const tableId = action.payload
+    //   let updatedCurrentTables = {...newState.currentTables};
+    //   delete updatedCurrentTables[tableId]
 
-      //Check if any tables left, if so switch to the first one
-      const tableIds = Object.keys(updatedCurrentTables);
-      let activeTable = null;
-      if (tableIds.length > 0) {
-        activeTable = updatedCurrentTables[tableIds[0]];
-        return { ...newState, currentTables: updatedCurrentTables, activeTable };
-      }
-      return { ...newState, currentTables: updatedCurrentTables, activeTable, showGames: true, showTables: false };
+    //   //Check if any tables left, if so switch to the first one
+    //   const tableIds = Object.keys(updatedCurrentTables);
+    //   let activeTable = null;
+    //   if (tableIds.length > 0) {
+    //     activeTable = updatedCurrentTables[tableIds[0]];
+    //     return { ...newState, currentTables: updatedCurrentTables, activeTable };
+    //   }
+    //   return { ...newState, currentTables: updatedCurrentTables, activeTable, showGames: true, showTables: false };
 
-    }
+    // }
 
 
  

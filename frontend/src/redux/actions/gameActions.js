@@ -130,7 +130,9 @@ export const takeSeatAction = (seatObj) => {
   };
 };
 
+
 export const leaveSeatAction = (seatObj) => {
+  console.log(seatObj);
   return {
     type: LEAVE_SEAT,
     payload: seatObj,
@@ -186,15 +188,6 @@ export const changeActiveTablesAction = () => {
     type: SHOW_ACTIVE_TABLES
   };
 };
-// export const addMessageAction = (messageObj) => {
-//   console.log('here');
-//   console.log(messageObj);
-
-//   return {
-//     type: ADD_MESSAGE,
-//     payload: messageObj
-//   };
-// };
 
 
 export const addBalanceAction = () => {

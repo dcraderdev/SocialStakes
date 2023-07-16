@@ -8,6 +8,10 @@ export const CHANGE_TABLE_THEME = 'users/CHANGE_TABLE_THEME';
 export const CHANGE_NEON_THEME = 'users/CHANGE_NEON_THEME';
 
 
+export const GET_USER_STATS = 'users/GET_USER_STATS';
+
+
+
 //csrf
 export const SET_CSRF_TOKEN = 'set/SET_CSRF_TOKEN';
 

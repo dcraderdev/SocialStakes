@@ -37,7 +37,6 @@ const gamesReducer = (state = initialState, action) => {
 
   switch (action.type) {
     case GET_GAMES:{
-      console.log(action.payload);
       const games = action.payload.reduce((acc, game) => {
         if (!acc[game.gameType]) {
           acc[game.gameType] = game;
@@ -55,7 +54,6 @@ const gamesReducer = (state = initialState, action) => {
     case SORT_TABLES: {
       const {sortBy, direction} = action.payload
 
-      console.log(newState.openTablesByGameType);
       let tablesToSort = [...newState.openTablesByGameType]
     
       tablesToSort.sort((a, b) => {
@@ -102,7 +100,6 @@ const gamesReducer = (state = initialState, action) => {
 
     case CREATE_TABLE:{
       
-      console.log(action.payload.table);
       const table = action.payload.table
 
       let updatedCurrentTables = {...newState.currentTables};
@@ -124,7 +121,6 @@ const gamesReducer = (state = initialState, action) => {
 
     
     case DELETE_TABLE:{
-      console.log(action.payload);
       const tableId = action.payload
       let updatedCurrentTables = {...newState.currentTables};
       delete updatedCurrentTables[tableId]
@@ -145,15 +141,14 @@ const gamesReducer = (state = initialState, action) => {
     
     case UPDATE_TABLE:{
       const {tableId, table} = action.payload
-      console.log('-=-=-=-=-=-=-=-=-=');
-      console.log('-=-=-=-=-=-=-=-=-=');
-      console.log(action.payload);
-      console.log('-=-=-=-=-=-=-=-=-=');
-      console.log('-=-=-=-=-=-=-=-=-=');
+      // console.log('-=-=-=-=-=-=-=-=-=');
+      // console.log('-=-=-=-=-=-=-=-=-=');
+      // console.log(action.payload);
+      // console.log('-=-=-=-=-=-=-=-=-=');
+      // console.log('-=-=-=-=-=-=-=-=-=');
 
       let updatedCurrentTables = {...newState.currentTables};
 
-      console.log(updatedCurrentTables);
 
       if (updatedCurrentTables[tableId]) {
         const currentTable = updatedCurrentTables[tableId];
@@ -181,12 +176,10 @@ const gamesReducer = (state = initialState, action) => {
     
 
     case VIEW_TABLE:{
-      console.log(action.payload);
       return {...newState, activeTable:action.payload, showGames: false, showTables: false, showActiveTable: true}
     }
 
     case JOIN_TABLE:{
-      console.log(action.payload);
       let newCurrentTables = {...newState.currentTables}
       newCurrentTables[action.payload.id] = action.payload
       newCurrentTables[action.payload.id].messages = []
@@ -195,14 +188,10 @@ const gamesReducer = (state = initialState, action) => {
 
 
     case LEAVE_TABLE: {
-      console.log('leaving');
-    
-      console.log(action.payload);
       let newCurrentTables = { ...newState.currentTables };
       let activeTable = { ...newState.activeTable}
 
       delete newCurrentTables[action.payload];
-
 
       // if active table still exists dont switch
       if(newCurrentTables[activeTable.id]){
@@ -252,7 +241,7 @@ const gamesReducer = (state = initialState, action) => {
       return { ...newState, currentTables: newCurrentTables };
     }
     
-
+ 
     case SHOW_GAMES:{
       return {...newState, showCreatingGame:false, showGames: true, showTables: false, activeTable: null}
     }
@@ -293,7 +282,6 @@ const gamesReducer = (state = initialState, action) => {
     
       const playerSeat = { ...newCurrentTable.tableUsers[seat] };
 
-      console.log(playerSeat);
 
       playerSeat.pendingBet -= lastBet;
       playerSeat.tableBalance += lastBet;
@@ -323,10 +311,6 @@ const gamesReducer = (state = initialState, action) => {
     case PLAYER_DISCONNECT: {
       const {seat, tableId, timer} = action.payload;
 
-      console.log(seat);
-      console.log(tableId);
-      console.log(timer);
-    
       const newCurrentTables = { ...newState.currentTables };
       const newCurrentTable = { ...newCurrentTables[tableId] };
     
@@ -342,9 +326,6 @@ const gamesReducer = (state = initialState, action) => {
     case PLAYER_RECONNECT: {
       const {seat, tableId, timer} = action.payload;
 
-      console.log(seat);
-      console.log(tableId);
-      console.log(timer);
     
       const newCurrentTables = { ...newState.currentTables };
       const newCurrentTable = { ...newCurrentTables[tableId] };
@@ -360,7 +341,6 @@ const gamesReducer = (state = initialState, action) => {
     
     case REMOVE_PLAYER: {
       const {seat, tableId} = action.payload;
-      console.log(seat);
       
       const newCurrentTables = { ...newState.currentTables };
       const newCurrentTable = { ...newCurrentTables[tableId] };
@@ -374,24 +354,18 @@ const gamesReducer = (state = initialState, action) => {
 
 
     case PLAYER_ADD_TABLE_FUNDS: {
-      console.log(action.payload);
       const {seat, tableId, amount} = action.payload;
       
       const newCurrentTables = { ...newState.currentTables };
       const newCurrentTable = { ...newCurrentTables[tableId] };
       
       const newCurrentSeat = newCurrentTable.tableUsers[seat];
-      console.log(newCurrentTable.tableUsers);
-
-      console.log(newCurrentSeat);
       newCurrentSeat.tableBalance += amount;
       
       return { ...newState, currentTables: newCurrentTables };
     }
 
     case UPDATE_TABLE_COUNTDOWN: {
-      console.log(action.payload);
-      console.log('here');
 
       const {countdownRemaining, tableId} = action.payload;
       
@@ -401,31 +375,21 @@ const gamesReducer = (state = initialState, action) => {
 
       newCurrentTable.countdown = countdownRemaining
       newCurrentTables[tableId] = newCurrentTable;
-
-      console.log(newCurrentTable);
-      
 
       
       return { ...newState, currentTables: newCurrentTables };
     }
 
     case COLLECT_BETS: {
-      console.log(action.payload);
-      console.log('here');
 
       const {countdownRemaining, tableId} = action.payload;
       
       const newCurrentTables = { ...newState.currentTables };
       const newCurrentTable = { ...newCurrentTables[tableId] };
 
-
       newCurrentTable.countdown = countdownRemaining
       newCurrentTables[tableId] = newCurrentTable;
 
-      console.log(newCurrentTable);
-      
-
-      
       return { ...newState, currentTables: newCurrentTables };
     }
     
@@ -447,7 +411,6 @@ const gamesReducer = (state = initialState, action) => {
       newCurrentTables[tableId] = newCurrentTable;
       return { ...newState, currentTables: newCurrentTables };
     }
-
 
 
   

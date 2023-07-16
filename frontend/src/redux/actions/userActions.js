@@ -1,4 +1,4 @@
-import { REMOVE_USER, SET_USER, SET_THEMES, CHANGE_NEON_THEME, CHANGE_TABLE_THEME } from './actionTypes'
+import { REMOVE_USER, SET_USER, SET_THEMES, CHANGE_NEON_THEME, CHANGE_TABLE_THEME, GET_USER_STATS } from './actionTypes'
 
 
 
@@ -36,5 +36,14 @@ export const changeTableThemeAction = (theme) => {
   return {
     type: CHANGE_TABLE_THEME,
     payload: theme
+  };
+};
+
+
+export const getUserStatsAction = (stats) => {
+  console.log(stats);
+  return {
+    type: GET_USER_STATS,
+    payload: stats
   };
 };

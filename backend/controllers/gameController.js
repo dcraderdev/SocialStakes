@@ -231,18 +231,6 @@ const gameController = {
 
   async removeUserFromTables(userId) {
 
-    console.log('REMOVING');
-    console.log('REMOVING');
-    console.log('REMOVING');
-    console.log('REMOVING');
-    console.log('REMOVING');
-    console.log('REMOVING');
-    console.log('REMOVING');
-    console.log('REMOVING');
-    console.log('REMOVING');
-    console.log('REMOVING');
-    console.log('REMOVING');
-
     const userTables = await UserTable.findAll({where:{userId,active:true}})
     const userToUpdate = await User.findByPk(userId);
 
@@ -253,22 +241,14 @@ const gameController = {
     let sumOfTableBalances = 0;
 
     for(let userTable of userTables){
-console.log('ADDING BALANCE: ', userTable.tableBalance);
 
       sumOfTableBalances += userTable.tableBalance; 
       userTable.active = false;
       await userTable.save();
     }
   
-console.log('CURRENT BALANCE: ', userToUpdate.balance);
-
     userToUpdate.balance += sumOfTableBalances;
-
-    console.log('NEW BALANCE: ', userToUpdate.balance);
-
     await userToUpdate.save();
-
-
     return
   },
 
@@ -347,11 +327,6 @@ console.log('CURRENT BALANCE: ', userToUpdate.balance);
     const userTable = await UserTable.findByPk(userTableId);
     const userToUpdate = await User.findByPk(userId);
 
-
-    console.log(userId);
-    console.log(userTableId);
-    console.log(tableBalance);
-
     if (!userTable || !userToUpdate) {
       return false;
     }
@@ -425,11 +400,6 @@ console.log('CURRENT BALANCE: ', userToUpdate.balance);
 
   async dealCards(dealObj) {
     const {tableId,gameSessionId, blockHash, nonce, decksUsed} = dealObj
-
-    console.log('-=-=-=-=DEALING CARDS-=-=-=-=-=');
-    console.log(dealObj);
-
-
 
     const newRound = await Round.create({tableId, active:true})
     if(!newRound){
@@ -537,6 +507,43 @@ async saveDealerHand(handObj) {
   return 
 },
 
+
+
+// Save hand at end of blackjack round
+async getUserStats(userId) {
+
+  
+  const userStats = await User.findByPk(userId, {
+    include: [
+      {
+        model: UserTable,
+        as: 'tables',
+        include: [
+          {
+            model: Hand,
+            attributes: ['id', 'cards', 'result', 'profitLoss', 'insuranceBet', ],
+            include: [
+              {
+                model: Round,
+                attributes: ['id', 'cards' ]
+              },
+            ],
+          },
+        ],
+        attributes: ['id', 'tableId', 'userId', 'active'],
+      },
+    ],
+    attributes: ['id', 'username', 'balance', 'rank'],
+  });
+
+  if(!userStats){
+    return false
+  } 
+
+
+
+  return userStats
+},
 
 
 

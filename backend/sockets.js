@@ -47,7 +47,7 @@ module.exports = function (io) {
     const username = socket.handshake.query.username;
 
     let socketId = socket.id;
-
+ 
     // console.log('-=-=-=-=-=-=-=-=-=');
     // console.log('--- CONNECTING ---');
     // console.log('SOCKET ID', socketId);

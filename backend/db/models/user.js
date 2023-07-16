@@ -52,13 +52,14 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     static associate(models) {
+      User.hasMany(models.UserTable, { foreignKey: 'userId', as: 'tables' });
 
       User.hasMany(models.Friendship, { foreignKey: 'user1Id', as: 'user1Id' });
       User.hasMany(models.Friendship, { foreignKey: 'user2Id', as: 'user2Id', });
       User.hasMany(models.Friendship, {foreignKey: 'actionUserId', as: 'actionUser' });
 
 
-      User.belongsToMany(models.Table, { through: 'UserTables', foreignKey: 'userId', as: 'tables' });
+      User.belongsToMany(models.Table, { through: 'UserTables', foreignKey: 'userId', as: 'userTables' });
 
       User.hasMany(models.Message, { foreignKey: 'userId'});
 

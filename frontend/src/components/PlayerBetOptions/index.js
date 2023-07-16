@@ -114,12 +114,14 @@ import { ModalContext } from '../../context/ModalContext';
 
 
   useEffect(() => {
+    setCanSplit(false)
+    setCanDouble(false)
     let hasHand = currentTables?.[activeTable.id]?.tableUsers?.[currentSeat]?.hands?.[actionHand]
-
     if(hasHand){
       let cards = hasHand.cards
+      let bet = hasHand.bet
 
-      if(cards.length === 2){
+      if(cards.length === 2 && tableBalance >= bet){
         let convertedCardOne = cardConverter[cards[0]]
         let convertedCardTwo = cardConverter[cards[1]]
         if(convertedCardOne.value === convertedCardTwo.value){
@@ -129,7 +131,7 @@ import { ModalContext } from '../../context/ModalContext';
       }
     }
 
-  }, [actionHand, currentSeat, currentTables, activeTable]);  
+  }, [actionHand, currentSeat, currentTables, activeTable, tableBalance]);  
 
 
 

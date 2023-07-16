@@ -53,14 +53,22 @@
 }
 
 
-
-.tableid-container{
+.tableid-container,
+.tablename-container{
   position: relative;
-  top: 240px;
+  top: 200px;
   left: -10px;
-  width: 370px;
+  width: fit-content;
   justify-content: space-between;
 }
+
+.tableid-container{
+  top: 240px;
+}
+
+
+
+
 
 .settingsmodal-invite-container{
   position: relative;

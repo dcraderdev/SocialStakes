@@ -176,16 +176,6 @@ module.exports = function (io) {
           // const leaveSeat = await gameController.removeUserFromTables(userId)
           if (!leaveSeat) return;
           emitUpdatedTable(tableId, io);
-          console.log('giving', userId, 'their chips', leaveSeatObj.tableBalance);
-          console.log('giving', userId, 'their chips', leaveSeatObj.tableBalance);
-          console.log('giving', userId, 'their chips', leaveSeatObj.tableBalance);
-          console.log('giving', userId, 'their chips', leaveSeatObj.tableBalance);
-          console.log('giving', userId, 'their chips', leaveSeatObj.tableBalance);
-          console.log('giving', userId, 'their chips', leaveSeatObj.tableBalance);
-          console.log('giving', userId, 'their chips', leaveSeatObj.tableBalance);
-          console.log('giving', userId, 'their chips', leaveSeatObj.tableBalance);
-          console.log('giving', userId, 'their chips', leaveSeatObj.tableBalance);
-          console.log('giving', userId, 'their chips', leaveSeatObj.tableBalance);
           io.in(userId).emit('player_leave', leaveSeatObj);
 
           // if theres other bets continue timer, otherwise cancel
@@ -221,6 +211,7 @@ module.exports = function (io) {
      
             io.in(tableId).emit('new_message', messageObj);
             handleDisconnect(table);
+            socket.leave(tableId)
           }
         }
       }, timer);
@@ -295,9 +286,7 @@ module.exports = function (io) {
     });
 
     socket.on('view_room', async (tableId) => {
-      let room = tableId;
       let table = { id: tableId };
-
       socket.emit('view_table', table);
     });
 
@@ -318,8 +307,7 @@ module.exports = function (io) {
         };
 
         gameController.leaveSeat(leaveSeatObj);
-        // socket.emit('close_table', tableId);
-
+        io.in(userId).emit('player_leave', leaveSeatObj);
         return;
       });
 
@@ -328,11 +316,24 @@ module.exports = function (io) {
 
       delete rooms[tableId];
       io.to(room).emit('close_table', tableId)
-      console.log('--- close_table ---');
-      console.log(`${username} close_table ${room}.`);
-      console.log('-=-=-=-=-=-=-=-=-=');
-    });
 
+
+      // // Get the connected sockets in the room
+      // let sockets = rooms[tableId].connections || {}
+      // console.log(sockets);
+
+      // // Disconnect all sockets in the room
+      // for (const [userId, socketInfo] in sockets) {
+      //   console.log(userId);
+      //   console.log(socketInfo);
+      //   // (socketId).disconnect();
+      // }
+
+
+      // console.log('--- close_table ---');
+      // console.log(`${username} close_table ${room}.`);
+      // console.log('-=-=-=-=-=-=-=-=-=');
+    });
 
     // Broadcast message to specific room
     socket.on('message', async (messageObj) => {
@@ -461,8 +462,6 @@ module.exports = function (io) {
         let player = rooms[tableId].seats[seat];
         socket.leave(tableId);
         await handleDisconnect(player)
-        // socket.emit('leave_table', tableId)
-
       }
     });
 

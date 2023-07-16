@@ -86,7 +86,7 @@ const SettingsModal = () => {
     closeModal()
     openModal('closeTable')
     setUpdateObj({tableId:activeTable.id})
-    setIsEditingTableName(true)
+    setIsEditingTableName(false)
   };
   
 
@@ -155,10 +155,14 @@ const SettingsModal = () => {
         </div>
       </div>
 
-
-        <div className='flex tableid-container'>
+      <div className='flex tableid-container'>
           <div className='flex'>Table Id: </div>
-          <div className='flex'>{activeTable?.id} </div>
+          <div className='flex marginleft'>{activeTable?.id || ''} </div>
+        </div>
+
+        <div className='flex tablename-container'>
+          <div className='flex'>Table Name: </div>
+          <div className='flex marginleft'>{currentTables?.[activeTable?.id]?.tableName || ''} </div>
         </div>
 
 

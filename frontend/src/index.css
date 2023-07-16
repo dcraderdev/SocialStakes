@@ -260,6 +260,10 @@ body{
   justify-content: space-between;
 }
 
+.marginleft{
+  margin-left: 5px;
+}
+
 
 .balancemodal-disabled{
   color: rgba(255, 255, 255, 0.297);

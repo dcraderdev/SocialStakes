@@ -22,7 +22,8 @@ import {
   viewTableAction,
   offerInsuranceAction, 
   rescindInsuranceAction,
-  joinTableAction
+  joinTableAction,
+  leaveTableAction
 } from '../redux/actions/gameActions';
 
 
@@ -69,13 +70,14 @@ const SocketProvider = ({ children }) => {
         dispatch(joinTableAction(table));
       }); 
 
-      socket.on('close_table', (leaveSeatObj) => {
-        const { tableId } = leaveSeatObj
+      socket.on('close_table', (tableId) => {
         openModal('tableClosedModal')
-        dispatch(deleteTableAction(tableId));
-        dispatch(leaveSeatAction(leaveSeatObj)); 
+        dispatch(leaveTableAction(tableId));
       }); 
 
+      socket.on('leave_table', (tableId) => {
+        dispatch(leaveTableAction(tableId));
+      }); 
 
       socket.on('update_table_name', (updateObject) => {
         dispatch(updateTableNameAction(updateObject));
@@ -126,7 +128,7 @@ const SocketProvider = ({ children }) => {
       socket.on('offer_insurance', (tableId) => {
         dispatch(offerInsuranceAction(tableId)); 
       });  
-
+ 
       socket.on('remove_insurance_offer', (tableId) => {
         dispatch(rescindInsuranceAction(tableId)); 
       }); 
@@ -140,9 +142,9 @@ const SocketProvider = ({ children }) => {
         dispatch(playerReconnectAction({seat, tableId, timer})); 
       });  
 
-      socket.on('remove_player', (leaveSeatObj) => {
-        dispatch(removePlayerAction(leaveSeatObj)); 
-      });  
+      // socket.on('remove_player', (leaveSeatObj) => {
+      //   dispatch(removePlayerAction(leaveSeatObj)); 
+      // });  
 
       socket.on('player_add_table_funds', (seatObj) => {
         dispatch(playerAddTableFundsAction(seatObj)); 
@@ -163,6 +165,7 @@ const SocketProvider = ({ children }) => {
         socket.off('view_table');
         socket.off('join_table');
         socket.off('close_table');
+        socket.off('leave_table');
         socket.off('update_table_name');
         socket.off('get_updated_table');
         socket.off('new_message');
@@ -178,7 +181,7 @@ const SocketProvider = ({ children }) => {
         socket.off('player_disconnected');
         socket.off('player_reconnected');
         socket.off('player_add_table_funds');
-        socket.off('remove_player');
+        // socket.off('remove_player');
         socket.off('countdown_update');
         socket.off('collect_bets');
 

@@ -50,8 +50,6 @@ function CloseTableModal() {
   
 
   const closeTable = () => {
-    console.log('closing table');
-    console.log(isHandInProgress);
     if(isHandInProgress){
       setShowValidationError(true)
       setTimeout(() => {
@@ -73,10 +71,6 @@ function CloseTableModal() {
     openModal('tableSettings')
     setUpdateObj(null)
   }
-
-
-
-
 
  
   return (

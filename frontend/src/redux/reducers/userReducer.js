@@ -121,15 +121,15 @@ const userReducer = (state = initialState, action) => {
 
 
     case GET_USER_STATS: {
-      console.log('-*_*_*_*_*_*_*_*_*_*_*_*_*_**_');
-      console.log('-*_*_*_*_*_*_*_*_*_*_*_*_*_**_');
-      console.log('-*_*_*_*_*_*_*_*_*_*_*_*_*_**_');
-      console.log('-*_*_*_*_*_*_*_*_*_*_*_*_*_**_');
-      console.log(action.payload);
-      console.log('-*_*_*_*_*_*_*_*_*_*_*_*_*_**_');
-      console.log('-*_*_*_*_*_*_*_*_*_*_*_*_*_**_');
-      console.log('-*_*_*_*_*_*_*_*_*_*_*_*_*_**_');
-      console.log('-*_*_*_*_*_*_*_*_*_*_*_*_*_**_');
+      // console.log('-*_*_*_*_*_*_*_*_*_*_*_*_*_**_');
+      // console.log('-*_*_*_*_*_*_*_*_*_*_*_*_*_**_');
+      // console.log('-*_*_*_*_*_*_*_*_*_*_*_*_*_**_');
+      // console.log('-*_*_*_*_*_*_*_*_*_*_*_*_*_**_');
+      // console.log(action.payload);
+      // console.log('-*_*_*_*_*_*_*_*_*_*_*_*_*_**_');
+      // console.log('-*_*_*_*_*_*_*_*_*_*_*_*_*_**_');
+      // console.log('-*_*_*_*_*_*_*_*_*_*_*_*_*_**_');
+      // console.log('-*_*_*_*_*_*_*_*_*_*_*_*_*_**_');
 
       let newStats = action.payload
       return { ...newState, stats:newStats};

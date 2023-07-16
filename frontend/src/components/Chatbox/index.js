@@ -172,9 +172,6 @@ const Chatbox = ({showMessages}) => {
     };
 
 
-console.log(editedMessageId);
-
-
   return(
 
   <div className='chatbox-wrapper'> 

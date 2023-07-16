@@ -50,14 +50,6 @@ router.post('/create',requireAuth, async (req, res, next) => {
   
   const {tableObj} = req.body
 
-  console.log('=-=-=-=-=-=-');
-  console.log('=-=-=-=-=-=-');
-  console.log('=-=-=-=-=-=-');
-  console.log(tableObj);
-  console.log('=-=-=-=-=-=-');
-  console.log('=-=-=-=-=-=-');
-  console.log('=-=-=-=-=-=-');
-
   const table = await gameController.createTable(tableObj)
 
   if (!table) {
@@ -80,8 +72,6 @@ router.put('/:tableId/edit', async (req, res, next) => {
   const table = await gameController.editTableById(tableObj)
   if (!table) {
     const err = new Error('table not found');
-    console.log(err);
-    console.log(err.status);
     err.statusCode = 404;
     err.status = 404;
     return next(err);
@@ -95,13 +85,9 @@ router.get('/:tableId', async (req, res, next) => {
 
   const {tableId} = req.params
 
-  console.log(tableId);
-
   const table = await gameController.getTableById(tableId)
   if (!table) {
     const err = new Error('table not found');
-    console.log(err);
-    console.log(err.status);
     err.statusCode = 404;
     err.status = 404;
     return next(err);

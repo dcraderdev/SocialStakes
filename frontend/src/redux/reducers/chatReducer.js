@@ -21,8 +21,6 @@ const gamesReducer = (state = initialState, action) => {
   switch (action.type) {
 
     case ADD_MESSAGE: {
-      console.log('adding message');
-      console.log(action.payload);
       const { tableId, user, message } = action.payload;
 
       const newConversations = { ...newState.conversations };
@@ -37,14 +35,11 @@ const gamesReducer = (state = initialState, action) => {
         newConversations[tableId].messages.push(newMessage);
       }
 
-      console.log(newConversations);
     
       return { ...newState, conversations: newConversations };
     }
 
     case EDIT_MESSAGE: {
-      console.log('editing message');
-      console.log(action.payload);
       const {tableId, userId,  messageId, newContent } = action.payload;
 
       const newConversations = { ...newState.conversations };
@@ -64,14 +59,11 @@ const gamesReducer = (state = initialState, action) => {
         }
       }
 
-      console.log(newConversations);
     
       return { ...newState, conversations: newConversations };
     }
 
     case DELETE_MESSAGE: {
-      console.log('Deleting message');
-      console.log(action.payload);
       const {tableId, userId, messageId } = action.payload;
     
       const newConversations = { ...newState.conversations };
@@ -94,7 +86,6 @@ const gamesReducer = (state = initialState, action) => {
         }
       }
       
-      console.log(newConversations);
     
       return { ...newState, conversations: newConversations };
     }

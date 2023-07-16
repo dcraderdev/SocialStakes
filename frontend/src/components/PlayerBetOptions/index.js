@@ -153,26 +153,17 @@ import { ModalContext } from '../../context/ModalContext';
 
 
   const leaveTable = () => {
-    console.log('here');
 
     dispatch(leaveTableAction(activeTable.id));
   };
 
 const rebet = (multiplier) => {
   
-  if(!user) console.log('!user');
-  if(!isSitting) console.log('!isSitting');
-  if(lastTotalBet === 0) console.log('lastBets.length === 0');
-  
-  
-  
   if(!user) return
   if(!isSitting) return
   if(lastTotalBet === 0) return
   
-  
   setHasBet(true)
-  console.log(multiplier);
 
   let bet = lastTotalBet;
   // double the bet if multiplier is true
@@ -199,15 +190,8 @@ const rebet = (multiplier) => {
 
   
   const undoBet = (multiplier) => {
-    
-    
-    console.log(lastBets);
-    console.log(currentSeat);
-    console.log(currentTables[activeTable.id].tableUsers[currentSeat]);
-
     let currPendingBet = currentTables[activeTable.id].tableUsers[currentSeat].pendingBet
     let lastBet = lastBets.pop()
-
 
     if(currPendingBet === 0){
       setHasBet(false)
@@ -223,12 +207,9 @@ const rebet = (multiplier) => {
       setHasBet(false)
 
       socket.emit('remove_all_bet', betObj)
-
-      // dispatch(removeAllBetAction(betObj));
       return
     }
     socket.emit('remove_last_bet', betObj)
-    // dispatch(removeBetAction(betObj));
   };
 
 
@@ -262,12 +243,7 @@ const rebet = (multiplier) => {
     let bet = lastTotalBet
     let insuranceCost = Math.ceil(bet/2)
 
-
-    console.log(bet);
-    console.log(insuranceCost);
-
     if(insuranceCost >= tableBalance){
-      console.log('not enough balance!');
       setUpdateObj({insuranceCost, type:'insufficientInsurance'})
       openModal('balanceModal')
       return
@@ -297,8 +273,6 @@ const rebet = (multiplier) => {
     if(!isSitting) return
     if(!isActiveSeat) return
 
-
-    console.log(action);
     let actionObj = {
       action,
       tableId: activeTable.id,
@@ -325,7 +299,6 @@ const rebet = (multiplier) => {
 
   const openSettings = () => {
     
-    console.log(activeTable);
     openModal('tableSettings')
 
   }

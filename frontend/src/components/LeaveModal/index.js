@@ -40,18 +40,23 @@ function LeaveModal() {
 
   const leaveSeat = () => {
     const {seat, tableId, type} = updateObj
-    // dispatch(gameActions.leaveSeat(table.id, seatNumber))
-    if(type && type==='leaveTableViaTab'){
-      dispatch(leaveTableAction(tableId))
-    }
-    
-    // socket emit the seat taken, tableID, seat number, player info
+
     const seatObj = {
       tableId,
       seat,
     }
+
     
-    socket.emit('leave_seat', seatObj)
+    if(type && type==='leaveTableViaTab'){
+      dispatch(leaveTableAction(tableId))
+      socket.emit('leave_table', seatObj)
+
+    } else {
+      socket.emit('leave_seat', seatObj)
+    }
+    
+
+
     closeModal()
     setUpdateObj(null)
     return

@@ -87,10 +87,10 @@ const ActiveGameBar = () => {
           </div>
           <div className='wager-container flex center'>
           <div className='min-wager'>
-            {tableData.Game.minBet}
+            {tableData?.Game?.minBet}
           </div>
           <div>
-          {tableData.Game.maxBet}
+          {tableData?.Game?.maxBet}
           </div>
           </div>
           {userCards &&( 

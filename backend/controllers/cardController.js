@@ -232,7 +232,6 @@ async function main() {
   }).map(float => Math.floor(float * 52));
 
 
-  console.log(deck);
   // Draw the cards
   const cardsDrawn = draws.map(draw => deck[draw]);
 
@@ -251,27 +250,25 @@ async function main() {
 function drawCards(drawObj) {
   const {deck, cardsToDraw, cursor} = drawObj
 
-  console.log('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=');
+//   console.log('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=');
  
-console.log(deck);
-console.log(cardsToDraw);
-console.log(cursor);
-console.log('-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=');
+// console.log(deck);
+// console.log(cardsToDraw);
+// console.log(cursor);
+// console.log('-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=');
 
   const drawnCards = deck.splice(0, cardsToDraw);
 
-  console.log(deck);
   let newDeck = deck
   let drawnCardsAndDeck = {drawnCards, newDeck}
 
-console.log(drawnCards);
+  // console.log(drawnCards);
   return drawnCardsAndDeck;
 }
 
 
 
   async function handSummary(cards) {
-    console.log('HAND SUMMARY');
 
     let handSummary = {
       blackjack: false,
@@ -288,7 +285,6 @@ console.log(drawnCards);
       let modCard = card % 51
 
       let convertedCard = cardConverter[modCard]
-      console.log(convertedCard);
       if(convertedCard.value === 11){
         aceCount++;
       } else {
@@ -323,8 +319,6 @@ console.log(drawnCards);
       handSummary.blackjack = true;
     }
 
-    console.log(handSummary);
-
   return handSummary;
 }
 
@@ -333,11 +327,8 @@ console.log(drawnCards);
 async function bestValue(values) {
   let underOrEqualTo21 = values.filter(v => v <= 21);
   if (underOrEqualTo21.length > 0) {
-    console.log('BEST VALUE MAX: ', Math.max(...underOrEqualTo21));
     return Math.max(...underOrEqualTo21);
   } else {
-    console.log('BEST VALUE MIN: ', Math.min(...values));
-
     return Math.min(...values);
   }
 }

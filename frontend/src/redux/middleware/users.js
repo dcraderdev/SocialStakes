@@ -7,7 +7,6 @@ import { csrfFetch } from './csrf';
 // ****************
 
 export const login = (user) => async (dispatch) => {
-console.log('loggin in');
   const { credential, password } = user;
   const response = await csrfFetch('/api/session', {
     method: 'POST',
@@ -18,7 +17,6 @@ console.log('loggin in');
   });
   const data = await response.json();
 
-
   dispatch(setUser(data));
   return {data, response};
 };
@@ -26,9 +24,7 @@ console.log('loggin in');
 
 
 export const signup = (user) => async (dispatch) => {
-  console.log('here'); 
   const { username, firstName, lastName, email, password } = user;
-  console.log(username, firstName, lastName, email, password);
   const response = await csrfFetch("/api/users", {
     method: "POST",
     body: JSON.stringify({
@@ -42,7 +38,6 @@ export const signup = (user) => async (dispatch) => {
 
 
   const data = await response.json();
-  console.log(data);
   dispatch(setUser(data)); 
   return {data, response};
 };
@@ -74,10 +69,6 @@ export const loadThemes = () => async (dispatch) => {
     const response = await csrfFetch("/api/session/themes");
     const data = await response.json();
 
-    console.log('-=-=-=-=');
-    console.log(data); 
-    console.log('-=-=-=-=');
-  
     dispatch(setThemes(data));
     return response;
     
@@ -94,9 +85,9 @@ export const getUserStats = () => async (dispatch) => {
     const response = await csrfFetch(`/api/session/stats`);
     const data = await response.json();
 
-    console.log('-=-=-=-=');
-    console.log(data); 
-    console.log('-=-=-=-=');
+    // console.log('-=-=-=-=');
+    // console.log(data); 
+    // console.log('-=-=-=-=');
   
     dispatch(getUserStatsAction(data));
     return response;

@@ -411,6 +411,7 @@ const TableSeat = ({seatNumber}) => {
 
 
   const leaveSeat = () => {
+    return
     setUpdateObj({seat:seatNumber, tableId:activeTable.id})
     openModal('leaveModal')
   }

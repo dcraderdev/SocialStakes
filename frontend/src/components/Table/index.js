@@ -79,7 +79,6 @@ const Table = () => {
     }
  
     if (countdown === 0) {
-      console.log('yee');
       setCountdown(null);
     }
 

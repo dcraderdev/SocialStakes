@@ -1,4 +1,4 @@
-.seat-container{
+/* .seat-container{
   width: 100px;
   min-width: 100px;
   height: 100px;
@@ -77,4 +77,134 @@
 
 .gold{
   border: gold solid 1px;
+} */
+
+
+
+
+
+
+
+/* _*_*_*_*_*_*_*_*_*_*_*_*_ */
+
+
+
+.seat-wrapper{
+  width: 100px;
+  min-width: 100px;
+  border: rgb(155, 40, 40) solid 1px;
+  height: 30%;
+  position: absolute;
+} 
+
+
+
+.seat1{
+  top: 0px;
+  left: 20px;
 }
+.seat6{
+  top: 0px;
+  right: 10px;
+}
+
+.seat2{
+  top: 30%;
+  left: 70px;
+}
+.seat5{
+  top: 30%;
+  right: 70px;
+}
+.seat3{
+  top: 60%;
+  left: 100px;
+}
+.seat4{
+  top: 60%;
+  right: 100px;
+}
+
+
+
+/* 
+.seat-container{
+  width: 100px;
+  min-width: 100px;
+  height: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border: black solid 1px;
+} 
+
+
+
+.profileimage-container{
+  border: black solid 1px;
+  width: 100%;
+  height: 100%;
+
+} */
+
+
+.border{
+
+  border: solid rgb(0, 0, 0) 1px;
+} 
+
+
+
+
+
+.turn-timer,
+.disconnect-timer{
+  height: 100px;
+  width: 100px;
+  position: absolute;
+  bottom: 0px;
+  left: 100px;
+}
+
+
+
+
+/* 
+.seat-card-area-container{
+  width: 200px;
+  height: 400px;
+  width: fit-content;
+  height: fit-content;
+  display: flex;
+  position: relative;
+  top: -56px;
+  flex-direction: column;
+}
+
+
+.seat-card-area{
+  width: fit-content;
+  height: fit-content;
+  display: flex;
+  flex-direction: row;
+}
+
+.seat-bet-area{
+  width: 20px;
+  height: 100%;
+}
+
+
+
+
+
+
+.seat-leave-button{
+  top: 100px;
+  position: absolute;
+}
+
+.gold{
+  border: gold solid 1px;
+} */

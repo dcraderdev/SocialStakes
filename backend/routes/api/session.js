@@ -13,6 +13,7 @@ const {
   multipleMulterUpload,
   retrievePrivateFile,
 } = require('../../awsS3');
+const { gameController } = require('../../controllers/gameController');
 
 // Login
 // need to make sure that the correct CSRF token
@@ -63,7 +64,7 @@ router.get('/', requireAuth,restoreUser, (req, res) => {
 
 
 // Get themes
-router.get('/themes', async (_req, res) => {
+router.get('/themes', async (_req, res, next) => {
 
   const themes = await themeController.getThemes()
   if(!themes){
@@ -85,8 +86,22 @@ router.get('/themes', async (_req, res) => {
 });
 
 
+// Get user's stats
+router.get('/stats', requireAuth, async (req, res, next) => {
+  const { user } = req;
+  const stats = await gameController.getUserStats(user.id)
+  if(!stats){
+    const err = new Error("No stats found") 
+    err.statusCode = 404
+    err.status = 404;
+    next(err)
+  }
+  return res.json(stats);
+});
+
+
 // Restore session user
-router.get('/', requireAuth,restoreUser, (req, res) => {
+router.get('/', requireAuth, restoreUser, (req, res) => {
   const { user } = req;
 
   if (user) {

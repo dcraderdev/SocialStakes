@@ -3,7 +3,7 @@ import {
   SET_USER, REMOVE_USER, 
   SET_THEMES, CHANGE_NEON_THEME, CHANGE_TABLE_THEME,
   LEAVE_SEAT, TAKE_SEAT, PLAYER_ADD_TABLE_FUNDS,
-  REMOVE_PLAYER
+  REMOVE_PLAYER, GET_USER_STATS
 } from '../actions/actionTypes'
 
 
@@ -13,21 +13,15 @@ const initialState = {
   friends: {},
   themes: {},
   neonTheme: null,
-  tableTheme: null
+  tableTheme: null,
+  stats: {}
 };
 
 const userReducer = (state = initialState, action) => {
   const newState = { ...state };
-
-  console.log(action);
-
-  console.log(action.type);
-
   switch (action.type) {
 
     case SET_USER:
-      console.log(action.payload);
-
       let newBalance = action.payload.balance
       return {
         ...newState,
@@ -50,7 +44,6 @@ const userReducer = (state = initialState, action) => {
       };   
     }
     case CHANGE_TABLE_THEME:{
-      console.log(action.payload)
       return {
         ...newState,
         tableTheme: action.payload,
@@ -59,8 +52,6 @@ const userReducer = (state = initialState, action) => {
 
 
     case CHANGE_NEON_THEME:{
-      console.log(action);
-      console.log(action.payload) 
       return {
         ...newState,
         neonTheme: action.payload,
@@ -69,7 +60,6 @@ const userReducer = (state = initialState, action) => {
 
 
     case TAKE_SEAT: {
-      console.log(action.payload);
 
       const {id, seat, tableBalance, tableId, userId, username } = action.payload
 
@@ -85,7 +75,6 @@ const userReducer = (state = initialState, action) => {
     }
 
     case LEAVE_SEAT: {
-      console.log(action.payload);
 
       const { userId, tableBalance } = action.payload
 
@@ -101,7 +90,6 @@ const userReducer = (state = initialState, action) => {
     }
 
     case PLAYER_ADD_TABLE_FUNDS: {
-      console.log(action.payload);
     
       const {seat, tableId, amount, userId} = action.payload;
     
@@ -117,7 +105,6 @@ const userReducer = (state = initialState, action) => {
     }
 
     case REMOVE_PLAYER: {
-      console.log(action.payload);
 
       const {seat, tableId, userId, tableBalance } = action.payload
 
@@ -132,6 +119,21 @@ const userReducer = (state = initialState, action) => {
       return newState;
     }
 
+
+    case GET_USER_STATS: {
+      console.log('-*_*_*_*_*_*_*_*_*_*_*_*_*_**_');
+      console.log('-*_*_*_*_*_*_*_*_*_*_*_*_*_**_');
+      console.log('-*_*_*_*_*_*_*_*_*_*_*_*_*_**_');
+      console.log('-*_*_*_*_*_*_*_*_*_*_*_*_*_**_');
+      console.log(action.payload);
+      console.log('-*_*_*_*_*_*_*_*_*_*_*_*_*_**_');
+      console.log('-*_*_*_*_*_*_*_*_*_*_*_*_*_**_');
+      console.log('-*_*_*_*_*_*_*_*_*_*_*_*_*_**_');
+      console.log('-*_*_*_*_*_*_*_*_*_*_*_*_*_**_');
+
+      let newStats = action.payload
+      return { ...newState, stats:newStats};
+    }
 
 
 

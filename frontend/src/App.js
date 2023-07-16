@@ -23,6 +23,7 @@ import CloseTableModal from './components/CloseTableModal';
 import TableClosedModal from './components/TableClosedModal';
 import FriendsPage from './components/FriendsPage';
 import UnknownRoutePage from './components/UnknownRoutePage';
+import StatPage from './components/StatPage';
 
 function App() {
 
@@ -127,6 +128,11 @@ function App() {
           </Route>
 
 
+          <Route path="/stats" exact>
+            <StatPage />
+          </Route>
+
+          
           <Route>
             <h1>404:Unknown Route</h1>
             <UnknownRoutePage/>

@@ -93,7 +93,11 @@ function ProfileButtonModal() {
             Invites
             </div>
 
-            <div className='profilemenu-option'>
+            <div className='profilemenu-option'  
+            onClick={()=>{
+              history.push('/stats')
+              closeModal()
+              }}>
             Stats
             </div>
 

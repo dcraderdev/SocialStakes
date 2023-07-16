@@ -93,9 +93,13 @@ const Table = () => {
 
   return (
     <div className='table-wrapper'>
-    <div className='table-container '>
-      <div className={`table-content flex center ${neonTheme}`}>
-        {themes[tableTheme] && <img src={themes[tableTheme].url} alt='table'></img>}
+      <div className={`table-content ${neonTheme}`}>
+        {themes[tableTheme] && 
+        <div className='table-image-container'>
+          <img src={themes[tableTheme].url} alt='table'></img>
+        </div>
+        
+        }
       </div>
       <div className='table-countdown'>{countdown > 0 ? countdown : ''}</div>
 
@@ -123,7 +127,7 @@ const Table = () => {
         </div> */}
 
 
-<div className='seats-container'>
+{/* <div className='seats-container'>
           <div className='top-seats flex between'>
             <TableSeat seatNumber={1} />
             <TableSeat seatNumber={6} />
@@ -136,9 +140,17 @@ const Table = () => {
             <TableSeat seatNumber={3} />
             <TableSeat seatNumber={4} />
           </div>
-        </div>
+        </div> */}
 
-    </div>
+          
+            <TableSeat seatNumber={1} />
+            <TableSeat seatNumber={6} />
+            <TableSeat seatNumber={2} />
+            <TableSeat seatNumber={5} />
+            <TableSeat seatNumber={3} />
+            <TableSeat seatNumber={4} />
+
+
     </div>
   )
 }

@@ -139,7 +139,6 @@ module.exports = function (io) {
 
           //if no players left to act, end the round
           if (!anyPlayersBefore && !anyPlayersAfter) {
-        console.log(' C here before end round');
         await endRound(tableId, io);
         return
           }
@@ -852,7 +851,6 @@ module.exports = function (io) {
       // if dealer has blackjack, skip to end of round
       if (bestDealerValue === 21) {
         await handleDealerBlackjack(tableId);
-        console.log(' D here before end round');
 
         await endRound(tableId, io);
       } else {
@@ -1249,8 +1247,7 @@ module.exports = function (io) {
 
       // If all players have busted, end the round without drawing cards
       if (!anyPlayersLeft) {
-        console.log('No players left');
-        console.log(' A here before end round');
+
         await endRound(tableId, io);
         return;
       }
@@ -1262,17 +1259,16 @@ module.exports = function (io) {
         let dealerHand = await handSummary(newCards);
         let bestDealerValue = await bestValue(dealerHand.values);
 
-        console.log('--------------');
-        console.log(dealerCards.visibleCards);
-        console.log(dealerHand);
-        console.log(bestDealerValue);
-        console.log('dealerHand.softSeventeen', dealerHand.softSeventeen);
-        console.log('bestDealerValue', bestDealerValue);
-        console.log('--------------');
+        // console.log('--------------');
+        // console.log(dealerCards.visibleCards);
+        // console.log(dealerHand);
+        // console.log(bestDealerValue);
+        // console.log('dealerHand.softSeventeen', dealerHand.softSeventeen);
+        // console.log('bestDealerValue', bestDealerValue);
+        // console.log('--------------');
 
         // Stop if dealer's best value is 17 or more and the hand is not a soft seventeen
         if (bestDealerValue >= 17 && !dealerHand.softSeventeen) {
-          console.log('DEALER STAYS');
           dealerCards.handSummary = dealerHand;
           dealerCards.bestValue = bestDealerValue;
           stop = true;
@@ -1281,8 +1277,8 @@ module.exports = function (io) {
 
 
         // Draw a card if dealer's best value is 16 or less, or the hand is a soft seventeen
-        console.log('dealerHand.softSeventeen', dealerHand.softSeventeen);
-        console.log('bestDealerValue', bestDealerValue);
+        // console.log('dealerHand.softSeventeen', dealerHand.softSeventeen);
+        // console.log('bestDealerValue', bestDealerValue);
 
         let cardsToDraw = 1;
         let drawObj = {
@@ -1293,9 +1289,9 @@ module.exports = function (io) {
 
         let { drawnCards, newDeck } = drawCards(drawObj);
 
-        console.log('------- newDeck dealer -------');
-        console.log(newDeck);
-        console.log('------------------------');
+        // console.log('------- newDeck dealer -------');
+        // console.log(newDeck);
+        // console.log('------------------------');
 
         rooms[tableId].deck = newDeck;
         newCards.push(...drawnCards);
@@ -1306,7 +1302,6 @@ module.exports = function (io) {
       }
 
       // Dealer's turn is finished, end the round
-        console.log(' B here before end round');
         await endRound(tableId, io);
     }
 
@@ -1530,11 +1525,6 @@ module.exports = function (io) {
 
     async function endRound(tableId, io) {
 
-      console.log('END ROUND');
-      console.log('END ROUND');
-      console.log('END ROUND');
-      console.log('END ROUND');
-      console.log('END ROUND');
 
       let room = tableId;
       let bestDealerValue = rooms[tableId].dealerCards.bestValue;
@@ -1581,19 +1571,12 @@ module.exports = function (io) {
       let visibleCards = dealerCards.visibleCards;
       let hiddenCards = dealerCards.hiddenCards;
       let otherCards = dealerCards.otherCards;
-      console.log('------- dealersCards 1 -------');
-      console.log(dealerCards);
-      console.log('----------------------');
+
 
       // Combine all dealer's cards
       let dealersCards = [...visibleCards, ...hiddenCards, ...otherCards].flat(5);
       // let dealersCards = rooms[tableId].dealerCards.visibleCards.flat(5);
-      console.log('------- dealersCards -------');
-      console.log(dealersCards);
-      console.log(visibleCards);
-      console.log(hiddenCards);
-      console.log(otherCards);
-      console.log('----------------------');
+
 
       let handObj = {
         id: rooms[tableId]?.roundId,
@@ -1602,21 +1585,11 @@ module.exports = function (io) {
         nonce: rooms[tableId].nonce,
       };
 
-      console.log('------- saveDealerHand -------');
-      console.log(handObj);
-      console.log('----------------------');
-      console.log('------- saveDealerHand -------');
-      console.log(handObj);
-      console.log('----------------------');
-
       await gameController.saveDealerHand(handObj);
 
       // Check for any players that have left midgame and remove them
       await processForfeitedPlayers(tableId, io);
 
-
-      console.log('------- before resetRoomForNextHand -------');
-      console.log('------------------------');
       resetRoomForNextHand(tableId);
 
       // Emit updated table state one last time
@@ -1634,13 +1607,6 @@ module.exports = function (io) {
 
       io.in(room).emit('get_updated_table', updateObj);
 
-      console.log(room);
-
-      console.log('------- get_updated_table -------');
-      console.log(updateObj);
-      console.log('------------------------');
-
-      console.log('HAND OVER');
     }
   });
 };

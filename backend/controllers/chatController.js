@@ -38,7 +38,7 @@ async createMessage(messageObj) {
   const {user,tableId, content} = messageObj
   let userId = user.id
 
-  console.log(user,tableId, content);
+  // console.log(user,tableId, content);
 
   const newMessage = await Message.create({
     userId, 

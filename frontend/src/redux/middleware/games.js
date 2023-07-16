@@ -107,7 +107,6 @@ export const getAllGames = () => async (dispatch) => {
   };  
 
   export const viewTable = (tableId) => async (dispatch) => {
-    console.log('view table');
     try{
       const response = await csrfFetch(`/api/tables/${tableId}`, {
         method: 'GET'
@@ -130,8 +129,6 @@ export const getAllGames = () => async (dispatch) => {
   };
 
   export const createTable = (tableObj, socket) => async (dispatch) => {
-    console.log('view table');
-    console.log(tableObj);
     try{
       const response = await csrfFetch(`/api/tables/create`, {
         method: 'POST',
@@ -158,7 +155,6 @@ export const getAllGames = () => async (dispatch) => {
   };
 
   export const deleteTable = (tableObj) => async (dispatch) => {
-    console.log('delete table');
     try{
       const response = await csrfFetch(`/api/tables/create`, {
         method: 'DELETE'
@@ -181,7 +177,6 @@ export const getAllGames = () => async (dispatch) => {
 
 
   export const editTableName = (tableObj, socket) => async (dispatch) => {
-    console.log('edit table');
     const {tableId } = tableObj
     try{
       const response = await csrfFetch(`/api/tables/${tableId}/edit`, {

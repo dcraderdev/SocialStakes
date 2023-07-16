@@ -67,6 +67,17 @@ const TableSeat = ({seatNumber}) => {
     let userHands = currentTables[activeTable.id]?.tableUsers?.[seatNumber]?.hands;
     let userForfeited = currentTables[activeTable.id]?.tableUsers?.[seatNumber]?.forfeit;
   
+console.log('_*(_*(_*(_*(_*(_*(_*(_*(_');
+console.log('_*(_*(_*(_*(_*(_*(_*(_*(_');
+console.log('_*(_*(_*(_*(_*(_*(_*(_*(_');
+console.log('_*(_*(_*(_*(_*(_*(_*(_*(_');
+console.log(userActionTimer);
+console.log(currentTables[activeTable.id]);
+console.log('_*(_*(_*(_*(_*(_*(_*(_*(_');
+console.log('_*(_*(_*(_*(_*(_*(_*(_*(_');
+console.log('_*(_*(_*(_*(_*(_*(_*(_*(_');
+console.log('_*(_*(_*(_*(_*(_*(_*(_*(_');
+
     setPendingBet(userPendingBet)
     setCurrentBet(userCurrentBet)
     setCurrentBalance(userCurrentBalance)
@@ -84,6 +95,15 @@ const TableSeat = ({seatNumber}) => {
   
 
   useEffect(() => {
+
+    if(currentTables[activeTable.id]?.tableUsers?.[seatNumber]){
+if(currentTables[activeTable.id]?.tableUsers?.[seatNumber].forfeit === true){
+  console.log('true!!!'); 
+} 
+      console.log(currentTables[activeTable.id]?.tableUsers?.[seatNumber]);
+      console.log(currentTables[activeTable.id]?.tableUsers?.[seatNumber].forfeit);
+    }
+
     let userInAnySeat = Object.values(currentTables[activeTable.id]?.tableUsers || {}).some(seat => seat.username === user.username);
     let userInSeat = currentTables[activeTable.id]?.tableUsers?.[seatNumber]?.username === user.username;
     let userInActiveSeat = currentTables[activeTable.id]?.actionSeat === seatNumber;
@@ -92,13 +112,12 @@ const TableSeat = ({seatNumber}) => {
 
 
     if(hands && actionHand && hands[actionHand]){
-      console.log(hands[actionHand].summary.values);
       setHandValues(hands[actionHand].summary.values.join(','))
     }
 
-    if(!handInProgress){
-      setIsForfeited(false)
-    }
+    // if(!handInProgress){
+    //   setIsForfeited(false)
+    // }
     setIsCurrentUser(userInSeat);
     setIsUserInAnySeat(userInAnySeat);
     setIsActiveSeat(userInActiveSeat)
@@ -110,6 +129,7 @@ const TableSeat = ({seatNumber}) => {
 
   useEffect(() => {
     let disconnectTimerId = null;
+
   
     if (disconnectTimer > 0) {
       disconnectTimerId = setInterval(() => {
@@ -125,6 +145,7 @@ const TableSeat = ({seatNumber}) => {
 
   useEffect(() => {
     let actionTimerId = null;
+
   
     if (actionTimer > 0) {
       actionTimerId = setInterval(() => {
@@ -139,7 +160,6 @@ const TableSeat = ({seatNumber}) => {
 
 
   useEffect(() => {
-    console.log(tableTheme);
     if(tableTheme === 'black'){
       // seat
 
@@ -174,13 +194,6 @@ const TableSeat = ({seatNumber}) => {
 
 
 
-if(isForfeited){
-  return (
-    <div onClick={takeSeat} className={`seat-container six-ring seat`}>
-    FORFEIT
-    </div>
-  )
-}
 
 
 
@@ -196,6 +209,7 @@ return(
         <div className={`seat-name-balance-container ${isActiveSeat ? ' gold' : ''}`}>
           <div className='flex center'>{player.username}</div>
           <div className='table-balance flex center'>${currentBalance}</div>
+          {isForfeited && <div className='table-balance flex center'>Forfeited</div>}
         </div>
 
       )}

@@ -137,12 +137,7 @@ export const leaveSeatAction = (seatObj) => {
   };
 };
 
-export const forfeitSeatAction = (leaveSeatObj) => {
-  return {
-    type: FORFEIT_SEAT,
-    payload: leaveSeatObj,
-  };
-};
+
 
 export const changeSeatAction = (table) => {
   return {
@@ -150,7 +145,12 @@ export const changeSeatAction = (table) => {
     payload: table,
   };
 };
-
+export const playerForfeitAction = (leaveSeatObj) => {
+  return {
+    type: FORFEIT_SEAT,
+    payload: leaveSeatObj,
+  };
+};
 
 
 

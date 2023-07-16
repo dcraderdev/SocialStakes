@@ -48,13 +48,13 @@ module.exports = function (io) {
 
     let socketId = socket.id;
 
-    console.log('-=-=-=-=-=-=-=-=-=');
-    console.log('--- CONNECTING ---');
-    console.log('SOCKET ID', socketId);
-    console.log('A user connected', socket.id, 'Username:', username);
-    console.log('User Room:', userId);
+    // console.log('-=-=-=-=-=-=-=-=-=');
+    // console.log('--- CONNECTING ---');
+    // console.log('SOCKET ID', socketId);
+    // console.log('A user connected', socket.id, 'Username:', username);
+    // console.log('User Room:', userId);
 
-    console.log('-=-=-=-=-=-=-=-=-=');
+    // console.log('-=-=-=-=-=-=-=-=-=');
 
     socket.join(userId);
 
@@ -63,7 +63,7 @@ module.exports = function (io) {
     // Reconnection logic
     if (disconnectTimeouts[userId]) {
       clearTimeout(disconnectTimeouts[userId]);
-      console.log(`User ${username} reconnected, timeout cleared.`);
+      // console.log(`User ${username} reconnected, timeout cleared.`);
       delete disconnectTimeouts[userId];
 
       if (userTables) {
@@ -87,31 +87,23 @@ module.exports = function (io) {
     }
 
     socket.on('disconnect_user', async () => {
-      console.log('-------disconnect_user-------');
-      console.log('--------------');
-
       const userTables = await gameController.getUserTables(userId);
       if (userTables) {
         for (let table of userTables) {
           handleDisconnect(table);
         }
       }
-
-      
-
       await gameController.removeUserFromTables(userId)
-
-
     });
 
-    async function handleDisconnect(table) {
+    async function handleDisconnect(playerSeat) {
       // console.log('-------handleDisconnect-------');
       // console.log('--------------');
 
-      let tableId = table.tableId;
-      let userTableId = table.id;
-      let userId = table.userId;
-      let seat = table.seat;
+      let tableId = playerSeat.tableId;
+      let userTableId = playerSeat.id;
+      let userId = playerSeat.userId;
+      let seat = playerSeat.seat;
       let room = tableId;
 
 
@@ -119,9 +111,18 @@ module.exports = function (io) {
 
 
         let player = rooms[tableId].seats[seat];
-        let anyPlayersLeft = rooms[tableId].sortedActivePlayers.some(
-          (player) => player.seat < seat
+
+        let anyPlayersAfter = rooms[tableId].sortedActivePlayers.some(
+          (player) => player.seat < seat 
         );
+
+        let anyPlayersBefore = rooms[tableId].sortedActivePlayers.some(
+          (player) => player.seat > seat 
+        );
+
+        let leaveOnPlayerTurn = rooms[tableId].actionSeat === player.seat
+        
+
         let handInProgress = rooms[tableId].handInProgress;
         let leaveSeatObj = {
           tableId,
@@ -142,31 +143,34 @@ module.exports = function (io) {
  
         io.in(tableId).emit('new_message', messageObj);
 
-
-
-        if (disconnectTimeouts[userId]) {
-          clearTimeout(disconnectTimeouts[userId]);
-        }
-        clearInterval(rooms[tableId].timerId)
-
-
-
-        // If the user disconnects during a hand, add them to the forfeited players
+        // If the user disconnects during a hand, add them to the forfeited players and update our hand's status
         if (handInProgress) {
+          
+          let playerHands = Object.entries(player.hands);
+          for (let [key, handData] of playerHands) {
+            handData.turnEnded = true;
+          }
           rooms[tableId].forfeitedPlayers.push( player );
-          io.in(room).emit('player_forfeit', leaveSeatObj);
+          player.forfeit = true
+          clearTimeout(disconnectTimeouts[userId])
 
-          if (!anyPlayersLeft) {
+          let currentTimer = rooms[tableId].actionTimer
+          let leaveSeatObj = {tableId, seat, currentTimer}
 
+          io.to(room).emit('player_forfeit', leaveSeatObj)
+
+          //if no players left to act, end the round
+          if (!anyPlayersBefore && !anyPlayersAfter) {
             await endRound(tableId, io);
-          } else {
-            let playerHands = Object.entries(player.hands);
-            for (let [key, handData] of playerHands) {
-              handData.turnEnded = true;
-            }
+          }
+          
+          if(leaveOnPlayerTurn){
+            clearInterval(rooms[tableId].timerId)
             await gameLoop(tableId, io);
           }
+          
         } else {
+
           // Refund pending bet(if exists) for user
           player.tableBalance += rooms[tableId].seats[seat].pendingBet;
           rooms[tableId].seats[seat].pendingBet = 0;
@@ -182,11 +186,12 @@ module.exports = function (io) {
           if (!leaveSeat) return;
           io.in(room).emit('player_leave', leaveSeatObj);
           emitUpdatedTable(tableId, io);
+
+          // if theres other bets continue timer, otherwise cancel
+          if (isNoBetsLeft(tableId)) {
+            stopTimer(tableId);
+          }
         }
-      }
-      // if theres other bets continue timer, otherwise cancel
-      if (isNoBetsLeft(tableId)) {
-        stopTimer(tableId);
       }
     }
  
@@ -207,7 +212,7 @@ module.exports = function (io) {
           }
         }
       }, timer);
-    });
+    }); 
 
     socket.on('join_room', async (room) => {
       let tableId = room;
@@ -429,68 +434,10 @@ module.exports = function (io) {
       // console.log('--------------');
       // console.log(`leave_seat`);
       // console.log('--------------');
-
-
-
- 
-
       const { tableId, seat } = seatObj;
-
-      // await handleDisconnect(tableId)
-
-      let room = tableId;
-
       if (rooms[tableId] && rooms[tableId].seats[seat]) {
         let player = rooms[tableId].seats[seat];
-        let userTableId = rooms[tableId].seats[seat].id;
-        let userId = rooms[tableId].seats[seat].userId;
-        let anyPlayersLeft = rooms[tableId].sortedActivePlayers.some(
-          (player) => player.seat < seat
-        );
-        let handInProgress = rooms[tableId].handInProgress;
-        let leaveSeatObj = {
-          tableId,
-          seat,
-          userTableId,
-          userId,
-          tableBalance: player.tableBalance,
-        };
-
-        // If the user disconnects during a hand, add them to the forfeited players
-        if (handInProgress) {
-          rooms[tableId].forfeitedPlayers.push(player);
-          io.in(room).emit('player_forfeit', leaveSeatObj);
-
-          if (!anyPlayersLeft) {
-            await endRound(tableId, io);
-          } else {
-            let playerHands = Object.entries(player.hands);
-            for (let [key, handData] of playerHands) {
-              handData.turnEnded = true;
-            }
-            await gameLoop(tableId, io);
-          }
-        } else {
-          // Refund pending bet(if exists) for user
-          player.tableBalance += rooms[tableId].seats[seat].pendingBet;
-          rooms[tableId].seats[seat].pendingBet = 0;
-          leaveSeatObj.tableBalance = player.tableBalance;
-
-          // Remove the player from the room state
-          if (rooms[tableId] && rooms[tableId].seats[seat]) {
-            delete rooms[tableId].seats[seat];
-          }
-
-          const leaveSeat = await gameController.leaveSeat(leaveSeatObj);
-          if (!leaveSeat) return;
-          io.in(room).emit('player_leave', leaveSeatObj);
-          emitUpdatedTable(tableId, io);
-        }
-      }
-      // if theres other bets continue timer, otherwise cancel
-      if (isNoBetsLeft(tableId)) {
-        console.log('NO BETS!');
-        stopTimer(tableId);
+        await handleDisconnect(player)
       }
     });
 

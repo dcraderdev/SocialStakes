@@ -154,10 +154,44 @@ import { ModalContext } from '../../context/ModalContext';
 
 
 
-  const leaveTable = () => {
+  // const leaveTable = () => {
 
-    dispatch(leaveTableAction(activeTable.id));
-  };
+  //   dispatch(leaveTableAction(activeTable.id));
+  // };
+
+  const leaveTable = (e,tableId) => {
+    e.preventDefault()
+    e.stopPropagation()
+
+    let seatNumber = checkForSeat(tableId)
+    if(seatNumber){
+      setUpdateObj({seat:seatNumber, tableId:activeTable.id, type:'leaveTableViaTab'})
+      openModal('leaveModal')
+    }
+    else {
+      dispatch(leaveTableAction(tableId))
+    }
+
+  }
+  
+  const checkForSeat=(tableId)=>{
+    let seat
+    let hasSeat = Object.entries(currentTables[tableId].tableUsers).some(([seatId, seatData], index) => {
+      if(seatData.userId === user.id){
+        seat = seatId
+        return true
+      }
+    })
+    if(hasSeat){
+      return seat
+    }
+    return false
+  }
+
+
+
+
+
 
 const rebet = (multiplier) => {
   
@@ -195,10 +229,10 @@ const rebet = (multiplier) => {
     let currPendingBet = currentTables[activeTable.id].tableUsers[currentSeat].pendingBet
     let lastBet = lastBets.pop()
 
-    if(currPendingBet === 0){
-      setHasBet(false)
-      return
-    }
+    // if(currPendingBet === 0){
+    //   setHasBet(false)
+    //   return
+    // }
     const betObj={
       tableId: activeTable.id,
       seat: currentSeat,
@@ -212,6 +246,11 @@ const rebet = (multiplier) => {
       return
     }
     socket.emit('remove_last_bet', betObj)
+
+    if(currPendingBet === 0 || lastBets.length === 0){
+      setHasBet(false)
+      return
+    }
   };
 
 
@@ -259,6 +298,7 @@ const rebet = (multiplier) => {
       seat: currentSeat,
     }
     socket.emit('accept_insurance', betObj)
+    setIsInsuranceOffered(false)
 
   };
 
@@ -320,7 +360,7 @@ const rebet = (multiplier) => {
                 <div className="bet-setting-button" onClick={addBalance}>
                  <i className="fa-solid fa-dollar-sign"></i>+
                 </div>
-                <div className="bet-setting-button" onClick={leaveTable}>
+                <div className="bet-setting-button" onClick={(e)=>leaveTable(e,activeTable?.id)}>
                   <i className="fa-solid fa-right-to-bracket"></i>
                 </div>
 
@@ -355,13 +395,13 @@ const rebet = (multiplier) => {
 
 {isSitting && (
 
-            <div className="section right flex center">
+            <div className="flex center">
 
               {!isHandInProgress && (
                 <div className="section right flex center">
 
                   {!hasBet &&(
-                    <div className="rebet-option-container flex">
+                    <div className="rebet-option-container flex between">
                       <div className="rebet regular" onClick={()=>rebet(false)}>Rebet</div>
                       <div className="rebet double" onClick={()=>rebet(true)}>Rebet x2</div>
                     </div>
@@ -384,7 +424,7 @@ const rebet = (multiplier) => {
 
               {isActiveSeat && !isInsuranceOffered &&(
                 <div className="section right flex center">
-                  <div className="decision-option-container">
+                  <div className="action-option-container flex">
                     <div className="action" onClick={()=>handleAction('hit')}>Hit</div>
                     <div className="action" onClick={()=>handleAction('stay')}>Stay</div>
                     {canDouble && <div className="action" onClick={()=>handleAction('double')}>Double</div>}

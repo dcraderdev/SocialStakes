@@ -100,7 +100,7 @@ const Table = () => {
         
         }
       </div>
-      <div className='table-countdown'>{countdown > 0 ? countdown : ''}</div>
+      <div className='table-countdown'>{countdown > 0 ? `Dealing in: ${countdown}`: ''}</div>
 
       <div className='dealer-cards flex center'>
         {cards && cards.map((card, index) => <Card key={index} card={card} />)}
@@ -126,7 +126,7 @@ const Table = () => {
         </div> */}
 
 
-{/* <div className='seats-container'>
+<div className='seats-container'>
           <div className='top-seats flex between'>
             <TableSeat seatNumber={1} />
             <TableSeat seatNumber={6} />
@@ -139,15 +139,15 @@ const Table = () => {
             <TableSeat seatNumber={3} />
             <TableSeat seatNumber={4} />
           </div>
-        </div> */}
+        </div>
 
           
-            <TableSeat seatNumber={1} />
+            {/* <TableSeat seatNumber={1} />
             <TableSeat seatNumber={6} />
             <TableSeat seatNumber={2} />
             <TableSeat seatNumber={5} />
             <TableSeat seatNumber={3} />
-            <TableSeat seatNumber={4} />
+            <TableSeat seatNumber={4} /> */}
 
 
     </div>

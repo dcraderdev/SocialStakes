@@ -58,6 +58,12 @@ body{
   text-shadow: -1px 0 #ff3aad, 0 3px #ff3aad, 3px 0 #ff3aad, 0 -1px #ff3aad;
 }
 
+.neon-pink-text{
+  color: #ff3aad;
+  text-shadow: -2px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+
+}
+
 
 @keyframes neon-pink {
 
@@ -92,6 +98,10 @@ body{
 }
 
 
+.neon-blue-text{
+  color: #3ae1ff;
+}
+
 @keyframes neon-blue {
 
   0%, 1%, 2%, 100% {
@@ -124,6 +134,9 @@ body{
   text-shadow: -1px 0 #e8f041 , 0 3px #e8f041 , 3px 0 #e8f041 , 0 -1px #e8f041 ;
 }
 
+.neon-yellow-text{
+  color: #e8f041;
+}
 
 @keyframes neon-yellow {
 
@@ -156,7 +169,9 @@ body{
   animation: neon-green 600s infinite;
   text-shadow: -1px 0 #84f041 , 0 3px #84f041 , 3px 0 #84f041 , 0 -1px #84f041 ;
 }
-
+.neon-green-text{
+  color: #84f041;
+}
 
 @keyframes neon-green {
 
@@ -189,6 +204,10 @@ body{
 .neon-white{
   animation: neon-white 600s infinite;
   text-shadow: -1px 0 #d5e2cd , 0 3px #d5e2cd , 3px 0 #d5e2cd , 0 -1px #d5e2cd ;
+}
+
+.neon-white-text{
+  color: #d5e2cd;
 }
 
 

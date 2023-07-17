@@ -7,7 +7,7 @@
 }
 
 .bet-container {
-  height: 100%;
+  height: 60%;
   width: 100%;
   display: flex;
 }
@@ -35,7 +35,7 @@
   width: 60px;
   height: fit-content;
   position: relative;
-  top: -60px;
+  top: -35px;
   left: 10px;
   display: flex;
   flex-direction: column;
@@ -57,39 +57,22 @@
 
 
 
-.decision-option-container{
-  width: 350px;
-  height: 200px;
-  margin-left: 50px;
-  justify-content: space-around;
-}
+
+
+
 
 
 .section.right{
+  position: relative;
+  top: 70px;
   display: flex;
   flex-direction: row;
-}
-
-
-.rebet,
-.action{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 35px;
-
-
-
-  color: white;
-  border-bottom: rgba(255, 217, 0, 0.466) solid .5px;
-  border-top: rgba(255, 217, 0, 0.466) solid .5px;
-  box-shadow: rgba(0, 0, 0, 0.5) 0px 3px 6px, rgba(0, 0, 0, 0.5) 0px 3px 6px;
-  cursor: pointer;
-
-  
+  width: 500px;
 
 }
+
+
+
 
 .undo:hover,
 .chip:hover,
@@ -104,9 +87,9 @@
 
 .chips-option-container{
   position: relative;
-  left: 30px;
-  width: 160px;
+  width: 360px;
   height: 200px;
+
   
 }
 
@@ -121,29 +104,26 @@
   border-top: rgba(255, 217, 0, 0.466) solid .5px;
   box-shadow: rgba(0, 0, 0, 0.5) 0px 3px 6px, rgba(0, 0, 0, 0.5) 0px 3px 6px;
   cursor: pointer;
+  position: relative;
 }
 
 .chip.one{
-  position: relative;
   left: 5px;
   top: 30px;
 
 }
 
 .chip.two{
-  position: relative;
   left: 5px;
   top: 45px;
 }
 
 .chip.three{
-  position: relative;
   left: 85px;
   top: -135px;
 }
 
 .chip.four{
-  position: relative;
   left: 85px;
   top: -120px;
 }
@@ -152,13 +132,39 @@
 .rebet-option-container,
 .undo-bet-container{
   width: 400px;
-  height: 100px;
+  height: 150px;
+  flex-direction: column;
+  position: relative;
+  left: 50px;
+  justify-content: space-between;
+}
 
 
+.decision-option-container{
+  width: 350px;
+  height: 200px;
+  margin-left: 50px;
+  margin-top: 50px;
+  justify-content: space-around;
 }
 
 
 
+
+
+
+.action-option-container{
+  width: 400px;
+  height: 200px;
+  margin-left: 50px;
+  margin-top: 50px;
+  justify-content: space-around;
+}
+
+
+
+
+.action,
 .rebet,
 .undo{
   border: black solid 1px;
@@ -171,7 +177,11 @@
   border-bottom: rgba(255, 217, 0, 0.466) solid .5px;
   border-top: rgba(255, 217, 0, 0.466) solid .5px;
   box-shadow: rgba(0, 0, 0, 0.5) 0px 3px 6px, rgba(0, 0, 0, 0.5) 0px 3px 6px;
-cursor: pointer;
+  cursor: pointer;
 }
 
 
+
+.action{
+  margin-left: 10px;
+}

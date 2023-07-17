@@ -32,8 +32,8 @@
 }
 
 .game-tile img {
-
-/* object-fit: cover;
+object-fit: fill;
+/* 
 height: inherit;
 width: inherit; */
 height: 100%;

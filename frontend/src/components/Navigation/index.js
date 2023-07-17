@@ -65,8 +65,14 @@ function Navigation(){
     }
   };
 
-  const demoUser = async (e) => {
+  const demoUserOne = async (e) => {
     dispatch(sessionActions.login({ credential:'bigtree', password:'password' }));
+  };
+  const demoUserTwo = async (e) => {
+    dispatch(sessionActions.login({ credential:'admin', password:'password' }));
+  };
+  const demoUserThree = async (e) => {
+    dispatch(sessionActions.login({ credential:'Spruce', password:'password' }));
   };
 
 
@@ -103,7 +109,9 @@ function Navigation(){
           )}
           {!user && (
           <div className='nav-user-buttons-container'>
-            {wideScreen && <div className='nav-user-button' onClick={demoUser}>Demo</div>}
+            {wideScreen && <div className='nav-user-button' onClick={demoUserOne}>Demo 1</div>}
+            {wideScreen && <div className='nav-user-button' onClick={demoUserTwo}>Demo 2</div>}
+            {wideScreen && <div className='nav-user-button' onClick={demoUserThree}>Demo 3</div>}
             {wideScreen && <div className='nav-user-button' onClick={()=>openModal('login')}>Login</div>}
             {wideScreen && <div className='nav-user-button' onClick={()=>openModal('signup')}>Sign up</div>}
             <div ref={profileBtnRef} className='nav-user-button profile' onClick={handleProfileButtonClick}>

@@ -85,19 +85,19 @@ const SocketProvider = ({ children }) => {
 
       socket.on('get_updated_table', (updateObject) => {
 
-        console.log('_+_+_+_+_+_+_+_+_+_+_+');
-        console.log('_+_+_+_+_+_+_+_+_+_+_+');
-        console.log(updateObject);
-        console.log('_+_+_+_+_+_+_+_+_+_+_+');
-        console.log('_+_+_+_+_+_+_+_+_+_+_+');
-        console.log('_+_+_+_+_+_+_+_+_+_+_+');
+        // console.log('_+_+_+_+_+_+_+_+_+_+_+');
+        // console.log('_+_+_+_+_+_+_+_+_+_+_+');
+        // console.log(updateObject);
+        // console.log('_+_+_+_+_+_+_+_+_+_+_+');
+        // console.log('_+_+_+_+_+_+_+_+_+_+_+');
+        // console.log('_+_+_+_+_+_+_+_+_+_+_+');
 
         if(updateObject.resetRoomForNextHand){
-          console.log('resetRoomForNextHand');
-          console.log('resetRoomForNextHand');
-          console.log('resetRoomForNextHand');
-          console.log('resetRoomForNextHand');
-          console.log('resetRoomForNextHand');
+          // console.log('resetRoomForNextHand');
+          // console.log('resetRoomForNextHand');
+          // console.log('resetRoomForNextHand');
+          // console.log('resetRoomForNextHand');
+          // console.log('resetRoomForNextHand');
         }
         dispatch(updateTableAction(updateObject)); 
       }); 

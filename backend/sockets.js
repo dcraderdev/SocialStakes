@@ -302,6 +302,7 @@ module.exports = function (io) {
       await Promise.all(leaveSeatPromises);
       await gameController.closeTable(tableId);
 
+      clearInterval(rooms[tableId].countdownTimer);
       delete rooms[tableId];
       io.to(room).emit('close_table', tableId)
 
@@ -322,7 +323,7 @@ module.exports = function (io) {
       // console.log(`${username} close_table ${room}.`);
       // console.log('-=-=-=-=-=-=-=-=-=');
     });
-
+ 
     // Broadcast message to specific room
     socket.on('message', async (messageObj) => {
       const { user, tableId, message } = messageObj;
@@ -492,13 +493,13 @@ module.exports = function (io) {
             if (isNoBetsLeft(tableId)) {
               stopTimer(tableId);
               return;
-            }
+            } 
 
             clearInterval(rooms[tableId].countdownTimer);
             rooms[tableId].countdownTimer = null;
             rooms[tableId].countdownRemaining = 0;
             rooms[tableId].handInProgress = true;
-
+ 
             // Transfer pendingBet to currentBet for each seat
             for (let seatKey in rooms[tableId].seats) {
               const seat = rooms[tableId].seats[seatKey];

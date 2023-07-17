@@ -176,7 +176,7 @@ const gamesReducer = (state = initialState, action) => {
     
 
     case VIEW_TABLE:{
-      return {...newState, activeTable:action.payload, showGames: false, showTables: false, showActiveTable: true}
+      return {...newState, activeTable:action.payload, showGames: false, showTables: false, showActiveTable: true, showCreatingGame:false}
     }
 
     case JOIN_TABLE:{

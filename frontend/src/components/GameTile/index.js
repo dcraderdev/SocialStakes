@@ -3,6 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Route, Router, Switch, NavLink, useHistory } from 'react-router-dom';
 import './GameTile.css';
 import gameTileBackground from '../../images/game-tile-background.jpeg'
+import Searching from '../../images/Searching.svg'
 
 
 const GameTile = ({game, cbFunc}) => {
@@ -87,6 +88,19 @@ const GameTile = ({game, cbFunc}) => {
 
   },[game])
 
+  useEffect(()=>{
+    handleImageLoad()
+
+  },[])
+
+
+  const [imgSrc, setImgSrc] = useState(null);
+
+  const handleImageLoad = () => {
+      
+      setImgSrc(gameTileBackground);  
+  };
+
 
   return (
     <div>
@@ -95,7 +109,13 @@ const GameTile = ({game, cbFunc}) => {
         {!isActive && (
           <div style={{position:'absoulte', 'fontSize': '13px' ,color:'red', top:'50px'}}>Game coming soon</div>
         )}
-        <img src={gameTileBackground} alt='game tile'></img>
+
+      {
+        imgSrc && (
+          <img src={imgSrc} alt='game tile' ></img>
+        )
+      }
+
       </div>
     </div>
   ); 

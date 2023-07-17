@@ -1,5 +1,6 @@
 import { React, useState, useRef, useEffect, useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import {  useLocation, useHistory } from 'react-router-dom';
 import { leaveTableAction } from '../../redux/actions/gameActions';
 import GameBarCard from '../GameBarCard';
 
@@ -15,6 +16,8 @@ const ActiveGameBar = () => {
   const { socket } = useContext(SocketContext);
 
   const dispatch = useDispatch();
+  const location = useLocation();
+  const history = useHistory();
   
   const user = useSelector(state => state.users.user);
   const currentTables = useSelector((state) => state.games.currentTables);
@@ -22,11 +25,15 @@ const ActiveGameBar = () => {
 
 
 
-
-
   const viewTable = (tableId) => {
+    if(location.pathname !== '/'){
+      history.push('/')
+    }
+
     socket.emit('view_room', tableId);
   }
+
+
   const closeTable = (e,tableId) => {
     e.preventDefault()
     e.stopPropagation()

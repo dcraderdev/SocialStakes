@@ -1,165 +1,154 @@
-/* .seat-container{
-  width: 100px;
+.seat-wrapper {
+  width: 130px;
   min-width: 100px;
-  height: 100px;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-} 
-
-
-.border{
-
-  border: solid rgb(0, 0, 0) 1px;
-} 
-
-
-.seat-name-balance-container{
-  width: 100%;
-  height: 40px;
-  position: absolute;
-  bottom: 0px;
-}
-
-
-
-.turn-timer,
-.disconnect-timer{
-  height: 100px;
-  width: 100px;
-  position: absolute;
-  bottom: 0px;
-  left: 100px;
-}
-
-.total-bet{
-
-}
-
-
-
-
-
-.seat-card-area-container{
-  width: 200px;
-  height: 400px;
-  width: fit-content;
-  height: fit-content;
-  display: flex;
-  position: relative;
-  top: -56px;
-  flex-direction: column;
-}
-
-
-.seat-card-area{
-  width: fit-content;
-  height: fit-content;
-  display: flex;
-  flex-direction: row;
-}
-
-.seat-bet-area{
-  width: 20px;
   height: 100%;
-}
-
-
-
-
-
-
-.seat-leave-button{
-  top: 100px;
   position: absolute;
+
 }
 
-.gold{
-  border: gold solid 1px;
-} */
-
-
-
-
-
-
-
-/* _*_*_*_*_*_*_*_*_*_*_*_*_ */
-
-
-
-.seat-wrapper{
-  width: 100px;
-  min-width: 100px;
-  border: rgb(155, 40, 40) solid 1px;
-  height: 30%;
-  position: absolute;
-} 
-
-
-
-.seat1{
+.seat1 {
   top: 0px;
-  left: 20px;
+  left: 0px;
 }
-.seat6{
+.seat6 {
   top: 0px;
-  right: 10px;
+  right: 0px;
 }
 
-.seat2{
-  top: 30%;
-  left: 70px;
+.seat2 {
+  top: 20px;
+  left: 25px;
 }
-.seat5{
-  top: 30%;
-  right: 70px;
+.seat5 {
+  right: 25px;
+  top: 20px;
 }
-.seat3{
-  top: 60%;
+.seat3 {
   left: 100px;
+  top: 20px;
 }
-.seat4{
-  top: 60%;
+.seat4 {
   right: 100px;
+  top: 20px;
+}
+
+@media screen and (max-height: 650px) {
+
+  .seat2,
+  .seat3,
+  .seat4,
+  .seat5 {
+    top: 0px;
+
+  }
+
+  
+}
+
+.seat-container {
+  width: 10%;
+  min-width: 100px;
+  aspect-ratio: 1 / 1;
+  position: relative;
+  flex-direction: column;
+  align-items: center;
 }
 
 
 
-/* 
-.seat-container{
-  width: 100px;
-  min-width: 100px;
-  height: 100%;
+
+.emptyseat-border:hover{
+  cursor: pointer;
+  border: #323431 solid 5px;
+}
+
+.emptyseat-border:hover .emptyseat-background{
+  background-color: #3a3c388b;
+}
+
+
+.emptyseat-border:hover .emptyseat-arrow{
+  transform: scale(1.1);
+}
+
+
+
+.profileimage-wrapper {
+  width: 90%;
+  height: 90%;
+  min-height: 80px;
+  height: fit-content;
   position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  border: black solid 1px;
-} 
+  overflow: hidden;
+}
 
 
-
-.profileimage-container{
-  border: black solid 1px;
+.profileimage-container {
+  border: #1d1e1c solid 5px;
+  border-radius: 50%;
   width: 100%;
   height: 100%;
+  top: 10px;
+  position: relative;
+}
 
-} */
 
 
-.border{
+.profileimage-sub-container{
+  background-color: #1d1e1c8b;
+  border-radius: 50%;
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
 
-  border: solid rgb(0, 0, 0) 1px;
-} 
+
+
+
+
+.profileimage-takeseat,
+.profileimage-image {
+  color: white;
+  width: 100%;
+  height: 100%;
+  font-size: max(30px, 5vh);
+}
+
+.profileimage-takeseat{
+  font-size: max(20px, 3vh);
+}
+
+
+
+.seat-namebalance-container{
+  bottom: 0px;
+  font-size: max(20px, 3vh);
+  border-radius: 10px;
+  border: black solid 1px;
+  width: 100%;
+  background-color: #1b1b1b;
+  min-height: 25px;
+}
+
+
+
+.seat-tablebalance{
+  font-size: 2.5vh;
+  font-size: max(16px, 3vh);
+  font-weight: 900;
+}
+
+.null-text,
+.none-text{
+  color: #01fdca;
+}
 
 
 
 
 
 .turn-timer,
-.disconnect-timer{
+.disconnect-timer {
   height: 100px;
   width: 100px;
   position: absolute;
@@ -170,14 +159,14 @@
 
 
 
-/* 
+
 .seat-card-area-container{
+  position: absolute;
   width: 200px;
   height: 400px;
   width: fit-content;
   height: fit-content;
   display: flex;
-  position: relative;
   top: -56px;
   flex-direction: column;
 }
@@ -186,16 +175,60 @@
 .seat-card-area{
   width: fit-content;
   height: fit-content;
+
   display: flex;
-  flex-direction: row;
+}
+
+.card-area{
+  margin-left: 30px;
+}
+
+.pending-bet-area{
+  position: absolute;
+  top: -10px;
+  z-index: 10000;
+
+  width: fit-content;
+  padding-left: 5%;
+  padding-right: 5%;
+  height: 20px;
+  border: black solid 1px;
+  border-radius: 15px;
+  background-color: #ffffff46;
+  color: rgb(0, 0, 0);
 }
 
 .seat-bet-area{
-  width: 20px;
+  width: fit-content;
+  padding-left: 15%;
+  padding-right: 15%;
   height: 100%;
+  max-height: 20px;
+  border: black solid 1px;
+  border-radius: 15px;
+  background-color: #ffffff46;
+  color: rgb(0, 0, 0);
+  position: relative;
 }
 
+.currentbet-chip-container{
+  width: 20px;
+  height: 20px;
+}
 
+.currentbet-chip{
+width: 100%;
+height: 100%;
+object-fit: contain;
+margin-right: 5px;
+
+}
+
+.currentbet-container{
+  width: 50px;
+
+  flex-direction: column;
+}
 
 
 
@@ -207,4 +240,9 @@
 
 .gold{
   border: gold solid 1px;
-} */
+}
+
+
+@media screen and (min-width: 650px) {
+
+}

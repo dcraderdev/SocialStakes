@@ -919,7 +919,6 @@ module.exports = function (io) {
       // console.log(rooms[tableId].cursor);
       // console.log('');
       // console.log('----------------------');
-      let room = tableId;
 
       // // Emit latest decision to clients
       emitUpdatedTable(tableId, io);
@@ -955,12 +954,13 @@ module.exports = function (io) {
       }
     }
 
+
     async function handlePlayerTurn(tableId, player, io) {
       let room = tableId;
 
       //Iterate over each player's hand
       let playerHands = Object.entries(player.hands);
-      // If all hands are done, move the player to sortedFinishedPlayers
+      // If all hands are finsihed, move the player to sortedFinishedPlayers
       let allHandsEnded = true;
       for (let [key, handData] of playerHands) {
         if (!handData.turnEnded) {
@@ -971,7 +971,6 @@ module.exports = function (io) {
       if (allHandsEnded) {
         let nextPlayer = rooms[tableId].sortedActivePlayers.pop();
         rooms[tableId].sortedFinishedPlayers.push(nextPlayer);
-        // await gameLoop(tableId, io)
         return;
       }
 
@@ -994,8 +993,9 @@ module.exports = function (io) {
           continue;
         }
 
-        // Create actionTimer
-        rooms[tableId].actionTimer = 500000;
+        // Create action end timestamp
+        const actionDuration = 5000; // 5 seconds
+        rooms[tableId].actionEnd = Date.now() + actionDuration;
 
         // Set action seat
         rooms[tableId].actionSeat = player.seat;
@@ -1006,7 +1006,7 @@ module.exports = function (io) {
           table: {
             actionSeat: player.seat,
             actionHand: key,
-            actionTimer: rooms[tableId].actionTimer,
+            actionEnd: rooms[tableId].actionEnd,
             seats: rooms[tableId].seats,
             dealerCards: {
               visibleCards: rooms[tableId].dealerCards.visibleCards,
@@ -1024,6 +1024,8 @@ module.exports = function (io) {
         // Create timer and store its id in the room object
         return new Promise((resolve, reject) => {
           rooms[tableId].timerId = setInterval(async () => {
+            const remainingTime = Math.ceil((rooms[tableId].actionEnd - Date.now()) / 1000);
+      
             rooms[tableId].actionTimer -= 1000; // Decrement by 1 second
             // console.log('COUNTDOWN: ', rooms[tableId].actionTimer);
             // console.log('COUNTDOWN: ', rooms[tableId].actionTimer);
@@ -1032,7 +1034,7 @@ module.exports = function (io) {
             // console.log('COUNTDOWN: ', rooms[tableId].actionTimer);
             // console.log('COUNTDOWN: ', rooms[tableId].actionTimer);
             // If timer reaches 0, clear interval and emit a timeout event
-            if (rooms[tableId].actionTimer <= 0) {
+            if (remainingTime <= 0) {
               clearInterval(rooms[tableId].timerId);
 
               // Set turnEnded to true for this hand
@@ -1044,6 +1046,96 @@ module.exports = function (io) {
       }
       return;
     }
+
+
+    // async function handlePlayerTurn(tableId, player, io) {
+    //   let room = tableId;
+
+    //   //Iterate over each player's hand
+    //   let playerHands = Object.entries(player.hands);
+    //   // If all hands are finsihed, move the player to sortedFinishedPlayers
+    //   let allHandsEnded = true;
+    //   for (let [key, handData] of playerHands) {
+    //     if (!handData.turnEnded) {
+    //       allHandsEnded = false;
+    //       break;
+    //     }
+    //   }
+    //   if (allHandsEnded) {
+    //     let nextPlayer = rooms[tableId].sortedActivePlayers.pop();
+    //     rooms[tableId].sortedFinishedPlayers.push(nextPlayer);
+    //     return;
+    //   }
+
+    //   for (let [key, handData] of playerHands) {
+    //     if (handData.turnEnded) continue;
+
+    //     let cards = handData.cards;
+    //     let playerHand = await handSummary(cards);
+    //     let playerBestValue = await bestValue(playerHand.values);
+    //     // Assign handSummary to hand
+    //     handData.summary = playerHand;
+
+    //     if (
+    //       playerHand.blackjack ||
+    //       playerHand.busted ||
+    //       playerBestValue === 21
+    //     ) {
+    //       handData.turnEnded = true;
+    //       clearInterval(rooms[tableId].timerId);
+    //       continue;
+    //     }
+
+    //     // Create actionTimer
+    //     rooms[tableId].actionTimer = 500000;
+
+    //     // Set action seat
+    //     rooms[tableId].actionSeat = player.seat;
+
+    //     // Emit update to clients
+    //     let updateObj = {
+    //       tableId,
+    //       table: {
+    //         actionSeat: player.seat,
+    //         actionHand: key,
+    //         actionTimer: rooms[tableId].actionTimer,
+    //         seats: rooms[tableId].seats,
+    //         dealerCards: {
+    //           visibleCards: rooms[tableId].dealerCards.visibleCards,
+    //         },
+    //       },
+    //     };
+
+    //     io.in(room).emit('get_updated_table', updateObj);
+    //     // // If timer already exists, return without creating another one
+    //     // if (rooms[tableId].timerId) {
+    //     //   clearInterval(rooms[tableId].timerId)
+    //     // }
+
+
+    //     // Create timer and store its id in the room object
+    //     return new Promise((resolve, reject) => {
+    //       rooms[tableId].timerId = setInterval(async () => {
+    //         rooms[tableId].actionTimer -= 1000; // Decrement by 1 second
+    //         // console.log('COUNTDOWN: ', rooms[tableId].actionTimer);
+    //         // console.log('COUNTDOWN: ', rooms[tableId].actionTimer);
+    //         // console.log('COUNTDOWN: ', rooms[tableId].actionTimer);
+    //         // console.log('COUNTDOWN: ', rooms[tableId].actionTimer);
+    //         // console.log('COUNTDOWN: ', rooms[tableId].actionTimer);
+    //         // console.log('COUNTDOWN: ', rooms[tableId].actionTimer);
+    //         // If timer reaches 0, clear interval and emit a timeout event
+    //         if (rooms[tableId].actionTimer <= 0) {
+    //           clearInterval(rooms[tableId].timerId);
+
+    //           // Set turnEnded to true for this hand
+    //           handData.turnEnded = true;
+    //           resolve(); // Resolve the promise to let the game loop continue
+    //         }
+    //       }, 1000);
+    //     });
+    //   }
+    //   return;
+    // }
 
     socket.on('player_action', async (actionObj) => {
       const { tableId, action, seat, handId } = actionObj;

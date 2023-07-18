@@ -6,6 +6,8 @@ import { ModalContext } from '../../context/ModalContext';
 
 import { getUserStats } from '../../redux/middleware/users';
 
+import socialstakesCards2 from '../../images/socialstakes-logo-cards2.svg'
+import './StatPage.css'
 
 const StatPage = () => {
 
@@ -27,7 +29,18 @@ const StatPage = () => {
 
   return (
     <div>
-      <div className='friends-banner flex center'>Stats coming soon</div>
+      {/* <div className='friends-banner flex center'>Stats coming soon</div> */}
+
+
+      <div className='zzz-container flex center'>
+
+      <div className='zzz flex center'>
+        <img src={socialstakesCards2} alt="cards"></img>
+      </div>
+
+        <div className='logo-name zzz-name'>SOCIAL STAKES</div> 
+      </div>
+            
     </div>
     
   )

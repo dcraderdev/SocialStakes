@@ -61,10 +61,26 @@ const TableSeat = ({seatNumber}) => {
 
 
 
+
+
+
+
+
+
+
+
+
   useEffect(() => {
 
+    if (!activeTable || !currentTables || !currentTables[activeTable.id]) {
+      return;
+    }
+
+    let countdownInterval = null;
+    let countdownRemaining = Math.ceil((currentTables[activeTable.id].actionEnd - Date.now()) / 1000);
+
+
     let userDisconnectTimer = currentTables[activeTable.id]?.tableUsers?.[seatNumber]?.disconnectTimer;
-    let userActionTimer = currentTables[activeTable.id].actionTimer;
     let userPendingBet = currentTables[activeTable.id]?.tableUsers?.[seatNumber]?.pendingBet;
     let userCurrentBet = currentTables[activeTable.id]?.tableUsers?.[seatNumber]?.currentBet;
     let userCurrentBalance = currentTables[activeTable.id]?.tableUsers?.[seatNumber]?.tableBalance;
@@ -82,14 +98,28 @@ const TableSeat = ({seatNumber}) => {
     if (userDisconnectTimer > 0) {
       setDisconnectTimer(userDisconnectTimer / 1000);
     }
-    if (userActionTimer > 0) {
-      setActionTimer(userActionTimer / 1000);
+
+
+    if (countdownRemaining > 0) {
+      setActionTimer(countdownRemaining);
+      countdownInterval = setInterval(() => {
+        setActionTimer((prevCountdown) => prevCountdown && prevCountdown > 1 ? prevCountdown - 1 : null);
+      }, 1000);
+    } else {
+      setActionTimer(null);
     }
-  }, [currentTables, activeTable, seatNumber]);
   
+    return () => {
+      if (countdownInterval) clearInterval(countdownInterval);
+    };
+
+
+
+  }, [currentTables, activeTable, seatNumber]);
+
+
 
   useEffect(() => {
-
 
     let userInAnySeat = Object.values(currentTables[activeTable.id]?.tableUsers || {}).some(seat => seat.username === user.username);
     let userInSeat = currentTables[activeTable.id]?.tableUsers?.[seatNumber]?.username === user.username;
@@ -102,9 +132,6 @@ const TableSeat = ({seatNumber}) => {
       setHandValues(hands[actionHand].summary.values.join(','))
     }
 
-    // if(!handInProgress){
-    //   setIsForfeited(false)
-    // }
     setIsCurrentUser(userInSeat);
     setIsUserInAnySeat(userInAnySeat);
     setIsActiveSeat(userInActiveSeat)
@@ -130,30 +157,22 @@ const TableSeat = ({seatNumber}) => {
   }, [disconnectTimer]);
 
 
-  useEffect(() => {
-    let actionTimerId = null;
+  // useEffect(() => {
+  //   let actionTimerId = null;
 
   
-    if (actionTimer > 0) {
-      actionTimerId = setInterval(() => {
-        setActionTimer((prevTimer) => prevTimer - 1);
-      }, 1000);
-    }
+  //   if (actionTimer > 0) {
+  //     actionTimerId = setInterval(() => {
+  //       setActionTimer((prevTimer) => prevTimer - 1);
+  //     }, 1000);
+  //   }
   
-    return () => {
-      if (actionTimerId) clearInterval(actionTimerId);
-    };
-  }, [actionTimer]);
+  //   return () => {
+  //     if (actionTimerId) clearInterval(actionTimerId);
+  //   };
+  // }, [actionTimer]);
 
 
-  useEffect(() => {
-    if(tableTheme === 'black'){
-      // seat
-
-    }
-
-  
-  }, [neonTheme, tableTheme]);
 
 
 
@@ -176,11 +195,6 @@ const TableSeat = ({seatNumber}) => {
     setUpdateObj({seat:seatNumber, tableId:activeTable.id})
     openModal('leaveModal')
   }
-
-
-
-
-
 
 
 

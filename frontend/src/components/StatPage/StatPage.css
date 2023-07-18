@@ -1,0 +1,20 @@
+.zzz img{
+  height: 200px;
+  width: 200px;
+}
+
+.zzz-container{
+  color: white;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+
+}
+
+.zzz-name{
+  width: 600px;
+  font-size: 70px;
+  position: relative;
+  left: -265px;
+  top: 90px;
+}

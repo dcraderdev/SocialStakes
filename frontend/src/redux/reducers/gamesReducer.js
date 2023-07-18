@@ -158,10 +158,11 @@ const gamesReducer = (state = initialState, action) => {
         currentTable.tableUsers = table.seats
 
 
-        currentTable.countdown = table.countdownRemaining;
+        currentTable.countdownEnd = table.countdownEnd;
         currentTable.dealerCards = action.payload.table.dealerCards?.visibleCards;
         currentTable.actionSeat = action.payload.table.actionSeat;
-        currentTable.actionTimer = action.payload.table.actionTimer;
+        // currentTable.actionTimer = action.payload.table.actionTimer;
+        currentTable.actionEnd = action.payload.table.actionEnd;
         currentTable.actionHand = action.payload.table.actionHand;
         
         // only update handInProgress if specified in payload
@@ -367,13 +368,16 @@ const gamesReducer = (state = initialState, action) => {
 
     case UPDATE_TABLE_COUNTDOWN: {
 
-      const {countdownRemaining, tableId} = action.payload;
+      const {countdownEnd, tableId} = action.payload;
+
+      console.log(action.payload);
+
       
       const newCurrentTables = { ...newState.currentTables };
       const newCurrentTable = { ...newCurrentTables[tableId] };
 
 
-      newCurrentTable.countdown = countdownRemaining
+      newCurrentTable.countdownEnd = countdownEnd
       newCurrentTables[tableId] = newCurrentTable;
 
       
@@ -381,13 +385,14 @@ const gamesReducer = (state = initialState, action) => {
     }
 
     case COLLECT_BETS: {
+      console.log(action.payload);
 
-      const {countdownRemaining, tableId} = action.payload;
+      const {countdownEnd, tableId} = action.payload;
       
       const newCurrentTables = { ...newState.currentTables };
       const newCurrentTable = { ...newCurrentTables[tableId] };
 
-      newCurrentTable.countdown = countdownRemaining
+      newCurrentTable.countdownEnd = countdownEnd
       newCurrentTables[tableId] = newCurrentTable;
 
       return { ...newState, currentTables: newCurrentTables };

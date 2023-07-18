@@ -11,6 +11,7 @@ module.exports = function (io) {
 
   const rooms = {};
   const disconnectTimeouts = {};
+  let disconnectTimes = {};
 
   const roomInit = () => {
     return {
@@ -64,6 +65,7 @@ module.exports = function (io) {
       clearTimeout(disconnectTimeouts[userId]);
       // console.log(`User ${username} reconnected, timeout cleared.`);
       delete disconnectTimeouts[userId];
+      delete disconnectTimes[userId]
 
       if (userTables) {
         for (let table of userTables) {
@@ -130,16 +132,18 @@ module.exports = function (io) {
           rooms[tableId].forfeitedPlayers.push( player );
           player.forfeit = true
           clearTimeout(disconnectTimeouts[userId])
-
-          let currentTimer = rooms[tableId].actionTimer
+          delete disconnectTimeouts[userId];
+          delete disconnectTimes[userId]
+      
+          let currentTimer = rooms[tableId].actionEnd
           let leaveSeatObj = {tableId, seat, currentTimer}
 
           io.to(room).emit('player_forfeit', leaveSeatObj)
 
           //if no players left to act, end the round
           if (!anyPlayersBefore && !anyPlayersAfter) {
-        await endRound(tableId, io);
-        return
+            await endRound(tableId, io);
+            return
           }
           
           if(leaveOnPlayerTurn){
@@ -177,6 +181,10 @@ module.exports = function (io) {
     socket.on('disconnect', async () => {
 
       let timer = 5000; // 15 seconds
+
+      disconnectTimes[userId] = Date.now();
+
+
       // Clear the existing timeout for this user (if any)
       if (disconnectTimeouts[userId]) {
         clearTimeout(disconnectTimeouts[userId]);
@@ -184,6 +192,12 @@ module.exports = function (io) {
 
       // Start a new timeout for this user
       disconnectTimeouts[userId] = setTimeout(async () => {
+
+        // Check the elapsed time since disconnect
+        let elapsedSeconds = Math.floor((Date.now() - disconnectTimes[userId]) / 1000);
+        if (elapsedSeconds < timer / 1000) {
+          return;
+        }
         const userTables = await gameController.getUserTables(userId);
         if (userTables) {
           for (let table of userTables) {
@@ -204,6 +218,11 @@ module.exports = function (io) {
         }
       }, timer);
     }); 
+
+
+
+
+
 
     socket.on('join_room', async (room) => {
       let tableId = room;
@@ -1031,7 +1050,7 @@ module.exports = function (io) {
           rooms[tableId].timerId = setInterval(async () => {
             const remainingTime = Math.ceil((rooms[tableId].actionEnd - Date.now()) / 1000);
       
-            rooms[tableId].actionTimer -= 1000; // Decrement by 1 second
+            // rooms[tableId].actionTimer -= 1000; // Decrement by 1 second
             // console.log('COUNTDOWN: ', rooms[tableId].actionTimer);
             // console.log('COUNTDOWN: ', rooms[tableId].actionTimer);
             // console.log('COUNTDOWN: ', rooms[tableId].actionTimer);
@@ -1070,13 +1089,19 @@ module.exports = function (io) {
       // Reset the timer whenever a player takes an action
       if (rooms[tableId] && rooms[tableId].timerId) {
         clearInterval(rooms[tableId].timerId);
-        rooms[tableId].actionTimer = 0;
+        rooms[tableId].actionEnd = 0;
+
+        // HERE
+        // HERE
+        // HERE
+        // HERE
+        // HERE
       }
 
       let updateObj = {
         tableId,
         table: {
-          actionTimer: rooms?.[tableId]?.actionTimer,
+          actionEnd: rooms?.[tableId]?.actionEnd,
           seats: rooms[tableId].seats,
           dealerCards: {
             visibleCards: rooms[tableId].dealerCards.visibleCards,
@@ -1525,7 +1550,7 @@ module.exports = function (io) {
       rooms[tableId].handInProgress = false;
       rooms[tableId].actionSeat = null;
       clearInterval(rooms[tableId].timerId);
-      rooms[tableId].actionTimer = null;
+      rooms[tableId].actionEnd = null;
     }
 
     function emitUpdatedTable(tableId, io) {

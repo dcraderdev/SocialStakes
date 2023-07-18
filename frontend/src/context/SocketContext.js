@@ -166,6 +166,7 @@ const SocketProvider = ({ children }) => {
       });  
 
       socket.on('countdown_update', (countdownObj) => {
+        console.log(countdownObj);
         dispatch(updateTableCountdownAction(countdownObj)); 
       });  
 

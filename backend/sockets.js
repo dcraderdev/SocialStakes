@@ -18,7 +18,6 @@ module.exports = function (io) {
       roundId: null,
       actionSeat: null,
       actionTimer: null,
-      countdownTimer: 0,
       countdownRemaining: 0,
       handInProgress: false,
       gameSessionId: null,
@@ -302,7 +301,6 @@ module.exports = function (io) {
       await Promise.all(leaveSeatPromises);
       await gameController.closeTable(tableId);
 
-      clearInterval(rooms[tableId].countdownTimer);
       delete rooms[tableId];
       io.to(room).emit('close_table', tableId)
 
@@ -455,90 +453,6 @@ module.exports = function (io) {
     });
 
 
-    socket.on('place_bet', async (betObj) => {
-      const { bet, tableId, seat } = betObj;
-      let room = tableId;
-
-      // If the room doesnt exist create a new room
-      if (!rooms[tableId]) {
-        let updatedTable = await gameController.getTableById(tableId);
-        rooms[tableId] = roomInit();
-        rooms[tableId].gameSessionId = updatedTable.gameSessions[0].id;
-        rooms[tableId].decksUsed = updatedTable.Game.decksUsed;
-      }
-
-      // Update pendingBet in the rooms object
-
-      if (rooms[tableId] && rooms[tableId].seats[seat]) {
-        rooms[tableId].seats[seat].pendingBet += bet;
-        rooms[tableId].seats[seat].tableBalance -= bet;
-      }
-
-
-
-      // Countdown duration
-      const countdownDuration = 5000; // 5 seconds
-
-      // Start a new countdown
-      let countdownRemaining = countdownDuration;
-
-
-      // Start a new countdown if one isn't already running
-      if (!rooms[tableId].countdownTimer) {
-        rooms[tableId].countdownTimer = setInterval(() => {
-          countdownRemaining -= 1000;
-          rooms[tableId].countdownRemaining = countdownRemaining;
-          if (countdownRemaining <= 0) {
-            // if theres bets, start hand otherwise cancel
-            if (isNoBetsLeft(tableId)) {
-              stopTimer(tableId);
-              return;
-            } 
-
-            clearInterval(rooms[tableId].countdownTimer);
-            rooms[tableId].countdownTimer = null;
-            rooms[tableId].countdownRemaining = 0;
-            rooms[tableId].handInProgress = true;
- 
-            // Transfer pendingBet to currentBet for each seat
-            for (let seatKey in rooms[tableId].seats) {
-              const seat = rooms[tableId].seats[seatKey];
-              seat.currentBet += seat.pendingBet;
-              seat.pendingBet = 0;
-            }
-            let updateObj = {
-              tableId,
-              table: {
-                handInProgress: true,
-                seats: rooms[tableId].seats,
-                countdownRemaining,
-              },
-            };
-
-            socket.join(room);
-            io.in(room).emit('get_updated_table', updateObj);
-
-            // Countdown finished, emit event to collect all bets
-            let countdownObj = {
-              countdownRemaining,
-              tableId,
-            };
-            io.in(room).emit('collect_bets', countdownObj);
-            dealCards(tableId, io);
-          }
-        }, 1000);
-      }
-
-      let countdownObj = {
-        countdownRemaining,
-        tableId,
-      };
-
-      io.in(room).emit('new_bet', betObj);
-      io.in(room).emit('countdown_update', countdownObj);
-
-    });
-
     socket.on('remove_last_bet', async (betObj) => {
       const { tableId, seat, lastBet } = betObj;
       let room = tableId;
@@ -577,6 +491,112 @@ module.exports = function (io) {
 
     });
 
+    
+
+
+    socket.on('place_bet', async (betObj) => {
+      const { bet, tableId, seat } = betObj;
+      let room = tableId;
+    
+      // If the room doesnt exist create a new room
+      if (!rooms[tableId]) {
+        let updatedTable = await gameController.getTableById(tableId);
+        rooms[tableId] = roomInit();
+        rooms[tableId].gameSessionId = updatedTable.gameSessions[0].id;
+        rooms[tableId].decksUsed = updatedTable.Game.decksUsed;
+      }
+
+      // If handInProgress, dont add the bet
+      if (rooms[tableId].handInProgress) {
+        return
+      }
+    
+      // Update pendingBet in the rooms object
+      if (rooms[tableId] && rooms[tableId].seats[seat]) {
+        rooms[tableId].seats[seat].pendingBet += bet;
+        rooms[tableId].seats[seat].tableBalance -= bet;
+      }
+
+      if(!rooms[tableId].countdownEnd){
+        setDealCountdownEndTime(tableId, io)
+      }
+
+    
+      io.in(room).emit('new_bet', betObj);
+    });
+    
+
+
+    // Check for expired countdowns every second
+    setInterval(async () => {
+      for (const tableId in rooms) {
+        const room = rooms[tableId];
+        if (room.countdownEnd && Date.now() >= room.countdownEnd) {
+          room.countdownEnd = null;
+    
+          // if theres bets, start hand otherwise cancel
+          if (isNoBetsLeft(tableId)) {
+            stopTimer(tableId);
+            continue;
+          }
+    
+          room.handInProgress = true;
+    
+          // Transfer pendingBet to currentBet for each seat
+          for (let seatKey in room.seats) {
+            const seat = room.seats[seatKey];
+            seat.currentBet += seat.pendingBet;
+            seat.pendingBet = 0;
+          }
+    
+          let updateObj = {
+            tableId,
+            table: {
+              handInProgress: true,
+              seats: room.seats,
+            },
+          };
+    
+          io.in(tableId).emit('get_updated_table', updateObj);
+    
+          // Countdown finished, emit event to collect all bets
+          let countdownObj = {
+            countdownEnd: room.countdownEnd,
+            tableId,
+          };
+          io.in(tableId).emit('collect_bets', countdownObj);
+          dealCards(tableId, io);
+        }
+      }
+    }, 1000);
+    
+
+
+
+
+
+ 
+
+
+    async function setDealCountdownEndTime(tableId, io){
+
+      if(!rooms[tableId]) return
+      if(rooms[tableId].countdownEnd) return
+
+      let room = tableId
+      // Set countdown end time
+      const countdownDuration = 5000; // 5 seconds
+      const endTime = Math.ceil((Date.now() + countdownDuration));
+      rooms[tableId].countdownEnd = endTime;
+
+      let countdownObj = {
+        countdownEnd: endTime,
+        tableId,
+      };
+
+      io.in(room).emit('countdown_update', countdownObj);
+    }
+
     function isNoBetsLeft(tableId) {
       if (!rooms[tableId]) return true;
 
@@ -592,20 +612,15 @@ module.exports = function (io) {
 
     function stopTimer(tableId) {
       let room = tableId;
-      // Check if the countdownTimer exists before trying to clear it
-      if (rooms[tableId] && rooms[tableId].countdownTimer) {
-        clearInterval(rooms[tableId].countdownTimer);
-        delete rooms[tableId].countdownTimer;
-        rooms[tableId].countdownRemaining = 0
+      let countdownObj = { countdownEnd: 0, tableId };
 
-        let countdownObj = {
-          countdownRemaining: 0,
-          tableId,
-        };
-
-        io.in(room).emit('countdown_update', countdownObj);
-      }
+      rooms[tableId].countdownEnd = null;
+      io.in(room).emit('countdown_update', countdownObj);
     }
+    
+
+
+
 
     socket.on('add_funds', async (seatObj) => {
       const { tableId, seat, userId, amount } = seatObj;
@@ -1041,7 +1056,7 @@ module.exports = function (io) {
           content: `${username} has ${action}.`,
           id: 0,
         },
-      };
+      }; 
 
       // Reset the timer whenever a player takes an action
       if (rooms[tableId] && rooms[tableId].timerId) {
@@ -1052,13 +1067,13 @@ module.exports = function (io) {
       let updateObj = {
         tableId,
         table: {
-          actionTimer: rooms[tableId].actionTimer,
+          actionTimer: rooms?.[tableId]?.actionTimer,
           seats: rooms[tableId].seats,
           dealerCards: {
             visibleCards: rooms[tableId].dealerCards.visibleCards,
           },
-        },
-      };
+        }, 
+      };  
 
       io.in(room).emit('get_updated_table', updateObj);
       io.in(room).emit('new_message', messageObj);

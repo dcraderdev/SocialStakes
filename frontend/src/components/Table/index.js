@@ -26,67 +26,42 @@ const Table = () => {
   
   const [countdown, setCountdown] = useState(null);
   const [cards, setCards] = useState([]);
-  const [currentSeat, setCurrentSeat] = useState(null);
   const [isHandInProgress, setIsHandInProgress] = useState(false);
 
 
  
   useEffect(()=>{
 
+    if (!activeTable || !currentTables || !currentTables[activeTable.id]) {
+      return;
+    }
 
-    if(currentTables && activeTable && currentTables[activeTable.id]?.handInProgress){
+    let countdownInterval = null;
+    let countdownRemaining = Math.ceil((currentTables[activeTable.id].countdownEnd - Date.now()) / 1000);
+    let currentTable = currentTables[activeTable.id]
+    let dealerCards = currentTable.dealerCards
+
+    if(currentTable.handInProgress){
       setIsHandInProgress(true)
     }
 
-    setCurrentSeat(null)
+    setCards(dealerCards)
 
-    if(activeTable && currentTables){
-      let currTable = currentTables[activeTable.id];
-      let dealerCards = currTable.dealerCards
-      setCards(dealerCards)
-
-
-      if(currTable.countdown === 0){
-        setCountdown(null);
-      }
-      if(!countdown && currTable.countdown){
-        setCountdown(currTable.countdown/1000);
-      }
-
-      if(user && currentTables && activeTable && currentTables[activeTable.id]?.tableUsers){
-        Object.values(currentTables[activeTable.id]?.tableUsers).map(seat=>{
-          if(seat.userId === user.id){
-            setCurrentSeat(seat.seat)
-          }
-        })
-      }
-
-
-
-    }
-  },[currentTables, activeTable]);
-
-
-
-
-
-  useEffect(() => {
-    let countdownInterval = null;
-    if (countdown > 0) {
+    if (countdownRemaining > 0) {
+      setCountdown(countdownRemaining);
       countdownInterval = setInterval(() => {
-        setCountdown((prevCountdown) => prevCountdown - 1);
+        setCountdown((prevCountdown) => prevCountdown && prevCountdown > 1 ? prevCountdown - 1 : null);
       }, 1000);
-    }
- 
-    if (countdown === 0) {
+    } else {
       setCountdown(null);
     }
-
+  
     return () => {
       if (countdownInterval) clearInterval(countdownInterval);
     };
-  }, [countdown]);
 
+
+  },[currentTables, activeTable]);
 
 
 
@@ -110,22 +85,6 @@ const Table = () => {
       </div>
 
 
-        {/* <div className='seats-container'>
-          <div className='top-seats flex between'>
-            <TableSeat seatNumber={1} player={activeTable?.tableUsers?.['1']} />
-            <TableSeat seatNumber={6} player={activeTable?.tableUsers?.['6']} />
-          </div>
-          <div className='mid-seats flex between'>
-            <TableSeat seatNumber={2} player={activeTable?.tableUsers?.['2']} />
-            <TableSeat seatNumber={5} player={activeTable?.tableUsers?.['5']} />
-          </div>
-          <div className='bot-seats flex between'>
-            <TableSeat seatNumber={3} player={activeTable?.tableUsers?.['3']} />
-            <TableSeat seatNumber={4} player={activeTable?.tableUsers?.['4']} />
-          </div>
-        </div> */}
-
-
 <div className='seats-container'>
           <div className='top-seats flex between'>
             <TableSeat seatNumber={1} />
@@ -142,12 +101,7 @@ const Table = () => {
         </div>
 
           
-            {/* <TableSeat seatNumber={1} />
-            <TableSeat seatNumber={6} />
-            <TableSeat seatNumber={2} />
-            <TableSeat seatNumber={5} />
-            <TableSeat seatNumber={3} />
-            <TableSeat seatNumber={4} /> */}
+
 
 
     </div>

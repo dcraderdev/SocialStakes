@@ -158,7 +158,7 @@ const gamesReducer = (state = initialState, action) => {
         currentTable.tableUsers = table.seats
 
 
-        currentTable.countdown = table.countdownRemaining;
+        currentTable.countdownEnd = table.countdownEnd;
         currentTable.dealerCards = action.payload.table.dealerCards?.visibleCards;
         currentTable.actionSeat = action.payload.table.actionSeat;
         currentTable.actionTimer = action.payload.table.actionTimer;
@@ -367,13 +367,16 @@ const gamesReducer = (state = initialState, action) => {
 
     case UPDATE_TABLE_COUNTDOWN: {
 
-      const {countdownRemaining, tableId} = action.payload;
+      const {countdownEnd, tableId} = action.payload;
+
+      console.log(action.payload);
+
       
       const newCurrentTables = { ...newState.currentTables };
       const newCurrentTable = { ...newCurrentTables[tableId] };
 
 
-      newCurrentTable.countdown = countdownRemaining
+      newCurrentTable.countdownEnd = countdownEnd
       newCurrentTables[tableId] = newCurrentTable;
 
       

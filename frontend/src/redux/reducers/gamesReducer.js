@@ -385,13 +385,14 @@ const gamesReducer = (state = initialState, action) => {
     }
 
     case COLLECT_BETS: {
+      console.log(action.payload);
 
-      const {countdownRemaining, tableId} = action.payload;
+      const {countdownEnd, tableId} = action.payload;
       
       const newCurrentTables = { ...newState.currentTables };
       const newCurrentTable = { ...newCurrentTables[tableId] };
 
-      newCurrentTable.countdown = countdownRemaining
+      newCurrentTable.countdownEnd = countdownEnd
       newCurrentTables[tableId] = newCurrentTable;
 
       return { ...newState, currentTables: newCurrentTables };

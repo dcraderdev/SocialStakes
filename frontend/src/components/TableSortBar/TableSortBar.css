@@ -14,33 +14,10 @@
 .tablesortbar-container{
   justify-content: space-between;
   width: 100%;
+  
 
 
 }
-
-
-.arrow-container{
-  flex-direction: column;
-  height: 30px;
-  margin-left: 5px;
-}
-
-.sort-arrow {
-  font-size: 15px;
-  z-index: 100;
-  cursor: pointer;
-}
-
-.sort-arrow:hover {
-  color: rgba(217, 46, 46, 1);
-}
-
-
-.tablesort-text{
-  font-size: 15px;
-}
-
-
 
 
 
@@ -54,16 +31,44 @@
 
 
 
+
 .tablesortbar-header-container:last-child{
   margin-right: 10px;
 }
 
+.tablesortbar-header-container:first-child{
+  margin-left: 10px;
+}
+
+
+.arrow-container{
+  flex-direction: column;
+  height: 30px;
+  margin-left: 5px;
+
+}
+
+.sort-arrow {
+  font-size: 15px;
+  z-index: 100;
+  cursor: pointer;
+}
+
+.sort-arrow:hover {
+  color: rgba(217, 46, 46, 1);
+}
 
 
 
+.tablesort-text{
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
 
-
-@media screen and (min-width: 700px) {
+@media screen and (min-width: 720px) {
   .tablesort-text{
     font-size: 20px;
   }

@@ -6,14 +6,14 @@ import gameTileBackground from '../../images/game-tile-background.jpeg'
 import Searching from '../../images/Searching.svg'
 
 
-const GameTile = ({game, cbFunc}) => {
+const GameTile = ({game, cbFunc, delay}) => {
 
   const [isActive, setIsActive] = useState(true)
 
   const getIcon = (gameType) => {
     if(!gameType){
       return (
-        <div className='gametile-container flex center'>
+        <div className='flex center'>
           <div>
             <div className=' flex center'></div>
           </div>
@@ -23,7 +23,7 @@ const GameTile = ({game, cbFunc}) => {
 
     if(gameType === 'multi_blackjack'){
       return (
-        <div className='gametile-container flex center'>
+        <div className='flex center'>
           <div>
             <div className=' flex center'>Multi Player</div>
             <div className=' flex center'>Blackjack</div> 
@@ -33,7 +33,7 @@ const GameTile = ({game, cbFunc}) => {
     }
     if(gameType === 'single_blackjack'){
       return (
-        <div className='gametile-container flex center'>
+        <div className='flex center'>
           <div>
             <div className=' flex center'>Single Player</div>
             <div className=' flex center'>Blackjack</div>
@@ -43,7 +43,7 @@ const GameTile = ({game, cbFunc}) => {
     }
     if(gameType === 'poker'){
       return (
-        <div className='gametile-container flex center'>
+        <div className='flex center'>
           <div>
             <div className=' flex center'>Texas</div>
             <div className=' flex center'>Hold 'em</div>
@@ -53,7 +53,7 @@ const GameTile = ({game, cbFunc}) => {
     }
     if(gameType === 'acey_duecey'){
       return (
-        <div className='gametile-container flex center'>
+        <div className='flex center'>
           <div>
             <div className=' flex center'>Acey</div>
             <div className=' flex center'>Duecey</div>
@@ -63,14 +63,14 @@ const GameTile = ({game, cbFunc}) => {
     }
     if(gameType === 'coin_flip'){
       return (
-        <div className='gametile-container flex center'>
+        <div className='flex center'>
             <div className=' flex center'>Coin Flip</div>
         </div>
       )
     }
     if(gameType === 'hi_lo'){
       return (
-        <div className='gametile-container flex center'>
+        <div className='flex center'>
             <div className=' flex center'>Hi Lo</div>
         </div>
       )
@@ -101,13 +101,17 @@ const GameTile = ({game, cbFunc}) => {
       setImgSrc(gameTileBackground);  
   };
 
+  const tileStyle = {
+    animationDelay: `${delay * 0.02}s`,
+  }
+
 
   return (
     <div>
-      <div className='game-tile pulse rounded' onClick={() => cbFunc(game.gameType)}>
-        <div className='game-name'>{getIcon(game.gameType)}</div>
+      <div className='gametile-container fade-in rounded' style={tileStyle} onClick={() => cbFunc(game.gameType)}>
+        <div className='gametile-name'>{getIcon(game.gameType)}</div>
         {!isActive && (
-          <div style={{position:'absoulte', 'fontSize': '13px' ,color:'red', top:'50px'}}>Game coming soon</div>
+          <div className='gametile-coming-soon' >Game coming soon</div>
         )}
 
       {

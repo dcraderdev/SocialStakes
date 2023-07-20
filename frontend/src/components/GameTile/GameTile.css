@@ -3,7 +3,7 @@
   color: inherit;
 }
 
-.game-tile {
+.gametile-container {
   border: black solid 1px;
   position: relative;
   display: flex;
@@ -14,29 +14,47 @@
   cursor: pointer;
   height: 100%;
   width: 100%;
-  background-color: black;
+  opacity: 0;
+
 }
 
 
 
-.game-tile:hover {
+.gametile-container:hover {
   box-shadow: rgba(218, 165, 32, 0.187) 0px 1px 3px, rgba(218, 165, 32, 0.272) 0px 1px 3px;
 }
 
 
-.game-name{
+.gametile-name{
   color: white;
   position: absolute;
   font-size: 25px;
   line-height: 1.3;
 }
 
-.game-tile img {
-object-fit: fill;
-/* 
-height: inherit;
-width: inherit; */
+.gametile-container img {
 height: 100%;
 width: 100%;
 }
 
+
+.gametile-coming-soon{
+  position: absolute;
+  font-size: 13px ;
+  color: red;
+  top: 0px;
+}
+
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.fade-in {
+  animation: fadeIn 1s forwards ease-in;
+}

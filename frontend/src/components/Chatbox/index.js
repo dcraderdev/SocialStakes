@@ -49,7 +49,7 @@ const Chatbox = ({showMessages}) => {
       if (bottomRef.current) {
         bottomRef.current.scrollIntoView({ behavior: 'smooth' });
       }
-    },[conversations])
+    },[conversations, activeTable])
 
 
     // useEffect(()=>{

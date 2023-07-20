@@ -75,13 +75,18 @@
 .seats-container{
   height: inherit;
   position: relative;
+  border: #01fdca solid 1px;
+  width: 100%;
+  min-height: 320px;
+  height: 50vh;
+
 }
 
 
 .bot-seats,
 .mid-seats,
 .top-seats{
-  /* border: gold solid 1px; */
+  border: gold solid 1px;
   position: relative;
   left: 50%;
   transform: translate(-50%, 0);

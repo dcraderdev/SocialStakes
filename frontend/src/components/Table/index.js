@@ -85,7 +85,7 @@ const Table = () => {
       </div>
 
 
-<div className='seats-container'>
+{/* <div className='seats-container'>
           <div className='top-seats flex between'>
             <TableSeat seatNumber={1} />
             <TableSeat seatNumber={6} />
@@ -98,9 +98,16 @@ const Table = () => {
             <TableSeat seatNumber={3} />
             <TableSeat seatNumber={4} />
           </div>
-        </div>
+        </div> */}
 
-          
+<div className='seats-container'>
+            <TableSeat seatNumber={1} />
+            <TableSeat seatNumber={6} />
+            <TableSeat seatNumber={2} />
+            <TableSeat seatNumber={5} />
+            <TableSeat seatNumber={3} />
+            <TableSeat seatNumber={4} />
+        </div>     
 
 
 

@@ -1,49 +1,56 @@
 .seat-wrapper {
   width: 130px;
   min-width: 100px;
-  height: 100%;
+  height: fit-content;
   position: absolute;
-
 }
+
 
 .seat1 {
-  top: 0px;
-  left: 0px;
+  top: 10%;
+  left: -25px;
 }
-.seat6 {
-  top: 0px;
-  right: 0px;
-}
-
 .seat2 {
-  top: 20px;
-  left: 25px;
-}
-.seat5 {
-  right: 25px;
-  top: 20px;
+  bottom: 8%;
+  left: 10px;
 }
 .seat3 {
-  left: 100px;
-  top: 20px;
+  left: 25%;
+  bottom: -10%;
 }
 .seat4 {
-  right: 100px;
-  top: 20px;
+  right: 25%;
+  bottom: -10%;
+}
+.seat5 {
+  bottom: 8%;
+
+  right: 10px;
+}
+.seat6 {
+  top: 10%;
+  right: -25px;
 }
 
-@media screen and (max-height: 650px) {
 
-  .seat2,
-  .seat3,
-  .seat4,
-  .seat5 {
-    top: 0px;
 
+@media screen and (min-width: 1300px) {
+  .seat6 {
+    right: -65px;
   }
 
-  
+  .seat1 {
+    left: -65px;
+  }
 }
+
+
+
+
+
+
+
+
 
 .seat-container {
   width: 10%;
@@ -169,13 +176,17 @@
   display: flex;
   top: -56px;
   flex-direction: column;
+  border: green solid 1px;
 }
 
 
 .seat-card-area{
+  border: rgb(9, 24, 101) solid 1px;
+
+
+
   width: fit-content;
   height: fit-content;
-
   display: flex;
 }
 
@@ -230,7 +241,9 @@ margin-right: 5px;
   flex-direction: column;
 }
 
-
+.name-space{
+  height: 20px;
+}
 
 
 .seat-leave-button{

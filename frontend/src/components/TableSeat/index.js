@@ -201,7 +201,7 @@ const TableSeat = ({seatNumber}) => {
 
 return(
 
-    <div onClick={takeSeat} className={`seat-wrapper flex center seat${seatNumber} ${!player ? ' border' : ''}`}>
+    <div onClick={takeSeat} className={`seat-wrapper flex center seat seat${seatNumber} ${!player ? ' border' : ''}`}>
 
       {disconnectTimer > 0 && (<div className='disconnect-timer flex center'>{disconnectTimer}s</div>)}
       {actionTimer > 0 && isActiveSeat && (<div className='turn-timer flex center'>{actionTimer}s</div>)}
@@ -228,7 +228,7 @@ return(
         <div className='seat-namebalance-container flex center'>
           <div className={`seat-tablebalance flex center ${neonTheme}-text`}>${currentBalance}</div>
         </div>
-          <div className={` ${neonTheme}-text flex center`}>{player.username}</div>
+          <div className={`${neonTheme}-text name-space flex center`}>{player.username}</div>
           {isForfeited && <div className='table-balance flex center'>Forfeited</div>}
 
         </div>
@@ -315,7 +315,7 @@ return(
                 <div className='seat-namebalance-container flex center'>
                   <div className={`seat-tablebalance flex center ${neonTheme}-text`}>-</div>
                 </div>
-                  <div className={` ${neonTheme}-text flex center`}></div>
+                  <div className={` ${neonTheme}-text name-space flex center`}></div>
                   {isForfeited && <div className='table-balance flex center'>Forfeited</div>}
         
                 </div>

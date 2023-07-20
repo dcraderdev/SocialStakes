@@ -34,7 +34,15 @@
 
 
 
+@media screen and (min-width: 1300px) {
+  .seat6 {
+    right: -65px;
+  }
 
+  .seat1 {
+    left: -65px;
+  }
+}
 
 
 
@@ -168,13 +176,17 @@
   display: flex;
   top: -56px;
   flex-direction: column;
+  border: green solid 1px;
 }
 
 
 .seat-card-area{
+  border: rgb(9, 24, 101) solid 1px;
+
+
+
   width: fit-content;
   height: fit-content;
-
   display: flex;
 }
 
@@ -229,7 +241,9 @@ margin-right: 5px;
   flex-direction: column;
 }
 
-
+.name-space{
+  height: 20px;
+}
 
 
 .seat-leave-button{

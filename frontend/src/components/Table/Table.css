@@ -75,7 +75,6 @@
 .seats-container{
   height: inherit;
   position: relative;
-  border: #01fdca solid 1px;
   width: 100%;
   min-height: 320px;
   height: 50vh;

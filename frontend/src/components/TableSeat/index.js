@@ -228,7 +228,7 @@ return(
         <div className='seat-namebalance-container flex center'>
           <div className={`seat-tablebalance flex center ${neonTheme}-text`}>${currentBalance}</div>
         </div>
-          <div className={` ${neonTheme}-text flex center`}>{player.username}</div>
+          <div className={`${neonTheme}-text name-space flex center`}>{player.username}</div>
           {isForfeited && <div className='table-balance flex center'>Forfeited</div>}
 
         </div>
@@ -315,7 +315,7 @@ return(
                 <div className='seat-namebalance-container flex center'>
                   <div className={`seat-tablebalance flex center ${neonTheme}-text`}>-</div>
                 </div>
-                  <div className={` ${neonTheme}-text flex center`}></div>
+                  <div className={` ${neonTheme}-text name-space flex center`}></div>
                   {isForfeited && <div className='table-balance flex center'>Forfeited</div>}
         
                 </div>

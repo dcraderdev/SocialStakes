@@ -7,7 +7,7 @@ import * as userActions from '../../redux/middleware/users';
 
 import './TableTile.css'
 
-const TableTile = ({table, viewTable}) => {
+const TableTile = ({table, viewTable, delay}) => {
 
   const history = useHistory()
   const dispatch = useDispatch()
@@ -80,10 +80,13 @@ const TableTile = ({table, viewTable}) => {
   },[isPrivate, playerCount, maxPlayers, table])
 
 
-
+  const tileStyle = {
+    animationDelay: `${delay * 0.02}s`,
+  }
+  
 
   return (
-      <div className="tabletile-wrapper" onClick={()=>viewTable(table)}>
+      <div className="tabletile-wrapper fade-in" style={tileStyle} onClick={()=>viewTable(table)}>
         <div className='tabletile-container'>
           <div className='tabletile-content flex center'>
 

@@ -88,21 +88,11 @@ const GameTile = ({game, cbFunc, delay}) => {
 
   },[game])
 
-  useEffect(()=>{
-    handleImageLoad()
-
-  },[])
 
 
-  const [imgSrc, setImgSrc] = useState(null);
-
-  const handleImageLoad = () => {
-      
-      setImgSrc(gameTileBackground);  
-  };
 
   const tileStyle = {
-    animationDelay: `${delay * 0.02}s`,
+    animationDelay: `${delay * 0.1}s`,
   }
 
 
@@ -114,11 +104,10 @@ const GameTile = ({game, cbFunc, delay}) => {
           <div className='gametile-coming-soon' >Game coming soon</div>
         )}
 
-      {
-        imgSrc && (
-          <img src={imgSrc} alt='game tile' ></img>
-        )
-      }
+
+        <img src={gameTileBackground} alt='game tile' ></img>
+
+
 
       </div>
     </div>

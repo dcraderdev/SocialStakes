@@ -1,5 +1,5 @@
 .table-wrapper{
-  position: relative;
+  position: absolute;
   top: -10px;
   left: 0%;
   width: 100%;
@@ -74,7 +74,7 @@
 
 .seats-container{
   height: inherit;
-  position: relative;
+  position: absolute;
   width: 100%;
   min-height: 320px;
   height: 50vh;
@@ -82,34 +82,7 @@
 }
 
 
-.bot-seats,
-.mid-seats,
-.top-seats{
-  border: gold solid 1px;
-  position: relative;
-  left: 50%;
-  transform: translate(-50%, 0);
-  height: 35%;
-  min-height: 100px;
 
-}
-
-.top-seats{
-  width: 100%;
-  margin-top: 10px;
-
-}
-.mid-seats{
-  width: 100%;
-  min-width: 500px;
-
-}
-
-.bot-seats{
-  width: 70%;
-  min-width: 500px;
-  max-width: 800px;
-}
 
 
 @media screen and (max-height: 650px) {

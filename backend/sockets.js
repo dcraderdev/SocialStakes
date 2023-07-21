@@ -590,13 +590,6 @@ module.exports = function (io) {
     }, 1000);
     
 
-
-
-
-
- 
-
-
     async function setDealCountdownEndTime(tableId, io){
 
       if(!rooms[tableId]) return
@@ -604,7 +597,7 @@ module.exports = function (io) {
 
       let room = tableId
       // Set countdown end time
-      const countdownDuration = 5000; // 5 seconds
+      const countdownDuration = 1000; // 5 seconds
       const endTime = Math.ceil((Date.now() + countdownDuration));
       rooms[tableId].countdownEnd = endTime;
 
@@ -638,7 +631,7 @@ module.exports = function (io) {
     }
     
 
-
+ 
 
 
     socket.on('add_funds', async (seatObj) => {
@@ -973,7 +966,7 @@ module.exports = function (io) {
       }
     }
 
-
+ 
     async function handlePlayerTurn(tableId, player, io) {
       let room = tableId;
 
@@ -986,7 +979,7 @@ module.exports = function (io) {
           allHandsEnded = false;
           break;
         }
-      }
+      } 
       if (allHandsEnded) {
         let nextPlayer = rooms[tableId].sortedActivePlayers.pop();
         rooms[tableId].sortedFinishedPlayers.push(nextPlayer);
@@ -1000,25 +993,20 @@ module.exports = function (io) {
         let playerHand = await handSummary(cards);
         let playerBestValue = await bestValue(playerHand.values);
         // Assign handSummary to hand
-        handData.summary = playerHand;
-
-        if (
+        handData.summary = playerHand; 
+ 
+        if ( 
           playerHand.blackjack ||
           playerHand.busted ||
           playerBestValue === 21
-        ) {
+        ) { 
           handData.turnEnded = true;
           clearInterval(rooms[tableId].timerId);
           continue;
-        }
-
-
-
-
-
+        }  
 
         // Create action end timestamp
-        const actionDuration = 50000; // 5 seconds
+        const actionDuration = 50000000; // 5 seconds
         rooms[tableId].actionEnd = Math.ceil(Date.now() + actionDuration);
 
         // Set action seat
@@ -1070,8 +1058,8 @@ module.exports = function (io) {
       }
       return;
     }
-
-
+ 
+ 
 
     socket.on('player_action', async (actionObj) => {
       const { tableId, action, seat, handId } = actionObj;
@@ -1152,8 +1140,8 @@ module.exports = function (io) {
       rooms[tableId].cursor += cardsToDraw;
       currentHand.cards.push(...drawnCards);
       return;
-    }
-
+    } 
+  
     // Handle player stay action
     async function playerStay(actionObj, io) {
       const { tableId, action, seat, handId } = actionObj;
@@ -1163,7 +1151,7 @@ module.exports = function (io) {
       playersHand.turnEnded = true;
       return;
     }
-
+ 
     async function playerSplit(actionObj, io) {
       const { tableId, action, seat, handId } = actionObj;
       let room = tableId;

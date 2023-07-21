@@ -1,11 +1,12 @@
 const { gameController } = require('./controllers/gameController');
 const { chatController } = require('./controllers/chatController');
+const { friendController } = require('./controllers/friendController');
+const { cardConverter } = require('./controllers/cardConverter');
 const {
   drawCards,
   handSummary,
   bestValue,
 } = require('./controllers/cardController');
-const { cardConverter } = require('./controllers/cardConverter');
 
 module.exports = function (io) {
 
@@ -1661,5 +1662,172 @@ module.exports = function (io) {
       io.in(room).emit('get_updated_table', updateObj);
 
     }
+
+
+    socket.on('send_friend_request', async (friendRequestObj) => {
+      let recipientId = friendRequestObj.newFriendId
+      let recipientUsername = friendRequestObj.newFriendId
+      
+
+
+      console.log('sender | ', username, userId);
+      console.log('recip | ', recipientUsername, recipientId);
+
+
+      const request = await friendController.sendFriendRequest({userId, recipientId});
+      if(request){
+
+        let senderObj = {
+          newFriend:{
+            id: recipientId,
+            username:recipientUsername,
+          },
+          requestInfo: {
+            id: request.id,
+            status: request.status
+          }
+        }
+        
+
+        let recipientObj = {
+          requestingFriend:{
+            id: userId,
+            username,
+          },
+          requestInfo: {
+            id: request.id,
+            status: request.status
+          }
+        }
+
+
+        console.log('-------- request -------');
+        console.log(request);
+        console.log('------------------------');
+
+
+
+        if(request.status === 'accepted'){
+          console.log('says accepted | ', username);
+
+          io.in(recipientId).emit('accept_friend_request', recipientObj);
+          socket.emit('accept_friend_request', senderObj);
+        }
+
+        if(request.status === 'rejected'){
+          senderObj.status = 'pending'
+          socket.emit('friend_request_sent', senderObj);
+
+        }
+
+        if(request.status === 'pending'){
+          io.in(recipientId).emit('friend_request_received', recipientObj);
+          socket.emit('friend_request_sent', senderObj);
+        }
+
+      }
+    });
+
+    socket.on('accept_friend_request', async (friendRequestObj) => {
+      let recipientId = friendRequestObj.newFriendId
+      let recipientUsername = friendRequestObj.newFriendId
+      
+
+      console.log('sender | ', username, userId);
+      console.log('recip | ', recipientUsername, recipientId);
+
+      console.log(friendRequestObj);
+
+
+      const request = await friendController.acceptFriendRequest({userId, recipientId});
+      if(request && request.status === 'accepted') {
+
+
+        let senderObj = {
+          newFriend:{
+            id: recipientId,
+            username:recipientUsername,
+          },
+          requestInfo: {
+            id: request.id,
+            status: request.status
+          }
+        }
+        
+
+        let recipientObj = {
+          requestingFriend:{
+            id: userId,
+            username,
+          },
+          requestInfo: {
+            id: request.id,
+            status: request.status
+          }
+        }
+
+
+        console.log(senderObj);
+        console.log(recipientObj);
+    
+        io.in(recipientId).emit('accept_friend_request', recipientObj);
+        socket.emit('accept_friend_request', senderObj);
+      }
+    
+      return request;
+    });
+    
+    socket.on('deny_friend_request', async (friendRequestObj) => {
+      let recipientId = friendRequestObj.newFriendId
+      let recipientUsername = friendRequestObj.newFriendId
+      
+
+      console.log('sender | ', username, userId);
+      console.log('recip | ', recipientUsername, recipientId);
+
+      console.log(friendRequestObj);
+
+
+
+      const request = await friendController.declineFriendRequest({userId, recipientId});
+      if(request && request.status === 'rejected') {
+    
+        let userKey = friendRequestObj.newFriendUsername;
+        let userId = friendRequestObj.newFriendId;
+    
+        let senderObj = {
+          keyName: userKey,
+          friendObj:{
+            friend:{
+              id: userId,
+              username:userKey,
+            },
+            id: request.id,
+            status: request.status
+          }
+        };
+    
+        let recipientObj = {
+          keyName: username,
+          friendObj:{
+            friend:{
+              id: userId,
+              username,
+            },
+            id: request.id,
+            status: request.status
+          }
+        };
+    
+        io.in(recipientId).emit('deny_friend_request', recipientObj);
+        socket.emit('deny_friend_request', senderObj);
+      }
+    
+      return request;
+    });
+
+
+
+
   });
 };

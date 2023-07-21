@@ -15,10 +15,11 @@ const Chatbox = ({showMessages}) => {
   const [newMessage, setNewMessage] = useState('');
   const [messages, setMessages] = useState([]);
   const user = useSelector(state => state.users.user);
-  const friends = useSelector(state => state.users.friends);
+  const friends = useSelector(state => state.friends);
   const activeTable = useSelector(state => state.games.activeTable);
   const currentTables = useSelector(state => state.games.currentTables);
   const conversations = useSelector(state => state.chats.conversations);
+  
   const { socket } = useContext(SocketContext);
   const bottomRef = useRef(null);
 
@@ -26,6 +27,7 @@ const Chatbox = ({showMessages}) => {
   const [isDeletingMessage, setIsDeletingMessage] = useState(false)
   const [editedMessageId, setEditedMessageId] = useState(null)
   const [editedMessageContent, setEditedMessageContent] = useState('')
+  const [invitedFriends, setInvitedFriends] = useState({});
 
 
     // Handle Sending Messages
@@ -60,25 +62,18 @@ const Chatbox = ({showMessages}) => {
     //     bottomRef.current.scrollIntoView({ behavior: 'smooth' });
     //   }
     // },[currentTables])
+    console.log(selectedMessage);
  
     const sendFriendRequest = () => {
-      return
+      console.log('clik');
       if (!user) return;
   
-      const userId = user.id;
-      const userRank = user.rank;
-      const newFriendId = selectedMessage.sender.id;
-      const newFriendUsername = selectedMessage.sender.username;
-      const newFriendRoom = selectedMessage.sender.userRoom;
-      const newFriendRank = selectedMessage.sender.rank;
+      const newFriendId = selectedMessage.user.id;
+      const newFriendUsername = selectedMessage.user.username;
   
       let friendRequestObj = {
-        userId,
-        userRank,
+        userId: user.id,
         newFriendId,
-        newFriendUsername,
-        newFriendRoom,
-        newFriendRank,
       };
   
       //  cant request self, friends does not exist, newFriendUsername is already in the pending list, newFriendUsername is already in the accepted list.

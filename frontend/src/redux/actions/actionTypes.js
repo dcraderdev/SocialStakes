@@ -16,7 +16,7 @@ export const GET_USER_STATS = 'users/GET_USER_STATS';
 export const SET_CSRF_TOKEN = 'set/SET_CSRF_TOKEN';
 
 
-//game
+//games
 export const GET_GAMES = 'games/GET_GAMES';
 export const GET_GAME_BY_ID = 'games/GET_GAME_BY_ID';
 
@@ -73,3 +73,16 @@ export const EDIT_MESSAGE = 'game/EDIT_MESSAGE';
 export const DELETE_MESSAGE = 'game/DELETE_MESSAGE';
 export const TOGGLE_SHOW_MESSAGES = 'game/TOGGLE_SHOW_MESSAGES';
 
+
+// friends
+export const ADD_INCOMING_FRIEND_REQUEST = 'user/add-friend-invite-incoming';
+export const ADD_OUTGOING_FRIEND_REQUEST = 'user/add-friend-invite-outgoing';
+export const ACCEPT_FRIEND_REQUEST = 'user/accept-friend-invite';
+export const DENY_FRIEND_REQUEST = 'user/deny-friend-invite';
+
+//conversations
+export const INITIAL_LOAD_CONVERSATIONS = 'user/initial-load-conversations';
+export const ADD_CONVERSATION = 'user/add-conversation';
+export const ADD_CONVERSATION_INIVTE = 'user/add-conversation-invite';
+export const ACCEPT_CONVERSATION_INIVTE = 'user/accept-conversation-invite';
+export const REMOVE_CONVERSATION = 'user/remove-conversation';

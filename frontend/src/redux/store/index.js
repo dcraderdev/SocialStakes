@@ -3,11 +3,13 @@ import thunk from 'redux-thunk';
 import userReducer from '../reducers/userReducer';
 import gamesReducer from '../reducers/gamesReducer';
 import chatReducer from '../reducers/chatReducer';
+import friendsReducer from '../reducers/friendsReducer';
 
 const rootReducer = combineReducers({
   users: userReducer,
   games: gamesReducer,
   chats: chatReducer,
+  friends: friendsReducer,
 });
 
 // const logger = require('redux-logger').default;

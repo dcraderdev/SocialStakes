@@ -46,7 +46,7 @@ const TableSeat = ({seatNumber}) => {
   const [isHandInProgress, setIsHandInProgress] = useState(false);
   const [isForfeited, setIsForfeited] = useState(false);
 
-
+  const [style, setStyle] = useState({});
 
   useEffect(() => {
     if(currentTables && activeTable && currentTables[activeTable.id].tableUsers){
@@ -88,6 +88,7 @@ const TableSeat = ({seatNumber}) => {
     let userHands = currentTables[activeTable.id]?.tableUsers?.[seatNumber]?.hands;
     let userForfeited = currentTables[activeTable.id]?.tableUsers?.[seatNumber]?.forfeit;
   
+    console.log(userHands);
     setPendingBet(userPendingBet)
     setCurrentBet(userCurrentBet)
     setCurrentBalance(userCurrentBalance)
@@ -191,13 +192,13 @@ const TableSeat = ({seatNumber}) => {
 
 
   const leaveSeat = () => {
-    return
     setUpdateObj({seat:seatNumber, tableId:activeTable.id})
     openModal('leaveModal')
+    return
   }
 
 
-
+ let fakeBet = 1
 
 return(
 
@@ -208,17 +209,20 @@ return(
 
       {player && (
                 
-        <div className={`seat-container flex`}>
+        <div className={`seat-container flex center`}>
 
-{       pendingBet > 0 &&             <div className='pending-bet-area flex center'>
+
+
+{       fakeBet > 0 &&             <div className='pending-bet-area flex center'>
                       <div className='currentbet-chip-container flex center'>
-                        {/* <img className='currentbet-chip' src={pokerChip} alt='searching'></img> */}
                         <img className='currentbet-chip' src={pokerChipWithDollarSign} alt='searching'></img>
                       </div>
-                      {pendingBet}
+                      {fakeBet}
                     </div>}
+
+
           <div className='profileimage-wrapper flex center'>
-            <div className={`profileimage-container flex center ${isActiveSeat ? ' gold' : ''}`}>
+            <div onClick={leaveSeat} className={`profileimage-container flex center ${isActiveSeat ? ' gold' : ''}`}>
               <div className='profileimage-sub-container flex center'>
                     <div className='profileimage-image flex center'><i className="fa-regular fa-user"></i></div>
               </div>
@@ -238,45 +242,47 @@ return(
 
 {player && (
 
-            <div className={`seat-card-area-container flex`}>
+            <div className={`seat-card-area-container flex ${seatNumber === 1 || seatNumber === 2 ? 'left-side' : ''}`}>
+
+
+
+              
               {hands && Object.entries(hands).map(([handId, handData]) => (
-                <div  className={`seat-card-area flex `} key={handId}>
-                    {/* <div>{handValues}</div> */}
-
-
-
-                <div className='currentbet-container flex'>
+                
+                <div className={`seat-card-area flex `} key={handId}>
 
                     <div className='seat-bet-area flex center'>
                       <div className='currentbet-chip-container flex center'>
-                        {/* <img className='currentbet-chip' src={pokerChip} alt='searching'></img> */}
-                        <img className='currentbet-chip' src={pokerChipWithDollarSign} alt='searching'></img>
+                        <img className='currentbet-chip' src={pokerChipWithDollarSign} alt='poker chip'></img>
                       </div>
                       {handData.bet}
                     </div>
 
+
+
+
+
                   {handData.insurance && (       
                     <div className='seat-bet-area flex center'>
                       <div className='currentbet-chip-container flex center'>
-                        {/* <img className='currentbet-chip' src={pokerChip} alt='searching'></img> */}
-                        <img className='currentbet-chip' src={pokerChipWithDollarSign} alt='searching'></img>
+                        {/* <img className='currentbet-chip' src={pokerChip} alt='poker chip'></img> */}
+                        <img className='currentbet-chip' src={pokerChipWithDollarSign} alt='poker chip'></img>
                       </div>
                       {handData.insurance.bet}
                     </div>
                     
                   )}
 
-                </div>
+                
 
-                    {/* <div className='seat-bet-area flex center'>
-                      <img src={Searching} alt='searching'></img>
-                    </div> */}
 
                     
-                  <div  className={`card-area flex ${handId === actionHand ? ' gold' : ''}`} key={handId}>
+                  <div className={`card-area flex ${seatNumber <= 3 ? 'cardarea-left' : 'cardarea-right'} ${handId === actionHand ? ' gold' : ''}`} key={handId}>
 
                     {handData.cards.map((card, index) => (
-                        <Card key={index} card={card} />
+                      <div className={`cardarea-card-container`} key={index}>
+                        <Card card={card} />
+                      </div>
                     ))}
                   </div>
 
@@ -290,11 +296,7 @@ return(
             )}
 
 
-{/* {player && isCurrentUser && (
-  <>
-    <button className='seat-leave-button' onClick={leaveSeat}>Leave seat</button>
-  </>
-)} */}
+
 
 
 
@@ -307,7 +309,12 @@ return(
                   <div className='profileimage-wrapper flex center'>
                     <div className='profileimage-container flex center emptyseat-border'>
                       <div className='profileimage-sub-container emptyseat-background flex center'>
-                            <div className={`profileimage-takeseat flex center`}><i class={`fa-solid fa-arrow-down emptyseat-arrow ${neonTheme}-text`}></i></div>
+
+                          <div className={`profileimage-takeseat flex center`}>
+                            <i className={`fa-solid fa-arrow-down emptyseat-arrow ${neonTheme}-text`}></i>
+                          </div>
+
+
                       </div>
                     </div>
                   </div>

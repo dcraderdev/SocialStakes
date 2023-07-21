@@ -125,8 +125,8 @@ import { ModalContext } from '../../context/ModalContext';
         let convertedCardOne = cardConverter[cards[0]]
         let convertedCardTwo = cardConverter[cards[1]]
         if(convertedCardOne.value === convertedCardTwo.value){
-          setCanSplit(true)
         }
+        setCanSplit(true)
         setCanDouble(true)
       }
     }
@@ -424,7 +424,7 @@ const rebet = (multiplier) => {
 
               {isActiveSeat && !isInsuranceOffered &&(
                 <div className="section right flex center">
-                  <div className="action-option-container flex">
+                  <div className="action-option-container flex center">
                     <div className="action" onClick={()=>handleAction('hit')}>Hit</div>
                     <div className="action" onClick={()=>handleAction('stay')}>Stay</div>
                     {canDouble && <div className="action" onClick={()=>handleAction('double')}>Double</div>}

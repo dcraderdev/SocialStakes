@@ -40,7 +40,7 @@ const ActiveGameBar = () => {
 
     let seatNumber = checkForSeat(tableId)
     if(seatNumber){
-      setUpdateObj({seat:seatNumber, tableId:activeTable.id, type:'leaveTableViaTab'})
+      setUpdateObj({seat:seatNumber, tableId, type:'leaveTableViaTab'})
       openModal('leaveModal')
     }
     else {

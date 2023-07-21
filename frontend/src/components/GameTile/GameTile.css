@@ -33,8 +33,8 @@
 }
 
 .gametile-container img {
-height: 100%;
-width: 100%;
+  height: 100%;
+  width: 100%;
 }
 
 
@@ -45,16 +45,3 @@ width: 100%;
   top: 0px;
 }
 
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-.fade-in {
-  animation: fadeIn 1s forwards ease-in;
-}

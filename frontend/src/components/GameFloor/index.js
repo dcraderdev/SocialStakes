@@ -161,7 +161,7 @@ function GameFloor() {
           <div className="gamefloor-content">
             {!activeTable && !showCreatingGame && (
               <div>
-                <div className="private-game-buttons">
+                <div className="private-game-buttons fade-in">
                   <div
                     className="private-game-button flex center"
                     onClick={startPrivateGame}
@@ -180,21 +180,6 @@ function GameFloor() {
             )}
 
 
-
-
-            {!isLoaded && (
-              <div className="games-grid">
-                <div className="game-tile loading">
-                  <img src={gameTileBackground} alt="game tile"></img>
-                </div>
-                <div className="game-tile loading">
-                  <img src={gameTileBackground} alt="game tile"></img>
-                </div>
-                <div className="game-tile loading">
-                  <img src={gameTileBackground} alt="game tile"></img>
-                </div>
-              </div>
-            )}
 
 
 
@@ -241,6 +226,7 @@ function GameFloor() {
                       key={index}
                       table={table}
                       viewTable={viewTable}
+                      delay={index}
                     />
                 ))}
 

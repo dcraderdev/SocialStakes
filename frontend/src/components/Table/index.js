@@ -78,9 +78,16 @@ const Table = () => {
       <div className='table-countdown'>{countdown > 0 ? `Dealing in: ${countdown}`: ''}</div>
 
       <div className='dealer-cards flex center'>
-        {cards && cards.map((card, index) => <Card key={index} card={card} />)}
+        {cards && cards.map((card, index) => 
+
+        <div className={`cardarea-card-container`} key={index}>
+          <Card card={card} />
+        </div>
+        )}
         {cards && cards.length === 1 && (
-          <Card card={'hidden'} />
+            <div className={`cardarea-card-container`}>
+                <Card card={'hidden'} />
+            </div>
           )}
       </div>
 

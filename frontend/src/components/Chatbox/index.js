@@ -46,7 +46,7 @@ const Chatbox = ({showMessages}) => {
       if(conversations && conversations[activeTable.id]){
         setMessages(conversations[activeTable.id].messages)
       }
-      if (bottomRef.current) {
+      if (bottomRef.current && showMessages) {
         bottomRef.current.scrollIntoView({ behavior: 'smooth' });
       }
     },[conversations, activeTable])

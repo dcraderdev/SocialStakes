@@ -1,9 +1,10 @@
 .bet-wrapper {
   width: 100%;
   height: 40%;
-  position: relative;
+  position: absolute;
   display: flex;
   flex-direction: column;
+  bottom: 0px;
 }
 
 .bet-container {
@@ -64,11 +65,11 @@
 
 .section.right{
   position: relative;
-  top: 70px;
   display: flex;
   flex-direction: row;
   width: 500px;
-
+  height: 100%;
+  top: 40px;
 }
 
 

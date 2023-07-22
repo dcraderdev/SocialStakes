@@ -1,7 +1,5 @@
 .friendsnavbar-wrapper {
-  /* width: 30%;
-  min-width: 200px;
-  max-width: 400px; */
+
   width: 100%;
   height: 100%;
   position: absolute;
@@ -11,14 +9,6 @@
   top: -50px;
 }
 
-/* .friendsnavbar-wrapper.shrunk {
-  transition: .5s all;
-  top: 51px;
-}
-
-.friendsnavbar-wrapper.expanded {
-  top: 95px;
-} */
 
 .friendsnavbar-container{
   width: 100%;

@@ -13,9 +13,9 @@ import { showFriendInvitesAction, showTableInvitesAction } from '../../redux/act
 const FriendsNavBar = () => {
   const history = useHistory()
   const dispatch = useDispatch();
-  const [hasCurrentTables, setHasCurrentTables] = useState(false);
+
   const [currentFocus, setCurrentFocus] = useState(null);
-  const currentTables = useSelector(state => state.games.currentTables);
+
   const friends = useSelector(state => state.friends);
 
   const viewFriends = 'view-friends'
@@ -24,10 +24,7 @@ const FriendsNavBar = () => {
 
 
 
-//sets hieght for our sidemenu in case we have currentGames
-  useEffect(()=>{
-    setHasCurrentTables(Object.entries(currentTables).length > 0)
-  },[currentTables])
+
 
   //select which submenu is focused(opened)
   const toggleFocus = (focus) => {
@@ -39,13 +36,10 @@ const FriendsNavBar = () => {
   }
 
 
-console.log(friends);
-console.log(friends.friends);
-
 
 
   return (
-    <div className={`friendsnavbar-wrapper flex ${hasCurrentTables ? ' expanded' : ' shrunk'}`}>
+    <div className={`friendsnavbar-wrapper flex`}>
       <div className="friendsnavbar-container flex ">
 
 

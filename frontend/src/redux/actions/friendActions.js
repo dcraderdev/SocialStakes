@@ -2,7 +2,8 @@ import {
   ADD_INCOMING_FRIEND_REQUEST, 
   ADD_OUTGOING_FRIEND_REQUEST, 
   ACCEPT_FRIEND_REQUEST, 
-  DENY_FRIEND_REQUEST
+  DENY_FRIEND_REQUEST,
+  GET_USER_FRIENDS
 } from '../actions/actionTypes'
 
 
@@ -44,3 +45,11 @@ export const denyFriendRequest = (friendRequestObj) => {
   };
 };
 
+export const getUserFriendsAction = (data) => {
+  console.log(data);
+
+  return {
+    type: GET_USER_FRIENDS,
+    payload: data,
+  };
+};

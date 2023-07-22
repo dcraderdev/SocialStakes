@@ -75,10 +75,13 @@ export const TOGGLE_SHOW_MESSAGES = 'game/TOGGLE_SHOW_MESSAGES';
 
 
 // friends
-export const ADD_INCOMING_FRIEND_REQUEST = 'user/add-friend-invite-incoming';
-export const ADD_OUTGOING_FRIEND_REQUEST = 'user/add-friend-invite-outgoing';
-export const ACCEPT_FRIEND_REQUEST = 'user/accept-friend-invite';
-export const DENY_FRIEND_REQUEST = 'user/deny-friend-invite';
+export const ADD_INCOMING_FRIEND_REQUEST = 'user/ADD_INCOMING_FRIEND_REQUEST';
+export const ADD_OUTGOING_FRIEND_REQUEST = 'user/ADD_OUTGOING_FRIEND_REQUEST';
+export const ACCEPT_FRIEND_REQUEST = 'user/ACCEPT_FRIEND_REQUEST';
+export const DENY_FRIEND_REQUEST = 'user/DENY_FRIEND_REQUEST';
+export const GET_USER_FRIENDS = 'user/GET_USER_FRIENDS';
+
+
 
 //conversations
 export const INITIAL_LOAD_CONVERSATIONS = 'user/initial-load-conversations';

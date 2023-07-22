@@ -1,5 +1,5 @@
 const { User, Friendship } = require('../db/models');
-
+const { Op } = require("sequelize");
 
 const friendController = {
   async sendFriendRequest(friendRequestObj) {
@@ -193,6 +193,79 @@ const friendController = {
       }
     }
   },
+
+  async getUserFriends(userId){
+
+    const usersFriendships = await Friendship.findAll( {
+      where: {
+        status: { [Op.or]: ['accepted', 'pending'] },
+        [Op.or]: [
+          { user1Id: userId },
+          { user2Id: userId },
+        ],
+      }, 
+      include: [
+        {
+        model: User,
+        as: 'user2',
+        attributes: ['id', 'username', 'rank'],
+        },
+        {
+          model: User,
+          as: 'user1',
+          attributes: ['id', 'username', 'rank'],
+        }
+    ],
+      attributes: ['id', 'status', 'actionUserId'],
+  });
+
+    if(!usersFriendships){
+      return false
+    }
+
+    let friendships = { incomingRequests: {}, outgoingRequests: {}, friends: {} };
+
+    const formattedResults = usersFriendships.reduce((acc, friendship) => {
+      const { id, status, user1, user2, actionUserId } = friendship;
+      let friend, isOutgoingRequest;
+
+      if (user1.id === userId) {
+        // If user1 is the current user, use user2's data
+        friend = user2;
+        isOutgoingRequest = actionUserId === userId;
+      } else {
+        // If user2 is the current user, use user1's data
+        friend = user1;
+        isOutgoingRequest = actionUserId === userId;
+      }
+    
+      const formattedFriendship = { id, friend, status };
+    
+      if (status === 'accepted') {
+        acc.friends[friend.username] = formattedFriendship;
+      } else if (status === 'pending') {
+        if (isOutgoingRequest) {
+          acc.outgoingRequests[friend.username] = formattedFriendship;
+        } else {
+          acc.incomingRequests[friend.username] = formattedFriendship;
+        }
+      }
+    
+      return acc;
+    }, friendships);
+
+    return formattedResults
+  }
+
+
+
+
+
+
+
+
+
+
 };
 
 module.exports = {

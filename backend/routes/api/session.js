@@ -6,6 +6,7 @@ const { check } = require('express-validator');
 const { handleValidationErrors, validateSpotEdit, validateReview, validateSignup, validateLogin } = require('../../utils/validation');
 const router = express.Router();
 const {themeController} = require('../../controllers/themeController')
+const {friendController} = require('../../controllers/friendController')
 const {
   singleFileUpload,
   singleMulterUpload,
@@ -97,6 +98,33 @@ router.get('/stats', requireAuth, async (req, res, next) => {
     next(err)
   }
   return res.json(stats);
+});
+
+
+// Get user's friends/requests/outgoing
+router.get('/friends', requireAuth, async (req, res, next) => {
+  console.log('friends');
+  console.log('friends');
+  console.log('friends');
+  console.log('friends');
+  console.log('friends');
+  console.log('friends');
+  console.log('friends');
+  console.log('friends');
+  console.log('friends');
+  console.log('friends');
+  console.log('friends');
+  const { user } = req;
+  const allFriends = await friendController.getUserFriends(user.id)
+
+  console.log(allFriends);
+  if(!allFriends){
+    const err = new Error("No friend data found") 
+    err.statusCode = 404
+    err.status = 404;
+    next(err)
+  }
+  return res.json(allFriends);
 });
 
 

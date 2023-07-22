@@ -2,7 +2,8 @@ import {
   ADD_INCOMING_FRIEND_REQUEST, 
   ADD_OUTGOING_FRIEND_REQUEST, 
   ACCEPT_FRIEND_REQUEST, 
-  DENY_FRIEND_REQUEST
+  DENY_FRIEND_REQUEST,
+  GET_USER_FRIENDS
 } from '../actions/actionTypes'
 
 const initialState = {
@@ -69,6 +70,17 @@ const userReducer = (state = initialState, action) => {
       }
     
       return {...newState};
+    }
+
+    case GET_USER_FRIENDS: {
+
+      console.log(action.payload);
+
+      return{ 
+        incomingRequests: action.payload.incomingRequests, 
+        outgoingRequests: action.payload.incomingRequests, 
+        friends: action.payload.friends
+      }
     }
     
     

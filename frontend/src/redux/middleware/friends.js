@@ -2,9 +2,40 @@ import {
   addOutGoingFriendRequest,
   addIncomingFriendRequest,
   acceptFriendRequest,
-  denyFriendRequest
+  denyFriendRequest,
+  getUserFriendsAction
   } 
   from '../actions/friendActions'
 
 
 import { csrfFetch } from './csrf';
+
+
+export const getUserFriends = (tableId) => async (dispatch) => {
+  console.log('friends');
+  console.log('friends');
+  console.log('friends');
+  console.log('friends');
+  console.log('friends');
+  console.log('friends');
+
+  try{
+    const response = await csrfFetch(`/api/session/friends`, {
+      method: 'GET'
+    });
+
+ 
+    const data = await response.json();
+
+    console.log('-=-=-=-=');
+    console.log(data); 
+    console.log('-=-=-=-=');
+ 
+    dispatch(getUserFriendsAction(data));
+
+    return {data, response};
+
+  }catch(error){
+    console.log(error);
+  } 
+};

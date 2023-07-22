@@ -1,0 +1,60 @@
+.friendtile-submenu-wrapper{
+  border: rgba(0, 0, 0, 0.238) solid 1px;
+
+  height: 50px;
+  width: 100%;
+}
+
+.friendtile-container{
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+
+.friendtile-profile-image-container{
+  position: relative;
+  height: 40px;
+  width: 40px;
+  margin-left: 5px;
+  border: rgba(0, 0, 0) solid 2px;
+  border-radius: 50%;
+
+}
+
+.friendtile-profile-image{
+  border: rgba(0, 0, 0, 0.238) solid 1px;
+  background-color: rgba(240, 255, 255, 0.135);
+
+  border-radius: 50%;
+  height: 40px;
+  width: 40px;
+}
+
+.friendtile-name-container{
+  margin-left: 10px;
+
+}
+
+.friend-status{
+  margin-right: 15px;
+  position: relative;
+  width: 10px;
+  height: 10px;
+  border: rgb(26, 59, 167) solid 1px;
+  border-radius: 50%;
+}
+
+.online{
+  border: rgb(8, 67, 20) solid 1px;
+  background-color: green;
+}
+
+.offline{
+  border: rgb(124, 36, 9) solid 1px;
+  background-color: rgb(200, 57, 13);
+}
+
+

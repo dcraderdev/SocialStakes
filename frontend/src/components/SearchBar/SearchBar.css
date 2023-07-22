@@ -5,7 +5,6 @@
   display: flex;
   overflow: hidden;
   align-items: center;
-  border: #7d7d7d7e 1px solid;
 }
 
 .nav-search-bar{
@@ -46,7 +45,7 @@
 
 
 .maginfy-container{
-  margin-right: 5px;
+  margin-right: 15px;
   cursor: pointer;
   display: flex;
   justify-content: center;

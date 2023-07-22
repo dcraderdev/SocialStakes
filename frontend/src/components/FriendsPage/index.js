@@ -15,12 +15,11 @@ const FriendsPage = () => {
   useEffect(()=>{
     if(!user)return
     dispatch(getUserFriends(user.id))
-  },[])
+  },[user])
 
   return (
     <div>
       <FriendsNavBar/>
-      <div className='friends-banner flex center'>Friends coming soon</div>
 
     </div>
     

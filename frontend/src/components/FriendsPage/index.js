@@ -15,22 +15,43 @@ const FriendsPage = () => {
   const friends = useSelector(state => state.friends);
   const showFriendInvites = useSelector(state => state.friends.showFriendInvites);
   const showTableInvites = useSelector(state => state.friends.showTableInvites);
+  const currentTables = useSelector(state => state.games.currentTables);
+  const [hasCurrentTables, setHasCurrentTables] = useState(false);
+  const [header, setHeader] = useState('');
+
 
   console.log(showFriendInvites);
   console.log(showTableInvites);
 
+  //sets hieght for our sidemenu in case we have currentGames
+  useEffect(()=>{
+    setHasCurrentTables(Object.entries(currentTables).length > 0)
+  },[currentTables])
 
-  const getHeader = () => {
+
+  // clean up any states when component unmounts
+  useEffect(() => {
+    return () => {
+      console.log('cleaning up');
+      setHeader('');
+    };
+  }, []); 
+
+
+  useEffect(()=>{
+    console.log(showFriendInvites);
+    console.log(showTableInvites);
     if(showFriendInvites){
-      return <div>Friend Invites</div>      
+      setHeader('Friend Invites')
     }
-
     if(showTableInvites){
-      return <div>Table Invites</div>      
+      setHeader('Table Invites')
     }
+  },[showFriendInvites, showTableInvites])
 
 
-  }
+
+
 
   useEffect(()=>{
     if(!user)return
@@ -40,14 +61,14 @@ const FriendsPage = () => {
   return (
     <div className='friendspage-wrapper flex'>
 
-      <div className='friendspage-friendsnavbar-wrapper'>
+      <div className={`friendspage-friendsnavbar-wrapper  ${hasCurrentTables ? ' expanded' : ' shrunk'}`}>
         <FriendsNavBar/>
       </div>
       
-      <div className='friendspage-content-wrapper flex'>
+      <div className={`friendspage-content-wrapper flex  ${hasCurrentTables ? ' expanded' : ' shrunk'}`}>
 
 <div className='friendspage-header flex center'>
-        {getHeader()}
+        {header}
 </div>
 
             
@@ -55,6 +76,8 @@ const FriendsPage = () => {
 
         {showFriendInvites && (
           <div>
+
+            
 
 
           </div>

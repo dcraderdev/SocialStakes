@@ -8,20 +8,17 @@
   left: 0px;
   display: flex;
   border-right: rgba(0, 0, 0, 0.466) solid .5px;
-  z-index: 10000000;
   top: -50px;
 }
 
-.friendsnavbar-wrapper.shrunk {
+/* .friendsnavbar-wrapper.shrunk {
   transition: .5s all;
   top: 51px;
-  left: 0px;
 }
 
 .friendsnavbar-wrapper.expanded {
-  left: 0px;
   top: 95px;
-}
+} */
 
 .friendsnavbar-container{
   width: 100%;
@@ -79,12 +76,10 @@
 
 .invites-extended{
   height: 150px;
-  
 }
 
 .friends-extended{
   height: calc(100vh - 220px);
-
 }
 
 .active-nav{

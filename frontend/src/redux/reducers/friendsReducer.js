@@ -18,6 +18,12 @@ const initialState = {
 
 const userReducer = (state = initialState, action) => {
   const newState = { ...state };
+  console.log('-=-=-=-=-=');
+  console.log('-=-=-=-=-=');
+  console.log(newState);
+  console.log('-=-=-=-=-=');
+  console.log('-=-=-=-=-=');
+
 
   switch (action.type) {
 
@@ -81,6 +87,7 @@ const userReducer = (state = initialState, action) => {
       console.log(action.payload);
 
       return{ 
+        ...newState,
         incomingRequests: action.payload.incomingRequests, 
         outgoingRequests: action.payload.incomingRequests, 
         friends: action.payload.friends

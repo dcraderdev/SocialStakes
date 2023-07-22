@@ -5,12 +5,14 @@
   position: absolute;
   left: 0px;
   top: 50px;
+  overflow-y: hidden;
 }
 
+
+
+
 .friendspage-friendsnavbar-wrapper{
-
   width: 200px;
-
   height: 100%;
   left: 0px;
   top: 0px;
@@ -20,13 +22,43 @@
 }
 
 
+.friendspage-friendsnavbar-wrapper.shrunk {
+  transition: .5s top;
+  top: 51px;
+}
+
+.friendspage-friendsnavbar-wrapper.expanded {
+  top: 95px;
+}
+
+
+
+
+
+
+
 .friendspage-content-wrapper{
   position: absolute;
   top: 0px;
-  height: 100%;
+
   right: 0px;
   background-color: rgba(0, 255, 255, 0.232);
   width: calc(100vw - 200px);
+
+}
+
+
+.friendspage-content-wrapper.expanded{
+  top: 42px;
+  
+  height: calc(100% - 44px);
+}
+
+.friendspage-content-wrapper.shrunk{
+  transition: .5s top;
+  top: 0px;
+  height: calc(100% - 0px);
+
 }
 
 

@@ -7,8 +7,6 @@ const FriendTile = ({friend, type}) => {
 
   const [status, setStatus] = useState('online');
 
-  console.log(friend);
-
   let online = false
 
   useEffect(()=>{

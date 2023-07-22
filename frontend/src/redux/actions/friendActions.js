@@ -3,7 +3,9 @@ import {
   ADD_OUTGOING_FRIEND_REQUEST, 
   ACCEPT_FRIEND_REQUEST, 
   DENY_FRIEND_REQUEST,
-  GET_USER_FRIENDS
+  GET_USER_FRIENDS,
+  SHOW_FRIEND_INVITES,
+  SHOW_TABLE_INVITES
 } from '../actions/actionTypes'
 
 
@@ -51,5 +53,24 @@ export const getUserFriendsAction = (data) => {
   return {
     type: GET_USER_FRIENDS,
     payload: data,
+  };
+};
+
+
+
+
+
+
+// actions for page display
+export const showFriendInvitesAction = () => {
+  return {
+    type: SHOW_FRIEND_INVITES,
+  };
+};
+
+
+export const showTableInvitesAction = () => {
+  return {
+    type: SHOW_TABLE_INVITES,
   };
 };

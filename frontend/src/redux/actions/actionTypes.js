@@ -84,8 +84,16 @@ export const GET_USER_FRIENDS = 'user/GET_USER_FRIENDS';
 
 
 //conversations
-export const INITIAL_LOAD_CONVERSATIONS = 'user/initial-load-conversations';
-export const ADD_CONVERSATION = 'user/add-conversation';
-export const ADD_CONVERSATION_INIVTE = 'user/add-conversation-invite';
-export const ACCEPT_CONVERSATION_INIVTE = 'user/accept-conversation-invite';
-export const REMOVE_CONVERSATION = 'user/remove-conversation';
+export const INITIAL_LOAD_CONVERSATIONS = 'user/INITIAL_LOAD_CONVERSATIONS';
+export const ADD_CONVERSATION = 'user/ADD_CONVERSATION';
+export const ADD_CONVERSATION_INIVTE = 'user/ADD_CONVERSATION_INIVTE';
+export const ACCEPT_CONVERSATION_INIVTE = 'user/ACCEPT_CONVERSATION_INIVTE';
+export const REMOVE_CONVERSATION = 'user/REMOVE_CONVERSATION';
+
+
+//Friend Page view
+export const SHOW_FRIEND_INVITES = 'user/SHOW_FRIEND_INVITES';
+export const SHOW_TABLE_INVITES = 'user/SHOW_TABLE_INVITES';
+export const SHOW_FRIENDS = 'user/SHOW_FRIENDS';
+export const SHOW_CONVERSATIONS = 'user/SHOW_FRIENDS';
+

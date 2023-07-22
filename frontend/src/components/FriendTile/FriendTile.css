@@ -1,8 +1,14 @@
 .friendtile-submenu-wrapper{
   border: rgba(0, 0, 0, 0.238) solid 1px;
+  cursor: pointer;
 
   height: 50px;
   width: 100%;
+
+}
+
+.friendtile-submenu-wrapper:hover{
+  background-color: #2d2e2c;
 }
 
 .friendtile-container{

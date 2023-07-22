@@ -7,6 +7,9 @@ import './FriendsNavBar.css'
 import SearchBar from '../SearchBar';
 import FriendTile from '../FriendTile';
 
+
+import { showFriendInvitesAction, showTableInvitesAction } from '../../redux/actions/friendActions';
+
 const FriendsNavBar = () => {
   const history = useHistory()
   const dispatch = useDispatch();
@@ -18,6 +21,7 @@ const FriendsNavBar = () => {
   const viewFriends = 'view-friends'
   const viewInvites = 'view-invites'
   const viewConversations = 'view-conversations'
+
 
 
 //sets hieght for our sidemenu in case we have currentGames
@@ -49,23 +53,12 @@ console.log(friends.friends);
           <SearchBar/>
         </div>
 
-        <div onClick={()=>toggleFocus(viewInvites)} className={`friendsnavbar-option invites ${currentFocus === viewInvites ? 'invites-extended' : ''}`}>
 
-          <div className={`friendsnavbar-nav-header flex center `}>
-            <div>Invites</div>
-          </div>
-          <div className="friendsnavbar-nav-header flex center">Incoming</div>
-          <div className="friendsnavbar-nav-header flex center">Requests</div>
-
-
-
-
-        </div>
 
 
         <div className={`friendsnavbar-option ${currentFocus === viewFriends ? 'friends-extended' : ''}`}>
 
-          <div onClick={()=>toggleFocus(viewFriends)} className={`friendsnavbar-nav-header flex center`}>
+          <div onClick={()=>toggleFocus(viewFriends)} className={`friendsnavbar-nav-header flex center ${currentFocus === viewFriends ? ' active-nav' : ''}`}>
             <div>Friends</div>
           </div>
 
@@ -81,9 +74,9 @@ console.log(friends.friends);
 
 
 
-        <div onClick={()=>toggleFocus(viewConversations)}  className={`friendsnavbar-option ${currentFocus === viewConversations ? 'friends-extended' : ''}`}>
+        <div  className={`friendsnavbar-option ${currentFocus === viewConversations ? 'friends-extended' : ''}`}>
 
-          <div className={`friendsnavbar-nav-header flex center`}>
+          <div onClick={()=>toggleFocus(viewConversations)} className={`friendsnavbar-nav-header flex center ${currentFocus === viewConversations ? ' active-nav' : ''}`}>
             <div>Conversations</div>
           </div>
 
@@ -93,7 +86,18 @@ console.log(friends.friends);
 
         </div>
 
+        <div className={`friendsnavbar-option invites ${currentFocus === viewInvites ? 'invites-extended' : ''}`}>
 
+          <div onClick={()=>toggleFocus(viewInvites)} className={`friendsnavbar-nav-header flex center  ${currentFocus === viewInvites ? ' active-nav' : ''}`}>
+            <div>Invites</div>
+          </div>
+          <div className="friendsnavbar-nav flex center" onClick={()=>dispatch(showTableInvitesAction())}>Tables</div>
+          <div className="friendsnavbar-nav flex center" onClick={()=>dispatch(showFriendInvitesAction())}>Friends</div>
+
+
+
+
+        </div>
 
 
 

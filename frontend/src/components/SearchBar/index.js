@@ -16,12 +16,19 @@ const SearchBar = () => {
   const newSearch = async () => {
     console.log(search);
     setSearch('');
-
     // dispatch(sessionActions.search(search));
   };
 
   return (
     <div className='nav-search-container flex'>
+
+      <div className="maginfy-container" onClick={newSearch}>
+        <img
+          className=""
+          src={magnifyGlass}
+          alt="medium cirlce logo"
+        />
+      </div>
 
 <div className='nav-search-bar flex'>
     <form
@@ -45,13 +52,7 @@ const SearchBar = () => {
 
 </div>
 
-      <div className="maginfy-container" onClick={newSearch}>
-        <img
-          className=""
-          src={magnifyGlass}
-          alt="medium cirlce logo"
-        />
-      </div>
+
 
 
 

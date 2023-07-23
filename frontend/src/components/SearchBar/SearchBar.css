@@ -1,10 +1,13 @@
 
 .nav-search-container{
-  width: 100%;
-  height: 100%;
+  width: 90%;
+  height: 70%;
   display: flex;
   overflow: hidden;
   align-items: center;
+  border: #7d7d7d7e 1px solid;
+
+  border-radius: 20px;
 }
 
 .nav-search-bar{
@@ -19,11 +22,8 @@
 .nav-search-bar label{
   display: flex;
   position: relative;
-  width: 90%;
-  border: #7d7d7d7e 1px solid;
+  width: 100%;
 
-  border-radius: 20px;
-  margin-left: 5%;
 
 }
 
@@ -37,7 +37,6 @@
 
   border-radius: 20px;
   height: 30px;
-  margin-left: 5px;
   color: white;
 
 }
@@ -45,7 +44,7 @@
 
 
 .maginfy-container{
-  margin-right: 15px;
+  margin-left: 10px;
   cursor: pointer;
   display: flex;
   justify-content: center;

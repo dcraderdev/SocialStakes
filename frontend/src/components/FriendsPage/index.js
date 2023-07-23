@@ -29,18 +29,9 @@ const FriendsPage = () => {
   },[currentTables])
 
 
-  // clean up any states when component unmounts
-  useEffect(() => {
-    return () => {
-      console.log('cleaning up');
-      setHeader('');
-    };
-  }, []); 
 
 
   useEffect(()=>{
-    console.log(showFriendInvites);
-    console.log(showTableInvites);
     if(showFriendInvites){
       setHeader('Friend Invites')
     }
@@ -72,13 +63,36 @@ const FriendsPage = () => {
 </div>
 
             
-
+    <div className='friendspage-content'></div>
 
         {showFriendInvites && (
           <div>
+            <div className='friendspage-header flex'>
+               Incoming
+            </div>
+            {Object.entries(friends.outgoingRequests).map(([key,friend],index)=>{
+              return(
+                <div className='friendtile-wrapper'>
 
-            
 
+                  {friend.friend.username}
+                </div>
+              )
+            })}
+
+
+<div className='friendspage-header flex'>
+               Outgoing
+            </div>
+            {Object.entries(friends.incomingRequests).map(([key,friend],index)=>{
+              return(
+                <div className='friendtile-wrapper'>
+
+
+                  {friend.friend.username}
+                </div>
+              )
+            })}
 
           </div>
         )}

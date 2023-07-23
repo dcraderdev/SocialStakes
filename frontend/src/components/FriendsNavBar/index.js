@@ -17,14 +17,32 @@ const FriendsNavBar = () => {
   const [currentFocus, setCurrentFocus] = useState(null);
 
   const friends = useSelector(state => state.friends);
+  const currentTables = useSelector(state => state.games.currentTables);
+  const [hasCurrentTables, setHasCurrentTables] = useState(false);
+
+
+  //sets hieght for our sidemenu in case we have currentGames
+  useEffect(()=>{
+    setHasCurrentTables(Object.entries(currentTables).length > 0)
+  },[currentTables])
+
 
   const viewFriends = 'view-friends'
-  const viewInvites = 'view-invites'
   const viewConversations = 'view-conversations'
+  const viewInvites = 'view-invites'
 
+  const testFriends = {};
 
-
-
+  for (let i = 0; i < 40; i++) {
+    let name = "Friend" + i;
+    let id = Math.floor(Math.random() * 1000000); // Generate a random number for ID, just for testing
+    testFriends[name] = { 
+      id: id.toString(), 
+      friend: { username: name, rank: i },
+      status: 'accepted' 
+    };
+  }
+  
 
   //select which submenu is focused(opened)
   const toggleFocus = (focus) => {
@@ -34,7 +52,23 @@ const FriendsNavBar = () => {
     }
     setCurrentFocus(focus)
   }
+ 
 
+  const getViewHeight = () => {
+    if(currentFocus === viewFriends){
+      return hasCurrentTables ? 'friends-extra-extended' : 'friends-extended'
+    }
+
+    if(currentFocus === viewConversations){
+      return hasCurrentTables ? 'friends-extra-extended' : 'friends-extended'
+    }
+
+    if(currentFocus === viewInvites){
+      return hasCurrentTables ? 'invites-extra-extended' : 'invites-extended'
+    }
+
+
+  }
 
 
 
@@ -50,25 +84,28 @@ const FriendsNavBar = () => {
 
 
 
-        <div className={`friendsnavbar-option ${currentFocus === viewFriends ? 'friends-extended' : ''}`}>
+        <div className={`friendsnavbar-option ${currentFocus === viewFriends ? getViewHeight() : ''}`}>
 
           <div onClick={()=>toggleFocus(viewFriends)} className={`friendsnavbar-nav-header flex center ${currentFocus === viewFriends ? ' active-nav' : ''}`}>
             <div>Friends</div>
           </div>
 
+    <div className='friendsnavbar-content'>
 
-          {friends && Object.entries(friends.friends).map(([key,friend],index) => {
+          {/* {friends && Object.entries(friends.friends).map(([key,friend],index) => { */}
+          {friends && Object.entries(testFriends).map(([key,friend],index) => {
             return (
             <FriendTile key={index} friend={friend} type={'submenu'}/>
             )
           })}
+    </div>
 
 
         </div>
 
 
 
-        <div  className={`friendsnavbar-option ${currentFocus === viewConversations ? 'friends-extended' : ''}`}>
+        <div  className={`friendsnavbar-option ${currentFocus === viewConversations ? getViewHeight() : ''}`}>
 
           <div onClick={()=>toggleFocus(viewConversations)} className={`friendsnavbar-nav-header flex center ${currentFocus === viewConversations ? ' active-nav' : ''}`}>
             <div>Conversations</div>
@@ -80,7 +117,7 @@ const FriendsNavBar = () => {
 
         </div>
 
-        <div className={`friendsnavbar-option invites ${currentFocus === viewInvites ? 'invites-extended' : ''}`}>
+        <div className={`friendsnavbar-option invites ${currentFocus === viewInvites ? getViewHeight() : ''}`}>
 
           <div onClick={()=>toggleFocus(viewInvites)} className={`friendsnavbar-nav-header flex center  ${currentFocus === viewInvites ? ' active-nav' : ''}`}>
             <div>Invites</div>

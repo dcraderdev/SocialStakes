@@ -5,6 +5,7 @@ import './FriendTile.css'
 
 const FriendTile = ({friend, type}) => {
 
+
   const [status, setStatus] = useState('online');
 
   let online = false

@@ -37,6 +37,12 @@
   transition: .5s all;
 }
 
+
+
+
+
+
+
 .friendsnavbar-nav:hover,
 .friendsnavbar-nav-header:hover{
   background-color: #2d2e2c;
@@ -44,11 +50,14 @@
 
 
 .friendsnavbar-nav-header{
+  position: sticky;
+  top: 0px;
   cursor: pointer;
   height: 50px;
   font-size: 18px;
   color: #fdfcfc;
   border-bottom: solid rgba(0, 0, 0, 0.287) 1px;
+  z-index: 100;
 
 }
 
@@ -64,13 +73,47 @@
 
 
 
+
+
+
 .invites-extended{
   height: 150px;
 }
 
 .friends-extended{
-  height: calc(100vh - 220px);
+  height: calc(100vh - 210px);
+  overflow-y: scroll;
 }
+
+.friends-extra-extended{
+  height: calc(100vh - 260px);
+  overflow-y: scroll;
+}
+
+.invites-extra-extended{
+  height: calc(100vh - 210px);
+}
+
+
+/* Styling the scrollbar */
+.friends-extended::-webkit-scrollbar {
+  width: 5px; /* Width of the scrollbar */
+}
+
+.friends-extended::-webkit-scrollbar-track {
+  background:transparent; /* Color of the track of the scrollbar */
+}
+
+.friends-extended::-webkit-scrollbar-thumb {
+  background: black; /* Color of the thumb of the scrollbar */
+  background: #131312;
+
+}
+
+.friends-extended::-webkit-scrollbar-thumb:hover {
+  background: darkgrey; /* Color of the thumb of the scrollbar when hovered */
+}
+
 
 .active-nav{
   border-bottom: rgba(255, 217, 0, 0.429) solid 1px;

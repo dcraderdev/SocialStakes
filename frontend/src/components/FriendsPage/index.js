@@ -9,6 +9,11 @@ import FriendsNavBar from '../FriendsNavBar';
 import './FriendsPage.css';
 
 const FriendsPage = () => {
+
+
+  const currentFriendViewConversations = 'currentFriendViewConversations'
+  const currentFriendViewPastGames = 'currentFriendViewPastGames'
+  const currentFriendViewStats = 'currentFriendViewStats'
   const dispatch = useDispatch();
   const user = useSelector((state) => state.users.user);
   const friends = useSelector((state) => state.friends);
@@ -25,11 +30,8 @@ const FriendsPage = () => {
   const currentTables = useSelector((state) => state.games.currentTables);
   const [hasCurrentTables, setHasCurrentTables] = useState(false);
   const [header, setHeader] = useState('');
-  const [currentFriendViewTab, setCurrentFriendViewTab] = useState(null);
+  const [currentFriendViewTab, setCurrentFriendViewTab] = useState(currentFriendViewConversations);
 
-  const currentFriendViewConversations = 'currentFriendViewConversations'
-  const currentFriendViewPastGames = 'currentFriendViewPastGames'
-  const currentFriendViewStats = 'currentFriendViewStats'
 
 
 
@@ -58,6 +60,12 @@ const FriendsPage = () => {
           <div className={`friendspage-name-container flex center`}>
             <div className={`friendspage-name flex center`}>
               {currentFriendView?.username || 'Friend'}
+            </div>
+            <div className='friendpage-friendmenu-container'>
+              <div className='friendpage-friendmenu-icon flex center'>
+                <i className="fa-solid fa-ellipsis-vertical"></i>
+              </div>
+
             </div>
           </div>
         </div>

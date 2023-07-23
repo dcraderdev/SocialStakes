@@ -91,7 +91,7 @@ const userReducer = (state = initialState, action) => {
       return{ 
         ...newState,
         incomingRequests: action.payload.incomingRequests, 
-        outgoingRequests: action.payload.incomingRequests, 
+        outgoingRequests: action.payload.outgoingRequests, 
         friends: action.payload.friends
       }
     }

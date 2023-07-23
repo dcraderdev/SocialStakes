@@ -111,7 +111,7 @@ const FriendsNavBar = () => {
     <div className={`friendsnavbar-content ${currentFocus === viewFriends ? getContentHeight() : ''}`}>
 
           {/* {friends && Object.entries(friends.friends).map(([key,friend],index) => { */}
-          {friends && Object.entries(testFriends).map(([key,friend],index) => {
+          {friends && Object.entries(friends.friends).map(([key,friend],index) => {
             return (
             <FriendTile key={index} friend={friend} type={'submenu'}/>
             )

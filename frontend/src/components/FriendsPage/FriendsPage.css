@@ -140,7 +140,6 @@
 }
 
 .friendview-nav{
-
   display: flex;
   justify-content: center;
   align-items: center;
@@ -151,7 +150,6 @@
 .friendview-nav:hover{
   color: goldenrod;
   box-shadow: 0 10px 10px -10px rgba(0,0,0,0.5);
-
 }
 
 .nav-text{
@@ -164,8 +162,33 @@
   color: goldenrod;
   border-bottom: solid 1px rgba(218, 165, 32, 0.675);
   box-shadow: 0 10px 10px -10px rgba(0,0,0,0.5);
+}
+
+
+
+.friendpage-friendmenu-container{
+  width: fit-content;
+  height: fit-content;
+  border: rgb(255, 255, 255) solid 1px;
 
 }
+
+
+.friendpage-friendmenu-icon{
+
+width: 30px;
+height: 30px;
+}
+
+.friendpage-friendmenu-icon i{
+
+  width: fit-content;
+  height: fit-content;
+  font-size: 16px;
+}
+
+
+
 
 
 @media screen and (min-width: 800px) {

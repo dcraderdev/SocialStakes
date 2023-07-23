@@ -96,20 +96,24 @@
 
 
 /* Styling the scrollbar */
+.friends-extra-extended::-webkit-scrollbar,
 .friends-extended::-webkit-scrollbar {
   width: 5px; /* Width of the scrollbar */
 }
 
+.friends-extra-extended::-webkit-scrollbar-track,
 .friends-extended::-webkit-scrollbar-track {
   background:transparent; /* Color of the track of the scrollbar */
 }
 
+.friends-extra-extended::-webkit-scrollbar-thumb,
 .friends-extended::-webkit-scrollbar-thumb {
   background: black; /* Color of the thumb of the scrollbar */
   background: #131312;
-
 }
 
+
+.friends-extra-extended::-webkit-scrollbar-thumb:hover,
 .friends-extended::-webkit-scrollbar-thumb:hover {
   background: darkgrey; /* Color of the thumb of the scrollbar when hovered */
 }

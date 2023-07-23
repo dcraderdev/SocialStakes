@@ -56,19 +56,37 @@ const FriendsNavBar = () => {
 
   const getViewHeight = () => {
     if(currentFocus === viewFriends){
-      return hasCurrentTables ? 'friends-extra-extended' : 'friends-extended'
+    return hasCurrentTables ? 'friends-extra-extended' : 'friends-extended'
     }
 
     if(currentFocus === viewConversations){
-      return hasCurrentTables ? 'friends-extra-extended' : 'friends-extended'
+    return hasCurrentTables ? 'friends-extra-extended' : 'friends-extended'
     }
 
     if(currentFocus === viewInvites){
-      return hasCurrentTables ? 'invites-extra-extended' : 'invites-extended'
+    return hasCurrentTables ? 'invites-extra-extended' : 'invites-extended'
+    }
+  }
+
+
+  const getContentHeight = () => {
+
+    if(currentFocus === viewFriends){
+    return hasCurrentTables ? 'friendsnavbar-content-extended' : ' friendsnavbar-content'
     }
 
+    else if(currentFocus === viewConversations){
+    console.log('here');
+    return hasCurrentTables ? 'friendsnavbar-content-extended' : ' friendsnavbar-content'
+    }
 
+    if(currentFocus === viewInvites){
+      return hasCurrentTables ? 'invites-extra-extended' : ' invites-extended'
+    }
   }
+
+
+
 
 
 
@@ -90,7 +108,7 @@ const FriendsNavBar = () => {
             <div>Friends</div>
           </div>
 
-    <div className='friendsnavbar-content'>
+    <div className={`friendsnavbar-content ${currentFocus === viewFriends ? getContentHeight() : ''}`}>
 
           {/* {friends && Object.entries(friends.friends).map(([key,friend],index) => { */}
           {friends && Object.entries(testFriends).map(([key,friend],index) => {
@@ -110,14 +128,17 @@ const FriendsNavBar = () => {
           <div onClick={()=>toggleFocus(viewConversations)} className={`friendsnavbar-nav-header flex center ${currentFocus === viewConversations ? ' active-nav' : ''}`}>
             <div>Conversations</div>
           </div>
+          <div className={`friendsnavbar-content ${currentFocus === viewConversations ? getContentHeight() : ''}`}>
 
-          { [1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,].map((friend,index) => {
-            return (<div key={index}>{friend}</div>)
-          })}
 
+            { [1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,2,3,4,1,2,3,4,1,2,3,4,5, 5, ].map((friend,index) => {
+              return (<div key={index}>{friend}</div>)
+            })}
+
+          </div>
         </div>
 
-        <div className={`friendsnavbar-option invites ${currentFocus === viewInvites ? getViewHeight() : ''}`}>
+        <div className={`friendsnavbar-option invites ${currentFocus === viewInvites ? 'invites-extended' : ''}`}>
 
           <div onClick={()=>toggleFocus(viewInvites)} className={`friendsnavbar-nav-header flex center  ${currentFocus === viewInvites ? ' active-nav' : ''}`}>
             <div>Invites</div>

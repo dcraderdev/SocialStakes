@@ -4,7 +4,7 @@ import {
   ACCEPT_FRIEND_REQUEST, 
   DENY_FRIEND_REQUEST,
   GET_USER_FRIENDS,
-  SHOW_TABLE_INVITES, SHOW_FRIEND_INVITES
+  SHOW_TABLE_INVITES, SHOW_FRIEND_INVITES, SHOW_FRIENDS
 } from '../actions/actionTypes'
 
 const initialState = {
@@ -13,6 +13,8 @@ const initialState = {
     friends: {},
     showFriendInvites: false,
     showTableInvites: false,
+    showFriends: false,
+    currentFriendView: null,
 
 };
 
@@ -97,7 +99,10 @@ const userReducer = (state = initialState, action) => {
       return {
         ...newState,
         showTableInvites:false,
-        showFriendInvites:true
+        showFriendInvites:true,
+        showFriends: false,
+        currentFriendView: null,
+
       }
       
     }
@@ -106,7 +111,22 @@ const userReducer = (state = initialState, action) => {
       return {
         ...newState,
         showTableInvites:true,
-        showFriendInvites:false
+        showFriendInvites:false,
+        showFriends: false,
+        currentFriendView: null,
+
+
+      }
+    }
+
+    case SHOW_FRIENDS: {
+      const friend = action.payload
+      return {
+        ...newState,
+        showFriends:true,
+        showTableInvites:false,
+        showFriendInvites:false,
+        currentFriendView: friend
       }
     }
     

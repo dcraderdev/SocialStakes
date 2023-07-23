@@ -82,41 +82,51 @@
 
 .friends-extended{
   height: calc(100vh - 210px);
-  overflow-y: scroll;
 }
 
 .friends-extra-extended{
   height: calc(100vh - 260px);
-  overflow-y: scroll;
 }
 
-.invites-extra-extended{
-  height: calc(100vh - 210px);
+
+
+.friendsnavbar-content{
+  width: 100%;
+  height: calc(100vh - 260px);
+  
+  overflow-y: scroll; 
+  overflow-x: hidden; 
 }
+
+.friendsnavbar-content-extended{
+  width: 100%;
+  height: calc(100vh - 315px);
+  
+  overflow-y: scroll; 
+  overflow-x: hidden; 
+}
+
+
+
 
 
 /* Styling the scrollbar */
-.friends-extra-extended::-webkit-scrollbar,
-.friends-extended::-webkit-scrollbar {
+.friendsnavbar-content::-webkit-scrollbar{
   width: 5px; /* Width of the scrollbar */
 }
 
-.friends-extra-extended::-webkit-scrollbar-track,
-.friends-extended::-webkit-scrollbar-track {
+.friendsnavbar-content::-webkit-scrollbar-track {
   background:transparent; /* Color of the track of the scrollbar */
 }
 
-.friends-extra-extended::-webkit-scrollbar-thumb,
-.friends-extended::-webkit-scrollbar-thumb {
-  background: black; /* Color of the thumb of the scrollbar */
-  background: #131312;
+.friendsnavbar-content::-webkit-scrollbar-thumb {
+  background: #131312; /* Color of the thumb of the scrollbar */
 }
 
-
-.friends-extra-extended::-webkit-scrollbar-thumb:hover,
-.friends-extended::-webkit-scrollbar-thumb:hover {
+.friendsnavbar-content::-webkit-scrollbar-thumb:hover {
   background: darkgrey; /* Color of the thumb of the scrollbar when hovered */
 }
+
 
 
 .active-nav{

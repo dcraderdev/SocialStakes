@@ -5,7 +5,8 @@ import {
   DENY_FRIEND_REQUEST,
   GET_USER_FRIENDS,
   SHOW_FRIEND_INVITES,
-  SHOW_TABLE_INVITES
+  SHOW_TABLE_INVITES,
+  SHOW_FRIENDS
 } from '../actions/actionTypes'
 
 
@@ -72,5 +73,15 @@ export const showFriendInvitesAction = () => {
 export const showTableInvitesAction = () => {
   return {
     type: SHOW_TABLE_INVITES,
+  };
+};
+
+export const showFriendsAction = (friend) => {
+  console.log('hi');
+  console.log(friend);
+  return {
+    type: SHOW_FRIENDS,
+    payload: friend,
+
   };
 };

@@ -17,6 +17,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  
 }
 
 
@@ -41,8 +42,21 @@
 
 .friendtile-name-container{
   margin-left: 10px;
+  font-size: 16px;
+  color: azure;
+  font-weight: 300;
 
 }
+
+.active-friend{
+  border: rgba(218, 165, 32, 0.38) solid 2px;
+}
+
+.active-name{
+  color: goldenrod;
+}
+
+
 
 .friend-status{
   margin-right: 15px;
@@ -52,6 +66,7 @@
   border: rgb(26, 59, 167) solid 1px;
   border-radius: 50%;
 }
+
 
 .online{
   border: rgb(8, 67, 20) solid 1px;
@@ -63,4 +78,10 @@
   background-color: rgb(200, 57, 13);
 }
 
+
+@media screen and (min-width: 800px) {
+  .friendtile-name-container{
+    font-size: 20px;
+  }
+}
 

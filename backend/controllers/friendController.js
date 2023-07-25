@@ -35,11 +35,6 @@ const friendController = {
         status: 'pending',
       });
     } else {
-      // console.log(existingFriendship);
-      // console.log(existingFriendship.status === 'pending');
-      // console.log(existingFriendship.status === 'rejected');
-      // console.log(existingFriendship.status === 'accepted');
-      // console.log(existingFriendship.actionUserId);
       // If there is an existing friendship with status 'pending', and the other user initiated - accept the request
       if (
         existingFriendship.status === 'pending' &&
@@ -62,42 +57,25 @@ const friendController = {
         return existingFriendship;
       }
 
-      // If the status is 'rejected' and the actionUserId was not the current user, don't create a new one
-      if (
-        existingFriendship.status === 'rejected' &&
-        existingFriendship.actionUserId === userId
-      ) {
-        console.log('Cannot send friend request - prior request rejected');
-        return await Friendship.create({
-          user1Id: user1Id,
-          user2Id: user2Id,
-          actionUserId: userId,
-          status: 'pending',
-        });
+      
+        // if there is a rejected friendship and the current user is not the one who rejected it, create a new one
+        if (
+          existingFriendship.status === 'rejected' &&
+          existingFriendship.actionUserId === userId
+        ) {
+        console.log('rejector is now sending request');
+        console.log('rejector is now sending request');
+        console.log('rejector is now sending request');
+        console.log('rejector is now sending request');
+    
 
-        return existingFriendship;
-      }
-      // If the other user has sent a friend request, set the friendship status to 'accepted'
-      if (
-        existingFriendship.status === 'pending' &&
-        existingFriendship.actionUserId !== userId
-      ) {
-        existingFriendship.status = 'accepted';
-        return await existingFriendship.save();
-      }
-    }
+        existingFriendship.status = 'pending';
+        existingFriendship.actionUserId = userId;
+        return await existingFriendship.save()
 
-    // if there is a rejected friendship and the current user is not the one who rejected it, create a new one
-    if (
-      existingFriendship.status === 'rejected' &&
-      existingFriendship.actionUserId !== userId
-    ) {
-      return await Friendship.create({
-        user1Id: user1Id,
-        user2Id: user2Id,
-        actionUserId: userId,
-        status: 'pending',
-      });
+        }
+
+
     }
 
     return 'Unexpected status';
@@ -205,6 +183,10 @@ const friendController = {
         existingFriendship.status === 'pending' &&
         existingFriendship.actionUserId !== userId
       ) {
+        console.log('saving status as rejected');
+        console.log('saving status as rejected');
+        console.log('saving status as rejected');
+        console.log('saving status as rejected');
         existingFriendship.status = 'rejected';
         existingFriendship.actionUserId = userId;
         return await existingFriendship.save();

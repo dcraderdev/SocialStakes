@@ -11,14 +11,7 @@ import {
 import { csrfFetch } from './csrf';
 
 
-export const getUserFriends = (tableId) => async (dispatch) => {
-  console.log('friends');
-  console.log('friends');
-  console.log('friends');
-  console.log('friends');
-  console.log('friends');
-  console.log('friends');
-
+export const getUserFriends = () => async (dispatch) => {
   try{
     const response = await csrfFetch(`/api/session/friends`, {
       method: 'GET'

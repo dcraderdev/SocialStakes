@@ -75,8 +75,6 @@ router.get('/themes', async (_req, res, next) => {
     next(err)
   }
 
-
-
   const themeUrls = themes.map((theme) => {
     let url = retrievePrivateFile(theme.url);
     let name = theme.name
@@ -103,17 +101,6 @@ router.get('/stats', requireAuth, async (req, res, next) => {
 
 // Get user's friends/requests/outgoing
 router.get('/friends', requireAuth, async (req, res, next) => {
-  console.log('friends');
-  console.log('friends');
-  console.log('friends');
-  console.log('friends');
-  console.log('friends');
-  console.log('friends');
-  console.log('friends');
-  console.log('friends');
-  console.log('friends');
-  console.log('friends');
-  console.log('friends');
   const { user } = req;
   const allFriends = await friendController.getUserFriends(user.id)
 

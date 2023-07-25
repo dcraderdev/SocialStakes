@@ -32,23 +32,13 @@ function RemoveFriendModal() {
   
 
   const removeFriend = () => {
-
     if(!updateObj) return
-
     const {currentFriendView} = updateObj
     let friendObj = {
       friendshipId: currentFriendView.id,
       friendId: currentFriendView.friend.id
     }
-
-    console.log(friendObj);
     socket.emit('remove_friend', friendObj)
- 
-
-    
-
-
-
     closeModal()
     setUpdateObj(null)
     return
@@ -61,13 +51,6 @@ function RemoveFriendModal() {
     setUpdateObj(null)
   }
 
-
-  console.log(updateObj);
-  console.log(updateObj.currentFriendView.friend);
-
-
-
- 
   return (
     <div className="leavemodal-wrapper" ref={formRef}>
 

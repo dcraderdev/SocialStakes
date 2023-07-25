@@ -11,11 +11,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { React, useState, useEffect, useContext } from 'react';
 import { Route, Router, Switch, NavLink, useLocation } from 'react-router-dom';
 
-import { io } from 'socket.io-client';
 
 import { ModalContext } from './context/ModalContext';
 import { SocketContext } from './context/SocketContext';
 import * as sessionActions from './redux/middleware/users';
+import * as friendActions from './redux/middleware/friends';
 import InsuranceModal from './components/InsuranceModal';
 import JoinPrivateGameModal from './components/JoinPrivateGameModal';
 import SettingsModal from './components/SettingsModal';
@@ -42,11 +42,12 @@ function App() {
   // if no user than we force open login modal
   useEffect(() => {
     isLoaded(false);
-
     dispatch(sessionActions.loadThemes())
     dispatch(sessionActions.restoreUser())
       .then(() => {
         isLoaded(true);
+        dispatch(friendActions.getUserFriends())
+
       })
       .catch(() => {
         isLoaded(true);
@@ -131,11 +132,13 @@ function App() {
           </Route>
 
           <Route path="/friends" exact>
+            {!user && <GameFloor/>}
             <FriendsPage />
           </Route>
 
 
           <Route path="/stats" exact>
+            {!user && <GameFloor/>}
             <StatPage />
           </Route>
 

@@ -5,9 +5,12 @@
 
 .zzz-container{
   color: white;
-  height: 100%;
   width: 100%;
   position: absolute;
+  left: 70%;
+  top: 40%;
+  transform: translate(-50%,-50%);
+
 
 }
 
@@ -17,4 +20,25 @@
   position: relative;
   left: -265px;
   top: 90px;
+}
+
+.container{
+  border: white solid 1px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%,-50%);
+  width: 500px;
+  height: 500px;
+}
+
+.stats-banner{
+  color: white;
+  width: 100%;
+  position: absolute;
+  left: 50%;
+  top: 60%;
+  transform: translate(-50%,-50%);
+  font-size: 30px;
+  font-weight: 300;
 }

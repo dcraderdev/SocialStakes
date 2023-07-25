@@ -1,13 +1,13 @@
 import React, { useEffect, useRef, useState, useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, Redirect, useHistory } from 'react-router-dom';
-import './LeaveModal.css';
+import './RemoveFriendModal.css';
 import { ModalContext } from '../../context/ModalContext';
 import { SocketContext } from '../../context/SocketContext';
 import * as sessionActions from '../../redux/middleware/users';
 import { showGamesAction, leaveTableAction } from '../../redux/actions/gameActions';
 
-function LeaveModal() {
+function RemoveFriendModal() {
   const dispatch = useDispatch();
   const history = useHistory();
   const formRef = useRef(null);
@@ -31,25 +31,14 @@ function LeaveModal() {
   
   
 
-  const leaveSeat = () => {
-    const {seat, tableId, type} = updateObj
-
-    const seatObj = {
-      tableId,
-      seat,
+  const removeFriend = () => {
+    if(!updateObj) return
+    const {currentFriendView} = updateObj
+    let friendObj = {
+      friendshipId: currentFriendView.id,
+      friendId: currentFriendView.friend.id
     }
-
-    
-    if(type && type==='leaveTableViaTab'){
-      dispatch(leaveTableAction(tableId))
-      socket.emit('leave_table', seatObj)
-
-    } else {
-      socket.emit('leave_seat', seatObj)
-    }
-    
-
-
+    socket.emit('remove_friend', friendObj)
     closeModal()
     setUpdateObj(null)
     return
@@ -62,26 +51,21 @@ function LeaveModal() {
     setUpdateObj(null)
   }
 
-
-
-
-
- 
   return (
     <div className="leavemodal-wrapper" ref={formRef}>
 
         
         <div className="leavemodal-container flex center">
           <div className="leavemodal-header white flex center">
-            Leave Seat?
+            Remove friend?
           </div>
 
           <div className="leavemodal-user-buttons flex between">
             <div className="leavemodal-cancel flex center" onClick={cancel}>
             Cancel
             </div>
-            <div className={`leavemodal-addbalance flex center`}onClick={leaveSeat}>
-            Leave
+            <div className={`leavemodal-addbalance flex center`}onClick={removeFriend}>
+            Remove
             </div>
           </div>
         </div>
@@ -90,4 +74,4 @@ function LeaveModal() {
   );
 }
 
-export default LeaveModal;
+export default RemoveFriendModal;

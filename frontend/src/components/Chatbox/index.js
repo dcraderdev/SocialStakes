@@ -15,10 +15,11 @@ const Chatbox = ({showMessages}) => {
   const [newMessage, setNewMessage] = useState('');
   const [messages, setMessages] = useState([]);
   const user = useSelector(state => state.users.user);
-  const friends = useSelector(state => state.users.friends);
+  const friends = useSelector(state => state.friends);
   const activeTable = useSelector(state => state.games.activeTable);
   const currentTables = useSelector(state => state.games.currentTables);
   const conversations = useSelector(state => state.chats.conversations);
+  
   const { socket } = useContext(SocketContext);
   const bottomRef = useRef(null);
 
@@ -26,6 +27,8 @@ const Chatbox = ({showMessages}) => {
   const [isDeletingMessage, setIsDeletingMessage] = useState(false)
   const [editedMessageId, setEditedMessageId] = useState(null)
   const [editedMessageContent, setEditedMessageContent] = useState('')
+  const [invitedFriends, setInvitedFriends] = useState({});
+  const [showInviteFriendButton, setShowFriendInviteButton] = useState(false);
 
 
     // Handle Sending Messages
@@ -52,42 +55,64 @@ const Chatbox = ({showMessages}) => {
     },[conversations, activeTable])
 
 
-    // useEffect(()=>{
-    //   if(currentTables && currentTables[activeTable.id]){
-    //     setMessages(currentTables[activeTable.id].messages)
-    //   }
-    //   if (bottomRef.current) {
-    //     bottomRef.current.scrollIntoView({ behavior: 'smooth' });
-    //   }
-    // },[currentTables])
+
+
+    useEffect(()=>{
+      const shouldShowFriendInviteButton = () => {
+        // Check if the user exists
+        if (!user) return false;
+  
+        // Check if there is no selected message
+        if (!selectedMessage) return false;
+  
+        // Check if the selected message is from the current user
+        if (selectedMessage.user.id === user.id) return false;
+  
+        // Check if the selected message is from the default user
+        if (selectedMessage.user.id === 1) return false;
+  
+        // Check if the selected message's user is already a friend or has a pending request
+        const currentFriends = friends.friends;
+        const outgoingRequests = friends.outgoingRequests;
+        const selectedMessageUserId = selectedMessage.user.id;
+
+
+      console.log(outgoingRequests);
+
+
+
+
+        if (currentFriends[selectedMessageUserId] || outgoingRequests[selectedMessageUserId]) {
+          return false;
+        }
+  
+        // If none of the conditions above are met, show the invite button
+        return true;
+      }
+  
+      setShowFriendInviteButton(shouldShowFriendInviteButton());
+    }, [selectedMessage, user, friends]);
+  
  
     const sendFriendRequest = () => {
-      return
+      console.log('clik');
       if (!user) return;
   
-      const userId = user.id;
-      const userRank = user.rank;
-      const newFriendId = selectedMessage.sender.id;
-      const newFriendUsername = selectedMessage.sender.username;
-      const newFriendRoom = selectedMessage.sender.userRoom;
-      const newFriendRank = selectedMessage.sender.rank;
+      const recipientId = selectedMessage.user.id;
+      const recipientUsername = selectedMessage.user.username;
   
       let friendRequestObj = {
-        userId,
-        userRank,
-        newFriendId,
-        newFriendUsername,
-        newFriendRoom,
-        newFriendRank,
+        recipientId,
+        recipientUsername,
       };
   
-      //  cant request self, friends does not exist, newFriendUsername is already in the pending list, newFriendUsername is already in the accepted list.
+      //  cant request self, friends does not exist, recipientUsername is already in the pending list, recipientUsername is already in the accepted list.
       if (
-        user.username === newFriendUsername ||
+        user.username === recipientUsername ||
         !friends ||
         (friends.outgoingRequests &&
-          friends.outgoingRequests[newFriendUsername]) ||
-        (friends.friends && friends.friends[newFriendUsername])
+          friends.outgoingRequests[recipientUsername]) ||
+        (friends.friends && friends.friends[recipientUsername])
       )
         return;
       socket.emit('send_friend_request', friendRequestObj);
@@ -187,10 +212,9 @@ const Chatbox = ({showMessages}) => {
                 >
 
 
-                  {user && selectedMessage === message &&
-                  selectedMessage.user.id !== 1 &&
-                  user.id !== selectedMessage.user.id &&
-                  !isDeletingMessage && !isEditingMessage &&
+                  {
+                  selectedMessage === message &&
+                  showInviteFriendButton &&
                   (
                       <div
                         className="chat-message-add-friend"
@@ -233,14 +257,14 @@ const Chatbox = ({showMessages}) => {
                             className="chat-message-option"
                             onClick={(e)=>saveMessage(e)}
                           >
-                            <i className="delete-check fa-solid fa-check"></i>
+                            <i className="fa-solid fa-check"></i>
                           </div>
 
                           <div
                           className="chat-message-option"
                           onClick={cancelEdit}
                           >
-                          <i className="delete-x fa-solid fa-x"></i>
+                          <i className="fa-solid fa-x"></i>
                           </div>
                         </div>
                   )}
@@ -257,14 +281,14 @@ const Chatbox = ({showMessages}) => {
                           className="chat-message-option"
                           onClick={deleteMessage}
                         >
-                          <i className="delete-check fa-solid fa-check"></i>
+                          <i className="fa-solid fa-check"></i>
                         </div>
 
                         <div
                         className="chat-message-option"
                         onClick={cancelDeleteMessage}
                         >
-                        <i className="delete-x fa-solid fa-x"></i>
+                        <i className="fa-solid fa-x"></i>
                         </div>
                       </div>
                 )}

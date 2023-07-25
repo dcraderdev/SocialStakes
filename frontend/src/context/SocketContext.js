@@ -7,10 +7,8 @@ import * as gameActions from '../redux/middleware/games';
 import {addMessageAction, editMessageAction,deleteMessageAction} from '../redux/actions/chatActions';
 
 
-
 import {
-  updateTableAction,
-  updateTableNameAction,
+  updateTableAction, updateTableNameAction,
   deleteTableAction,
   takeSeatAction, leaveSeatAction, playerForfeitAction,
   addBetAction, removeLastBetAction, removeAllBetAction,
@@ -20,11 +18,20 @@ import {
   updateTableCountdownAction,
   collectBetsAction,
   viewTableAction,
-  offerInsuranceAction, 
-  rescindInsuranceAction,
-  joinTableAction,
-  leaveTableAction
+  offerInsuranceAction, rescindInsuranceAction,
+  joinTableAction, leaveTableAction
 } from '../redux/actions/gameActions';
+
+
+import {
+  addOutGoingFriendRequest,
+  addIncomingFriendRequest,
+  acceptFriendRequest,
+  denyFriendRequest,
+  removeFriendAction
+} from '../redux/actions/friendActions';
+
+
 
 
 const SocketContext = createContext();
@@ -175,6 +182,40 @@ const SocketProvider = ({ children }) => {
         dispatch(collectBetsAction(countdownObj)); 
       });  
 
+
+
+
+    // friends
+    socket.on('friend_request_sent', (friendRequestObj) => {
+      console.log(friendRequestObj);
+      dispatch(addOutGoingFriendRequest(friendRequestObj));
+    });
+
+    // // 
+    socket.on('friend_request_received', (friendRequestObj) => {
+      console.log('here');
+      dispatch(addIncomingFriendRequest(friendRequestObj));
+    });
+    
+
+    socket.on('accept_friend_request', (friendRequestObj) => {
+      console.log(friendRequestObj);
+      dispatch(acceptFriendRequest(friendRequestObj));
+    });
+
+    // // 
+    socket.on('deny_friend_request', (friendRequestObj) => {
+      console.log(friendRequestObj);
+      dispatch(denyFriendRequest(friendRequestObj));
+    });
+
+    // // 
+    socket.on('friend_removed', (friendObj) => {
+      console.log(friendObj);
+      dispatch(removeFriendAction(friendObj));
+    });
+
+
       return () => {
         
         socket.off('player_forfeit');
@@ -200,7 +241,12 @@ const SocketProvider = ({ children }) => {
         // socket.off('remove_player');
         socket.off('countdown_update');
         socket.off('collect_bets');
-
+        socket.off('friend_request_sent');
+        socket.off('friend_request_received');
+        socket.off('accept_friend_request');
+        socket.off('deny_friend_request');
+        socket.off('friend_removed');
+        
       };
       
     }

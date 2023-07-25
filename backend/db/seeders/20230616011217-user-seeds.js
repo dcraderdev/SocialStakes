@@ -66,7 +66,6 @@ module.exports = {
         username: 'OakLeaf',
         hashedPassword: await bcrypt.hash('password3', salt),
         balance: 90000
-
       },
       {
         id:"e10d8de4-f4c2-4d28-9324-56aa9c924a80",
@@ -76,7 +75,6 @@ module.exports = {
         username: 'Willow',                                                           // WILLOW
         hashedPassword: await bcrypt.hash('password4', salt),
         balance: 90000
-
       },
       {
         id:"e10d8de4-f4c2-4d28-9324-56aa9c924a81",

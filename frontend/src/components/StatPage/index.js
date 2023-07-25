@@ -28,8 +28,8 @@ const StatPage = () => {
 
 
   return (
-    <div>
-      {/* <div className='friends-banner flex center'>Stats coming soon</div> */}
+    <div className='flex center'>
+      <div className='stats-banner flex center'>Stats coming soon</div>
 
 
       <div className='zzz-container flex center'>

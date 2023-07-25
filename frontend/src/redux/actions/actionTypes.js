@@ -16,7 +16,7 @@ export const GET_USER_STATS = 'users/GET_USER_STATS';
 export const SET_CSRF_TOKEN = 'set/SET_CSRF_TOKEN';
 
 
-//game
+//games
 export const GET_GAMES = 'games/GET_GAMES';
 export const GET_GAME_BY_ID = 'games/GET_GAME_BY_ID';
 
@@ -72,4 +72,29 @@ export const ADD_MESSAGE = 'game/ADD_MESSAGE';
 export const EDIT_MESSAGE = 'game/EDIT_MESSAGE';
 export const DELETE_MESSAGE = 'game/DELETE_MESSAGE';
 export const TOGGLE_SHOW_MESSAGES = 'game/TOGGLE_SHOW_MESSAGES';
+
+
+// friends
+export const ADD_INCOMING_FRIEND_REQUEST = 'user/ADD_INCOMING_FRIEND_REQUEST';
+export const ADD_OUTGOING_FRIEND_REQUEST = 'user/ADD_OUTGOING_FRIEND_REQUEST';
+export const ACCEPT_FRIEND_REQUEST = 'user/ACCEPT_FRIEND_REQUEST';
+export const DENY_FRIEND_REQUEST = 'user/DENY_FRIEND_REQUEST';
+export const GET_USER_FRIENDS = 'user/GET_USER_FRIENDS';
+export const REMOVE_FRIEND = 'user/REMOVE_FRIEND';
+
+
+
+//conversations
+export const INITIAL_LOAD_CONVERSATIONS = 'user/INITIAL_LOAD_CONVERSATIONS';
+export const ADD_CONVERSATION = 'user/ADD_CONVERSATION';
+export const ADD_CONVERSATION_INIVTE = 'user/ADD_CONVERSATION_INIVTE';
+export const ACCEPT_CONVERSATION_INIVTE = 'user/ACCEPT_CONVERSATION_INIVTE';
+export const REMOVE_CONVERSATION = 'user/REMOVE_CONVERSATION';
+
+
+//Friend Page view
+export const SHOW_FRIEND_INVITES = 'user/SHOW_FRIEND_INVITES';
+export const SHOW_TABLE_INVITES = 'user/SHOW_TABLE_INVITES';
+export const SHOW_FRIENDS = 'user/SHOW_FRIENDS';
+export const SHOW_CONVERSATIONS = 'user/SHOW_CONVERSATIONS';
 

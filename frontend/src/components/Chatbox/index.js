@@ -68,21 +68,21 @@ const Chatbox = ({showMessages}) => {
       console.log('clik');
       if (!user) return;
   
-      const newFriendId = selectedMessage.user.id;
-      const newFriendUsername = selectedMessage.user.username;
+      const recipientId = selectedMessage.user.id;
+      const recipientUsername = selectedMessage.user.username;
   
       let friendRequestObj = {
-        userId: user.id,
-        newFriendId,
+        recipientId,
+        recipientUsername,
       };
   
-      //  cant request self, friends does not exist, newFriendUsername is already in the pending list, newFriendUsername is already in the accepted list.
+      //  cant request self, friends does not exist, recipientUsername is already in the pending list, recipientUsername is already in the accepted list.
       if (
-        user.username === newFriendUsername ||
+        user.username === recipientUsername ||
         !friends ||
         (friends.outgoingRequests &&
-          friends.outgoingRequests[newFriendUsername]) ||
-        (friends.friends && friends.friends[newFriendUsername])
+          friends.outgoingRequests[recipientUsername]) ||
+        (friends.friends && friends.friends[recipientUsername])
       )
         return;
       socket.emit('send_friend_request', friendRequestObj);
@@ -228,14 +228,14 @@ const Chatbox = ({showMessages}) => {
                             className="chat-message-option"
                             onClick={(e)=>saveMessage(e)}
                           >
-                            <i className="delete-check fa-solid fa-check"></i>
+                            <i className="fa-solid fa-check"></i>
                           </div>
 
                           <div
                           className="chat-message-option"
                           onClick={cancelEdit}
                           >
-                          <i className="delete-x fa-solid fa-x"></i>
+                          <i className="fa-solid fa-x"></i>
                           </div>
                         </div>
                   )}
@@ -252,14 +252,14 @@ const Chatbox = ({showMessages}) => {
                           className="chat-message-option"
                           onClick={deleteMessage}
                         >
-                          <i className="delete-check fa-solid fa-check"></i>
+                          <i className="fa-solid fa-check"></i>
                         </div>
 
                         <div
                         className="chat-message-option"
                         onClick={cancelDeleteMessage}
                         >
-                        <i className="delete-x fa-solid fa-x"></i>
+                        <i className="fa-solid fa-x"></i>
                         </div>
                       </div>
                 )}

@@ -85,3 +85,42 @@
   }
 }
 
+
+
+.friendtile-request-option-container{
+  margin-right: 10px;
+
+  position: absolute;
+  right: 0%;
+  width: 100px;
+  height: 30px;
+  justify-content: space-around;
+
+}
+
+.friendtile-request-option{
+  position: relative;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+  cursor: pointer;
+}
+
+
+
+.friendtile-request-option:hover{
+  background-color: #17344c;
+}
+
+.friendtile-request-option i{
+  font-size: 20px;
+  color: rgb(18, 133, 8);
+}
+
+.friendtile-request-option:active > i {
+  transform: scale(1.3);
+}

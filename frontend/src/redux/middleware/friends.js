@@ -38,4 +38,4 @@ export const getUserFriends = (tableId) => async (dispatch) => {
   }catch(error){
     console.log(error);
   } 
-};
+};  

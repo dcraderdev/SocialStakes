@@ -1665,20 +1665,17 @@ module.exports = function (io) {
 
 
     socket.on('send_friend_request', async (friendRequestObj) => {
-      let recipientId = friendRequestObj.newFriendId
-      let recipientUsername = friendRequestObj.newFriendId
+      let recipientId = friendRequestObj.recipientId
+      let recipientUsername = friendRequestObj.recipientUsername
       
-
-
       console.log('sender | ', username, userId);
       console.log('recip | ', recipientUsername, recipientId);
-
 
       const request = await friendController.sendFriendRequest({userId, recipientId});
       if(request){
 
         let senderObj = {
-          newFriend:{
+          friend:{
             id: recipientId,
             username:recipientUsername,
           },
@@ -1687,10 +1684,10 @@ module.exports = function (io) {
             status: request.status
           }
         }
-        
+         
 
         let recipientObj = {
-          requestingFriend:{
+          friend:{
             id: userId,
             username,
           },
@@ -1710,8 +1707,10 @@ module.exports = function (io) {
         if(request.status === 'accepted'){
           console.log('says accepted | ', username);
 
-          io.in(recipientId).emit('accept_friend_request', recipientObj);
-          socket.emit('accept_friend_request', senderObj);
+          io.in(userId).emit('accept_friend_request', senderObj);
+          socket.emit('accept_friend_request', recipientObj);
+
+
         }
 
         if(request.status === 'rejected'){
@@ -1729,10 +1728,14 @@ module.exports = function (io) {
     });
 
     socket.on('accept_friend_request', async (friendRequestObj) => {
-      let recipientId = friendRequestObj.newFriendId
-      let recipientUsername = friendRequestObj.newFriendId
-      
+      console.log('-----accept_friend_request------');
+      console.log('----------------------');
 
+
+      let recipientId = friendRequestObj.recipientId
+      let recipientUsername = friendRequestObj.recipientUsername
+      
+ 
       console.log('sender | ', username, userId);
       console.log('recip | ', recipientUsername, recipientId);
 
@@ -1744,8 +1747,8 @@ module.exports = function (io) {
 
 
         let senderObj = {
-          newFriend:{
-            id: recipientId,
+          friend:{
+            id: recipientId, 
             username:recipientUsername,
           },
           requestInfo: {
@@ -1756,7 +1759,7 @@ module.exports = function (io) {
         
 
         let recipientObj = {
-          requestingFriend:{
+          friend:{
             id: userId,
             username,
           },
@@ -1777,47 +1780,46 @@ module.exports = function (io) {
       return request;
     });
     
-    socket.on('deny_friend_request', async (friendRequestObj) => {
-      let recipientId = friendRequestObj.newFriendId
-      let recipientUsername = friendRequestObj.newFriendId
-      
+    socket.on('decline_friend_request', async (friendRequestObj) => {
+      console.log('-----deny_friend_request------');
+      console.log('----------------------');
 
+
+      let recipientId = friendRequestObj.recipientId
+      let recipientUsername = friendRequestObj.recipientUsername
+      
+ 
       console.log('sender | ', username, userId);
       console.log('recip | ', recipientUsername, recipientId);
 
       console.log(friendRequestObj);
 
 
-
       const request = await friendController.declineFriendRequest({userId, recipientId});
       if(request && request.status === 'rejected') {
     
-        let userKey = friendRequestObj.newFriendUsername;
-        let userId = friendRequestObj.newFriendId;
-    
         let senderObj = {
-          keyName: userKey,
-          friendObj:{
-            friend:{
-              id: userId,
-              username:userKey,
-            },
+          friend:{
+            id: recipientId, 
+            username:recipientUsername,
+          },
+          requestInfo: {
             id: request.id,
             status: request.status
           }
-        };
-    
+        }
+        
+
         let recipientObj = {
-          keyName: username,
-          friendObj:{
-            friend:{
-              id: userId,
-              username,
-            },
+          friend:{
+            id: userId,
+            username,
+          },
+          requestInfo: {
             id: request.id,
             status: request.status
           }
-        };
+        }
     
         io.in(recipientId).emit('deny_friend_request', recipientObj);
         socket.emit('deny_friend_request', senderObj);

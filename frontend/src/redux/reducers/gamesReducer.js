@@ -28,7 +28,7 @@ const initialState = {
   activeTable: null,
   showGames: true,
   showTables: false,
-  showMessages: false,
+  showMessages: true,
   showCreatingGame: false
 }
 

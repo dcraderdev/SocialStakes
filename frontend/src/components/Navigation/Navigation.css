@@ -78,19 +78,17 @@
 
 .nav-user-button .fa-user:hover,
 .nav-user-button:hover{
-  color: rgb(200, 57, 13);
   color: goldenrod;
+  
 }
 
 .nav-user-button:hover > .profile-icon-container{
-  border: rgb(200, 57, 13) 1px solid;
   border: goldenrod 1px solid;
   color: goldenrod;
 
 }
 
 .profile-icon-container:hover > .nav-user-button .fa-user {
-  color: rgb(200, 57, 13);
   color: goldenrod;
 
 }

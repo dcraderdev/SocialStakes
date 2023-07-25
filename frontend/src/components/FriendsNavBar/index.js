@@ -18,8 +18,9 @@ const FriendsNavBar = () => {
 
   const friends = useSelector(state => state.friends);
   const currentTables = useSelector(state => state.games.currentTables);
+  const isShowingFriendInvites = useSelector(state => state.friends.showFriendInvites);
+  const isShowingTableInvites = useSelector(state => state.friends.showTableInvites);
   const [hasCurrentTables, setHasCurrentTables] = useState(false);
-
 
   //sets hieght for our sidemenu in case we have currentGames
   useEffect(()=>{
@@ -143,8 +144,8 @@ const FriendsNavBar = () => {
           <div onClick={()=>toggleFocus(viewInvites)} className={`friendsnavbar-nav-header flex center  ${currentFocus === viewInvites ? ' active-nav' : ''}`}>
             <div>Invites</div>
           </div>
-          <div className="friendsnavbar-nav flex center" onClick={()=>dispatch(showTableInvitesAction())}>Tables</div>
-          <div className="friendsnavbar-nav flex center" onClick={()=>dispatch(showFriendInvitesAction())}>Friends</div>
+          <div className={`friendsnavbar-nav flex center ${isShowingTableInvites ? 'friendsnavbar-text-active' : ''}`} onClick={()=>dispatch(showTableInvitesAction())}>Tables</div>
+          <div className={`friendsnavbar-nav flex center ${isShowingFriendInvites ? 'friendsnavbar-text-active' : ''}`} onClick={()=>dispatch(showFriendInvitesAction())}>Friends</div>
 
 
 

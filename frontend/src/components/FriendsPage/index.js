@@ -5,6 +5,7 @@ import { SocketContext } from '../../context/SocketContext';
 import { getUserFriends } from '../../redux/middleware/friends';
 
 import FriendsNavBar from '../FriendsNavBar';
+import FriendTile from '../FriendTile';
 
 import './FriendsPage.css';
 
@@ -20,18 +21,19 @@ const FriendsPage = () => {
   const currentFriendView = useSelector(
     (state) => state.friends.currentFriendView
   );
-  const showFriendInvites = useSelector(
-    (state) => state.friends.showFriendInvites
-  );
   const showFriends = useSelector((state) => state.friends.showFriends);
   const showTableInvites = useSelector(
     (state) => state.friends.showTableInvites
   );
+  const showFriendInvites = useSelector(
+    (state) => state.friends.showFriendInvites
+  );
+
+
   const currentTables = useSelector((state) => state.games.currentTables);
   const [hasCurrentTables, setHasCurrentTables] = useState(false);
   const [header, setHeader] = useState('');
   const [currentFriendViewTab, setCurrentFriendViewTab] = useState(currentFriendViewConversations);
-
 
 
 
@@ -102,22 +104,23 @@ const FriendsPage = () => {
         {showFriendInvites && (
           <div>
             <div className="friendspage-header flex">Incoming</div>
-            {Object.entries(friends.outgoingRequests).map(
+            {Object.entries(friends.incomingRequests).map(
               ([key, friend], index) => {
                 return (
                   <div key={index} className="friendtile-wrapper">
-                    {friend.friend.username}
+                    <FriendTile friend={friend} type={'invite'}/>
                   </div>
                 );
               }
             )}
 
             <div className="friendspage-header flex">Outgoing</div>
-            {Object.entries(friends.incomingRequests).map(
+            {Object.entries(friends.outgoingRequests).map(
               ([key, friend], index) => {
                 return (
                   <div key={index} className="friendtile-wrapper">
-                    {friend.friend.username}
+                    {friend?.friend?.username || ''}
+                    <FriendTile friend={friend} type={'submenu'}/>
                   </div>
                 );
               }

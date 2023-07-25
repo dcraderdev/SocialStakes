@@ -30,55 +30,79 @@ const userReducer = (state = initialState, action) => {
   switch (action.type) {
 
     case ADD_INCOMING_FRIEND_REQUEST: {
-      const { newFriend, requestInfo} = action.payload;
+      const { friend, requestInfo} = action.payload;
+      let id = requestInfo.id
+
+      console.log(action.payload);
+      console.log(friend);
+      console.log(requestInfo);
     
       // add the new request
-      newState.incomingRequests[newFriend.id] = action.payload;
+      newState.incomingRequests[friend.id] = { id, friend };
+
+      console.log(newState);
     
       return {...newState};
     }
 
     case ADD_OUTGOING_FRIEND_REQUEST: {
-      const { newFriend, requestInfo} = action.payload;
+      const { friend, requestInfo} = action.payload;
       
       // add the new request
-      newState.outgoingRequests[newFriend.id] = action.payload;
+      newState.outgoingRequests[friend.id] = { id, friend };
       
       return {...newState};
     }
     
 
     case ACCEPT_FRIEND_REQUEST: {
-      const { newFriend, requestInfo } = action.payload;
+      const { friend, requestInfo } = action.payload;
+      let id = requestInfo.id
+
+      console.log(action.payload);
+      console.log(friend);
+      console.log(requestInfo);
     
+      console.log(newState);
+      console.log(newState.incomingRequests);
+
       // Remove from incomingRequests
-      if (newState.incomingRequests[newFriend.id]) {
-        delete newState.incomingRequests[newFriend.id];
+      if (newState.incomingRequests[friend.id]) {
+        console.log('yes');
+        console.log(newState.incomingRequests);
+        console.log(newState.incomingRequests[friend.id]);
+
+        delete newState.incomingRequests[friend.id];
       }
     
       // Remove from outgoingRequests
-      if (newState.outgoingRequests[newFriend.id]) {
-        delete newState.outgoingRequests[newFriend.id];
+      if (newState.outgoingRequests[friend.id]) {
+        delete newState.outgoingRequests[friend.id];
       }
     
       // Add to friends list
-      newState.friends[newFriend.id] = action.payload;
+      newState.friends[friend.id] = { id, friend };;
     
       return {...newState};
     }
     
     
     case DENY_FRIEND_REQUEST: {
-      const { newFriend, requestInfo } = action.payload;
+      const { friend, requestInfo } = action.payload;
     
+      console.log(action.payload);
+      console.log(friend);
+      console.log(requestInfo);
+
+
       // Remove from incomingRequests
-      if (newState.incomingRequests[newFriend.id]) {
-        delete newState.incomingRequests[newFriend.id];
+      if (newState.incomingRequests[friend.id]) {
+        delete newState.incomingRequests[friend.id];
       }
     
       // Remove from outgoingRequests
-      if (newState.outgoingRequests[newFriend.id]) {
-        delete newState.outgoingRequests[newFriend.id];
+      if (newState.outgoingRequests[friend.id]) {
+        delete newState.outgoingRequests[friend.id];
       }
     
       return {...newState};

@@ -24,6 +24,7 @@ import TableClosedModal from './components/TableClosedModal';
 import FriendsPage from './components/FriendsPage';
 import UnknownRoutePage from './components/UnknownRoutePage';
 import StatPage from './components/StatPage';
+import RemoveFriendModal from './components/RemoveFriendModal';
 
 function App() {
 
@@ -111,6 +112,12 @@ function App() {
       {modal  === 'tableClosedModal' && (
         <div className='modal-container'>
           {modal === 'tableClosedModal' && <TableClosedModal />}
+        </div>
+      )}
+
+{modal  === 'RemoveFriendModal' && (
+        <div className='modal-container'>
+          {modal === 'RemoveFriendModal' && <RemoveFriendModal />}
         </div>
       )}
 

@@ -27,7 +27,8 @@ import {
   addOutGoingFriendRequest,
   addIncomingFriendRequest,
   acceptFriendRequest,
-  denyFriendRequest
+  denyFriendRequest,
+  removeFriendAction
 } from '../redux/actions/friendActions';
 
 
@@ -208,6 +209,12 @@ const SocketProvider = ({ children }) => {
       dispatch(denyFriendRequest(friendRequestObj));
     });
 
+    // // 
+    socket.on('friend_removed', (friendObj) => {
+      console.log(friendObj);
+      dispatch(removeFriendAction(friendObj));
+    });
+
 
       return () => {
         
@@ -238,7 +245,8 @@ const SocketProvider = ({ children }) => {
         socket.off('friend_request_received');
         socket.off('accept_friend_request');
         socket.off('deny_friend_request');
-
+        socket.off('friend_removed');
+        
       };
       
     }

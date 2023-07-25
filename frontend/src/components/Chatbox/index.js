@@ -28,6 +28,7 @@ const Chatbox = ({showMessages}) => {
   const [editedMessageId, setEditedMessageId] = useState(null)
   const [editedMessageContent, setEditedMessageContent] = useState('')
   const [invitedFriends, setInvitedFriends] = useState({});
+  const [showInviteFriendButton, setShowFriendInviteButton] = useState(false);
 
 
     // Handle Sending Messages
@@ -54,15 +55,44 @@ const Chatbox = ({showMessages}) => {
     },[conversations, activeTable])
 
 
-    // useEffect(()=>{
-    //   if(currentTables && currentTables[activeTable.id]){
-    //     setMessages(currentTables[activeTable.id].messages)
-    //   }
-    //   if (bottomRef.current) {
-    //     bottomRef.current.scrollIntoView({ behavior: 'smooth' });
-    //   }
-    // },[currentTables])
-    console.log(selectedMessage);
+
+
+    useEffect(()=>{
+      const shouldShowFriendInviteButton = () => {
+        // Check if the user exists
+        if (!user) return false;
+  
+        // Check if there is no selected message
+        if (!selectedMessage) return false;
+  
+        // Check if the selected message is from the current user
+        if (selectedMessage.user.id === user.id) return false;
+  
+        // Check if the selected message is from the default user
+        if (selectedMessage.user.id === 1) return false;
+  
+        // Check if the selected message's user is already a friend or has a pending request
+        const currentFriends = friends.friends;
+        const outgoingRequests = friends.outgoingRequests;
+        const selectedMessageUserId = selectedMessage.user.id;
+
+
+      console.log(outgoingRequests);
+
+
+
+
+        if (currentFriends[selectedMessageUserId] || outgoingRequests[selectedMessageUserId]) {
+          return false;
+        }
+  
+        // If none of the conditions above are met, show the invite button
+        return true;
+      }
+  
+      setShowFriendInviteButton(shouldShowFriendInviteButton());
+    }, [selectedMessage, user, friends]);
+  
  
     const sendFriendRequest = () => {
       console.log('clik');
@@ -182,10 +212,9 @@ const Chatbox = ({showMessages}) => {
                 >
 
 
-                  {user && selectedMessage === message &&
-                  selectedMessage.user.id !== 1 &&
-                  user.id !== selectedMessage.user.id &&
-                  !isDeletingMessage && !isEditingMessage &&
+                  {
+                  selectedMessage === message &&
+                  showInviteFriendButton &&
                   (
                       <div
                         className="chat-message-add-friend"

@@ -4,7 +4,7 @@ import {
   ACCEPT_FRIEND_REQUEST, 
   DENY_FRIEND_REQUEST,
   GET_USER_FRIENDS,
-  SHOW_TABLE_INVITES, SHOW_FRIEND_INVITES, SHOW_FRIENDS
+  SHOW_TABLE_INVITES, SHOW_FRIEND_INVITES, SHOW_FRIENDS, REMOVE_FRIEND
 } from '../actions/actionTypes'
 
 const initialState = {
@@ -47,6 +47,7 @@ const userReducer = (state = initialState, action) => {
 
     case ADD_OUTGOING_FRIEND_REQUEST: {
       const { friend, requestInfo} = action.payload;
+      let id = requestInfo.id
       
       // add the new request
       newState.outgoingRequests[friend.id] = { id, friend };
@@ -104,14 +105,43 @@ const userReducer = (state = initialState, action) => {
       if (newState.outgoingRequests[friend.id]) {
         delete newState.outgoingRequests[friend.id];
       }
-    
       return {...newState};
     }
 
-    case GET_USER_FRIENDS: {
-
+    case REMOVE_FRIEND: {
       console.log(action.payload);
+      let friendId = action.payload.friendId
 
+      console.log(newState.friends);
+      console.log(friendId);
+      console.log(newState.friends[friendId]);
+
+      if(newState.friends[friendId]){
+        delete newState.friends[friendId]
+      }
+
+      let otherFriends = Object.values(newState.friends)
+      console.log(otherFriends);
+      if(otherFriends.length){
+        console.log(otherFriends[0]);
+        newState.currentFriendView = otherFriends[0]
+      } else{
+        newState.currentFriendView = null
+      }
+
+
+
+      return{ 
+        ...newState,
+      }
+    }
+
+
+
+
+
+    case GET_USER_FRIENDS: {
+      console.log(action.payload);
       return{ 
         ...newState,
         incomingRequests: action.payload.incomingRequests, 
@@ -119,6 +149,14 @@ const userReducer = (state = initialState, action) => {
         friends: action.payload.friends
       }
     }
+
+
+
+
+
+
+
+
     case SHOW_FRIEND_INVITES: {
       return {
         ...newState,
@@ -145,6 +183,7 @@ const userReducer = (state = initialState, action) => {
 
     case SHOW_FRIENDS: {
       const friend = action.payload
+      console.log(friend);
       return {
         ...newState,
         showFriends:true,

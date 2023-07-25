@@ -6,7 +6,8 @@ import {
   GET_USER_FRIENDS,
   SHOW_FRIEND_INVITES,
   SHOW_TABLE_INVITES,
-  SHOW_FRIENDS
+  SHOW_FRIENDS,
+  REMOVE_FRIEND
 } from '../actions/actionTypes'
 
 
@@ -57,7 +58,14 @@ export const getUserFriendsAction = (data) => {
   };
 };
 
+export const removeFriendAction = (friendObj) => {
+  console.log(friendObj);
+  return {
+    type: REMOVE_FRIEND,
+    payload: friendObj,
 
+  };
+};
 
 
 
@@ -77,7 +85,6 @@ export const showTableInvitesAction = () => {
 };
 
 export const showFriendsAction = (friend) => {
-  console.log('hi');
   console.log(friend);
   return {
     type: SHOW_FRIENDS,

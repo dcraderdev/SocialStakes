@@ -1829,6 +1829,31 @@ module.exports = function (io) {
     });
 
 
+    socket.on('remove_friend', async (friendObj) => {
+      console.log('-----remove_friend------');
+      console.log('----------------------');
+      console.log(friendObj);
+
+
+      let friendshipId = friendObj.id
+      let friendId = friendObj.friendId
+      
+ 
+      console.log('friendshipId | ', friendshipId);
+      console.log('friendId | ', friendId);
+
+ 
+
+      const request = await friendController.removeFriend(userId, friendObj);
+     
+      
+      socket.emit('friend_removed', friendObj);
+      friendObj.friendId = userId
+      io.in(friendId).emit('friend_removed', friendObj);
+    
+     
+    });
+
 
 
   });

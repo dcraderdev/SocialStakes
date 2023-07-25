@@ -257,10 +257,36 @@ const friendController = {
     }, friendships);
 
     return formattedResults
+  },
+
+
+async removeFriend(userId, friendObj){
+
+  const {friendshipId,friendId} = friendObj
+
+
+  const existingFriendship = await Friendship.findByPk(friendshipId);
+
+  if(!existingFriendship){
+    return false
+  }
+
+  // Check if users are valid in the friendship
+  if (
+    (existingFriendship.user1Id === userId && existingFriendship.user2Id === friendId) ||
+    (existingFriendship.user1Id === friendId && existingFriendship.user2Id === userId)
+  ) {
+    console.log('Friendship is valid.');
+    await existingFriendship.destroy();
+  } else {
+    console.log('Invalid users for this friendship.');
+    return false;
   }
 
 
 
+
+}
 
 
 

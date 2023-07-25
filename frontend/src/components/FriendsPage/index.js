@@ -6,7 +6,7 @@ import { getUserFriends } from '../../redux/middleware/friends';
 
 import FriendsNavBar from '../FriendsNavBar';
 import FriendTile from '../FriendTile';
-
+import { ModalContext } from '../../context/ModalContext';
 import './FriendsPage.css';
 
 const FriendsPage = () => {
@@ -29,16 +29,41 @@ const FriendsPage = () => {
     (state) => state.friends.showFriendInvites
   );
 
+  const { openModal, setUpdateObj, updateObj } = useContext(ModalContext);
 
   const currentTables = useSelector((state) => state.games.currentTables);
   const [hasCurrentTables, setHasCurrentTables] = useState(false);
   const [header, setHeader] = useState('');
   const [currentFriendViewTab, setCurrentFriendViewTab] = useState(currentFriendViewConversations);
+  const [showFriendSubMenu, setShowFriendSubMenu] = useState(false);
+
+  const submenu = useRef()
+  const submenuButton = useRef()
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (submenu.current && !submenu.current.contains(event.target)) {
+        if(event.target === submenuButton.current){
+          return
+        }
+        setShowFriendSubMenu(false)
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
 
+  const toggleSubMenu = () => {
+      setShowFriendSubMenu(!showFriendSubMenu)
+  }
 
-  console.log(showFriendInvites);
-  console.log(currentFriendView);
+  const toggleRemoveFriendModal = () => {
+    setUpdateObj({currentFriendView})
+   openModal('RemoveFriendModal')
+  }
 
   //sets hieght for our sidemenu in case we have currentGames
   useEffect(() => {
@@ -61,19 +86,46 @@ const FriendsPage = () => {
 
           <div className={`friendspage-name-container flex center`}>
             <div className={`friendspage-name flex center`}>
-              {currentFriendView?.username || 'Friend'}
+              {currentFriendView?.friend.username}
             </div>
-            <div className='friendpage-friendmenu-container'>
-              <div className='friendpage-friendmenu-icon flex center'>
+
+            <div className='friendpage-friendmenu-container' >
+              <div ref={submenuButton} className='friendpage-friendmenu-icon flex center' onClick={toggleSubMenu}>
                 <i className="fa-solid fa-ellipsis-vertical"></i>
               </div>
+
+{showFriendSubMenu &&              <div ref={submenu} className='friendpage-submenu-container'>
+                <div onClick={toggleRemoveFriendModal} className='friendpage-submenu-item remove flex center'>Remove <i className="fa-regular fa-trash-can"></i></div>
+                <div className='friendpage-submenu-item message flex center'>Message <i className="fa-regular fa-message"></i></div>
+              </div>}
 
             </div>
           </div>
         </div>
       );
     }
-  }, [showFriendInvites, showTableInvites, currentFriendView]);
+
+    if (showFriends && !currentFriendView) {
+      setHeader(
+        <div className="friendspage-friendview-header flex center">
+          <div className={`friendspage-profile-image-container flex center`}>
+            <div className={`friendspage-profile-image flex center`}>{`:(`}</div>
+          </div>
+
+          <div className={`friendspage-name-container flex center`}>
+            <div className={`friendspage-name flex center`}>
+              Friend removed
+            </div>
+
+          </div>
+        </div>
+      );
+    }
+  }, [showFriendInvites, showTableInvites, currentFriendView, showFriendSubMenu]);
+
+  console.log(currentFriendView);
+
+
 
   useEffect(() => {
     if (!user) return;

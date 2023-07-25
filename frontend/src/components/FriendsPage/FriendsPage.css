@@ -169,24 +169,78 @@
 .friendpage-friendmenu-container{
   width: fit-content;
   height: fit-content;
-  border: rgb(255, 255, 255) solid 1px;
 
+  position: absolute;
+  right: 20px;
 }
 
 
 .friendpage-friendmenu-icon{
+cursor: pointer;
+  background-color: #212220;
 
-width: 30px;
-height: 30px;
+width: 40px;
+height: 40px;
+border-radius: 50%;
+border: rgba(0, 0, 0, 0.311) solid 1px;
+
+
+
+}
+
+.friendpage-friendmenu-icon:hover{
+  background-color: #2d2e2c;
+}
+.friendpage-friendmenu-icon:hover > i{
+  transform: scale(1.3);
+}
+
+.friendpage-friendmenu-icon:active > i{
+  transform: scale(1);
 }
 
 .friendpage-friendmenu-icon i{
 
   width: fit-content;
   height: fit-content;
-  font-size: 16px;
+  font-size: 15px;
 }
 
+
+.friendpage-submenu-container{
+  width: 130px;
+  height: fit-content;
+  border: white solid 1px;
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  z-index: 1;
+}
+
+
+
+.friendpage-submenu-item{
+  font-size: 16px;
+  width: 100%;
+  height: 30px;
+  border: white solid 1px;
+  cursor: pointer;
+  background-color: #212220;
+  justify-content: space-around;
+}
+
+.friendpage-submenu-item.remove:hover{
+
+  background-color: #2d2e2c;
+  background-color: #7b351c;
+}
+
+.friendpage-submenu-item.message:hover{
+
+  background-color: #2d2e2c;
+  background-color: #1c3d7b;
+
+}
 
 
 

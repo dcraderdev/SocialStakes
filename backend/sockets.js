@@ -992,6 +992,16 @@ module.exports = function (io) {
         if (handData.turnEnded) continue;
 
         let cards = handData.cards;
+        // console.log('------- cards -------');
+        // console.log('');
+        // console.log(cards);
+        // console.log(player);
+        // console.log('');
+        // console.log('----------------------');
+        if(cards.length ===1){
+          await playerHit({ tableId, seat:player.seat, handId:key })
+          return
+        }
         let playerHand = await handSummary(cards);
         let playerBestValue = await bestValue(playerHand.values);
         // Assign handSummary to hand
@@ -1067,25 +1077,19 @@ module.exports = function (io) {
       const { tableId, action, seat, handId } = actionObj;
       let room = tableId;
 
-      let messageObj = {
-        tableId,
-        user: { username: 'Room', id: 1, rank: 0 },
-        message: {
-          content: `${username} has ${action}.`,
-          id: 0,
-        },
-      }; 
+      // let messageObj = {
+      //   tableId,
+      //   user: { username: 'Room', id: 1, rank: 0 },
+      //   message: {
+      //     content: `${username} has ${action}.`,
+      //     id: 0,
+      //   },
+      // }; 
 
       // Reset the timer whenever a player takes an action
       if (rooms[tableId] && rooms[tableId].timerId) {
         clearInterval(rooms[tableId].timerId);
         rooms[tableId].actionEnd = 0;
-
-        // HERE
-        // HERE
-        // HERE
-        // HERE
-        // HERE
       }
 
       let updateObj = {
@@ -1100,7 +1104,7 @@ module.exports = function (io) {
       };  
 
       io.in(room).emit('get_updated_table', updateObj);
-      io.in(room).emit('new_message', messageObj);
+      // io.in(room).emit('new_message', messageObj);
 
       // console.log('--------------');
       // console.log(`Handling action(${action}) for ${username} @room ${room}`);
@@ -1122,8 +1126,11 @@ module.exports = function (io) {
       await gameLoop(tableId, io);
     });
 
+
+
+
     async function playerHit(actionObj, io) {
-      const { tableId, action, seat, handId } = actionObj;
+      const { tableId, seat, handId } = actionObj;
       let currentHand = rooms[tableId].seats[seat].hands[handId];
       let cardsToDraw = 1;
 
@@ -1202,6 +1209,7 @@ module.exports = function (io) {
       };
 
       io.in(room).emit('get_updated_table', updateObj);
+      await new Promise((resolve) => setTimeout(resolve, 1000)); // Wait for 2 seconds
       return;
     }
 
@@ -1667,7 +1675,7 @@ module.exports = function (io) {
       io.in(room).emit('get_updated_table', updateObj);
 
     }
-
+  
 
     socket.on('send_friend_request', async (friendRequestObj) => {
       let recipientId = friendRequestObj.recipientId

@@ -280,9 +280,11 @@ margin-right: 5px;
   position: absolute;
 }
 
-/* .gold{
+.gold{
   border: gold solid 1px;
-} */
+}
+
+
 
 
 @media screen and (min-width: 650px) {

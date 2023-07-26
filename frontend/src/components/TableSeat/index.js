@@ -345,7 +345,7 @@ return(
 
 
                     
-                  <div className={`card-area flex ${seatNumber <= 3 ? 'cardarea-left' : 'cardarea-right'} ${handId === actionHand ? ' gold' : ''}`} key={handId}>
+                  <div className={`card-area flex ${seatNumber <= 3 ? 'cardarea-left' : 'cardarea-right'} ${handId === actionHand ? ' gold ' : ''}`} key={handId}>
 
                     {handData.cards.map((card, index) => (
                           <div 

@@ -168,16 +168,8 @@
 
 
 .cardarea-card-container{
-  /* position: absolute; */
-  display: inline-block;
-  position: relative;
-  margin-top: 0px;
-  margin-left: -18px;
-  z-index: 10;
-  border: saddlebrown solid 1px;
+
 }
-
-
 
 
 
@@ -185,31 +177,22 @@
   position: absolute;
   height: fit-content;
   top: 0px;
-  flex-direction: column;
+
 }
-
-
-
 
 
 .seat-card-area{
   position: relative;
-  border: rgb(9, 24, 101) solid 1px;
-  transition: all .2s ease;
+  transition: all .5s ease;
+  width: 45px;
+  padding: 5px;
+
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-
-
-
-.cardarea-left{
-  position: absolute;
-  left: 0;
-}
-
-.cardarea-right{
-  position: absolute;
-  right: 0;
-}
 
 
 
@@ -218,7 +201,7 @@
 .pending-bet-area{
   position: absolute;
   top: -18px;
-  left: -3px;
+  left: 10px;
   z-index: 10000;
   width: fit-content;
   padding-left: 5px;
@@ -226,7 +209,6 @@
   height: 20px;
   border: black solid 1px;
   border-radius: 15px;
-  background-color: #9adbd9;
   background-color: #01fdca;
   color: rgb(0, 0, 0);
 
@@ -236,8 +218,8 @@
 
 .seat-bet-area{
   position: absolute;
-  top: -18px;
-  left: -41px;
+  bottom: -20px;
+  left: 30px;
   z-index: 10000;
   width: fit-content;
   padding-left: 5px;
@@ -245,12 +227,30 @@
   height: 20px;
   border: black solid 1px;
   border-radius: 15px;
-  background-color: #9adbd9;
   background-color: #01fdca;
 
   
   color: rgb(0, 0, 0);
 }
+
+.insurance-bet-area{
+  position: absolute;
+  top: -18px;
+  right: -10px;
+  z-index: 10000;
+  width: fit-content;
+  padding-left: 5px;
+  padding-right: 5px;
+  height: 20px;
+  border: black solid 1px;
+  border-radius: 15px;
+  background-color: #01fdca;
+
+  
+  color: rgb(0, 0, 0);
+}
+
+
 
 .currentbet-chip-container{
 

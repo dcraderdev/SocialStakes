@@ -427,6 +427,10 @@ module.exports = function (io) {
         forfeit: false,
         hands: {},
         cards: [],
+        insurance:{
+          accepted:false,
+          bet: 0
+        }
       };
 
       // If the room doesnt exist create a new room
@@ -630,9 +634,6 @@ module.exports = function (io) {
       rooms[tableId].countdownEnd = null;
       io.in(room).emit('countdown_update', countdownObj);
     }
-    
-
- 
 
 
     socket.on('add_funds', async (seatObj) => {
@@ -686,10 +687,10 @@ module.exports = function (io) {
       // // console.log('rooms[tableId].seats[seat].hands',rooms[tableId].seats[seat].hands);
       // console.log('------------------------');
 
-      rooms[tableId].seats[seat].hands[currentHandId]['insurance'] = {
+      rooms[tableId].seats[seat]['insurance'] = {
         accepted: true,
         bet: bet,
-      };
+      }; 
 
       // Add player to insured players array
       rooms[tableId].insuredPlayers[seat] = insuranceCost;
@@ -701,7 +702,7 @@ module.exports = function (io) {
       //   `Insurance accepted(${insuranceCost}) for ${username} @room ${room}`
       // );
       // console.log('--------------');
-    });
+    }); 
 
     // starts game of blackjack for multiple players
     async function dealCards(tableId, io) {
@@ -1451,8 +1452,12 @@ module.exports = function (io) {
       player.cards = [];
       player.pendingBet = 0;
       player.currentBet = 0;
+      player.insurance= {
+        accepted:false,
+        bet: 0
+      }
     }
-
+ 
     async function calculateAndSavePlayerHand(
       player,
       bestDealerValue,
@@ -1679,7 +1684,7 @@ module.exports = function (io) {
             id: recipientId,
             username:recipientUsername,
           },
-          requestInfo: {
+          requestInfo: { 
             id: request.id,
             status: request.status
           }

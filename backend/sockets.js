@@ -1367,8 +1367,8 @@ module.exports = function (io) {
 
       // Dealer's turn is finished, end the round
         await endRound(tableId, io);
-    }
-
+    } 
+ 
     async function determineResult(
       bestPlayerValue,
       bestDealerValue,

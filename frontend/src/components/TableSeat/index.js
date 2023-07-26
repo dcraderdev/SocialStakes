@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import './TableSeat.css'
 import { SocketContext } from '../../context/SocketContext';
 import { ModalContext } from '../../context/ModalContext';
+import { WindowContext } from '../../context/WindowContext';
 
 import Card from '../Card'
 import cardConverter from '../../utils/cardConverter';
@@ -15,6 +16,7 @@ import pokerChipWithDollarSign from '../../images/poker-chip-with-dollar-sign.sv
 const TableSeat = ({seatNumber}) => {
   const {socket} = useContext(SocketContext)
   const { modal, openModal, closeModal, updateObj, setUpdateObj} = useContext(ModalContext);
+  const { windowWidth } = useContext(WindowContext); // use the windowWidth value from your context
 
   const dispatch = useDispatch()
   const activeTable = useSelector(state=>state.games.activeTable)
@@ -46,7 +48,7 @@ const TableSeat = ({seatNumber}) => {
   const [isHandInProgress, setIsHandInProgress] = useState(false);
   const [isForfeited, setIsForfeited] = useState(false);
 
-  const [style, setStyle] = useState({});
+  const [scale, setScale] = useState(1);
 
   useEffect(() => {
     if(currentTables && activeTable && currentTables[activeTable.id].tableUsers){
@@ -62,7 +64,20 @@ const TableSeat = ({seatNumber}) => {
 
 
 
+  useEffect(() => {
+    let newScale = windowWidth / 600
 
+    if(newScale > 1){
+      newScale = 1
+    } else if(newScale< 0.5){
+      newScale = 0.5
+    }
+
+    setScale(newScale)
+
+    
+
+  }, [windowWidth]);
 
 
 
@@ -270,7 +285,7 @@ const TableSeat = ({seatNumber}) => {
 
 return(
 
-    <div onClick={takeSeat} className={`seat-wrapper flex center seat seat${seatNumber} ${!player ? ' border' : ''}`}>
+    <div style={{ transform: `scale(${scale})` }} onClick={takeSeat} className={`seat-wrapper flex center seat seat${seatNumber} ${!player ? ' border' : ''}`}>
 
       {disconnectTimer > 0 && (<div className='disconnect-timer flex center'>{disconnectTimer}s</div>)}
       {actionTimer > 0 && isActiveSeat && (<div className='turn-timer flex center'>{actionTimer}s</div>)}

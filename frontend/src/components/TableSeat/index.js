@@ -218,9 +218,7 @@ const TableSeat = ({seatNumber}) => {
     return
   }
 
-  const getOffset = (index) => {
 
-  }
 
   const getOffsetStyle = (index, isActive) => {
     const offsetValue = 20;
@@ -249,22 +247,74 @@ const TableSeat = ({seatNumber}) => {
   };
 
 
-  const getCardOffsetStyle = (cardIndex, isSeatOnLeftSide) => {
+  // const getCardOffsetStyle = (cardIndex, isSeatOnLeftSide) => {
+  //   const offsetValueA = 20;
+  //   const offsetValueB = 10;
+  
+  //   let baseStyle = {
+  //     position: 'absolute',
+  //     zIndex: cardIndex,
+  //     left: `${cardIndex * (offsetValueB)}px`,
+  //     top: `${cardIndex * -offsetValueA}px`,
+  //   };
+  
+  //   if (!isSeatOnLeftSide) {
+  //     baseStyle = {
+  //       ...baseStyle,
+  //       left: `${cardIndex * -offsetValueB}px`,
+  //     };
+  //   }
+  
+  //   return baseStyle;
+  // };
+  
+
+
+  const getCardOffsetStyle = (cardIndex, seatNumber) => {
     const offsetValueA = 20;
     const offsetValueB = 10;
+
+    const isSeatOnLeftSide = seatNumber <= 3 
   
+    // Base Style
     let baseStyle = {
       position: 'absolute',
       zIndex: cardIndex,
-      left: `${cardIndex * (offsetValueB)}px`,
-      top: `${cardIndex * -offsetValueA}px`,
     };
   
-    if (!isSeatOnLeftSide) {
-      baseStyle = {
-        ...baseStyle,
-        left: `${cardIndex * -offsetValueB}px`,
-      };
+    console.log(cardIndex);
+    console.log(seatNumber);
+    console.log(isSeatOnLeftSide);
+
+    // Handle position based on seatNumber
+    switch (seatNumber) {
+      case 1:
+        baseStyle = {
+          ...baseStyle,
+          left: `${cardIndex * (offsetValueB)}px`,
+          // top: `${cardIndex * -offsetValueA}px`,
+        };
+        break;
+      case 6:
+        baseStyle = {
+          ...baseStyle,
+          right: `${(cardIndex+1) * (offsetValueA)}px`,
+          // top: `${cardIndex * -offsetValueA}px`,
+        };
+        break;
+      default:
+        baseStyle = {
+          ...baseStyle,
+          left: `${cardIndex * (offsetValueB)}px`,
+          top: `${cardIndex * -offsetValueA}px`,
+        };
+        if (!isSeatOnLeftSide) {
+          baseStyle = {
+            ...baseStyle,
+            left: `${cardIndex * -offsetValueB}px`,
+          };
+        }
+        break;
     }
   
     return baseStyle;
@@ -272,7 +322,7 @@ const TableSeat = ({seatNumber}) => {
   
   
 
-  const getSplitOffset = (numSplits, isSeat3) => {
+  const getSplitOffsetStyle = (numSplits, isSeat3) => {
     // Change this value to adjust the offset per split
     const offsetPerSplit = 15;
     
@@ -365,7 +415,7 @@ return(
                     {handData.cards.map((card, index) => (
                           <div 
                           className={`cardarea-card-container`} 
-                          style={getCardOffsetStyle(index, seatNumber <= 3)} 
+                          style={getCardOffsetStyle(index, seatNumber)} 
                           key={index}
                         >
                         <Card card={card} />

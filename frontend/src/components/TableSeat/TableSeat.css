@@ -3,16 +3,17 @@
   min-width: 100px;
   height: fit-content;
   position: absolute;
+  
 }
 
 
 .seat1 {
-  top: 10%;
+  top: 20%;
   left: -25px;
 }
 .seat2 {
-  bottom: 8%;
-  left: 10px;
+  bottom: 5%;
+  left: 20px;
 }
 .seat3 {
   left: 25%;
@@ -23,12 +24,12 @@
   bottom: -10%;
 }
 .seat5 {
-  bottom: 8%;
+  bottom: 5%;
 
-  right: 10px;
+  right: 20px;
 }
 .seat6 {
-  top: 10%;
+  top: 20%;
   right: -25px;
 }
 
@@ -183,14 +184,14 @@
 
 .seat-card-area{
   position: relative;
-  transition: all .5s ease;
   width: 45px;
   padding: 5px;
-
-  height: 60px;
+  height: 30px;
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
+
 }
 
 
@@ -218,8 +219,8 @@
 
 .seat-bet-area{
   position: absolute;
-  bottom: -20px;
-  left: 30px;
+  bottom: -40px;
+  left: -20px;
   z-index: 10000;
   width: fit-content;
   padding-left: 5px;
@@ -229,7 +230,6 @@
   border-radius: 15px;
   background-color: #01fdca;
 
-  
   color: rgb(0, 0, 0);
 }
 
@@ -282,6 +282,15 @@ margin-right: 5px;
 
 .gold{
   border: gold solid 1px;
+}
+
+
+.action-hand{
+  transform: scale(1.3);
+  z-index: 100000000000000;
+  position: relative;
+  left: -30px;
+  top: -40px;
 }
 
 

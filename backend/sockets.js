@@ -1358,7 +1358,7 @@ module.exports = function (io) {
             dealerCards: {
               visibleCards: dealerCards.visibleCards,
             },
-          },
+          }, 
         };
 
         io.in(room).emit('get_updated_table', updateObj);
@@ -1367,8 +1367,8 @@ module.exports = function (io) {
 
       // Dealer's turn is finished, end the round
         await endRound(tableId, io);
-    } 
-   
+    }   
+     
     async function determineResult(
       bestPlayerValue,
       bestDealerValue,

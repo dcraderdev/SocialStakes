@@ -65,13 +65,13 @@ const TableSeat = ({seatNumber}) => {
 
 
   useEffect(() => {
-    let newScale = windowWidth / 600
+    let newScale = windowWidth / 1000
 
-    if(newScale > 1){
-      newScale = 1
-    } else if(newScale< 0.5){
-      newScale = 0.5
-    }
+    // if(newScale > 1){
+    //   newScale = 0.8
+    // } else if(newScale< 0.5){
+    //   newScale = 0.5
+    // }
 
     setScale(newScale)
 
@@ -179,25 +179,6 @@ const TableSeat = ({seatNumber}) => {
   }, [disconnectTimer]);
 
 
-  // useEffect(() => {
-  //   let actionTimerId = null;
-
-  
-  //   if (actionTimer > 0) {
-  //     actionTimerId = setInterval(() => {
-  //       setActionTimer((prevTimer) => prevTimer - 1);
-  //     }, 1000);
-  //   }
-  
-  //   return () => {
-  //     if (actionTimerId) clearInterval(actionTimerId);
-  //   };
-  // }, [actionTimer]);
-
-
-
-
-
   const takeSeat = () => {
     if(!user) return
     if(player || isUserInAnySeat) return
@@ -219,67 +200,18 @@ const TableSeat = ({seatNumber}) => {
   }
 
 
-
-  const getOffsetStyle = (index, isActive) => {
-    const offsetValue = 20;
-  
-    let baseStyle = {
-      position: 'absolute',
-      left: `${index * offsetValue}px`,
-    };
-  
-    if (seatNumber >= 4 && seatNumber <= 6) {
-      baseStyle = {
-        ...baseStyle,
-        left: `${index * -offsetValue}px`,
-      };
-    }
-  
-    if (isActive) {
-      baseStyle = {
-        ...baseStyle,
-        transform: "scale(1.2)",
-        zIndex: 100000,
-      };
-    }
-  
-    return baseStyle;
-  };
-
-
-  // const getCardOffsetStyle = (cardIndex, isSeatOnLeftSide) => {
-  //   const offsetValueA = 20;
-  //   const offsetValueB = 10;
-  
-  //   let baseStyle = {
-  //     position: 'absolute',
-  //     zIndex: cardIndex,
-  //     left: `${cardIndex * (offsetValueB)}px`,
-  //     top: `${cardIndex * -offsetValueA}px`,
-  //   };
-  
-  //   if (!isSeatOnLeftSide) {
-  //     baseStyle = {
-  //       ...baseStyle,
-  //       left: `${cardIndex * -offsetValueB}px`,
-  //     };
-  //   }
-  
-  //   return baseStyle;
-  // };
-  
-
-
   const getCardOffsetStyle = (cardIndex, seatNumber) => {
     const offsetValueA = 20;
     const offsetValueB = 10;
+    const offsetValueC = 5;
 
+    const offsetValueD = 15;
     const isSeatOnLeftSide = seatNumber <= 3 
   
     // Base Style
     let baseStyle = {
       position: 'absolute',
-      zIndex: cardIndex,
+      // zIndex: cardIndex,
     };
   
     console.log(cardIndex);
@@ -292,7 +224,8 @@ const TableSeat = ({seatNumber}) => {
         baseStyle = {
           ...baseStyle,
           left: `${cardIndex * (offsetValueB)}px`,
-          // top: `${cardIndex * -offsetValueA}px`,
+          top: `${cardIndex * -offsetValueA}px`,
+
         };
         break;
       case 6:
@@ -322,11 +255,83 @@ const TableSeat = ({seatNumber}) => {
   
   
 
-  const getSplitOffsetStyle = (numSplits, isSeat3) => {
+  const getSplitOffsetStyle = () => {
     // Change this value to adjust the offset per split
+    const offsetPerSplit = 0;
+    if(!hands) return
+    let numSplits = Object.entries(hands).length  
+
+    if(seatNumber === 1 || seatNumber === 6){    
+      return {
+      flexDirection: 'column',
+      flexDirection: 'row',
+      
+      }
+    } else {
+      return {
+        flexDirection: 'row',
+        // right: `${numSplits * (offsetPerSplit)}px`,
+
+      };
+    }
+
+
+  }
+
+  const getCardAreaStyle = () => {
+    // // Change this value to adjust the offset per split
     const offsetPerSplit = 15;
+    // //
+    if(!hands) return
+    let numSplits = Object.entries(hands).length  
+
+    // console.log(numSplits);
+    // console.log(numSplits * (offsetPerSplit*2));
+
+
+
     
-    return numSplits * (isSeat3 ? -offsetPerSplit : offsetPerSplit);
+    // if(numSplits >= 2){   
+
+      if(seatNumber === 1){    
+        return {
+          left: `${numSplits * (offsetPerSplit)}px`,
+        }
+      }
+
+
+    //   if(seatNumber === 2){    
+    //     return {
+    //       left: `${numSplits * (offsetPerSplit)}px`,
+    //       // bottom: `-${numSplits * (offsetPerSplit)}px`,
+    //     }
+    //   }
+    //   if(seatNumber === 5){    
+    //     return {
+    //       right: `${numSplits * (offsetPerSplit)}px`,
+    //     }
+    //   }
+
+
+
+    // } 
+
+    // if(numSplits > 7){    
+    //   return {
+    //     // left: `${numSplits * (offsetPerSplit*6)}px`,
+    //   border: `black solid 10px`
+
+
+    //   }
+    // } 
+    
+    // else {
+    //   return {
+    //     flexDirection: 'row',
+    //   };
+    // }
+
+
   }
   
 
@@ -392,6 +397,7 @@ return(
 
             <div 
             className={`seat-card-area-container flex ${seatNumber === 1 || seatNumber === 2 ? 'left-side' : ''}`}
+            style={getSplitOffsetStyle()} 
             >
 
 
@@ -399,7 +405,10 @@ return(
               
               {hands && Object.entries(hands).map(([handId, handData],index) => (
                 
-                <div className={`seat-card-area flex center `} key={handId}>
+                <div             
+                style={getCardAreaStyle()} 
+                className={`seat-card-area flex center `} key={handId}
+                >
 
                     <div className='seat-bet-area flex center'>
                       <div className='currentbet-chip-container flex center'>
@@ -410,7 +419,7 @@ return(
 
 
                     
-                  <div className={`card-area flex ${seatNumber <= 3 ? 'cardarea-left' : 'cardarea-right'} ${handId === actionHand ? ' gold ' : ''}`} key={handId}>
+                  <div className={`card-area flex ${seatNumber <= 3 ? 'cardarea-left' : 'cardarea-right'} ${handId === actionHand ? ' gold action-hand' : ''}`} key={handId}>
 
                     {handData.cards.map((card, index) => (
                           <div 

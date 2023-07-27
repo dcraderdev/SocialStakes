@@ -20,7 +20,7 @@
   width: 100%;
   left: 0px;
   top: 50px;
-  z-index: 1000000;
+  z-index: 1;
   border-bottom: 1px solid black;
   justify-content: center;
   background-color: #2d2e2c;

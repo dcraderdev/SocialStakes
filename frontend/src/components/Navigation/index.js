@@ -57,6 +57,7 @@ function Navigation(){
     dispatch(gameActions.showGamesAction())
     history.push('/');
   };
+
   const handleProfileButtonClick = () => {
     if(modal === 'profileModal'){
       closeModal()
@@ -102,7 +103,11 @@ function Navigation(){
             {wideScreen && <div className='nav-user-button' onClick={handleFriendsClick}>Friends</div>}
             <div className='nav-user-button balance'>${balance}</div>
             <div ref={profileBtnRef} className='nav-user-button profile' onClick={handleProfileButtonClick}>
-              <div className='profile-icon-container flex center'><i className="fa-regular fa-user"></i></div>
+              <div className='profile-icon-container flex center'>
+                {/* <i className="fa-regular fa-user"></i> */}
+                {modal !== 'profileModal' && <i className="fa-solid fa-bars"></i>}
+                {modal === 'profileModal' && <i className="fa-solid fa-x"></i>}
+              </div>
             </div>
 
           </div>
@@ -122,9 +127,7 @@ function Navigation(){
           )}
         </div>
         
-            <div className={`profile-modal ${modal === 'profileModal' ? '' : ' profilemenu-hidden'}`} >
-              {modal === 'profileModal' && <ProfileButtonModal />}
-            </div>
+
         
 
       </nav>

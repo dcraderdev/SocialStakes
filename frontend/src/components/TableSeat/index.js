@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import './TableSeat.css'
 import { SocketContext } from '../../context/SocketContext';
 import { ModalContext } from '../../context/ModalContext';
+import { WindowContext } from '../../context/WindowContext';
 
 import Card from '../Card'
 import cardConverter from '../../utils/cardConverter';
@@ -15,6 +16,7 @@ import pokerChipWithDollarSign from '../../images/poker-chip-with-dollar-sign.sv
 const TableSeat = ({seatNumber}) => {
   const {socket} = useContext(SocketContext)
   const { modal, openModal, closeModal, updateObj, setUpdateObj} = useContext(ModalContext);
+  const { windowWidth, windowHeight } = useContext(WindowContext); // use the windowWidth value from your context
 
   const dispatch = useDispatch()
   const activeTable = useSelector(state=>state.games.activeTable)
@@ -46,7 +48,7 @@ const TableSeat = ({seatNumber}) => {
   const [isHandInProgress, setIsHandInProgress] = useState(false);
   const [isForfeited, setIsForfeited] = useState(false);
 
-  const [style, setStyle] = useState({});
+  const [scale, setScale] = useState(1);
 
   useEffect(() => {
     if(currentTables && activeTable && currentTables[activeTable.id].tableUsers){
@@ -60,9 +62,30 @@ const TableSeat = ({seatNumber}) => {
   }, [currentTables, activeTable, seatNumber]);
 
 
+   console.log(windowHeight);
+    console.log(windowWidth);
 
+  useEffect(() => {
+    console.log(windowHeight);
+    console.log(windowWidth);
 
+    let measurement = Math.max(windowHeight, windowWidth)
 
+    console.log(measurement);
+
+    let newScale = measurement / 1100
+
+    if(newScale > 1){
+      newScale = 1
+    } else if(newScale< 0.5){
+      newScale = 0.5
+    }
+
+    setScale(newScale)
+
+    
+
+  }, [windowWidth, windowHeight]);
 
 
 
@@ -79,14 +102,16 @@ const TableSeat = ({seatNumber}) => {
     let countdownInterval = null;
     let countdownRemaining = Math.ceil((currentTables[activeTable.id].actionEnd - Date.now()) / 1000);
 
+    let currUser = currentTables[activeTable.id]?.tableUsers?.[seatNumber]
 
-    let userDisconnectTimer = currentTables[activeTable.id]?.tableUsers?.[seatNumber]?.disconnectTimer;
-    let userPendingBet = currentTables[activeTable.id]?.tableUsers?.[seatNumber]?.pendingBet;
-    let userCurrentBet = currentTables[activeTable.id]?.tableUsers?.[seatNumber]?.currentBet;
-    let userCurrentBalance = currentTables[activeTable.id]?.tableUsers?.[seatNumber]?.tableBalance;
-    let userCards = currentTables[activeTable.id]?.tableUsers?.[seatNumber]?.cards;
-    let userHands = currentTables[activeTable.id]?.tableUsers?.[seatNumber]?.hands;
-    let userForfeited = currentTables[activeTable.id]?.tableUsers?.[seatNumber]?.forfeit;
+    let userDisconnectTimer = currUser?.disconnectTimer;
+    let userPendingBet = currUser?.pendingBet;
+    let userInsuranceBet = currUser?.insurance;
+    let userCurrentBet = currUser?.currentBet;
+    let userCurrentBalance = currUser?.tableBalance;
+    let userCards = currUser?.cards;
+    let userHands = currUser?.hands;
+    let userForfeited = currUser?.forfeit;
   
     console.log(userHands);
     setPendingBet(userPendingBet)
@@ -95,6 +120,11 @@ const TableSeat = ({seatNumber}) => {
     setCards(userCards)
     setHands(userHands)
     setIsForfeited(userForfeited)
+
+    if (userInsuranceBet && userInsuranceBet.bet) {
+      setInsuranceBet(userInsuranceBet.bet)
+    }
+
 
     if (userDisconnectTimer > 0) {
       setDisconnectTimer(userDisconnectTimer / 1000);
@@ -158,25 +188,6 @@ const TableSeat = ({seatNumber}) => {
   }, [disconnectTimer]);
 
 
-  // useEffect(() => {
-  //   let actionTimerId = null;
-
-  
-  //   if (actionTimer > 0) {
-  //     actionTimerId = setInterval(() => {
-  //       setActionTimer((prevTimer) => prevTimer - 1);
-  //     }, 1000);
-  //   }
-  
-  //   return () => {
-  //     if (actionTimerId) clearInterval(actionTimerId);
-  //   };
-  // }, [actionTimer]);
-
-
-
-
-
   const takeSeat = () => {
     if(!user) return
     if(player || isUserInAnySeat) return
@@ -198,11 +209,67 @@ const TableSeat = ({seatNumber}) => {
   }
 
 
- let fakeBet = 1
+  const getCardOffsetStyle = (cardIndex, handId) => {
+
+    const isActionHand = handId === actionHand
+
+    const offsetValueA = 5;
+    const offsetValueB = 10;
+
+    const isSeatOnLeftSide = seatNumber <= 3 
+  
+    // Base Style
+    let baseStyle = {
+      position: 'absolute',
+      zIndex: cardIndex,
+      // left: `${cardIndex * (offsetValueB)}px`,
+      // top: `${cardIndex * -offsetValueA}px`,
+    };
+  
+    console.log(cardIndex);
+    console.log(seatNumber);
+    console.log(isSeatOnLeftSide);
+    
+console.log(isActionHand);
+
+    if(!isActionHand){
+    }
+    
+    
+    return {
+      ...baseStyle,
+      top: `${cardIndex * offsetValueB}px`,
+    };
+
+  };
+  
+  
+
+  const getSplitOffsetStyle = () => {
+    // Change this value to adjust the offset per split
+    const offsetPerSplit = 0;
+    if(!hands) return
+    let numSplits = Object.entries(hands).length  
+
+    if(seatNumber === 1 || seatNumber === 6){    
+      return {
+      flexDirection: 'column',
+      flexDirection: 'row',
+      
+      }
+    } else {
+      return {
+        flexDirection: 'row',
+        // right: `${numSplits * (offsetPerSplit)}px`,
+      };
+    }
+  }
+
+
 
 return(
 
-    <div onClick={takeSeat} className={`seat-wrapper flex center seat seat${seatNumber} ${!player ? ' border' : ''}`}>
+    <div style={{ transform: `scale(${scale})` }} onClick={takeSeat} className={`seat-wrapper flex center seat seat${seatNumber} ${!player ? ' border' : ''}`}>
 
       {disconnectTimer > 0 && (<div className='disconnect-timer flex center'>{disconnectTimer}s</div>)}
       {actionTimer > 0 && isActiveSeat && (<div className='turn-timer flex center'>{actionTimer}s</div>)}
@@ -211,15 +278,21 @@ return(
                 
         <div className={`seat-container flex center`}>
 
-
-
-{       fakeBet > 0 &&             <div className='pending-bet-area flex center'>
+{       pendingBet > 0 &&             <div className='pending-bet-area flex center'>
                       <div className='currentbet-chip-container flex center'>
                         <img className='currentbet-chip' src={pokerChipWithDollarSign} alt='searching'></img>
                       </div>
-                      {fakeBet}
+                      {pendingBet}
                     </div>}
 
+                    {insuranceBet > 0 && (       
+                    <div className='insurance-bet-area flex center'>
+                      <div className='currentbet-chip-container flex center'>
+                        <img className='currentbet-chip' src={pokerChipWithDollarSign} alt='poker chip'></img>
+                      </div>
+                      {insuranceBet}
+                    </div>
+                  )}
 
           <div className='profileimage-wrapper flex center'>
             <div onClick={leaveSeat} className={`profileimage-container flex center ${isActiveSeat ? ' gold' : ''}`}>
@@ -230,57 +303,42 @@ return(
           </div>
 
         <div className='seat-namebalance-container flex center'>
+          {/* <div className={`${neonTheme}-text name-space flex center`}>{player.username}</div> */}
+          <div className={`${neonTheme}-text name-space flex center`}>{player.username}</div>
           <div className={`seat-tablebalance flex center ${neonTheme}-text`}>${currentBalance}</div>
         </div>
-          <div className={`${neonTheme}-text name-space flex center`}>{player.username}</div>
-          {isForfeited && <div className='table-balance flex center'>Forfeited</div>}
+          {/* {isForfeited && <div className='table-balance flex center'>Forfeited</div>} */}
 
         </div>
 
       )}
 
-
 {player && (
 
-            <div className={`seat-card-area-container flex ${seatNumber === 1 || seatNumber === 2 ? 'left-side' : ''}`}>
-
-
-
+            <div 
+            className={`tableseat-hands-container flex`}
+            // style={getSplitOffsetStyle()} 
+            >
               
-              {hands && Object.entries(hands).map(([handId, handData]) => (
+              {hands && Object.entries(hands).map(([handId, handData],index) => (
                 
-                <div className={`seat-card-area flex `} key={handId}>
+                <div className={`tableseat-hand-container flex center `} key={handId}>
 
-                    <div className='seat-bet-area flex center'>
+                    <div className='tableseat-hand-bet flex center'>
                       <div className='currentbet-chip-container flex center'>
                         <img className='currentbet-chip' src={pokerChipWithDollarSign} alt='poker chip'></img>
                       </div>
                       {handData.bet}
                     </div>
 
-
-
-
-
-                  {handData.insurance && (       
-                    <div className='seat-bet-area flex center'>
-                      <div className='currentbet-chip-container flex center'>
-                        {/* <img className='currentbet-chip' src={pokerChip} alt='poker chip'></img> */}
-                        <img className='currentbet-chip' src={pokerChipWithDollarSign} alt='poker chip'></img>
-                      </div>
-                      {handData.insurance.bet}
-                    </div>
-                    
-                  )}
-
-                
-
-
-                    
-                  <div className={`card-area flex ${seatNumber <= 3 ? 'cardarea-left' : 'cardarea-right'} ${handId === actionHand ? ' gold' : ''}`} key={handId}>
+                  <div className={`tableseat-hand-cards flex center`} key={handId}>
 
                     {handData.cards.map((card, index) => (
-                      <div className={`cardarea-card-container`} key={index}>
+                          <div 
+                          className={`cardarea-card-container`} 
+                          style={getCardOffsetStyle(index, handId)} 
+                          key={index}
+                        >
                         <Card card={card} />
                       </div>
                     ))}
@@ -294,11 +352,6 @@ return(
               
             </div>
             )}
-
-
-
-
-
 
 
       {!player && (
@@ -328,13 +381,6 @@ return(
                 </div>
         
               )}
-
-
-
-
-
-
-
 
     </div>
 )

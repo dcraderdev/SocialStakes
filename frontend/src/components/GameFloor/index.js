@@ -16,6 +16,7 @@ import { ModalContext } from '../../context/ModalContext';
 import './GameFloor.css';
 import Game from '../Game';
 import CreatingGameView from '../CreatingGameView';
+import Navigation from '../Navigation';
 
 import gameTileBackground from '../../images/game-tile-background.jpeg';
 import TableSortBar from '../TableSortBar';
@@ -155,10 +156,16 @@ function GameFloor() {
   
 
   return (
-    <>
-      <div className={`gamefloor-wrapper ${activeTable ? 'table-view' : ''}`}>
-        <div className="gamefloor-container">
-          <div className="gamefloor-content">
+    
+      <div className={`gamefloor-wrapper ${activeTable ? ' table-view' : ''}`}>
+          <div className="gamefloor-container flex center">
+<>
+
+
+            {!activeTable && isLoaded && <Navigation />}
+
+
+            {/* private game buttons */}
             {!activeTable && !showCreatingGame && (
               <div>
                 <div className="private-game-buttons fade-in">
@@ -197,10 +204,12 @@ function GameFloor() {
               </div>
             )}
 
+
+
             {/* SHOW AVAILABLE TABLES PER GAME TYPE */}
             {isLoaded && showTables && (
               <div className="available-tables-grid">
-                <div className="available-game-types-container flex">
+                <div className="available-game-types-container flex center">
                   {allGames &&
                     Object.values(allGames).map((game, index) => (
                       <div
@@ -215,10 +224,7 @@ function GameFloor() {
                     ))}
                 </div>
 
-
                 <TableSortBar/>
-
-
 
                 {openTablesByGameType.length > 0 &&
                   openTablesByGameType.map((table, index) => (
@@ -229,19 +235,15 @@ function GameFloor() {
                       delay={index}
                     />
                 ))}
-
                 {!openTablesByGameType.length &&
                   <div className='tables-coming-soon-container flex center'>Tables coming soon!</div>
                 }
-
-
-
               </div>
             )}
 
             {/* SHOW SELECTED TABLE */}
             {isLoaded && activeTable && (
-              <div className="game-view">{activeTable && <Game />}</div>
+              <div className="game-view flex center">{activeTable && <Game />}</div>
             )}
 
             {/* SHOW SELECTED TABLE */}
@@ -251,11 +253,10 @@ function GameFloor() {
               </div>
             )}
 
-
+ </>
           </div>
         </div>
-      </div>
-    </>
+   
   );
 }
 

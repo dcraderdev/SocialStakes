@@ -427,6 +427,10 @@ module.exports = function (io) {
         forfeit: false,
         hands: {},
         cards: [],
+        insurance:{
+          accepted:false,
+          bet: 0
+        }
       };
 
       // If the room doesnt exist create a new room
@@ -630,9 +634,6 @@ module.exports = function (io) {
       rooms[tableId].countdownEnd = null;
       io.in(room).emit('countdown_update', countdownObj);
     }
-    
-
- 
 
 
     socket.on('add_funds', async (seatObj) => {
@@ -686,10 +687,10 @@ module.exports = function (io) {
       // // console.log('rooms[tableId].seats[seat].hands',rooms[tableId].seats[seat].hands);
       // console.log('------------------------');
 
-      rooms[tableId].seats[seat].hands[currentHandId]['insurance'] = {
+      rooms[tableId].seats[seat]['insurance'] = {
         accepted: true,
         bet: bet,
-      };
+      }; 
 
       // Add player to insured players array
       rooms[tableId].insuredPlayers[seat] = insuranceCost;
@@ -701,7 +702,7 @@ module.exports = function (io) {
       //   `Insurance accepted(${insuranceCost}) for ${username} @room ${room}`
       // );
       // console.log('--------------');
-    });
+    }); 
 
     // starts game of blackjack for multiple players
     async function dealCards(tableId, io) {
@@ -991,6 +992,16 @@ module.exports = function (io) {
         if (handData.turnEnded) continue;
 
         let cards = handData.cards;
+        // console.log('------- cards -------');
+        // console.log('');
+        // console.log(cards);
+        // console.log(player);
+        // console.log('');
+        // console.log('----------------------');
+        if(cards.length ===1){
+          await playerHit({ tableId, seat:player.seat, handId:key })
+          return
+        }
         let playerHand = await handSummary(cards);
         let playerBestValue = await bestValue(playerHand.values);
         // Assign handSummary to hand
@@ -1066,25 +1077,19 @@ module.exports = function (io) {
       const { tableId, action, seat, handId } = actionObj;
       let room = tableId;
 
-      let messageObj = {
-        tableId,
-        user: { username: 'Room', id: 1, rank: 0 },
-        message: {
-          content: `${username} has ${action}.`,
-          id: 0,
-        },
-      }; 
+      // let messageObj = {
+      //   tableId,
+      //   user: { username: 'Room', id: 1, rank: 0 },
+      //   message: {
+      //     content: `${username} has ${action}.`,
+      //     id: 0,
+      //   },
+      // }; 
 
       // Reset the timer whenever a player takes an action
       if (rooms[tableId] && rooms[tableId].timerId) {
         clearInterval(rooms[tableId].timerId);
         rooms[tableId].actionEnd = 0;
-
-        // HERE
-        // HERE
-        // HERE
-        // HERE
-        // HERE
       }
 
       let updateObj = {
@@ -1099,7 +1104,7 @@ module.exports = function (io) {
       };  
 
       io.in(room).emit('get_updated_table', updateObj);
-      io.in(room).emit('new_message', messageObj);
+      // io.in(room).emit('new_message', messageObj);
 
       // console.log('--------------');
       // console.log(`Handling action(${action}) for ${username} @room ${room}`);
@@ -1121,8 +1126,11 @@ module.exports = function (io) {
       await gameLoop(tableId, io);
     });
 
+
+
+
     async function playerHit(actionObj, io) {
-      const { tableId, action, seat, handId } = actionObj;
+      const { tableId, seat, handId } = actionObj;
       let currentHand = rooms[tableId].seats[seat].hands[handId];
       let cardsToDraw = 1;
 
@@ -1201,6 +1209,7 @@ module.exports = function (io) {
       };
 
       io.in(room).emit('get_updated_table', updateObj);
+      await new Promise((resolve) => setTimeout(resolve, 1000)); // Wait for 2 seconds
       return;
     }
 
@@ -1349,27 +1358,26 @@ module.exports = function (io) {
             dealerCards: {
               visibleCards: dealerCards.visibleCards,
             },
-          },
+          }, 
         };
 
         io.in(room).emit('get_updated_table', updateObj);
         await new Promise((resolve) => setTimeout(resolve, 1500));
-      }
-
+      }  
+ 
       // Dealer's turn is finished, end the round
         await endRound(tableId, io);
-    }
-
+    }    
     async function determineResult(
       bestPlayerValue,
       bestDealerValue,
       bet,
       blackjack
-    ) {
+    ) { 
       let result;
       let profitLoss;
       let winnings = 0;
-
+ 
       if (bestPlayerValue > 21) {
         result = 'LOSE';
         profitLoss = -bet;
@@ -1451,8 +1459,12 @@ module.exports = function (io) {
       player.cards = [];
       player.pendingBet = 0;
       player.currentBet = 0;
+      player.insurance= {
+        accepted:false,
+        bet: 0
+      }
     }
-
+ 
     async function calculateAndSavePlayerHand(
       player,
       bestDealerValue,
@@ -1662,7 +1674,7 @@ module.exports = function (io) {
       io.in(room).emit('get_updated_table', updateObj);
 
     }
-
+  
 
     socket.on('send_friend_request', async (friendRequestObj) => {
       let recipientId = friendRequestObj.recipientId
@@ -1679,7 +1691,7 @@ module.exports = function (io) {
             id: recipientId,
             username:recipientUsername,
           },
-          requestInfo: {
+          requestInfo: { 
             id: request.id,
             status: request.status
           }

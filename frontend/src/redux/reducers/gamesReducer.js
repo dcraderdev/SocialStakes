@@ -153,21 +153,31 @@ const gamesReducer = (state = initialState, action) => {
       if (updatedCurrentTables[tableId]) {
         const currentTable = updatedCurrentTables[tableId];
 
-        // console.log(currentTable.tableUsers[4]?.cards);
-        // console.log(table?.seats[4]?.cards);
         currentTable.tableUsers = table.seats
-
-
         currentTable.countdownEnd = table.countdownEnd;
-        currentTable.dealerCards = action.payload.table.dealerCards?.visibleCards;
-        currentTable.actionSeat = action.payload.table.actionSeat;
-        // currentTable.actionTimer = action.payload.table.actionTimer;
         currentTable.actionEnd = action.payload.table.actionEnd;
-        currentTable.actionHand = action.payload.table.actionHand;
-        
+        // currentTable.dealerCards = action.payload.table.dealerCards?.visibleCards;
+        // currentTable.actionSeat = action.payload.table.actionSeat;
+        // currentTable.actionTimer = action.payload.table.actionTimer;
+        // currentTable.actionHand = action.payload.table.actionHand;
+
+
+        // Only update these values if they have changed
+        if(currentTable.actionSeat !== action.payload.table.actionSeat){
+          currentTable.actionSeat = action.payload.table.actionSeat;
+        }
+
+        if(currentTable.actionHand !== action.payload.table.actionHand){
+          currentTable.actionHand = action.payload.table.actionHand;
+        }
+
+
         // only update handInProgress if specified in payload
         if(action.payload.table.handInProgress !== null && action.payload.table.handInProgress !== undefined){
           currentTable.handInProgress = action.payload.table.handInProgress;
+        }
+        if(action.payload.table.dealerCards) {
+          currentTable.dealerCards = action.payload.table.dealerCards.visibleCards;
         }
         // Replace the table in currentTables with the updated table
         updatedCurrentTables[tableId] = currentTable;
@@ -205,7 +215,14 @@ const gamesReducer = (state = initialState, action) => {
           activeTable = newCurrentTables[tableIds[0]];
           return { ...newState, currentTables: newCurrentTables, activeTable };
       }
-      return { ...newState, currentTables: newCurrentTables, activeTable, showGames: true, showTables: false };
+      if(newState.showTables){
+        return { ...newState, currentTables: newCurrentTables, activeTable, showGames: false, showTables: true, showCreatingGame:false };
+      }
+      if(newState.showCreatingGame){
+        return { ...newState, currentTables: newCurrentTables, activeTable, showGames: false, showTables: false, showCreatingGame:true };
+      }
+
+      return { ...newState, currentTables: newCurrentTables, activeTable, showGames: true, showTables: false, showCreatingGame:false };
       }
     }
 

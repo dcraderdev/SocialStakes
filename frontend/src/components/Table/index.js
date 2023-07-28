@@ -12,9 +12,12 @@ import cardConverter from '../../utils/cardConverter'
 
 import { ModalContext } from '../../context/ModalContext';
 import { SocketContext } from '../../context/SocketContext';
+import { showGamesAction } from '../../redux/actions/gameActions';
+
 
 
 const Table = () => {
+  const { modal, openModal, closeModal, setUpdateObj } = useContext(ModalContext);
   
   const dispatch = useDispatch()
   const user = useSelector((state) => state.users.user);
@@ -28,7 +31,7 @@ const Table = () => {
   const [cards, setCards] = useState([]);
   const [isHandInProgress, setIsHandInProgress] = useState(false);
 
-
+  const profileBtnRef = useRef()
  
   useEffect(()=>{
 
@@ -64,9 +67,37 @@ const Table = () => {
   },[currentTables, activeTable]);
 
 
+  const handleProfileButtonClick = () => {
+    if(modal === 'profileModal'){
+      closeModal()
+    } else {
+      openModal('profileModal')
+    }
+  };
+
+
 
   return (
     <div className='table-wrapper'>
+
+
+
+        <div onClick={()=>dispatch(showGamesAction())} className='table-home-button-container flex center'>
+          <div className='table-home-button-subcontainer flex center'>
+            <i className="fa-solid fa-house"></i>
+          </div>
+        </div>
+
+
+        <div  ref={profileBtnRef} onClick={handleProfileButtonClick} className='table-menu-button-container flex center'>
+            {modal !== 'profileModal' && <i className="fa-solid fa-bars"></i>}
+            {modal === 'profileModal' && <i className="fa-solid fa-x"></i>}
+        </div>
+
+<div></div>
+
+
+
       <div className={`table-content ${neonTheme}`}>
         {themes[tableTheme] && 
         <div className='table-image-container'>
@@ -107,13 +138,13 @@ const Table = () => {
           </div>
         </div> */}
 
-<div className='seats-container'>
+<div className='seats-container flex center'>
             <TableSeat seatNumber={1} />
-            <TableSeat seatNumber={6} />
             <TableSeat seatNumber={2} />
-            <TableSeat seatNumber={5} />
             <TableSeat seatNumber={3} />
             <TableSeat seatNumber={4} />
+            <TableSeat seatNumber={5} />
+            <TableSeat seatNumber={6} />
         </div>     
 
 

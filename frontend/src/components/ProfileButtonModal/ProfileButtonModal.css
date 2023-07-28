@@ -1,84 +1,224 @@
+.profile-modal {
+  border: black solid 1px;
+  z-index: 10;
+  position: fixed;
+  height: calc(100vh - 50px);
+  top: 48px;
+  right: 0px;
+  transition: right ease 1s;
+  width: 230px;
+}
+
+
+
+.profile-modal.visible{
+  right: 0;
+  transition: right 1s ease;
+}
+
+.profile-modal.hidden {
+  right: -300px;
+  transition: right 1s ease;
+}
+
+
+
+
 .profilemenu {
   position: relative;
-  top: -18px;
-  right: 5px;
-  border: 1px solid rgb(0, 0, 0,0.1);
   border-top: none;
-  background-color: white;
-  border-radius: 5px;
-  box-shadow: rgba(127, 127, 127, 0.9) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
-  width: 170px;
-  height: fit-content;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
-  z-index: 411;
+
+  transition: width ease 1s;
+  background-color: #1d1e1cfa;
+  background-color: #1b1c1bfa;
+  overflow-y: scroll;
 }
 
 
+/* Styling the scrollbar */
+.show-tables::-webkit-scrollbar,
+.profilemenu::-webkit-scrollbar{
+  width: 5px; /* Width of the scrollbar */
+}
+.show-tables::-webkit-scrollbar-track,
+.profilemenu::-webkit-scrollbar-track {
+  background:transparent; /* Color of the track of the scrollbar */
+}
+.show-tables::-webkit-scrollbar-thumb,
+.profilemenu::-webkit-scrollbar-thumb {
+  background: #131312; /* Color of the thumb of the scrollbar */
+}
 
-.div-link {
+.show-tables::-webkit-scrollbar-thumb:hover,
+.profilemenu::-webkit-scrollbar-thumb:hover {
+  background: darkgrey; /* Color of the thumb of the scrollbar when hovered */
+}
+
+.profilemenu-cashier-button{
+  width: 98%;
   position: relative;
-  transition: background-color 0.2s ease;
-  padding: 5px;
-  left: -40px;
-  width: 230px;
-  border-bottom-left-radius: 1px;
-  border-bottom-right-radius: 1px;
-}
-
-.div-link:hover {
-  background-color: rgba(228, 228, 228, 0.2508);
-}
-
-.div-link:active {
-  background-color: rgb(226, 226, 226);
-}
-
-.profilemenu-user-welcome {
-  position: relative;
-  padding: 20px;
-  background-color: #f0f0f0;
-  border-bottom: 1px solid #dcdcdc;
-  padding: 15px;
-  left: -40px;
-  width: 230px;
-  height: 30px;
-  
-  flex-direction: column;
-}
-
-
-
-.profilemenu-hello {
-  width: 100%;
-  left: -10px;
-  position: relative;
-  margin-bottom: 4px;
+  left: 1%;
+  height: 50px;
+  border-radius: 10px;
+  background-color: rgb(200, 57, 13);
+  font-weight: 300;
   font-size: 20px;
 }
 
-.profilemenu-icon{
-  margin-right: 5px;
-}
 
-.profilemenu-balance {
-  position: relative;
-  bottom: 2px;
-  left: -5px;
-}
-
-
-
+.profilemenu-cashier,
 .profilemenu-option{
   position: relative;
   transition: background-color 0.2s ease;
-  padding: 5px;
-  width: 230px;
-  left: -40px;
+  width: 100%;
+  height: 50px;
   cursor: pointer;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  color: white;
+  font-weight: 300;
+}
+
+.profilemenu-cashier{
+  margin-bottom: 5px;
+  
+}
+
+
+.profilemenu-section{
+  border-top: #404040b0 solid 1px;
+  border-bottom: #000000 solid 2px;
+}
+
+.profilemenu-section.first{
+  border-top: none;
+  border-bottom: #000000 solid 2px;
+}
+
+/* .profilemenu-section.first{
+  border-top: none;
+  border-bottom: #000000 solid 2px;
+} */
+
+
+.profilemenu-option-text{
+  height: 100%;
+  width: 73%;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  margin-left: 5%;
+}
+
+
+
+.profilemenu-option-icon{
+  height: 100%;
+  width: 20%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 23px;
+}
+
+.profilemenu-option-icon img{
+  height: 100%;
+  width: 20%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 23px;
+  color: white;
+}
+
+
+.profilemenu-table-option:hover,
+.profilemenu-option:hover {
+  background-color: rgba(228, 228, 228, 0.2508);
+}
+.profilemenu-table-option:active,
+.profilemenu-option:active {
+  background-color: rgba(228, 228, 228, 0.2508);
 
 }
+
+.profilemenu-user-info {
+  position: relative;
+  width:100%;
+  height: 75px;
+  color: white;
+
+
+}
+
+
+
+.profilemenu-profileimage-wrapper {
+  width: 30%;
+  height: 100%;
+  position: relative;
+  font-size: 20px;
+}
+.profilemenu-profileimage-container {
+  width: 80%;
+  height: 80%;
+  position: relative;
+  font-size: 20px;
+  border: solid rgb(255, 255, 255) 1px;
+  border-radius: 50%;
+  color: white;
+}
+
+
+.profilemenu-namebalance-container{
+  width: 70%;
+  height: 60%;
+  margin-top: 20px;
+  position: relative;
+  font-size: 20px;
+  font-weight: 300;
+}
+
+.profilemenu-name-container {
+  width: 100%;
+  height: 50%;
+  position: relative;
+  font-size: 18px;
+  justify-content: left;
+  align-items: center;
+}
+
+.profilemenu-balance-container {
+  width: 100%;
+  height: 50%;
+  position: relative;
+  font-size: 14px;
+  justify-content: left;
+  align-items: center;
+}
+
+
+.profilemenu-balance-text{
+  color: grey;
+}
+
+.profilemenu-balance-balance {
+  margin-left: 3px;
+}
+
+.green{
+  color: rgb(25, 141, 60);
+}
+.red{
+  color: rgb(200, 57, 13);
+}
+
+
 
 
 .profilemenu-option:hover{
@@ -86,15 +226,14 @@
 }
 
 .profilemenu-logout-container{
-  height: 40px;
+  height: 60px;
 }
 
 .profilemenu-logout-button{
   position: relative;
   width: 80%;
-  height: 30px;
+  height: 40px;
   bottom: 10%;
-  left: -20px;
   background-color: #2d2e2c;
 
   color: white;
@@ -113,10 +252,49 @@
 }
 
 .profilemenu-logout-button:active {
-  transform: scale(.95);
-  background-color: rgb(74, 113, 186);
+  background-color: rgb(200, 57, 13);;
 
 }
 
 
+.show-tables{
+  height: 0px;
+  transition: all 1s ease;
+  overflow-y: auto;
+}
 
+
+
+.show-tables.expand{
+  height: 200px;
+  transition: all 1s ease;
+}
+
+
+
+.profilemenu-table-option{
+  position: relative;
+  transition: background-color 0.2s ease;
+  height: 50px;
+  cursor: pointer;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  color: white;
+  font-weight: 300;
+}
+
+.profilemenu-notables{
+  position: relative;
+  transition: background-color 0.2s ease;
+  height: 100%;
+  cursor: pointer;
+  color: white;
+  font-weight: 300;
+}
+
+.active-menutab{
+  color: goldenrod;
+  background-color: #2d2e2c;
+
+}

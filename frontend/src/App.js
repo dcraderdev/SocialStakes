@@ -25,6 +25,7 @@ import FriendsPage from './components/FriendsPage';
 import UnknownRoutePage from './components/UnknownRoutePage';
 import StatPage from './components/StatPage';
 import RemoveFriendModal from './components/RemoveFriendModal';
+import ProfileButtonModal from './components/ProfileButtonModal';
 
 function App() {
 
@@ -57,12 +58,12 @@ function App() {
   }, [dispatch]);
 
 
-
+console.log(modal);
 
   return (
     <>
 
-      {loaded && <Navigation />}
+      {/* {loaded && <Navigation />} */}
 
 
       {modal === 'login' && (
@@ -122,9 +123,18 @@ function App() {
         </div>
       )}
 
+
+
+        <div className={`profile-modal ${modal === 'profileModal' ? ' visible' : ' hidden'}`} >
+          <ProfileButtonModal />
+        </div>
+
+
+
+
+
+
       <div>
-
-
         <Switch>
 
           <Route path="/" exact>
@@ -133,18 +143,21 @@ function App() {
 
           <Route path="/friends" exact>
             {!user && <GameFloor/>}
+            {loaded && <Navigation />}
             <FriendsPage />
           </Route>
 
 
           <Route path="/stats" exact>
             {!user && <GameFloor/>}
+            {loaded && <Navigation />}
             <StatPage />
           </Route>
 
           
           <Route>
             <h1>404:Unknown Route</h1>
+            {loaded && <Navigation />}
             <UnknownRoutePage/>
           </Route>
         </Switch>

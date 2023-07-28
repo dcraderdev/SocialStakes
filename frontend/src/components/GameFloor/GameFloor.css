@@ -1,47 +1,47 @@
 .gamefloor-wrapper{
-  display: flex;
-  justify-content: center;
-  width: 95%;
-  max-width: 1200px;
-  position: absolute;
-  left: 50%;
-  top: 270px;
-  transform: translate(-50%,0);
-
+  width: 100%;
+  position: relative;
+  top: 245px;
 }
 
-.gamefloor-content,
 .gamefloor-container{
   width: 100%;
+  height: fit-content;
   position: relative;
 }
 
 .table-view{
-
   top: 50px;
 }
 
+
+
 .game-view{
   position: relative;
-  top: 45px;
-  height: calc(100vh - 100px);
+  top: -5px;
+  left: -10px;
+  height: calc(100vh - 65px);
+  width: 99vw;
 }
 
-.games-grid {
-  position: relative;
 
+
+.games-grid {
+  position: absolute;
+  left: 0px;
   left: 50%;
+  transform: translate(-51%,0);
+
   top: -50px;
-  transform: translate(-50%,0);
 
   width: 95%;
+  max-width: 1200px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-auto-rows: minmax(180px, 1fr);
   grid-gap: 40px;
   grid-row-gap: 30px;
   transition: all 0.3s ease;
-  margin-bottom: 30px;
 }
 
 .available-tables-grid {
@@ -50,14 +50,17 @@
   grid-gap: 16px;
   width: 100%;
   position: relative;
-  transition: all 0.3s ease;
-  position: relative;
   top: -80px;
+
+  position: absolute;
+  left: 0px;
+  left: 50%;
+  transform: translate(-51%,0);
+
 }
 
 .private-game-buttons{
   display: flex;
-  justify-content: center;
   justify-content: space-around;
   align-items: center;
   width: 80%;
@@ -118,8 +121,8 @@
 
 .available-game-types-container{
   width: 100%;
+  position: relative;
   justify-content: space-around;
-
 }
 
 .available-game-types{
@@ -147,7 +150,7 @@
 
 .gameicon-container{
   color: white;
-  font-size: 12px;
+  font-size: 11px;
   text-align: center;
   flex-direction: column;
 }
@@ -168,8 +171,6 @@
     grid-template-columns: repeat(2, 1fr);
     grid-auto-rows: 180px;
     grid-gap: 16px;
-    padding: 5px;
-    transition: all 0.3s ease;
   }
 }
 

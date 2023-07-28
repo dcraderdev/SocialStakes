@@ -25,9 +25,13 @@
   justify-content: center;
   background-color: #2d2e2c;
   background-color: #1d1e1c;
-
   transition: all .5s ease;
 }
+
+
+
+
+
 
 .gametabs-shrunk {
   height: 0px;
@@ -159,23 +163,6 @@
 
 
 
-.profile-modal {
-  position: absolute;
-  width: 200px;
-  height: 200px;
-  top: 50px;
-  right: 20px;
-}
 
-@media screen and (min-width: 1200px) {
-  .profile-modal {
-    position: absolute;
-    margin: 0 auto;
-    left: 980px;
-  }
-}
 
-.profilemenu-hidden {
-  display: none;
 
-}

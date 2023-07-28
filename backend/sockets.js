@@ -1363,22 +1363,21 @@ module.exports = function (io) {
 
         io.in(room).emit('get_updated_table', updateObj);
         await new Promise((resolve) => setTimeout(resolve, 1500));
-      }
-
+      }  
+ 
       // Dealer's turn is finished, end the round
         await endRound(tableId, io);
-    }   
-     
+    }    
     async function determineResult(
       bestPlayerValue,
       bestDealerValue,
       bet,
       blackjack
-    ) {
+    ) { 
       let result;
       let profitLoss;
       let winnings = 0;
-
+ 
       if (bestPlayerValue > 21) {
         result = 'LOSE';
         profitLoss = -bet;

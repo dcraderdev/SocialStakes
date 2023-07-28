@@ -1,6 +1,7 @@
 
 .tablesortbar-wrapper{
-  width: 100%;
+  width: 98%;
+  left: 1%;
   height: 35px;
   position: relative;
   background-color: #1d1e1c;

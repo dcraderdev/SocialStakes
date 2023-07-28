@@ -108,6 +108,21 @@ function ProfileButtonModal() {
             </div>
 
             <div className="profilemenu-section first">
+
+            <div
+                onClick={() => {
+                  closeModal()
+                  dispatch(showGamesAction())
+                }}
+                className={`profilemenu-option`}
+              >
+                <div className={`profilemenu-option-text`}>Home</div>
+                <div className="profilemenu-option-icon">
+                  <i className="fa-solid fa-home"></i>
+                </div>
+              </div>
+
+
               <div
                 onClick={() => {
                   setShowTables(!showTables)
@@ -128,7 +143,13 @@ function ProfileButtonModal() {
                   Object.values(currentTables).map((table, index) => {
                     console.log(table);
                     return (
-                      <div className="profilemenu-table-option flex" key={index}>
+                      <div
+                      onClick={() => {
+                        closeModal()
+                        history.push('/')
+                        socket.emit('view_room', table.id);
+                      }}
+                       className="profilemenu-table-option flex" key={index}>
                         <div className="profilemenu-option-text">
                           {table.tableName}
                         </div>

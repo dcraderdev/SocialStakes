@@ -58,7 +58,7 @@ function App() {
   }, [dispatch]);
 
 
-
+console.log(modal);
 
   return (
     <>
@@ -130,9 +130,11 @@ function App() {
         </div>
 
 
+
+
+
+
       <div>
-
-
         <Switch>
 
           <Route path="/" exact>

@@ -263,10 +263,13 @@
   overflow-y: auto;
 }
 
+
+
 .show-tables.expand{
   height: 200px;
   transition: all 1s ease;
 }
+
 
 
 .profilemenu-table-option{

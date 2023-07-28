@@ -43,9 +43,21 @@ function ProfileButtonModal() {
     closeModal();
     openModal(type);
   };
+  console.log(modal);
 
   useEffect(() => {
+    console.log(modal);
+
     const handleClickOutside = (event) => {
+
+      console.log(modal);
+
+      if(modal !== 'profileModal') {
+        return
+      }
+
+
+
       if (
         profileBtnRef &&
         profileBtnRef.current &&
@@ -62,9 +74,8 @@ function ProfileButtonModal() {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, []);
+  }, [modal]);
 
-  console.log(currentTables);
 
   return (
     <>
@@ -112,6 +123,7 @@ function ProfileButtonModal() {
             <div
                 onClick={() => {
                   closeModal()
+                  history.push('/')
                   dispatch(showGamesAction())
                 }}
                 className={`profilemenu-option`}
@@ -141,7 +153,6 @@ function ProfileButtonModal() {
                 {currentTables &&
                   Object.values(currentTables).length > 0 &&
                   Object.values(currentTables).map((table, index) => {
-                    console.log(table);
                     return (
                       <div
                       onClick={() => {

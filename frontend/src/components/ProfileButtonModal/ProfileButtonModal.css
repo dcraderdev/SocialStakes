@@ -34,23 +34,26 @@
 
   transition: width ease 1s;
   background-color: #1d1e1cfa;
+  background-color: #1b1c1bfa;
   overflow-y: scroll;
 }
 
 
 /* Styling the scrollbar */
+.show-tables::-webkit-scrollbar,
 .profilemenu::-webkit-scrollbar{
   width: 5px; /* Width of the scrollbar */
 }
-
+.show-tables::-webkit-scrollbar-track,
 .profilemenu::-webkit-scrollbar-track {
   background:transparent; /* Color of the track of the scrollbar */
 }
-
+.show-tables::-webkit-scrollbar-thumb,
 .profilemenu::-webkit-scrollbar-thumb {
   background: #131312; /* Color of the thumb of the scrollbar */
 }
 
+.show-tables::-webkit-scrollbar-thumb:hover,
 .profilemenu::-webkit-scrollbar-thumb:hover {
   background: darkgrey; /* Color of the thumb of the scrollbar when hovered */
 }
@@ -134,11 +137,11 @@
 }
 
 
-
+.profilemenu-table-option:hover,
 .profilemenu-option:hover {
   background-color: rgba(228, 228, 228, 0.2508);
 }
-
+.profilemenu-table-option:active,
 .profilemenu-option:active {
   background-color: rgba(228, 228, 228, 0.2508);
 
@@ -254,4 +257,41 @@
 }
 
 
+.show-tables{
+  height: 0px;
+  transition: all 1s ease;
+  overflow-y: auto;
+}
 
+.show-tables.expand{
+  height: 200px;
+  transition: all 1s ease;
+}
+
+
+.profilemenu-table-option{
+  position: relative;
+  transition: background-color 0.2s ease;
+  height: 50px;
+  cursor: pointer;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  color: white;
+  font-weight: 300;
+}
+
+.profilemenu-notables{
+  position: relative;
+  transition: background-color 0.2s ease;
+  height: 100%;
+  cursor: pointer;
+  color: white;
+  font-weight: 300;
+}
+
+.active-menutab{
+  color: goldenrod;
+  background-color: #2d2e2c;
+
+}

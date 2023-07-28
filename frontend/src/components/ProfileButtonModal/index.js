@@ -122,12 +122,12 @@ function ProfileButtonModal() {
 
 
 
-<div className='profilemenu-section'>
+<div className='profilemenu-section first'>
 <div className='profilemenu-option'>
             <div className='profilemenu-option-text'>My Tables</div>
                 <div className='profilemenu-option-icon'>
                   {/* <img src={tableIcon} alt='table icon' ></img> */}
-                  <i className="fa-solid fa-table-cells-large"></i>
+                  <i className="fa-solid fa-star"></i>
                 </div>
             </div>
             <div className='profilemenu-option'  
@@ -136,7 +136,16 @@ function ProfileButtonModal() {
               closeModal()
               }}>
                 <div className='profilemenu-option-text'>Create Private Table</div>
-                <div className='profilemenu-option-icon'><i className="fa-solid fa-signal"></i></div>
+                <div className='profilemenu-option-icon'><i className="fa-solid fa-circle-plus"></i></div>
+            </div>
+
+            <div className='profilemenu-option'  
+            onClick={()=>{
+              history.push('/stats')
+              closeModal()
+              }}>
+                <div className='profilemenu-option-text'>Join Private Table</div>
+                <div className='profilemenu-option-icon'><i className="fa-solid fa-unlock-keyhole"></i></div>
             </div>
 </div>
 
@@ -160,12 +169,36 @@ function ProfileButtonModal() {
               closeModal()
               }}>
                 <div className='profilemenu-option-text'>Invites</div>
-                <div className='profilemenu-option-icon'><i className="fa-solid fa-poo"></i></div>
+                <div className='profilemenu-option-icon'><i className="fa-solid fa-envelopes-bulk"></i></div>
             
             </div>
 
 
 </div>
+
+
+<div className='profilemenu-section'>
+
+            <div className='profilemenu-option'  
+            onClick={()=>{
+              history.push('/stats')
+              closeModal()
+              }}>
+                <div className='profilemenu-option-text'>Game History</div>
+                <div className='profilemenu-option-icon'><i className="fa-solid fa-clock"></i></div>
+            </div>
+            <div className='profilemenu-option'  
+            onClick={()=>{
+              history.push('/stats')
+              closeModal()
+              }}>
+                <div className='profilemenu-option-text'>Stats</div>
+                <div className='profilemenu-option-icon'><i className="fa-solid fa-signal"></i></div>
+            </div>
+
+
+            </div>
+
 
 
 <div className='profilemenu-section'>
@@ -183,7 +216,7 @@ function ProfileButtonModal() {
             <div className='profilemenu-option-text'>Themes</div>
                 <div className='profilemenu-option-icon'>
                   {/* <img src={tableIcon} alt='table icon' ></img> */}
-                  <i className="fa-solid fa-palette"></i>
+                  <i className="fa-solid fa-brush"></i>
                 </div>
             </div>
 </div>
@@ -194,25 +227,6 @@ function ProfileButtonModal() {
 
 
 
-
-
-            <div className='profilemenu-option'  
-            onClick={()=>{
-              history.push('/stats')
-              closeModal()
-              }}>
-                <div className='profilemenu-option-text'>Stats</div>
-                <div className='profilemenu-option-icon'><i className="fa-solid fa-signal"></i></div>
-            </div>
-
-            <div className='profilemenu-option'  
-            onClick={()=>{
-              history.push('/stats')
-              closeModal()
-              }}>
-                <div className='profilemenu-option-text'>Game History</div>
-                <div className='profilemenu-option-icon'><i className="fa-solid fa-signal"></i></div>
-            </div>
 
 
 
@@ -232,15 +246,18 @@ function ProfileButtonModal() {
               </div>
             </div>
 
+
+            
+
           </div>
 
         ) : (
           <div>
             <div className='profilemenu-option' onClick={() => navModal('login')}>
-              Sign In
+              <div className='profilemenu-option-text'>Sign In</div>  
             </div>
             <div className='profilemenu-option' onClick={() => navModal('signup')}>
-              Sign Up
+              <div className='profilemenu-option-text'>Sign Up</div>  
             </div>
           </div>
         )}

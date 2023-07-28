@@ -1,7 +1,7 @@
 .profile-modal {
   border: black solid 1px;
   z-index: 10;
-  position: absolute;
+  position: fixed;
   height: calc(100vh - 50px);
   top: 48px;
   right: 0px;
@@ -34,6 +34,25 @@
 
   transition: width ease 1s;
   background-color: #1d1e1cfa;
+  overflow-y: scroll;
+}
+
+
+/* Styling the scrollbar */
+.profilemenu::-webkit-scrollbar{
+  width: 5px; /* Width of the scrollbar */
+}
+
+.profilemenu::-webkit-scrollbar-track {
+  background:transparent; /* Color of the track of the scrollbar */
+}
+
+.profilemenu::-webkit-scrollbar-thumb {
+  background: #131312; /* Color of the thumb of the scrollbar */
+}
+
+.profilemenu::-webkit-scrollbar-thumb:hover {
+  background: darkgrey; /* Color of the thumb of the scrollbar when hovered */
 }
 
 .profilemenu-cashier-button{
@@ -64,14 +83,24 @@
 
 .profilemenu-cashier{
   margin-bottom: 5px;
+  
 }
+
 
 .profilemenu-section{
-  border-bottom: #404040b0 solid 1px;
-  border-top: #0000007b solid 1px;
+  border-top: #404040b0 solid 1px;
+  border-bottom: #000000 solid 2px;
 }
 
+.profilemenu-section.first{
+  border-top: none;
+  border-bottom: #000000 solid 2px;
+}
 
+/* .profilemenu-section.first{
+  border-top: none;
+  border-bottom: #000000 solid 2px;
+} */
 
 
 .profilemenu-option-text{
@@ -194,15 +223,14 @@
 }
 
 .profilemenu-logout-container{
-  height: 40px;
+  height: 60px;
 }
 
 .profilemenu-logout-button{
   position: relative;
   width: 80%;
-  height: 30px;
+  height: 40px;
   bottom: 10%;
-  left: -20px;
   background-color: #2d2e2c;
 
   color: white;
@@ -221,8 +249,7 @@
 }
 
 .profilemenu-logout-button:active {
-  transform: scale(.95);
-  background-color: rgb(74, 113, 186);
+  background-color: rgb(200, 57, 13);;
 
 }
 

@@ -6,6 +6,7 @@ import './FriendsNavBar.css'
 
 import SearchBar from '../SearchBar';
 import FriendTile from '../FriendTile';
+import ConversationTile from '../ConversationTile';
 
 
 import { showFriendInvitesAction, showTableInvitesAction } from '../../redux/actions/friendActions';
@@ -17,6 +18,8 @@ const FriendsNavBar = () => {
   const [currentFocus, setCurrentFocus] = useState(null);
 
   const friends = useSelector(state => state.friends);
+  const conversations = useSelector((state) => state.chats.conversations);
+
   const currentTables = useSelector(state => state.games.currentTables);
   const isShowingFriendInvites = useSelector(state => state.friends.showFriendInvites);
   const isShowingTableInvites = useSelector(state => state.friends.showTableInvites);
@@ -36,7 +39,7 @@ const FriendsNavBar = () => {
 
   for (let i = 0; i < 40; i++) {
     let name = "Friend" + i;
-    let id = Math.floor(Math.random() * 1000000); // Generate a random number for ID, just for testing
+    let id = Math.floor(Math.random() * 1000000);
     testFriends[name] = { 
       id: id.toString(), 
       friend: { username: name, rank: i },
@@ -132,9 +135,11 @@ const FriendsNavBar = () => {
           <div className={`friendsnavbar-content ${currentFocus === viewConversations ? getContentHeight() : ''}`}>
 
 
-            { [1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,2,3,4,1,2,3,4,1,2,3,4,5, 5, ].map((friend,index) => {
-              return (<div key={index}>{friend}</div>)
-            })}
+          {conversations && Object.entries(conversations).map(([key,conversation],index) => {
+            return (
+            <ConversationTile key={index} conversation={conversation} type={'submenu'}/>
+            )
+          })}
 
           </div>
         </div>

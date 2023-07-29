@@ -11,12 +11,13 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       Message.belongsTo(models.User, { foreignKey: 'userId'});
-      Message.belongsTo(models.Table, { foreignKey: 'tableId' });
+      Message.belongsTo(models.Conversation, { foreignKey: 'conversationId' });
+    
 
     }
   }
   Message.init({
-    tableId: DataTypes.UUID,
+    conversationId: DataTypes.UUID,
     userId: DataTypes.UUID,
     content: DataTypes.STRING
   }, {

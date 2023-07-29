@@ -1,0 +1,126 @@
+.conversationtile-submenu-wrapper{
+  border: rgba(0, 0, 0, 0.238) solid 1px;
+  cursor: pointer;
+
+  height: 50px;
+  width: 100%;
+
+}
+
+.conversationtile-submenu-wrapper:hover{
+  background-color: #2d2e2c;
+}
+
+.conversationtile-container{
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  
+}
+
+
+.conversationtile-profile-image-container{
+  position: relative;
+  height: 40px;
+  width: 40px;
+  margin-left: 5px;
+  border: rgba(0, 0, 0) solid 2px;
+  border-radius: 50%;
+
+}
+
+.conversationtile-profile-image{
+  border: rgba(0, 0, 0, 0.238) solid 1px;
+  background-color: rgba(240, 255, 255, 0.135);
+
+  border-radius: 50%;
+  height: 40px;
+  width: 40px;
+}
+
+.conversationtile-name-container{
+  margin-left: 10px;
+  font-size: 16px;
+  color: azure;
+  font-weight: 300;
+
+}
+
+.active-conversation{
+  border: rgba(218, 165, 32, 0.38) solid 2px;
+}
+
+.active-name{
+  color: goldenrod;
+}
+
+
+
+.conversation-status{
+  margin-right: 15px;
+  position: relative;
+  width: 10px;
+  height: 10px;
+  border: rgb(26, 59, 167) solid 1px;
+  border-radius: 50%;
+}
+
+
+.online{
+  border: rgb(8, 67, 20) solid 1px;
+  background-color: green;
+}
+
+.offline{
+  border: rgb(124, 36, 9) solid 1px;
+  background-color: rgb(200, 57, 13);
+}
+
+
+@media screen and (min-width: 800px) {
+  .conversationtile-name-container{
+    font-size: 20px;
+  }
+}
+
+
+
+.conversationtile-request-option-container{
+  margin-right: 10px;
+
+  position: absolute;
+  right: 0%;
+  width: 100px;
+  height: 30px;
+  justify-content: space-around;
+
+}
+
+.conversationtile-request-option{
+  position: relative;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+  cursor: pointer;
+}
+
+
+
+.conversationtile-request-option:hover{
+  background-color: #17344c;
+}
+
+.conversationtile-request-option i{
+  font-size: 20px;
+  color: rgb(18, 133, 8);
+}
+
+.conversationtile-request-option:active > i {
+  transform: scale(1.3);
+}

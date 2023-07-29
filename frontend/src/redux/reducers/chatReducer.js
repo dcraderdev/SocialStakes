@@ -1,6 +1,6 @@
 
 import { 
-  ADD_MESSAGE, EDIT_MESSAGE, DELETE_MESSAGE
+  ADD_MESSAGE, EDIT_MESSAGE, DELETE_MESSAGE, GET_USER_CONVERSATIONS
 
 } from '../actions/actionTypes'
 
@@ -85,10 +85,32 @@ const gamesReducer = (state = initialState, action) => {
           ];
         }
       }
+
       
-    
+      
       return { ...newState, conversations: newConversations };
     }
+    
+    
+    
+    
+    case GET_USER_CONVERSATIONS: {
+      let newConversations = action.payload
+      console.log(action.payload);
+      return {...newState, conversations: newConversations}
+    }
+
+
+
+
+
+
+
+
+
+
+
+
     
   
 

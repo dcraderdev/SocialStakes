@@ -3,11 +3,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { SocketContext } from '../../context/SocketContext';
 
 import { getUserFriends } from '../../redux/middleware/friends';
+import { getUserConversations } from '../../redux/middleware/chat';
 
 import FriendsNavBar from '../FriendsNavBar';
 import FriendTile from '../FriendTile';
+import ConversationTile from '../ConversationTile';
 import { ModalContext } from '../../context/ModalContext';
 import './FriendsPage.css';
+import Chatbox from '../Chatbox';
 
 const FriendsPage = () => {
 
@@ -15,19 +18,17 @@ const FriendsPage = () => {
   const currentFriendViewConversations = 'currentFriendViewConversations'
   const currentFriendViewPastGames = 'currentFriendViewPastGames'
   const currentFriendViewStats = 'currentFriendViewStats'
+
   const dispatch = useDispatch();
   const user = useSelector((state) => state.users.user);
   const friends = useSelector((state) => state.friends);
-  const currentFriendView = useSelector(
-    (state) => state.friends.currentFriendView
-  );
+  const conversations = useSelector((state) => state.chats.conversations);
+  const currentFriendView = useSelector((state) => state.friends.currentFriendView);
+  const currentConversationView = useSelector((state) => state.friends.currentConversationView);
   const showFriends = useSelector((state) => state.friends.showFriends);
-  const showTableInvites = useSelector(
-    (state) => state.friends.showTableInvites
-  );
-  const showFriendInvites = useSelector(
-    (state) => state.friends.showFriendInvites
-  );
+  const showConversation = useSelector((state) => state.friends.showConversation);
+  const showTableInvites = useSelector((state) => state.friends.showTableInvites);
+  const showFriendInvites = useSelector((state) => state.friends.showFriendInvites);
 
   const { openModal, setUpdateObj, updateObj } = useContext(ModalContext);
 
@@ -40,6 +41,17 @@ const FriendsPage = () => {
   const submenu = useRef()
   const submenuButton = useRef()
 
+
+    // fetch updated friends/convos
+  useEffect(() => {
+    if (!user) return;
+    dispatch(getUserFriends(user.id));
+    dispatch(getUserConversations(user.id));
+
+  }, [user]);
+
+
+  // friendsTab friend menu modal logic handling
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (submenu.current && !submenu.current.contains(event.target)) {
@@ -123,14 +135,10 @@ const FriendsPage = () => {
     }
   }, [showFriendInvites, showTableInvites, currentFriendView, showFriendSubMenu]);
 
-  console.log(currentFriendView);
 
 
 
-  useEffect(() => {
-    if (!user) return;
-    dispatch(getUserFriends(user.id));
-  }, [user]);
+
 
   if (!user) return;
 
@@ -199,6 +207,20 @@ const FriendsPage = () => {
 
           </div>
         )}
+
+        {/* // currentConversationView */}
+        {showConversation && (
+          <div className="friendspage-friendview-container">
+            
+            <Chatbox conversation={currentConversationView}/>
+
+
+          </div>
+        )}
+
+
+
+
       </div>
     </div>
   );

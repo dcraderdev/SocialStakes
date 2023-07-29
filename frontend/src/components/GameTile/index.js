@@ -99,6 +99,8 @@ const GameTile = ({game, cbFunc, delay}) => {
   return (
     <div>
       <div className='gametile-container fade-in rounded' style={tileStyle} onClick={() => cbFunc(game.gameType)}>
+
+        
         <div className='gametile-name'>{getIcon(game.gameType)}</div>
         {!isActive && (
           <div className='gametile-coming-soon' >Game coming soon</div>

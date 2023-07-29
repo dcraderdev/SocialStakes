@@ -13,12 +13,7 @@
   display: flex;
 }
 
-.chatbox-wrapper {
-  height: calc(100%-100px);
-  width: 400px;
-  transition: width 1s ease;
 
-}
 
 .minimize {
   width: 0px;

@@ -392,12 +392,12 @@ const rebet = (multiplier) => {
 
               </div>
 
-              <div
+              {/* <div
                 className={`chatbox-wrapper ${showMessages ? '' : 'minimize'}`}
                 onClick={showMessages ? null : () => dispatch(toggleShowMessages())}
               >
                 <Chatbox showMessages={showMessages} />
-              </div>
+              </div> */}
             </div>
 
 

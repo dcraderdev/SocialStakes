@@ -20,6 +20,7 @@ import Navigation from '../Navigation';
 
 import gameTileBackground from '../../images/game-tile-background.jpeg';
 import TableSortBar from '../TableSortBar';
+import ChatInputArea from '../ChatInputArea';
 
 function GameFloor() {
   const { socket } = useContext(SocketContext);
@@ -164,6 +165,7 @@ function GameFloor() {
 
             {!activeTable && isLoaded && <Navigation />}
 
+  
 
             {/* private game buttons */}
             {!activeTable && !showCreatingGame && (

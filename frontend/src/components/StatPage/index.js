@@ -26,6 +26,7 @@ const StatPage = () => {
     dispatch(getUserStats())
   },[])
 
+  if (!user) return;
 
   return (
     <div className='flex center'>

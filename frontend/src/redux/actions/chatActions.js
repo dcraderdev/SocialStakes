@@ -1,6 +1,6 @@
 
 import {
-  ADD_MESSAGE, EDIT_MESSAGE, DELETE_MESSAGE
+  ADD_MESSAGE, EDIT_MESSAGE, DELETE_MESSAGE, GET_USER_CONVERSATIONS, SHOW_CONVERSATION_BY_ID
 } from './actionTypes'
 
 
@@ -28,3 +28,21 @@ export const deleteMessageAction = (messageObj) => {
 };
 
 
+export const getUserConversationsAction = (data) => {
+  console.log(data);
+
+  return {
+    type: GET_USER_CONVERSATIONS,
+    payload: data
+  };
+};
+
+
+export const showConversationAction = (friend) => {
+  console.log(friend);
+  return {
+    type: SHOW_CONVERSATION_BY_ID,
+    payload: friend,
+
+  };
+};

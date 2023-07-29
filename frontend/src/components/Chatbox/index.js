@@ -6,8 +6,9 @@ import { SocketContext } from '../../context/SocketContext';
 
 import { addMessage} from '../../redux/actions/userActions';
 import { toggleShowMessages } from '../../redux/actions/gameActions';
+import ChatInputArea from '../ChatInputArea';
 
-const Chatbox = ({showMessages}) => {
+const Chatbox = ({conversation}) => {
   const dispatch = useDispatch()
   const [selectedMessage, setSelectedMessage] = useState(null);
   const [showSettings, setShowSettings] = useState(false);
@@ -19,6 +20,7 @@ const Chatbox = ({showMessages}) => {
   const activeTable = useSelector(state => state.games.activeTable);
   const currentTables = useSelector(state => state.games.currentTables);
   const conversations = useSelector(state => state.chats.conversations);
+  const showMessages = useSelector((state) => state.games.showMessages);
   
   const { socket } = useContext(SocketContext);
   const bottomRef = useRef(null);
@@ -31,178 +33,178 @@ const Chatbox = ({showMessages}) => {
   const [showInviteFriendButton, setShowFriendInviteButton] = useState(false);
 
 
-    // Handle Sending Messages
-    const handleSubmit = (e) => {
-      if (e) e.preventDefault();
-      if (!user) return;
-      const newMessageObj = {}
-      newMessageObj.content = newMessage
-      newMessageObj.tableId = activeTable.id
-      newMessageObj.user = user
+    // // Handle Sending Messages
+    // const handleSubmit = (e) => {
+    //   if (e) e.preventDefault();
+    //   if (!user) return;
+    //   const newMessageObj = {}
+    //   newMessageObj.content = newMessage
+    //   newMessageObj.tableId = activeTable.id
+    //   newMessageObj.user = user
 
-      socket.emit('message', newMessageObj);
-      setNewMessage('');
-    }
+    //   socket.emit('message', newMessageObj);
+    //   setNewMessage('');
+    // }
   
 
-    useEffect(()=>{
-      if(conversations && conversations[activeTable.id]){
-        setMessages(conversations[activeTable.id].messages)
-      }
-      if (bottomRef.current && showMessages) {
-        bottomRef.current.scrollIntoView({ behavior: 'smooth' });
-      }
-    },[conversations, activeTable])
+    // useEffect(()=>{
+    //   if(conversations && conversations[activeTable.id]){
+    //     setMessages(conversations[activeTable.id].messages)
+    //   }
+    //   if (bottomRef.current && showMessages) {
+    //     bottomRef.current.scrollIntoView({ behavior: 'smooth' });
+    //   }
+    // },[conversations, activeTable])
 
 
 
 
-    useEffect(()=>{
-      const shouldShowFriendInviteButton = () => {
-        // Check if the user exists
-        if (!user) return false;
+    // useEffect(()=>{
+    //   const shouldShowFriendInviteButton = () => {
+    //     // Check if the user exists
+    //     if (!user) return false;
   
-        // Check if there is no selected message
-        if (!selectedMessage) return false;
+    //     // Check if there is no selected message
+    //     if (!selectedMessage) return false;
   
-        // Check if the selected message is from the current user
-        if (selectedMessage.user.id === user.id) return false;
+    //     // Check if the selected message is from the current user
+    //     if (selectedMessage.user.id === user.id) return false;
   
-        // Check if the selected message is from the default user
-        if (selectedMessage.user.id === 1) return false;
+    //     // Check if the selected message is from the default user
+    //     if (selectedMessage.user.id === 1) return false;
   
-        // Check if the selected message's user is already a friend or has a pending request
-        const currentFriends = friends.friends;
-        const outgoingRequests = friends.outgoingRequests;
-        const selectedMessageUserId = selectedMessage.user.id;
+    //     // Check if the selected message's user is already a friend or has a pending request
+    //     const currentFriends = friends.friends;
+    //     const outgoingRequests = friends.outgoingRequests;
+    //     const selectedMessageUserId = selectedMessage.user.id;
 
 
-      console.log(outgoingRequests);
+    //   console.log(outgoingRequests);
 
 
 
 
-        if (currentFriends[selectedMessageUserId] || outgoingRequests[selectedMessageUserId]) {
-          return false;
-        }
+    //     if (currentFriends[selectedMessageUserId] || outgoingRequests[selectedMessageUserId]) {
+    //       return false;
+    //     }
   
-        // If none of the conditions above are met, show the invite button
-        return true;
-      }
+    //     // If none of the conditions above are met, show the invite button
+    //     return true;
+    //   }
   
-      setShowFriendInviteButton(shouldShowFriendInviteButton());
-    }, [selectedMessage, user, friends]);
+    //   setShowFriendInviteButton(shouldShowFriendInviteButton());
+    // }, [selectedMessage, user, friends]);
   
  
-    const sendFriendRequest = () => {
-      console.log('clik');
-      if (!user) return;
+    // const sendFriendRequest = () => {
+    //   console.log('clik');
+    //   if (!user) return;
   
-      const recipientId = selectedMessage.user.id;
-      const recipientUsername = selectedMessage.user.username;
+    //   const recipientId = selectedMessage.user.id;
+    //   const recipientUsername = selectedMessage.user.username;
   
-      let friendRequestObj = {
-        recipientId,
-        recipientUsername,
-      };
+    //   let friendRequestObj = {
+    //     recipientId,
+    //     recipientUsername,
+    //   };
   
-      //  cant request self, friends does not exist, recipientUsername is already in the pending list, recipientUsername is already in the accepted list.
-      if (
-        user.username === recipientUsername ||
-        !friends ||
-        (friends.outgoingRequests &&
-          friends.outgoingRequests[recipientUsername]) ||
-        (friends.friends && friends.friends[recipientUsername])
-      )
-        return;
-      socket.emit('send_friend_request', friendRequestObj);
-    };
+    //   //  cant request self, friends does not exist, recipientUsername is already in the pending list, recipientUsername is already in the accepted list.
+    //   if (
+    //     user.username === recipientUsername ||
+    //     !friends ||
+    //     (friends.outgoingRequests &&
+    //       friends.outgoingRequests[recipientUsername]) ||
+    //     (friends.friends && friends.friends[recipientUsername])
+    //   )
+    //     return;
+    //   socket.emit('send_friend_request', friendRequestObj);
+    // };
 
 
     
-    const confirmDeleteMessage = () => {
-      if (!user) return;
-      if(user.id !== selectedMessage.user.id) return
-      setIsDeletingMessage(true)
-      setEditedMessageId(selectedMessage.message.id)
-      setEditedMessageContent(' Delete message?')
-    };
+    // const confirmDeleteMessage = () => {
+    //   if (!user) return;
+    //   if(user.id !== selectedMessage.user.id) return
+    //   setIsDeletingMessage(true)
+    //   setEditedMessageId(selectedMessage.message.id)
+    //   setEditedMessageContent(' Delete message?')
+    // };
 
 
-    const deleteMessage = () => {
-      if (!user) return;
-      if(user.id !== selectedMessage.user.id) return
+    // const deleteMessage = () => {
+    //   if (!user) return;
+    //   if(user.id !== selectedMessage.user.id) return
 
-      let editMessageObj = {
-        tableId: activeTable?.id,
-        userId: user.id,
-        messageId : editedMessageId,
-        newContent: editedMessageContent
-      };
-      socket.emit('delete_message', editMessageObj);
+    //   let editMessageObj = {
+    //     tableId: activeTable?.id,
+    //     userId: user.id,
+    //     messageId : editedMessageId,
+    //     newContent: editedMessageContent
+    //   };
+    //   socket.emit('delete_message', editMessageObj);
 
-      setIsDeletingMessage(false)
-      setEditedMessageId(null)
-      setEditedMessageContent('')
-    };
-
-
-    const cancelDeleteMessage = () => {
-      if (!user) return;
-      if(user.id !== selectedMessage.user.id) return
-      setIsDeletingMessage(false)
-      setEditedMessageId(null)
-      setEditedMessageContent('')
-    };
+    //   setIsDeletingMessage(false)
+    //   setEditedMessageId(null)
+    //   setEditedMessageContent('')
+    // };
 
 
-
-
-    const editMessage = () => {
-      if (!user) return;
-      if(user.id !== selectedMessage.user.id) return
-      setIsEditingMessage(true)
-      setEditedMessageId(selectedMessage.message.id)
-      setEditedMessageContent(selectedMessage.message.content)
-    };
+    // const cancelDeleteMessage = () => {
+    //   if (!user) return;
+    //   if(user.id !== selectedMessage.user.id) return
+    //   setIsDeletingMessage(false)
+    //   setEditedMessageId(null)
+    //   setEditedMessageContent('')
+    // };
 
 
 
-    const saveMessage = (e) => {
-      e.preventDefault()
-      if (!user) return;
-      if(user.id !== selectedMessage.user.id) return
+
+    // const editMessage = () => {
+    //   if (!user) return;
+    //   if(user.id !== selectedMessage.user.id) return
+    //   setIsEditingMessage(true)
+    //   setEditedMessageId(selectedMessage.message.id)
+    //   setEditedMessageContent(selectedMessage.message.content)
+    // };
+
+
+
+    // const saveMessage = (e) => {
+    //   e.preventDefault()
+    //   if (!user) return;
+    //   if(user.id !== selectedMessage.user.id) return
 
   
-      let editMessageObj = {
-        tableId: activeTable?.id,
-        userId: user.id,
-        messageId : editedMessageId,
-        newContent: editedMessageContent
-      };
+    //   let editMessageObj = {
+    //     tableId: activeTable?.id,
+    //     userId: user.id,
+    //     messageId : editedMessageId,
+    //     newContent: editedMessageContent
+    //   };
 
-      socket.emit('edit_message', editMessageObj);
-      setIsEditingMessage(false)
-      setEditedMessageId(null)
-      setEditedMessageContent('')
-    };
+    //   socket.emit('edit_message', editMessageObj);
+    //   setIsEditingMessage(false)
+    //   setEditedMessageId(null)
+    //   setEditedMessageContent('')
+    // };
 
-    const cancelEdit = () => {
-      if (!user) return;
-      if(user.id !== selectedMessage.user.id) return
+    // const cancelEdit = () => {
+    //   if (!user) return;
+    //   if(user.id !== selectedMessage.user.id) return
 
-      setIsEditingMessage(false)
-      setEditedMessageId(null)
-      setEditedMessageContent('')
-    };
+    //   setIsEditingMessage(false)
+    //   setEditedMessageId(null)
+    //   setEditedMessageContent('')
+    // };
 
 
   return(
 
   <div className='chatbox-wrapper'> 
-    <div className={`chatbox-container ${showMessages ? 'open' : 'minimize'}`}>
+    <div className={`chatbox-container`}>
     <div className="message-container">
-              {messages.map((message, index) => (
+              {/* {messages.map((message, index) => (
                 <div
                   key={index}
                   className="chat-message"
@@ -342,10 +344,16 @@ const Chatbox = ({showMessages}) => {
 
 
                 </div>
-              ))}
+              ))} */}
               <div className="chat-bottom-ref" ref={bottomRef}></div>
             </div>
-            <div className="new-message-container">
+
+              <div className='chatbox-chatinput-container'>
+                <ChatInputArea />
+              </div>
+
+
+            {/* <div className="new-message-container">
         
         
         <div className="new-message-controls">
@@ -367,7 +375,7 @@ const Chatbox = ({showMessages}) => {
 
 
 
-    </div> 
+    </div>  */}
     </div> 
   </div>
   )

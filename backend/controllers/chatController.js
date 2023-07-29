@@ -1,34 +1,10 @@
 const { Card, Deck, User, Friendship, UserFriendship, UserHand, Game, Table, UserGame, UserTable, DeckCard, Message, Conversation, UserConversation } = require('../db/models');
 const { Op } = require('sequelize');
 const Sequelize  = require('sequelize');
+const userconversation = require('../db/models/userconversation');
 
 
 
-
-
-
-// function getTabName(conversation, userId){
-
-
-//   if(conversation.isGeneral){
-//     return 'General'
-//   }
-
-//   if(conversation.tabName){
-//     return conversation.tabName
-//   }
-
-//   if(conversation.users?.length === 2){
-//     return conversation.users[0].id === userId ? conversation.users[1].username : conversation.users[0].username
-//   }
-
-//   if(conversation.users?.length > 2){
-//     let tabName = conversation.users.map(user => user.username + ', ')
-//     return tabName
-//   }
-
-//   return 'Unknown'
-// }
 
 const chatController = {
 
@@ -144,245 +120,116 @@ async deleteMessage(messageObj) {
 
 // }, 
 
-//   async getConversations(userId) {
-//     console.log('getting convos');
-
-//     console.log(userId);
-
-//     try {
-//       // const userWithConversations = await User.findByPk(userId, {
-//       //   include: [
-//       //     {
-//       //       model: Conversation,
-//       //       as: 'conversations',
-//       //       where: {
-//       //         isTable: false,
-//       //       },
-//       //       include: [
-//       //         {
-//       //           model: Message,
-//       //           as: 'messages',
-//       //           include: {
-//       //             model: User,
-//       //             as: 'sender',
-//       //             attributes: ['id', 'username'],
-//       //           },
-//       //         },
-//       //         {
-//       //           model: User,
-//       //           as: 'users',
-//       //           attributes: ['id', 'username'],
-//       //         },
-//       //       ],
-//       //     }
-//       //   ],
-//       // });
-
-//       // const userConversations = await User.findAll({
-//       //   where: { id: userId },
-//       //   include: [{
-//       //     model: UserConversation,
-//       //     as: 'UserConversations',
-//       //     where: { hasLeft: false },
-//       //     include: [{
-//       //       model: Conversation,
-//       //       as: 'conversations',
-//       //     }],
-//       //   }],
-//       // });
+  async getConversations(userId) {
+    try {
 
 
-//       const userWithConversations = await User.findByPk(userId, {
-//         include: [{
-//           model: UserConversation,
-//           as: 'UserConversations',
-//           where: { hasLeft: false },
-//           include: [{
-//             model: Conversation,
-//             as: 'conversations',
-//             where: {
-//               isTable: false,
-//             },
-//             include: [
-//               {
-//                 model: Message,
-//                 as: 'messages',
-//                 include: {
-//                   model: User,
-//                   as: 'sender',
-//                   attributes: ['id', 'username', 'userRoom', 'rank'],
-//                 },
-//               },
-//               {
-//                 model: User,
-//                 as: 'users',
-//                 attributes: ['id', 'username', 'rank',],
-//               },
-//             ],
-//           }],
-//         }],
-//       });
+      const userWithConversations = await User.findByPk(userId, {
+        include: [{
+          model: UserConversation,
+          as: 'UserConversations',
+          where: { hasLeft: false },
+          include: [{
+            model: Conversation,
+            as: 'conversations',
+            where: {
+              tableId: null,
+            },
+            include: [
+              {
+                model: Message,
+                as: 'messages',
+                include: {
+                  model: User,
+                  attributes: ['id', 'username', 'rank'],
+                },
+              },
+              {
+                model: User,
+                as: 'users',
+                attributes: ['id', 'username', 'rank',],
+              },
+            ],
+          }],
+        }],
+      });
       
 
-    
-//     const generalConversations = await Conversation.findAll({
-//       where: { isGeneral: true },
-//       include: [
-//         {
-//           model: Message,
-//           as: 'messages',
-//           include: {
-//             model: User,
-//             as: 'sender',
-//             attributes: ['id', 'username', 'userRoom', 'rank'],
-//           },
-//         },
-//         {
-//           model: User,
-//           as: 'users',
-//           attributes: ['id', 'username', 'rank'],
-//           required: false
-//         },
-//       ]
-//     });
-
-
-//     const usersFriendships = await Friendship.findAll( {
-//         where: {
-//           status: { [Op.or]: ['accepted', 'pending'] },
-//           [Op.or]: [
-//             { user1Id: userId },
-//             { user2Id: userId },
-//           ],
-//         }, 
-//         include: [
-//           {
-//           model: User,
-//           as: 'user2',
-//           attributes: ['id', 'username', 'userRoom', 'rank'],
-//           },
-//           {
-//             model: User,
-//             as: 'user1',
-//             attributes: ['id', 'username', 'userRoom', 'rank'],
-//           }
-//       ],
-//         attributes: ['id', 'status', 'actionUserId'],
-//     });
-
-
-
-
-//       // NOt returning correct conversations upon loading in. only showing the regular tabs and not the hidden tabs
-//       // but only for bigtree who got a group invite and then a tab name switch before finally messaging back 
-//       // after startiong new convo wiht [msg] button all the convos pop up but the one pops up 2x
-
-//       let friendships = { incomingRequests: {}, outgoingRequests: {}, friends: {} };
-
-//       const formattedResults = usersFriendships.reduce((acc, friendship) => {
-//         const { id, status, user1, user2, actionUserId } = friendship;
-//         let friend, isOutgoingRequest;
-
-
-      
-//         if (user1.id === userId) {
-//           // If user1 is the current user, use user2's data
-//           friend = user2;
-//           isOutgoingRequest = actionUserId === userId;
-//         } else {
-//           // If user2 is the current user, use user1's data
-//           friend = user1;
-//           isOutgoingRequest = actionUserId === userId;
-//         }
-      
-//         const formattedFriendship = { id, friend, status };
-      
-//         if (status === 'accepted') {
-//           acc.friends[friend.username] = formattedFriendship;
-//         } else if (status === 'pending') {
-//           if (isOutgoingRequest) {
-//             acc.outgoingRequests[friend.username] = formattedFriendship;
-//           } else {
-//             acc.incomingRequests[friend.username] = formattedFriendship;
-//           }
-//         }
-      
-//         return acc;
-//       }, friendships);
       
       
-//       // console.log('=-=-=-=-=');
-//       // console.log(userWithConversations);
+      console.log('=-=-=-=-=');
+      console.log('=-=-=-=-=');
+      console.log('=-=-=-=-=');
+      console.log('=-=-=-=-=');
+      console.log(userWithConversations);
+      console.log('=-=-=-=-=');
+      console.log('=-=-=-=-=');
+      console.log('=-=-=-=-=');
+      console.log('=-=-=-=-=');
 
 
-//       // let convos = []
 
-//       // if(userWithConversations){
-//       //   console.log(userWithConversations.UserConversations.map(convo=>{
-//       //     convos.push(convo.conversations)
-//       //   }));
-//       // }
+      let conversations
 
+      if(userWithConversations){
+        conversations = userWithConversations.UserConversations.map(convo=>convo.conversations);
+      }
 
-//       let convos
-//       if(userWithConversations){
-//         convos = userWithConversations.UserConversations.map(convo=>convo.conversations);
-//       }
-
-//       let conversations
-//       if(userWithConversations){
-//         conversations = [...convos, ...generalConversations];
-
-//       } else {
-//         conversations = [...generalConversations];
-//       }
   
-  
-//       if (conversations) {
-//         console.log(`Found conversations`);
+      if (conversations) {
+        console.log(`Found conversations`);
+
+        console.log('_*_*_*_*_*_*_*_*_*_*_');
+        console.log('_*_*_*_*_*_*_*_*_*_*_');
+        console.log('_*_*_*_*_*_*_*_*_*_*_');
+        console.log('_*_*_*_*_*_*_*_*_*_*_');
+        console.log(conversations);
+        console.log('_*_*_*_*_*_*_*_*_*_*_');
+        console.log('_*_*_*_*_*_*_*_*_*_*_');
+        console.log('_*_*_*_*_*_*_*_*_*_*_');
+        console.log('_*_*_*_*_*_*_*_*_*_*_');
       
 
 
-//         const formattedConversations = conversations.reduce((acc, conversation) => {
-//           let tabName = getTabName(conversation, userId)
-//           acc[conversation.id] = {
-//             tabName,
-//             conversationId: conversation.id,
+        const formattedConversations = conversations.reduce((acc, conversation) => {
 
-//             users: conversation.users.reduce((userAcc, user) => {
-//               userAcc[user.username] = user;
-//               return userAcc;
-//             }, {}),
+          acc[conversation.id] = {
+            chatName: conversation.chatName,
+            conversationId: conversation.id,
+
+            users: conversation.users.reduce((userAcc, user) => {
+              userAcc[user.username] = user;
+              return userAcc;
+            }, {}),
           
 
-//             messages: conversation.messages.map(message => {
+            messages: conversation.messages.map(message => {
 
-//               console.log('message??');
-//               const { id, content, sender, senderId } = message;
-//               return { conversationId: conversation.id, id, content, sender };
-//             }),
+              console.log('message??');
+              const { id, content, userId, senderId } = message;
+              return { conversationId: conversation.id, id, content, userId };
+            }),
 
-//             notification: false,
-//           };
-//           return acc;
-//         }, {});
+            notification: false,
+          };
+          return acc;
+        }, {});
 
-//         // console.log(formattedConversations);
+        console.log(formattedConversations);
 
 
-//         // Set empty friends array if no friends are found
-//         formattedConversations.friends = friendships || [];
         
+        console.log('        return formattedConversations;??');
   
-//         return formattedConversations;
-//       } else {
-//         console.log('No conversations found');
-//         return null;
-//       }
-//     } catch (error) {
-//       console.error('Error finding conversations:', error);
-//   }
-//   },  
+        return formattedConversations;
+      } else {
+        console.log('No conversations found');
+        return null;
+      }
+    } catch (error) {
+      console.error('Error finding conversations:', error);
+  }
+  },  
 
  
 

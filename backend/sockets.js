@@ -49,17 +49,34 @@ module.exports = function (io) {
 
     let socketId = socket.id;
  
+    socket.join(userId);
+
+    const userTables = await gameController.getUserTables(userId);
+    const userFriends = await friendController.getUserFriends(userId);
+    const userConversations = await chatController.getUserConversations(userId);
+
     // console.log('-=-=-=-=-=-=-=-=-=');
     // console.log('--- CONNECTING ---');
     // console.log('SOCKET ID', socketId);
     // console.log('A user connected', socket.id, 'Username:', username);
     // console.log('User Room:', userId);
+    // console.log('userFriends:');
+    // console.log(userFriends);
 
     // console.log('-=-=-=-=-=-=-=-=-=');
 
-    socket.join(userId);
+    Object.keys(userConversations).map(conversation=>{
+      socket.join(conversation)
+    })
+    let initObj = {
+      userFriends,
+      userConversations
+    }
 
-    const userTables = await gameController.getUserTables(userId);
+    socket.emit('initialize_user', initObj);
+
+    // dispatch(friendActions.getUserFriends())
+    // dispatch(chatActions.getUserConversations())
 
     // Reconnection logic
     if (disconnectTimeouts[userId]) {
@@ -344,46 +361,54 @@ module.exports = function (io) {
  
     // Broadcast message to specific room
     socket.on('message', async (messageObj) => {
-      const { user, tableId, message } = messageObj;
-      let room = tableId;
+      const { conversationId, content } = messageObj;
+      let room = conversationId;
 
-      const newMessage = await chatController.createMessage(messageObj);
+      const newMessage = await chatController.createMessage(messageObj, userId);
       if (!newMessage) return false;
 
+      // newMessageObj = {
+      //   conversationId,
+      //   user: {
+      //     username,
+      //     id: userId,
+      //   },
+      //   message: {
+      //     content: newMessage.content,
+      //     id: newMessage.id,
+      //   },
+      // }; 
+
       newMessageObj = {
-        tableId,
-        user: {
-          username: user.username,
-          id: user.id,
-          rank: user.rank,
-        },
-        message: {
-          content: newMessage.content,
-          id: newMessage.id,
-        },
+        conversationId,
+        content: newMessage.content,
+        id: newMessage.id,
+        userId,
+        username
       };
+
 
       if (rooms[room]) {
         rooms[room].messages.push(newMessageObj);
       }
 
       io.in(room).emit('new_message', newMessageObj);
-    });
+    }); 
 
     // Edit message in specific room
     socket.on('edit_message', async (messageObj) => {
-      const { tableId, userId, messageId, newContent } = messageObj;
-      let room = tableId;
-      await chatController.editMessage(messageObj);
+      const { conversationId, messageId, newContent } = messageObj;
+      let room = conversationId;
+      await chatController.editMessage(messageObj, userId);
 
       io.in(room).emit('edit_message', messageObj);
     });
 
     // Edit message in specific room
     socket.on('delete_message', async (messageObj) => {
-      const { tableId, userId, messageId } = messageObj;
-      let room = tableId;
-      await chatController.deleteMessage(messageObj);
+      const { conversationId, messageId } = messageObj;
+      let room = conversationId;
+      await chatController.deleteMessage(messageObj, userId);
 
       io.in(room).emit('delete_message', messageObj);
     });

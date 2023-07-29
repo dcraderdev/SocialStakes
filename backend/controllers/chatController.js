@@ -10,15 +10,12 @@ const chatController = {
 
 
 
-async createMessage(messageObj) {
-  const {user,tableId, content} = messageObj
-  let userId = user.id
-
-  // console.log(user,tableId, content);
+async createMessage(messageObj, userId) {
+  const { conversationId, content} = messageObj
 
   const newMessage = await Message.create({
     userId, 
-    tableId, 
+    conversationId, 
     content, 
   });
 
@@ -29,8 +26,8 @@ async createMessage(messageObj) {
 }, 
 
 
-async editMessage(messageObj) {
-  const {userId, messageId, newContent} = messageObj
+async editMessage(messageObj, userId) {
+  const { messageId, newContent} = messageObj
 
   const newMessage = await Message.findByPk(messageId);
 
@@ -44,8 +41,8 @@ async editMessage(messageObj) {
 }, 
 
 
-async deleteMessage(messageObj) {
-  const {userId, messageId} = messageObj
+async deleteMessage(messageObj, userId) {
+  const { messageId } = messageObj
 
   const message = await Message.findByPk(messageId);
 
@@ -120,16 +117,17 @@ async deleteMessage(messageObj) {
 
 // }, 
 
-  async getConversations(userId) {
+  async getUserConversations(userId) {
     try {
 
 
-      const userWithConversations = await User.findByPk(userId, {
+
+      const userConversations = await UserConversation.findAll({
+        where:{
+          hasLeft: false,
+          userId,
+        },
         include: [{
-          model: UserConversation,
-          as: 'UserConversations',
-          where: { hasLeft: false },
-          include: [{
             model: Conversation,
             as: 'conversations',
             where: {
@@ -139,57 +137,28 @@ async deleteMessage(messageObj) {
               {
                 model: Message,
                 as: 'messages',
-                include: {
-                  model: User,
-                  attributes: ['id', 'username', 'rank'],
-                },
-              },
-              {
-                model: User,
-                as: 'users',
-                attributes: ['id', 'username', 'rank',],
+                include: [
+                  {
+                    model: User,
+                    attributes: ['id', 'username', 'rank'],
+                  },
+                ],
               },
             ],
-          }],
         }],
+        order: [
+          ['conversations', 'createdAt', 'ASC'],
+          ['conversations', 'messages', 'id', 'ASC'],
+        ],
       });
-      
-
-      
-      
-      console.log('=-=-=-=-=');
-      console.log('=-=-=-=-=');
-      console.log('=-=-=-=-=');
-      console.log('=-=-=-=-=');
-      console.log(userWithConversations);
-      console.log('=-=-=-=-=');
-      console.log('=-=-=-=-=');
-      console.log('=-=-=-=-=');
-      console.log('=-=-=-=-=');
-
 
 
       let conversations
-
-      if(userWithConversations){
-        conversations = userWithConversations.UserConversations.map(convo=>convo.conversations);
+      if(userConversations){
+        conversations = userConversations.map(convo=>convo.conversations);
       }
-
   
       if (conversations) {
-        console.log(`Found conversations`);
-
-        console.log('_*_*_*_*_*_*_*_*_*_*_');
-        console.log('_*_*_*_*_*_*_*_*_*_*_');
-        console.log('_*_*_*_*_*_*_*_*_*_*_');
-        console.log('_*_*_*_*_*_*_*_*_*_*_');
-        console.log(conversations);
-        console.log('_*_*_*_*_*_*_*_*_*_*_');
-        console.log('_*_*_*_*_*_*_*_*_*_*_');
-        console.log('_*_*_*_*_*_*_*_*_*_*_');
-        console.log('_*_*_*_*_*_*_*_*_*_*_');
-      
-
 
         const formattedConversations = conversations.reduce((acc, conversation) => {
 
@@ -197,17 +166,9 @@ async deleteMessage(messageObj) {
             chatName: conversation.chatName,
             conversationId: conversation.id,
 
-            users: conversation.users.reduce((userAcc, user) => {
-              userAcc[user.username] = user;
-              return userAcc;
-            }, {}),
-          
-
             messages: conversation.messages.map(message => {
-
-              console.log('message??');
-              const { id, content, userId, senderId } = message;
-              return { conversationId: conversation.id, id, content, userId };
+              const { id, content, userId, User } = message;
+              return { conversationId: conversation.id, id, content, userId, username:User.username };
             }),
 
             notification: false,
@@ -215,11 +176,6 @@ async deleteMessage(messageObj) {
           return acc;
         }, {});
 
-        console.log(formattedConversations);
-
-
-        
-        console.log('        return formattedConversations;??');
   
         return formattedConversations;
       } else {

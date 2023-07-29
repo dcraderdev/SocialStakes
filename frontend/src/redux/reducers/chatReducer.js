@@ -1,6 +1,6 @@
 
 import { 
-  ADD_MESSAGE, EDIT_MESSAGE, DELETE_MESSAGE, GET_USER_CONVERSATIONS
+  ADD_MESSAGE, EDIT_MESSAGE, DELETE_MESSAGE, GET_USER_CONVERSATIONS, SHOW_CONVERSATION_BY_ID
 
 } from '../actions/actionTypes'
 
@@ -8,6 +8,7 @@ import {
 
 const initialState = {
   conversations: {},
+  currentConversation: null,
   chatRoom: null,
   chatRoomTabs: [],
   generalChat: null,
@@ -21,18 +22,18 @@ const gamesReducer = (state = initialState, action) => {
   switch (action.type) {
 
     case ADD_MESSAGE: {
-      const { tableId, user, message } = action.payload;
+      const { id, conversationId, userId, username, content } = action.payload;
 
       const newConversations = { ...newState.conversations };
 
-      if (!newConversations[tableId]) {
-        newConversations[tableId] = {}
-        newConversations[tableId].messages = []
+      if (!newConversations[conversationId]) {
+        newConversations[conversationId] = {}
+        newConversations[conversationId].messages = []
       }
     
-      if (newConversations[tableId]) {
-        const newMessage = { user, message };
-        newConversations[tableId].messages.push(newMessage);
+      if (newConversations[conversationId]) {
+        const newMessage = action.payload;
+        newConversations[conversationId].messages.push(newMessage);
       }
 
     
@@ -40,22 +41,22 @@ const gamesReducer = (state = initialState, action) => {
     }
 
     case EDIT_MESSAGE: {
-      const {tableId, userId,  messageId, newContent } = action.payload;
+      const {conversationId, userId,  messageId, newContent } = action.payload;
 
       const newConversations = { ...newState.conversations };
 
-      if (!newConversations[tableId]) {
-        newConversations[tableId] = {}
-        newConversations[tableId].messages = []
+      if (!newConversations[conversationId]) {
+        newConversations[conversationId] = {}
+        newConversations[conversationId].messages = []
       }
     
-      if (newConversations[tableId]) {
+      if (newConversations[conversationId]) {
         // Find the index of the message to be edited
-        const messageIndex = newConversations[tableId].messages.findIndex(message => message.message.id === messageId);
+        const messageIndex = newConversations[conversationId].messages.findIndex(message => message.id === messageId);
     
         // If the message is found, update its content
         if (messageIndex > -1) {
-          newConversations[tableId].messages[messageIndex].message.content = newContent;
+          newConversations[conversationId].messages[messageIndex].content = newContent;
         }
       }
 
@@ -64,22 +65,21 @@ const gamesReducer = (state = initialState, action) => {
     }
 
     case DELETE_MESSAGE: {
-      const {tableId, userId, messageId } = action.payload;
-    
+      const {conversationId, userId, messageId } = action.payload;
       const newConversations = { ...newState.conversations };
     
-      if (!newConversations[tableId]) {
-        newConversations[tableId] = {}
-        newConversations[tableId].messages = []
+      if (!newConversations[conversationId]) {
+        newConversations[conversationId] = {}
+        newConversations[conversationId].messages = []
       }
     
-      const { messages } = newConversations[tableId];
+      const { messages } = newConversations[conversationId];
       
       if (messages) {
-        const messageIndex = messages.findIndex(message => message.message.id === messageId);
+        const messageIndex = messages.findIndex(message => message.id === messageId);
     
         if (messageIndex > -1) {
-          newConversations[tableId].messages = [
+          newConversations[conversationId].messages = [
             ...messages.slice(0, messageIndex),
             ...messages.slice(messageIndex + 1)
           ];
@@ -102,10 +102,14 @@ const gamesReducer = (state = initialState, action) => {
 
 
 
+    case SHOW_CONVERSATION_BY_ID: {
+      let conversation = action.payload
+      console.log(action.payload);
+      return {...newState, currentConversation: conversation}
+    }
 
 
-
-
+    
 
 
 

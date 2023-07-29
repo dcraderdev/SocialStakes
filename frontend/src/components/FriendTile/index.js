@@ -35,7 +35,6 @@ const FriendTile = ({ friend, type }) => {
 
   const acceptRequest = () =>{
     if(!user || !friend) return
-    console.log('-----accept_friend_request------'); 
     console.log(friend);
     let friendObj = {
       recipientId:friend.friend.id,
@@ -49,7 +48,6 @@ const FriendTile = ({ friend, type }) => {
   const declineRequest = () =>{
     if(!user || !friend) return
 
-    console.log('-----decline_friend_request------');
     let friendObj = {
       recipientId:friend.friend.id,
       recipientUsername:friend.friend.username
@@ -58,7 +56,6 @@ const FriendTile = ({ friend, type }) => {
 
   }
 
-  console.log(friend);
 
 
 

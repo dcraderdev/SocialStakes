@@ -4,7 +4,12 @@ import io from 'socket.io-client';
 import { ModalContext } from './ModalContext';
 import * as gameActions from '../redux/middleware/games';
 
-import {addMessageAction, editMessageAction,deleteMessageAction} from '../redux/actions/chatActions';
+import {
+  addMessageAction,
+  editMessageAction,
+  deleteMessageAction,
+  getUserConversationsAction
+  } from '../redux/actions/chatActions';
 
 
 import {
@@ -28,7 +33,8 @@ import {
   addIncomingFriendRequest,
   acceptFriendRequest,
   denyFriendRequest,
-  removeFriendAction
+  removeFriendAction,
+  getUserFriendsAction
 } from '../redux/actions/friendActions';
 
 
@@ -69,6 +75,12 @@ const SocketProvider = ({ children }) => {
   useEffect(() => {
     if(socket){
       
+      socket.on('initialize_user', (initObj) => {
+        dispatch(getUserFriendsAction(initObj.userFriends));
+        dispatch(getUserConversationsAction(initObj.userConversations));
+      }); 
+
+
       socket.on('view_table', (tableId) => {
         dispatch(viewTableAction(tableId));
       }); 
@@ -111,6 +123,7 @@ const SocketProvider = ({ children }) => {
       
 
       socket.on('new_message', (messageObj) => {
+        console.log(messageObj);
         dispatch(addMessageAction(messageObj));
       });
 
@@ -218,6 +231,7 @@ const SocketProvider = ({ children }) => {
 
       return () => {
         
+        socket.off('initialize_user');
         socket.off('player_forfeit');
         socket.off('view_table');
         socket.off('join_table');

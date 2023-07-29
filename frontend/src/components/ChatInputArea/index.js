@@ -11,6 +11,7 @@ const ChatInputArea = () => {
   
   const user = useSelector(state => state.users.user);
   const activeTable = useSelector(state => state.games.activeTable);
+  const currentConversation = useSelector(state => state.chats.currentConversation);
   
   const { socket } = useContext(SocketContext);
   
@@ -20,11 +21,13 @@ const ChatInputArea = () => {
     const handleSubmit = (e) => {
       if (e) e.preventDefault();
       if (!user) return;
-      const newMessageObj = {}
-      newMessageObj.content = newMessage
-      newMessageObj.tableId = activeTable.id
-      newMessageObj.user = user
+      if (!currentConversation) return
 
+
+      const newMessageObj = {
+        content: newMessage,
+        conversationId: currentConversation.conversationId,
+      }
       socket.emit('message', newMessageObj);
       setNewMessage('');
     }

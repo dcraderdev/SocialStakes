@@ -43,12 +43,14 @@ const FriendsPage = () => {
 
 
     // fetch updated friends/convos
-  useEffect(() => {
-    if (!user) return;
-    dispatch(getUserFriends(user.id));
-    dispatch(getUserConversations(user.id));
+  // useEffect(() => {
+  //   if (!user) return;
 
-  }, [user]);
+  //   console.log('here');
+  //   dispatch(getUserFriends(user.id));
+  //   dispatch(getUserConversations(user.id));
+
+  // }, [user]);
 
 
   // friendsTab friend menu modal logic handling

@@ -26,14 +26,6 @@ const ConversationTile = ({ conversation, type }) => {
   },[conversation, currentConversationView])
 
 
- 
-
-
-  console.log(conversation);
-  console.log(currentConversationView);
-
-
-
   // sub menu tile
   if (type === 'submenu') {
     return (

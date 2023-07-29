@@ -16,6 +16,7 @@ import { ModalContext } from './context/ModalContext';
 import { SocketContext } from './context/SocketContext';
 import * as sessionActions from './redux/middleware/users';
 import * as friendActions from './redux/middleware/friends';
+import * as chatActions from './redux/middleware/chat';
 import InsuranceModal from './components/InsuranceModal';
 import JoinPrivateGameModal from './components/JoinPrivateGameModal';
 import SettingsModal from './components/SettingsModal';
@@ -47,7 +48,8 @@ function App() {
     dispatch(sessionActions.restoreUser())
       .then(() => {
         isLoaded(true);
-        dispatch(friendActions.getUserFriends())
+        // dispatch(friendActions.getUserFriends())
+        // dispatch(chatActions.getUserConversations())
 
       })
       .catch(() => {

@@ -23,6 +23,16 @@ module.exports = {
         conversationId: 'c1e6c24a-036b-43cd-aa53-bf32ee4ac77e',
         content: `Hey guys! I'm Spruce!`,
       },
+      {
+        userId: '2da2c0a2-0de9-4275-a5e5-5d91e8b8533c',
+        conversationId: 'c1e6c24a-036b-43cd-aa53-bf32ee4ac77e',
+        content: `Lets get a game going!`,
+      },
+      {
+        userId: '2da2c0a2-0de9-4275-a5e5-5d91e8b8533c',
+        conversationId: 'c1e6c24a-036b-43cd-aa53-bf32ee4ac77e',
+        content: `What should we play?`,
+      },
     ],{});
   },
 

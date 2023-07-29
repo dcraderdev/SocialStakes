@@ -126,14 +126,9 @@ console.log(modal);
       )}
 
 
-
         <div className={`profile-modal ${modal === 'profileModal' ? ' visible' : ' hidden'}`} >
           <ProfileButtonModal />
         </div>
-
-
-
-
 
 
       <div>

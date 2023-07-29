@@ -24,6 +24,9 @@ module.exports = (sequelize, DataTypes) => {
         as: 'table',
       });
 
+      Conversation.hasOne(models.Friendship, {foreignKey: 'conversationId'})
+
+
     }
   }
 
@@ -41,6 +44,9 @@ module.exports = (sequelize, DataTypes) => {
     chatName: {
       type: DataTypes.STRING,
       allowNull: true,
+    },
+    isDirectMessage: {
+      type: DataTypes.BOOLEAN,
     },
   }, {
     sequelize,

@@ -43,21 +43,13 @@ function ProfileButtonModal() {
     closeModal();
     openModal(type);
   };
-  console.log(modal);
 
+  
   useEffect(() => {
-    console.log(modal);
-
     const handleClickOutside = (event) => {
-
-      console.log(modal);
-
       if(modal !== 'profileModal') {
         return
       }
-
-
-
       if (
         profileBtnRef &&
         profileBtnRef.current &&

@@ -173,7 +173,6 @@ const userReducer = (state = initialState, action) => {
         showFriends: false,
         currentFriendView: null,
         showConversation: false,
-        currentConversationView: null,
 
       }
       
@@ -187,7 +186,6 @@ const userReducer = (state = initialState, action) => {
         showFriends: false,
         currentFriendView: null,
         showConversation: false,
-        currentConversationView: null,
 
 
       }
@@ -203,7 +201,6 @@ const userReducer = (state = initialState, action) => {
         showFriendInvites:false,
         currentFriendView: friend,
         showConversation: false,
-        currentConversationView: null,
       }
     }
 
@@ -214,7 +211,6 @@ const userReducer = (state = initialState, action) => {
       return {
         ...newState,
         showConversation: true,
-        currentConversationView: conversation,
         showFriends:false,
         showTableInvites:false,
         showFriendInvites:false,

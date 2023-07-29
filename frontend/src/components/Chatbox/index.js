@@ -22,25 +22,38 @@ const Chatbox = () => {
   const currentTables = useSelector((state) => state.games.currentTables);
 
   const conversations = useSelector((state) => state.chats.conversations);
-  const conversation = useSelector((state) => state.chats.currentConversation);
+  const currentConversationId = useSelector((state) => state.chats.currentConversation);
+
   const showMessages = useSelector((state) => state.games.showMessages);
 
   const { socket } = useContext(SocketContext);
   const bottomRef = useRef(null);
 
-  
+
+ 
+console.log(conversations);
+  console.log(currentConversationId);
+  console.log(messages);
+
+
   useEffect(() => {
-    if (conversation && conversations) {
-      let currentMessages = conversations[conversation.conversationId].messages;
+    if (currentConversationId && conversations) {
+
+      console.log(conversations[currentConversationId]);
+      let currentMessages = conversations[currentConversationId].messages;
       setMessages(currentMessages);
     }
-  }, [conversation, conversations]);
+  }, [currentConversationId, conversations]);
+
+
+
+
 
   useEffect(() => {
     if (bottomRef.current) {
       bottomRef.current.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [conversation, conversations, messages]);
+  }, [currentConversationId, conversations, messages]);
 
 
   return (

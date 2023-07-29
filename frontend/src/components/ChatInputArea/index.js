@@ -26,12 +26,13 @@ const ChatInputArea = () => {
 
       const newMessageObj = {
         content: newMessage,
-        conversationId: currentConversation.conversationId,
+        conversationId: currentConversation,
       }
       socket.emit('message', newMessageObj);
       setNewMessage('');
     }
 
+    console.log(currentConversation);
 
 
   return (

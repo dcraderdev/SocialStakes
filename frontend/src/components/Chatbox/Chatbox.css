@@ -1,7 +1,6 @@
 .chatbox-wrapper {
   width: 99%;
   height: 100%;
-  border: yellow solid 1px;
 }
 
 
@@ -41,7 +40,6 @@
 
 
 
-  border: rgb(30, 255, 0) solid 1px;
 
 
 
@@ -61,7 +59,6 @@
   position: relative;
   height: 40px;
   bottom: 5px;
-  border: yellow solid 1px;
 
 }
 

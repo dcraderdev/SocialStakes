@@ -6,25 +6,21 @@ import { showFriendsAction } from '../../redux/actions/friendActions';
 import { SocketContext } from '../../context/SocketContext';
 import { ModalContext } from '../../context/ModalContext';
 import { showConversationAction } from '../../redux/actions/chatActions';
+
+
 const ConversationTile = ({ conversation, type }) => {
   const dispatch = useDispatch();
-  const {socket} = useContext(SocketContext)
-
-  const currentConversationView = useSelector((state) => state.friends.currentConversationView);
-  const [status, setStatus] = useState('online');
+  const currentConversationId = useSelector((state) => state.chats.currentConversation);
   const [isActive, setIsActive ] = useState(false);
-  const user = useSelector((state) => state.users.user);
+
 
   useEffect(()=> {
     setIsActive(false)
-
-    if(!currentConversationView || !conversation) return
-    if(currentConversationView?.conversation?.username === conversation?.conversation?.username){
+    if(!currentConversationId || !conversation) return
+    if(currentConversationId === conversation?.conversationId){
       setIsActive(true)
     }
-
-  },[conversation, currentConversationView])
-
+  },[currentConversationId, conversation])
 
   // sub menu tile
   if (type === 'submenu') {

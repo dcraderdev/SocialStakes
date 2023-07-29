@@ -1,6 +1,6 @@
 
 import { 
-  ADD_MESSAGE, EDIT_MESSAGE, DELETE_MESSAGE, GET_USER_CONVERSATIONS, SHOW_CONVERSATION_BY_ID
+  ADD_MESSAGE, EDIT_MESSAGE, DELETE_MESSAGE, GET_USER_CONVERSATIONS, SHOW_CONVERSATION_BY_ID, SHOW_FRIENDS
 
 } from '../actions/actionTypes'
 
@@ -105,9 +105,17 @@ const gamesReducer = (state = initialState, action) => {
     case SHOW_CONVERSATION_BY_ID: {
       let conversation = action.payload
       console.log(action.payload);
-      return {...newState, currentConversation: conversation}
+      return {...newState, currentConversation: conversation.conversationId}
+    }
+    case SHOW_FRIENDS: {
+      let conversation = action.payload
+      console.log(action.payload);
+      console.log(action.payload.conversationId);
+
+      return {...newState, currentConversation: conversation.conversationId}
     }
 
+    
 
     
 

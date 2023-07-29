@@ -63,7 +63,11 @@ const FriendTile = ({ friend, type }) => {
   if (type === 'submenu') {
     return (
       <div
-        onClick={() => dispatch(showFriendsAction(friend))}
+        onClick={() => {
+        dispatch(showFriendsAction(friend))
+        console.log(friend);
+        
+        }}
         className={`friendtile-submenu-wrapper flex`}
       >
         <div className={`friendtile-container flex`}>

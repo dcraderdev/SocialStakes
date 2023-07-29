@@ -206,7 +206,7 @@ const friendController = {
           attributes: ['id', 'username', 'rank'],
         }
     ],
-      attributes: ['id', 'status', 'actionUserId'],
+      attributes: ['id', 'status', 'actionUserId', 'conversationId'],
   });
 
     if(!usersFriendships){
@@ -216,7 +216,7 @@ const friendController = {
     let friendships = { incomingRequests: {}, outgoingRequests: {}, friends: {} };
 
     const formattedResults = usersFriendships.reduce((acc, friendship) => {
-      const { id, status, user1, user2, actionUserId } = friendship;
+      const { id, status, user1, user2, actionUserId, conversationId } = friendship;
       let friend, isOutgoingRequest;
 
       if (user1.id === userId) {
@@ -229,7 +229,7 @@ const friendController = {
         isOutgoingRequest = actionUserId === userId;
       }
     
-      const formattedFriendship = { id, friend, status };
+      const formattedFriendship = { id, friend, status, conversationId };
     
       if (status === 'accepted') {
         acc.friends[friend.id] = formattedFriendship;

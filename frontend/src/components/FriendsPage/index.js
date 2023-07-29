@@ -26,11 +26,14 @@ const FriendsPage = () => {
   const currentFriendView = useSelector((state) => state.friends.currentFriendView);
   const currentConversationView = useSelector((state) => state.friends.currentConversationView);
   const showFriends = useSelector((state) => state.friends.showFriends);
+
+
   const showConversation = useSelector((state) => state.friends.showConversation);
   const showTableInvites = useSelector((state) => state.friends.showTableInvites);
   const showFriendInvites = useSelector((state) => state.friends.showFriendInvites);
 
   const { openModal, setUpdateObj, updateObj } = useContext(ModalContext);
+  const { socket } = useContext(SocketContext);
 
   const currentTables = useSelector((state) => state.games.currentTables);
   const [hasCurrentTables, setHasCurrentTables] = useState(false);
@@ -41,16 +44,6 @@ const FriendsPage = () => {
   const submenu = useRef()
   const submenuButton = useRef()
 
-
-    // fetch updated friends/convos
-  // useEffect(() => {
-  //   if (!user) return;
-
-  //   console.log('here');
-  //   dispatch(getUserFriends(user.id));
-  //   dispatch(getUserConversations(user.id));
-
-  // }, [user]);
 
 
   // friendsTab friend menu modal logic handling
@@ -70,6 +63,8 @@ const FriendsPage = () => {
   }, []);
 
 
+
+
   const toggleSubMenu = () => {
       setShowFriendSubMenu(!showFriendSubMenu)
   }
@@ -77,6 +72,16 @@ const FriendsPage = () => {
   const toggleRemoveFriendModal = () => {
     setUpdateObj({currentFriendView})
    openModal('RemoveFriendModal')
+  }
+
+  const startPrivateConversation = () => {
+    let conversationObj = {
+      friendshipId: currentFriendView.id,
+      friend: currentFriendView.friend
+    }
+    console.log('clik');
+    socket.emit('start_private_conversation', conversationObj)
+
   }
 
   //sets hieght for our sidemenu in case we have currentGames
@@ -109,8 +114,8 @@ const FriendsPage = () => {
               </div>
 
 {showFriendSubMenu &&              <div ref={submenu} className='friendpage-submenu-container'>
+                <div onClick={startPrivateConversation} className='friendpage-submenu-item message flex center'>Message <i className="fa-regular fa-message"></i></div>
                 <div onClick={toggleRemoveFriendModal} className='friendpage-submenu-item remove flex center'>Remove <i className="fa-regular fa-trash-can"></i></div>
-                <div className='friendpage-submenu-item message flex center'>Message <i className="fa-regular fa-message"></i></div>
               </div>}
 
             </div>
@@ -192,11 +197,11 @@ const FriendsPage = () => {
 
         {/* // currentFriendView */}
         {showFriends && (
-          <div className="friendspage-friendview-container">
+          <div className="friendspage-friendview-container flex">
             
             <div className='friendspage-friendview-nav flex'>
               <div onClick={()=>setCurrentFriendViewTab(currentFriendViewConversations)} className={`friendview-nav ${currentFriendViewTab === currentFriendViewConversations ? 'nav-text-active' : ''}`}>
-                <div className='nav-text'>Conversations</div>
+                <div className='nav-text'>Direct Messages</div>
                 </div>
               <div onClick={()=>setCurrentFriendViewTab(currentFriendViewPastGames)} className={`friendview-nav ${currentFriendViewTab === currentFriendViewPastGames ? 'nav-text-active' : ''}`}>
                 <div className='nav-text'>Past Games</div>
@@ -205,6 +210,17 @@ const FriendsPage = () => {
                 <div className='nav-text'>Stats</div>
                 </div>
             </div>
+
+
+            {currentFriendViewTab === currentFriendViewConversations && currentFriendView && (
+              <div>
+                <Chatbox conversation={conversations[currentFriendView.conversationId]}/>
+              </div>
+
+
+            )}
+
+
 
 
           </div>
@@ -219,8 +235,6 @@ const FriendsPage = () => {
 
           </div>
         )}
-
-
 
 
       </div>

@@ -104,6 +104,8 @@
 .friendspage-friendview-container{
   width: 100%;
   height: 100%;
+  border: yellow solid 1px;
+  flex-direction: column;
 }
 
 

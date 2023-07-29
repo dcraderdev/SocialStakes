@@ -41,7 +41,7 @@ module.exports = function (io) {
       forfeitedPlayers: [],
       insuredPlayers: {},
     };
-  };
+  }; 
 
   io.on('connection', async (socket) => {
     const userId = socket.handshake.query.userId;
@@ -62,9 +62,9 @@ module.exports = function (io) {
     // console.log('User Room:', userId);
     // console.log('userFriends:');
     // console.log(userFriends);
-
+ 
     // console.log('-=-=-=-=-=-=-=-=-=');
-
+ 
     Object.keys(userConversations).map(conversation=>{
       socket.join(conversation)
     })
@@ -412,6 +412,34 @@ module.exports = function (io) {
 
       io.in(room).emit('delete_message', messageObj);
     });
+
+
+    socket.on('start_private_conversation', async (conversationObj) => {
+    console.log('clik');
+    console.log('clik');
+    console.log('clik');
+
+      // const { friendshipId, friend } = conversationObj;
+      // await chatController.startPrivateConversation(conversationObj, userId, username);
+      
+
+      // let room = friendshipId;
+      // io.in(room).emit('delete_message', conversationObj);
+    }); 
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
 
     socket.on('take_seat', async (seatObj) => {
       const { room, seat, user, amount } = seatObj;

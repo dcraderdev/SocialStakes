@@ -5,6 +5,19 @@ const userconversation = require('../db/models/userconversation');
 
 
 
+const getChatName = (usernames) =>{
+  let sortedNames = usernames.sort((a, b) => {
+     a = a.toLowerCase();
+     b = b.toLowerCase();
+ 
+     if (a < b) return -1;
+     if (a > b) return 1;
+ 
+     return 0;
+ });
+   return sortedNames.join(', ')
+ }
+
 
 const chatController = {
 
@@ -54,74 +67,9 @@ async deleteMessage(messageObj, userId) {
   return true
 }, 
 
-// async sendMessage(messageObj) {
-
-//   let userId = messageObj.sender.id
-//   let conversation = await Conversation.findByPk(messageObj.conversationId,{
-//     where: { isGeneral: true },
-//     include: [
-//       {
-//         model: Message,
-//         as: 'messages',
-//         include: {
-//           model: User,
-//           as: 'sender',
-//           attributes: ['id', 'username', 'userRoom'],
-//         },
-//       },
-//       {
-//         model: User,
-//         as: 'users',
-//         attributes: ['id', 'username'],
-//         required: false
-//       },
-//     ]
-//   });
-
-//   if (!conversation) {
-//     return {
-//       message: 'No conversation found',
-//       statusCode: 404
-//     };
-//   }
-
-//   if (conversation) {
-//     const newMessage = await Message.create({
-//       senderId: messageObj.sender.id, 
-//       conversationId: messageObj.conversationId, 
-//       content: messageObj.content, 
-//     });
-//     if(newMessage){
-
-//       let tabName = getTabName(conversation, userId)
-
-//       const formattedConversation = {
-//         tabName,
-//         conversationId: conversation.id,
-//         users: conversation.users.reduce((userAcc, user) => {
-//           userAcc[user.username] = user;
-//           return userAcc;
-//         }, {}),
-//         messages: [...conversation.messages, newMessage],
-//         notification: false,
-//       };
-//       return formattedConversation
-
-//     } else {
-//       return {
-//         message: 'Error creating message',
-//         statusCode: 500
-//       }
-//     }
-//   }
-
-// }, 
 
   async getUserConversations(userId) {
     try {
-
-
-
       const userConversations = await UserConversation.findAll({
         where:{
           hasLeft: false,
@@ -132,6 +80,7 @@ async deleteMessage(messageObj, userId) {
             as: 'conversations',
             where: {
               tableId: null,
+              // isDirectMessage: false,
             },
             include: [
               {
@@ -189,87 +138,111 @@ async deleteMessage(messageObj, userId) {
 
  
 
-//   async startPrivateConversation(newConvoObj) {
+  async startPrivateConversation(conversationObj, userId, username) {
 
-//        let user1 = newConvoObj.sender.id
-//        let user2 = newConvoObj.recipient.id
-//     const user1Conversations = await User.findByPk(user1, {
-//       include: [
-//         {
-//           model: Conversation,
-//           as: 'conversations',
-//           where: {
-//             isTable: false
-//           },
-//           include: [
-//             {
-//               model: Message,
-//               as: 'messages',
-//               include: {
-//                 model: User,
-//                 as: 'sender',
-//                 attributes: ['id', 'username'],
-//               },
-//             },
-//             {
-//               model: User,
-//               as: 'users',
-//               attributes: ['id', 'username'],
-//             },
-//           ],
-//         },
-//       ],
-//     });
+    console.log(conversationObj.friend.username);
+    console.log(username);
+
+    let usernames = [conversationObj.friend.username, username]
+
+       let user1 = userId
+       let user2 = conversationObj.friend.id
+    const user1Conversations = await User.findByPk(user1, {
+      include: [
+        {
+          model: Conversation,
+          as: 'conversations',
+          where: {
+            tableId: null
+          },
+          include: [
+            {
+              model: Message,
+              as: 'messages',
+              include: {
+                model: User,
+                attributes: ['id', 'username'],
+              },
+            },
+            {
+              model: User,
+              as: 'users',
+              attributes: ['id', 'username'],
+            },
+          ],
+        },
+      ],
+    });
 
 
-//     // Filter to find a conversation where the second user is also a participant
-//     let commonConvo;
-//     if(user1Conversations){
-//       for (let conversation of user1Conversations.conversations) {
-//         // Extract the users from the conversation
-//         const participants = conversation.users.map(user => user);
+    // Filter to find a conversation where the second user is also a participant
+    let commonConvo;
+    if(user1Conversations){
+      for (let conversation of user1Conversations.conversations) {
+        // Extract the users from the conversation
+        const participants = conversation.users.map(user => user);
 
-//         if (participants.length > 2) {
-//           continue;
-//         }
-//         if (participants.some(user => user.id === user2)) {
-//           commonConvo = conversation;
-//           break;
-//         }
-//       }
-//     }
-//     // If conversation exists, return it
-//     if (commonConvo) {
+        if (participants.length > 2) {
+          continue;
+        }
+        if (participants.some(user => user.id === user2)) {
+          commonConvo = conversation;
+          break;
+        }
+      }
+    }
+    // If conversation exists, return it
+    if (commonConvo) {
 
-//       // console.log(commonConvo);
-//       const formattedConversation = {
-//         tabName: getTabName(commonConvo, user1),
-//         conversationId: commonConvo.id,
-//         users: newConvoObj.users,
-//         messages: commonConvo.messages,
-//         notification: false,
-//       };
-//       return formattedConversation;
-//     }  
+      console.log('<><><><><><><><<><><><><><<>');
+      console.log('<><><><><><><><<><><><><><<>');
+      console.log('commonConvo');
+      console.log('commonConvo');
+      console.log('commonConvo');
+      console.log('commonConvo');
+      console.log('commonConvo');
+      console.log(commonConvo);
+      console.log('<><><><><><><><<><><><><><<>');
+      console.log('<><><><><><><><<><><><><><<>');
 
-//     // If not, create a new one and add both users
-//     const conversation = await Conversation.create();
+      // const formattedConversation = {
+      //   tabName: getTabName(commonConvo, user1),
+      //   conversationId: commonConvo.id,
+      //   users: newConvoObj.users,
+      //   messages: commonConvo.messages,
+      //   notification: false,
+      // };
+      return commonConvo;
+    }  
+    // If not, create a new one and add both users
+    chatName = getChatName(usernames)
+    const conversation = await Conversation.create({chatName});
+    
+    console.log('<><><><><><><><<><><><><><<>');
+    console.log('<><><><><><><><<><><><><><<>');
+    console.log('new conversation');
+    console.log(conversation);
+    console.log('<><><><><><><><<><><><><><<>');
+    console.log('<><><><><><><><<><><><><><<>');
 
-//     if(conversation){
-//       console.log('CONVO CREATED');
-//       await conversation.addUsers([user1, user2]);
+    if(conversation){
+      console.log('CONVO CREATED');
+      console.log('CONVO CREATED');
+      console.log('CONVO CREATED');
+      console.log('CONVO CREATED');
+      await conversation.addUsers([user1, user2]);
 
-//       const formattedConversation = {
-//           tabName: newConvoObj.tabName,
-//           conversationId: conversation.id,
-//           users: newConvoObj.users,
-//           messages: [],
-//           notification: false,
-//         };
-//         return formattedConversation
-//     }
-//     return { message: 'Conversation not found/created' };
-//   },
+      const formattedConversation = {
+        chatName: conversation.chatName,
+          conversationId: conversation.id,
+          users: usernames,
+          messages: [],
+          notification: false,
+        };
+        return formattedConversation
+    }
+    return { message: 'Conversation not found/created' };
+  },
 
   
 //   async sendFriendRequest(friendRequestObj) {

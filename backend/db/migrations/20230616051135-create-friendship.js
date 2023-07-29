@@ -43,6 +43,14 @@ module.exports = {
         type: Sequelize.ENUM('pending', 'accepted', 'rejected'),
         defaultValue: 'pending'
       },
+      conversationId: {
+        type: Sequelize.UUID,
+        allowNull: true,
+        references: {
+          model: 'Conversations',
+        },
+        onDelete: 'CASCADE',
+      },
       createdAt: {
         type: Sequelize.DATE,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')

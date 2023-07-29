@@ -26,6 +26,11 @@ module.exports = {
         allowNull: true,
         type: Sequelize.STRING,
       },
+      isDirectMessage: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
+
+      },
       createdAt: {
         type: Sequelize.DATE,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')

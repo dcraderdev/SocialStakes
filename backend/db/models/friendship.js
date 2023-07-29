@@ -9,6 +9,7 @@ module.exports = (sequelize, DataTypes) => {
       Friendship.belongsTo(models.User, {  foreignKey: 'user1Id', as: 'user1' });
       Friendship.belongsTo(models.User, {  foreignKey: 'user2Id', as: 'user2' });
       Friendship.belongsTo(models.User, { as: 'actionUser', foreignKey: 'actionUserId' });
+      Friendship.belongsTo( models.Conversation, {foreignKey: 'conversationId'})
     
     }
   }

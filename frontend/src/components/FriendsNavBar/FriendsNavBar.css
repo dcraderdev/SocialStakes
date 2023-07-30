@@ -54,7 +54,9 @@
 
 .friendsnavbar-nav:hover,
 .friendsnavbar-nav-header:hover{
-  background-color: #2d2e2c;
+  background-color: rgba(228, 228, 228, 0.2508);
+
+
 }
 
 
@@ -76,6 +78,7 @@
   color: #fdfcfc;
   border-top: #404040b0 solid 1px;
   border-bottom: #000000 solid 2px;
+  border-right: black 1px solid;
 
   cursor: pointer;
 }
@@ -147,10 +150,7 @@
 
 
 .active-nav{
-  border-bottom: rgba(255, 217, 0, 0.429) solid 1px;
-  border-top: rgba(255, 217, 0, 0.429) solid 1px;
-  background-color: #2d2e2c;
-
+  background-color: rgba(228, 228, 228, 0.213);
 }
 
 

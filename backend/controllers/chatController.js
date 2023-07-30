@@ -116,8 +116,8 @@ async deleteMessage(messageObj, userId) {
             conversationId: conversation.id,
 
             messages: conversation.messages.map(message => {
-              const { id, content, userId, User } = message;
-              return { conversationId: conversation.id, id, content, userId, username:User.username };
+              const { id, content, userId, User, createdAt } = message;
+              return { conversationId: conversation.id, id, content, userId, username:User.username, createdAt };
             }),
 
             notification: false,

@@ -210,7 +210,7 @@ border: rgba(0, 0, 0, 0.311) solid 1px;
 
 
 .friendpage-submenu-container{
-  width: 130px;
+  width: 160px;
   height: fit-content;
   border: white solid 1px;
   position: absolute;
@@ -231,12 +231,29 @@ border: rgba(0, 0, 0, 0.311) solid 1px;
   justify-content: space-around;
 }
 
+.friendpage-item-text{
+  font-size: 16px;
+  width: 100%;
+  height: 100%;
+  background-color: #212220;
+  justify-content: space-around;
+}
+.friendpage-item-icon{
+  font-size: 16px;
+  width: 40%;
+  height: 100%;
+  background-color: #212220;
+  justify-content: space-around;
+}
+
+
 .friendpage-submenu-item.remove:hover{
 
   background-color: #2d2e2c;
   background-color: #7b351c;
 }
 
+.friendpage-submenu-container.message:hover,
 .friendpage-submenu-item.message:hover{
 
   background-color: #2d2e2c;

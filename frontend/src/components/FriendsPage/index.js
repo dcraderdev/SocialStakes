@@ -11,6 +11,7 @@ import ConversationTile from '../ConversationTile';
 import { ModalContext } from '../../context/ModalContext';
 import './FriendsPage.css';
 import Chatbox from '../Chatbox';
+import { showConversationAction } from '../../redux/actions/chatActions';
 
 const FriendsPage = () => {
 
@@ -24,7 +25,7 @@ const FriendsPage = () => {
   const friends = useSelector((state) => state.friends);
   const conversations = useSelector((state) => state.chats.conversations);
   const currentFriendView = useSelector((state) => state.friends.currentFriendView);
-  const currentConversationView = useSelector((state) => state.friends.currentConversationView);
+  const currentConversationId = useSelector((state) => state.chats.currentConversation);
   const showFriends = useSelector((state) => state.friends.showFriends);
 
 
@@ -124,6 +125,58 @@ const FriendsPage = () => {
       );
     }
 
+
+
+    if (showConversation && conversations && currentConversationId) {
+      console.log(conversations[currentConversationId]);
+      setHeader(
+        <div className="friendspage-friendview-header flex center">
+          <div className={`friendspage-profile-image-container flex center`}>
+            <div className={`friendspage-profile-image flex center`}>{`:)`}</div>
+          </div>
+
+          <div className={`friendspage-name-container flex center`}>
+            <div className={`friendspage-name flex center`}>
+              {conversations[currentConversationId].chatName}
+            </div>
+            <div className='friendpage-friendmenu-container' >
+              <div ref={submenuButton} className='friendpage-friendmenu-icon flex center' onClick={toggleSubMenu}>
+                <i className="fa-solid fa-ellipsis-vertical"></i>
+              </div>
+
+{showFriendSubMenu &&      
+              <div onClick={startPrivateConversation} ref={submenu} className='friendpage-submenu-container'>
+
+                <div className='friendpage-submenu-item red flex center'>
+                  <div className='friendpage-item-text flex center'>Leave</div>
+                  <div className='friendpage-item-icon flex center'>
+                    <i className="fa-solid fa-arrow-right-from-bracket"></i>
+                  </div>
+                </div>
+
+                <div className='friendpage-submenu-item flex center'>
+                  <div className='friendpage-item-text flex center'>Change Name</div>
+                  <div className='friendpage-item-icon flex center'>
+                    <i className="fa-solid fa-font"></i>
+                  </div>
+
+                </div>
+
+
+
+              </div>}
+
+          </div>
+
+          </div>
+          
+        </div>
+      );
+    }
+
+
+
+
     if (showFriends && !currentFriendView) {
       setHeader(
         <div className="friendspage-friendview-header flex center">
@@ -140,9 +193,9 @@ const FriendsPage = () => {
         </div>
       );
     }
-  }, [showFriendInvites, showTableInvites, currentFriendView, showFriendSubMenu]);
+  }, [showFriendInvites, showTableInvites, currentFriendView, showFriendSubMenu, showConversation, currentConversationId]);
 
-
+console.log(showConversation);
 
 
 
@@ -213,7 +266,7 @@ const FriendsPage = () => {
 
 
             {currentFriendViewTab === currentFriendViewConversations && currentFriendView && (
-              <div>
+              <div className="friendspage-friendview-container">
                 <Chatbox conversation={conversations[currentFriendView.conversationId]}/>
               </div>
 
@@ -228,9 +281,9 @@ const FriendsPage = () => {
 
         {/* // currentConversationView */}
         {showConversation && (
-          <div className="friendspage-friendview-container">
+          <div className="friendspage-friendview-container" >
             
-            <Chatbox conversation={currentConversationView}/>
+            <Chatbox conversation={conversations[currentConversationId]}/>
 
 
           </div>

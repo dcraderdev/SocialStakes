@@ -12,6 +12,7 @@ import { ModalContext } from '../../context/ModalContext';
 import './FriendsPage.css';
 import Chatbox from '../Chatbox';
 import { showConversationAction } from '../../redux/actions/chatActions';
+import ChatInputArea from '../ChatInputArea';
 
 const FriendsPage = () => {
 
@@ -90,6 +91,10 @@ const FriendsPage = () => {
     setHasCurrentTables(Object.entries(currentTables).length > 0);
   }, [currentTables]);
 
+
+
+
+  // Get header styling/content
   useEffect(() => {
     if (showFriendInvites) {
       setHeader('Friend Invites');
@@ -128,7 +133,6 @@ const FriendsPage = () => {
 
 
     if (showConversation && conversations && currentConversationId) {
-      console.log(conversations[currentConversationId]);
       setHeader(
         <div className="friendspage-friendview-header flex center">
           <div className={`friendspage-profile-image-container flex center`}>
@@ -194,6 +198,23 @@ const FriendsPage = () => {
       );
     }
   }, [showFriendInvites, showTableInvites, currentFriendView, showFriendSubMenu, showConversation, currentConversationId]);
+
+
+  
+  const getViewHeight = () => {
+    if(showFriends){
+     return hasCurrentTables ? 'friendspage-chatbox-extended lowered' : 'friendspage-chatbox-condensed lowered'
+    }
+
+    if(showConversation){
+     return hasCurrentTables ? 'friendspage-chatbox-extended conversations' : 'friendspage-chatbox-condensed conversations'
+    }
+
+
+  }
+
+
+
 
 console.log(showConversation);
 
@@ -266,14 +287,16 @@ console.log(showConversation);
 
 
             {currentFriendViewTab === currentFriendViewConversations && currentFriendView && (
-              <div className="friendspage-friendview-container">
+              <div className={`friendspage-chatbox-container ${getViewHeight()}`}>
                 <Chatbox conversation={conversations[currentFriendView.conversationId]}/>
               </div>
-
-
             )}
 
-
+            {currentFriendViewTab === currentFriendViewConversations && currentFriendView && (
+              <div className="chatbox-chatinput-container">
+                <ChatInputArea />
+              </div>
+            )}
 
 
           </div>
@@ -281,13 +304,19 @@ console.log(showConversation);
 
         {/* // currentConversationView */}
         {showConversation && (
-          <div className="friendspage-friendview-container" >
-            
+          <div className={`friendspage-chatbox-container ${getViewHeight()}`} >
+      
             <Chatbox conversation={conversations[currentConversationId]}/>
-
-
           </div>
         )}
+
+        {showConversation && (
+          <div className="chatbox-chatinput-container">
+            <ChatInputArea />
+          </div>
+        )}
+
+
 
 
       </div>

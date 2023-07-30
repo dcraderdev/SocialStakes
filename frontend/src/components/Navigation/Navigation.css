@@ -20,12 +20,11 @@
   width: 100%;
   left: 0px;
   top: 50px;
-  z-index: 1;
+  z-index: 10;
   border-bottom: 1px solid black;
   justify-content: center;
   background-color: #2d2e2c;
   background-color: #1d1e1c;
-  transition: all .5s ease;
 }
 
 
@@ -35,6 +34,7 @@
 
 .gametabs-shrunk {
   height: 0px;
+  transition: all .5s ease;
 }
 
 .gametabs-expanded{

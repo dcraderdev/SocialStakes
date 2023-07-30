@@ -30,10 +30,7 @@ const Chatbox = () => {
   const bottomRef = useRef(null);
 
 
- 
-console.log(conversations);
-  console.log(currentConversationId);
-  console.log(messages);
+
 
 
   useEffect(() => {
@@ -49,28 +46,29 @@ console.log(conversations);
 
 
 
-  useEffect(() => {
-    if (bottomRef.current) {
-      bottomRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [currentConversationId, conversations, messages]);
+
+
+
+  // useEffect(() => {
+  //   if (bottomRef.current) {
+  //     bottomRef.current.scrollIntoView({ behavior: 'smooth' });
+  //   }
+  // }, [currentConversationId, conversations, messages]);
+  //${currentFocus === viewConversations ? getViewHeight() : ''}
 
 
   return (
     <div className="chatbox-wrapper">
-      <div className={`chatbox-container`}>
-        <div className="message-container">
+
+        <div className={`chatbox-message-container`}>
+
           {messages.map((message, index) => (
             <MessageTile key={index} message={message} />
           ))}
 
-          <div className="chat-bottom-ref" ref={bottomRef}></div>
+          {/* <div className="chat-bottom-ref" ref={bottomRef}></div> */}
         </div>
 
-        <div className="chatbox-chatinput-container">
-          <ChatInputArea />
-        </div>
-      </div>
     </div>
   );
 };

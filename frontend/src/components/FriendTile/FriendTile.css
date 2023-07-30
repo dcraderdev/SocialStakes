@@ -1,17 +1,21 @@
 .friendtile-submenu-wrapper{
   border: rgba(0, 0, 0, 0.238) solid 1px;
   cursor: pointer;
-
+  
   height: 50px;
   width: 100%;
-
+  
 }
 
 .friendtile-submenu-wrapper:hover{
   background-color: #2d2e2c;
+  
 }
 
 .friendtile-container{
+  border-top: #404040b0 solid 1px;
+  border-bottom: #000000 solid 1px;
+
   height: 100%;
   width: 100%;
   display: flex;
@@ -21,6 +25,7 @@
 }
 
 
+
 .friendtile-profile-image-container{
   position: relative;
   height: 40px;
@@ -28,7 +33,7 @@
   margin-left: 5px;
   border: rgba(0, 0, 0) solid 2px;
   border-radius: 50%;
-
+  
 }
 
 .friendtile-profile-image{
@@ -120,6 +125,7 @@
   font-size: 20px;
   color: rgb(18, 133, 8);
 }
+
 
 .friendtile-request-option:active > i {
   transform: scale(1.3);

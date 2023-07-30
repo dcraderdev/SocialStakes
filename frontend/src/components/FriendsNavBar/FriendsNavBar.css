@@ -6,6 +6,7 @@
   left: 0px;
   display: flex;
   border-right: rgba(0, 0, 0, 0.466) solid .5px;
+  border-right: rgba(0, 0, 0, 0.466) solid 1px;
   top: -50px;
 }
 
@@ -27,12 +28,20 @@
 
 
 .friendsnavbar-option{
-  border-bottom: rgba(0, 0, 0, 0.466) solid .5px;
+  /* border-bottom: rgba(0, 0, 0, 0.466) solid .5px;
   border-top: rgba(0, 0, 0, 0.466) solid .5px;
+
+
+
+  border: black solid 1px; */
+  border-top: #404040b0 solid 1px;
+  border-bottom: #000000 solid 2px;
+
+
   height: 50px;
   font-size: 18px;
   color: #fdfcfc;
-  box-shadow: rgba(0, 0, 0, 0.5) 0px 1px 2px, rgba(0, 0, 0, 0.5) 0px 1px 2px;
+  /* box-shadow: rgba(0, 0, 0, 0.5) 0px 1px 2px, rgba(0, 0, 0, 0.5) 0px 1px 2px; */
   overflow: hidden;
   transition: .5s all;
 }
@@ -65,7 +74,9 @@
   height: 50px;
   font-size: 18px;
   color: #fdfcfc;
-  border-bottom: solid rgba(0, 0, 0, 0.287) 1px;
+  border-top: #404040b0 solid 1px;
+  border-bottom: #000000 solid 2px;
+
   cursor: pointer;
 }
 
@@ -78,14 +89,20 @@
 
 .invites-extended{
   height: 150px;
+  box-shadow: #40404064  0px 1px 2px, #404040b0  0px 1px 2px;
+
+  border-bottom: #000000 solid 2px;
+
 }
 
 .friends-extended{
   height: calc(100vh - 210px);
+
 }
 
 .friends-extra-extended{
   height: calc(100vh - 260px);
+
 }
 
 

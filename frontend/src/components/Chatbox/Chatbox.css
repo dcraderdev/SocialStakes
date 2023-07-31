@@ -7,11 +7,7 @@
 
 
 .chatbox-message-container {
-
-
   position: relative;
-
-
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -24,9 +20,6 @@
 .chatbox-message-container > :last-child {
   margin-bottom: 10px;
 }
-
-
-
 
 
 /* Styling the scrollbar */
@@ -47,16 +40,12 @@
 }
 
 
-
-
-
 .chat-bottom-ref{
   position: relative;
   height: 5px;
   width: 5px;
   top: -20px;
 }
-
 
 
 

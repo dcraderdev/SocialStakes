@@ -114,14 +114,14 @@ const FriendsPage = () => {
               {currentFriendView?.friend.username}
             </div>
 
-            <div className='friendpage-friendmenu-container' >
-              <div ref={submenuButton} className='friendpage-friendmenu-icon flex center' onClick={toggleSubMenu}>
+            <div className='friendspage-friendmenu-container' >
+              <div ref={submenuButton} className='friendspage-friendmenu-icon flex center' onClick={toggleSubMenu}>
                 <i className="fa-solid fa-ellipsis-vertical"></i>
               </div>
 
-{showFriendSubMenu &&              <div ref={submenu} className='friendpage-submenu-container'>
-                <div onClick={startPrivateConversation} className='friendpage-submenu-item message flex center'>Message <i className="fa-regular fa-message"></i></div>
-                <div onClick={toggleRemoveFriendModal} className='friendpage-submenu-item remove flex center'>Remove <i className="fa-regular fa-trash-can"></i></div>
+{showFriendSubMenu &&              <div ref={submenu} className='friendspage-submenu-container'>
+                <div onClick={startPrivateConversation} className='friendspage-submenu-item message flex center'>Message <i className="fa-regular fa-message"></i></div>
+                <div onClick={toggleRemoveFriendModal} className='friendspage-submenu-item remove flex center'>Remove <i className="fa-regular fa-trash-can"></i></div>
               </div>}
 
             </div>
@@ -135,6 +135,9 @@ const FriendsPage = () => {
     if (showConversation && conversations && currentConversationId) {
       setHeader(
         <div className="friendspage-friendview-header flex center">
+          <div>
+
+          </div>
           <div className={`friendspage-profile-image-container flex center`}>
             <div className={`friendspage-profile-image flex center`}>{`:)`}</div>
           </div>
@@ -143,24 +146,24 @@ const FriendsPage = () => {
             <div className={`friendspage-name flex center`}>
               {conversations[currentConversationId].chatName}
             </div>
-            <div className='friendpage-friendmenu-container' >
-              <div ref={submenuButton} className='friendpage-friendmenu-icon flex center' onClick={toggleSubMenu}>
+            <div className='friendspage-friendmenu-container' >
+              <div ref={submenuButton} className='friendspage-friendmenu-icon flex center' onClick={toggleSubMenu}>
                 <i className="fa-solid fa-ellipsis-vertical"></i>
               </div>
 
 {showFriendSubMenu &&      
-              <div onClick={startPrivateConversation} ref={submenu} className='friendpage-submenu-container'>
+              <div onClick={startPrivateConversation} ref={submenu} className='friendspage-submenu-container'>
 
-                <div className='friendpage-submenu-item red flex center'>
-                  <div className='friendpage-item-text flex center'>Leave</div>
-                  <div className='friendpage-item-icon flex center'>
+                <div className='friendspage-submenu-item flex center'>
+                  <div className='friendspage-item-text remove flex center'>Leave</div>
+                  <div className='friendspage-item-icon remove flex center'>
                     <i className="fa-solid fa-arrow-right-from-bracket"></i>
                   </div>
                 </div>
 
-                <div className='friendpage-submenu-item flex center'>
-                  <div className='friendpage-item-text flex center'>Change Name</div>
-                  <div className='friendpage-item-icon flex center'>
+                <div className='friendspage-submenu-item flex center'>
+                  <div className='friendspage-item-text  flex center'>Change Name</div>
+                  <div className='friendspage-item-icon flex center'>
                     <i className="fa-solid fa-font"></i>
                   </div>
 
@@ -238,7 +241,14 @@ console.log(showConversation);
           hasCurrentTables ? ' expanded' : ' shrunk'
         }`}
       >
-        <div className="friendspage-header flex center">{header}</div>
+        <div className="friendspage-header flex center">
+          
+          
+          {header}
+          
+          
+          
+        </div>
 
         <div className="friendspage-content"></div>
 

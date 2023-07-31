@@ -32,7 +32,6 @@ const ChatInputArea = () => {
       setNewMessage('');
     }
 
-    console.log(currentConversation);
 
 
   return (

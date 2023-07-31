@@ -90,6 +90,7 @@
 
   font-size: 30px;
   color: white;
+  border: white solid 1px;
 }
 
 .friendtile-wrapper{
@@ -115,11 +116,6 @@
   flex-direction: column;
 }
 
-
-.friendspage-chatbox-container{
-/* height: 80%;
-height: calc(100% - 40px); */
-}
 
 
 
@@ -192,8 +188,15 @@ height: calc(100% - 40px); */
   width: 40px;
 }
 
+
+
 .friendspage-name-container{
+border: white solid 1px;
+
+
   margin-left: 10px;
+  font-size: 20px;
+
 
 }
 
@@ -232,16 +235,16 @@ height: calc(100% - 40px); */
 
 
 
-.friendpage-friendmenu-container{
+.friendspage-friendmenu-container{
   width: fit-content;
   height: fit-content;
 
   position: absolute;
-  right: 20px;
+  right: 30px;
 }
 
 
-.friendpage-friendmenu-icon{
+.friendspage-friendmenu-icon{
 cursor: pointer;
   background-color: #212220;
 
@@ -254,18 +257,18 @@ border: rgba(0, 0, 0, 0.311) solid 1px;
 
 }
 
-.friendpage-friendmenu-icon:hover{
+.friendspage-friendmenu-icon:hover{
   background-color: #2d2e2c;
 }
-.friendpage-friendmenu-icon:hover > i{
+.friendspage-friendmenu-icon:hover > i{
   transform: scale(1.3);
 }
 
-.friendpage-friendmenu-icon:active > i{
+.friendspage-friendmenu-icon:active > i{
   transform: scale(1);
 }
 
-.friendpage-friendmenu-icon i{
+.friendspage-friendmenu-icon i{
 
   width: fit-content;
   height: fit-content;
@@ -273,7 +276,9 @@ border: rgba(0, 0, 0, 0.311) solid 1px;
 }
 
 
-.friendpage-submenu-container{
+
+
+.friendspage-submenu-container{
   width: 160px;
   height: fit-content;
   border: white solid 1px;
@@ -285,7 +290,7 @@ border: rgba(0, 0, 0, 0.311) solid 1px;
 
 
 
-.friendpage-submenu-item{
+.friendspage-submenu-item{
   font-size: 16px;
   width: 100%;
   height: 30px;
@@ -295,14 +300,14 @@ border: rgba(0, 0, 0, 0.311) solid 1px;
   justify-content: space-around;
 }
 
-.friendpage-item-text{
+.friendspage-item-text{
   font-size: 16px;
   width: 100%;
   height: 100%;
   background-color: #212220;
   justify-content: space-around;
 }
-.friendpage-item-icon{
+.friendspage-item-icon{
   font-size: 16px;
   width: 40%;
   height: 100%;
@@ -310,15 +315,17 @@ border: rgba(0, 0, 0, 0.311) solid 1px;
   justify-content: space-around;
 }
 
-
-.friendpage-submenu-item.remove:hover{
-
-  background-color: #2d2e2c;
+.friendspage-submenu-item:hover .remove {
+  background-color: red;
   background-color: #7b351c;
+  
 }
 
-.friendpage-submenu-container.message:hover,
-.friendpage-submenu-item.message:hover{
+
+
+
+.friendspage-submenu-container.message:hover,
+.friendspage-submenu-item.message:hover{
 
   background-color: #2d2e2c;
   background-color: #1c3d7b;
@@ -337,5 +344,11 @@ border: rgba(0, 0, 0, 0.311) solid 1px;
   }
   .nav-text{
     font-size: 20px;
+  }
+
+  .friendspage-name-container{
+    margin-left: 10px;
+    font-size: 20px;
+
   }
 }

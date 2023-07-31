@@ -141,7 +141,7 @@ const MessageTile = ({message}) => {
       if(user.id !== selectedMessage.userId) return
 
       let editMessageObj = {
-        conversationId: currentConversation.conversationId,
+        conversationId: currentConversation,
         userId: user.id,
         messageId : editedMessageId,
         newContent: editedMessageContent
@@ -182,17 +182,29 @@ const MessageTile = ({message}) => {
 
   
       let editMessageObj = {
-        conversationId: currentConversation.conversationId,
+        conversationId: currentConversation,
         userId: user.id,
         messageId : editedMessageId,
         newContent: editedMessageContent
       };
+
+
+      console.log(editMessageObj);
+
+
+
 
       socket.emit('edit_message', editMessageObj);
       setIsEditingMessage(false)
       setEditedMessageId(null)
       setEditedMessageContent('')
     };
+
+
+
+
+
+
 
     const cancelEdit = () => {
       if (!user) return;
@@ -204,8 +216,7 @@ const MessageTile = ({message}) => {
     };
 
 
-console.log(message);
-console.log(date);
+
 
 
   return (

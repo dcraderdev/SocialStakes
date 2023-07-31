@@ -367,19 +367,9 @@ module.exports = function (io) {
       const newMessage = await chatController.createMessage(messageObj, userId);
       if (!newMessage) return false;
 
-      // newMessageObj = {
-      //   conversationId,
-      //   user: {
-      //     username,
-      //     id: userId,
-      //   },
-      //   message: {
-      //     content: newMessage.content,
-      //     id: newMessage.id,
-      //   },
-      // }; 
 
       newMessageObj = {
+        createdAt: Date.now(),
         conversationId,
         content: newMessage.content,
         id: newMessage.id,
@@ -398,6 +388,7 @@ module.exports = function (io) {
     // Edit message in specific room
     socket.on('edit_message', async (messageObj) => {
       const { conversationId, messageId, newContent } = messageObj;
+
       let room = conversationId;
       await chatController.editMessage(messageObj, userId);
 

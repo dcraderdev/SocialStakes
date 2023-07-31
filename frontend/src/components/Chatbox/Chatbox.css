@@ -21,6 +21,9 @@
   overflow-x: hidden;
 }
 
+.chatbox-message-container > :last-child {
+  margin-bottom: 10px;
+}
 
 
 

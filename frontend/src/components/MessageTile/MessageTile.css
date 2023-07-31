@@ -2,10 +2,21 @@
 
 .chatmessage-wrapper{
   width: 95%;
-
+  cursor: pointer;
+  border-radius: 20px;
+  margin-left: 20px;
+  margin-right: 20px;
 }
 
+.chatmessage-wrapper:hover{
+  cursor: pointer;
+  background-color: rgb(30, 30, 30);
+  background-color: rgb(40, 40, 40);
+}
 
+.chatmessage-wrapper:first-child{
+  margin-top: 5px;
+}
 
 
 .chatmessage-container{
@@ -45,6 +56,8 @@
 
 
 .chatmessage-username-date-container{
+  height: 20px;
+  width: 250px;
 }
 
 
@@ -53,12 +66,12 @@
 
 .chatmessage-username{
   position: relative;
+  top: 4px;
   color: rgb(255, 255, 255);
   font-size: 18px;
   margin-left: 5px;
   font-family: serif;
   font-weight: 900;
-  top: 4px;
 
 }
 
@@ -87,22 +100,24 @@
   margin-top: 10px;
   margin-left: 5px;
   margin-bottom: 10px;
+  width: 85%;
 
   position: relative;
 
-  color: white;
   color: #fdfcfc;
 
   font-size: 17px;
   font-family: sans-serif;
   font-weight: 300;
-line-height: 1.2;
+  line-height: 1.2;
 
 }
 
+
+
+
 .chat-message:hover,
 .friendlist-friend:hover{
-  background-color: #1b3d59;
   background-color: #071b2b;
 
 }
@@ -114,52 +129,6 @@ line-height: 1.2;
   width: 37px;
 }
 
-.chat-message-add-friend{
-  position: absolute;
-  right: 2%;
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  z-index: 1;
-  user-select: none;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-
-.chat-message-add-friend:hover{
-  background-color: #17344c;
-  cursor: pointer;
-}
-
-.chat-message-add-friend i{
-  transform: scale(1.2);
-  color: rgb(18, 133, 8);
-}
-
-.chat-message-add-friend i:hover{
-  transform: scale(1.3);
-  cursor: pointer;
-}
-
-.chat-message-add-friend i:active{
-  transform: scale(1.2);
-  cursor: pointer;
-}
-
-
-
-.chat-message-buttons-container{
-  position: absolute;
-  right: 0%;
-  width: 60px;
-  height: 30px;
-  justify-content: space-around;
-  background-color: #071b2b;
-
-
-}
 
 
 .chat-message-option{
@@ -175,30 +144,65 @@ line-height: 1.2;
 
 }
 
-
-
 .chat-message-option:hover{
-  background-color: #17344c;
+  background-color: #1a1a1b;
+  cursor: pointer;
 }
 
+
 .chat-message-option i{
-  font-size: 16px;
+  transform: scale(1);
   color: rgb(18, 133, 8);
 }
 
-
 .chat-message-option i:hover{
-  transform: scale(1.3);
+  transform: scale(1.2);
+  cursor: pointer;
 }
+
 .chat-message-option i:active{
-  font-size: 20px;
+  transform: scale(1);
+  cursor: pointer;
+}
+
+
+
+.chat-message-buttons-container{
+  position: relative;
+  /* right: -10px; */
+  width: 60px;
+  height: 100%;
+  justify-content: space-around;
+  margin-left: 5px;
+  position: relative;
+  top: 4px;
 
 }
+
+
+
+
+
 
 .editmessage-input{
   border: black;
-  width: 100%;
-  height: 100%;
+  position: relative;
+  top: 5px;
+  width: 95%;
+  margin-top: 2px;
+  height: 45px;
+  background-color: none;
+  background-color: #191a1b;
+
+  background-color: #1f201f;
+
+  color: #fdfcfc;
+
+  font-size: 17px;
+  font-family: sans-serif;
+  font-weight: 300;
+  line-height: 1.2;
+
 }
 
 

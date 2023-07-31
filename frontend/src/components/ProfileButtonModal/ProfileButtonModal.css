@@ -2,7 +2,7 @@
   border: black solid 1px;
   border-top: #404040 solid 1px;
 
-  z-index: 10;
+  z-index: 100;
   position: fixed;
   height: calc(100vh - 45px);
   top: 47px;

@@ -18,12 +18,27 @@
   flex-direction: column;
 }
 
-.friendsnavbar-main-header{
-  height: 50px;
+
+
+.friendsnavbar-searchbar-container{
+  height: 59px;
   font-size: 18px;
   color: #fdfcfc;
   align-items: center;
+  border-bottom: #000000 solid 1px;
+  transition: 0s all ease;
+
+
 }
+
+
+.friendsnavbar-searchbar-container.raised{
+  position: relative;
+  height: 52px;
+  transition: .1s all;
+
+}
+
 
 
 
@@ -91,12 +106,12 @@
 }
 
 .friends-extended{
-  height: calc(100vh - 210px);
+  height: calc(100vh - 220px);
 
 }
 
 .friends-extra-extended{
-  height: calc(100vh - 260px);
+  height: calc(100vh - 270px);
 
 }
 

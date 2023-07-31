@@ -80,7 +80,6 @@ const FriendsNavBar = () => {
     }
 
     else if(currentFocus === viewConversations){
-    console.log('here');
     return hasCurrentTables ? 'friendsnavbar-content-extended' : ' friendsnavbar-content'
     }
 
@@ -93,13 +92,12 @@ const FriendsNavBar = () => {
 
 
 
-
   return (
     <div className={`friendsnavbar-wrapper flex`}>
       <div className="friendsnavbar-container flex ">
 
 
-        <div className="friendsnavbar-main-header flex center">
+        <div className={`friendsnavbar-searchbar-container flex center ${hasCurrentTables ? ' raised' : ''}`}>
           <SearchBar/>
         </div>
 

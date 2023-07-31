@@ -89,7 +89,9 @@ background-color: #1d1e1c;
   color: white;
   color: rgb(200, 57, 13);
 }
-
+.gamebar-close-button:active{
+transform: scale(.9);
+}
 
 
 .card-container{

@@ -1,6 +1,6 @@
 
 import {
-  ADD_MESSAGE, EDIT_MESSAGE, DELETE_MESSAGE, GET_USER_CONVERSATIONS, SHOW_CONVERSATION_BY_ID
+  ADD_MESSAGE, EDIT_MESSAGE, DELETE_MESSAGE, GET_USER_CONVERSATIONS, SHOW_CONVERSATION_BY_ID, ADD_CONVERSATION, REMOVE_CONVERSATION
 } from './actionTypes'
 
 
@@ -43,6 +43,26 @@ export const showConversationAction = (conversation) => {
   return {
     type: SHOW_CONVERSATION_BY_ID,
     payload: conversation,
+
+  };
+};
+
+
+
+export const addConversationAction = (convoObj) => {
+  console.log(convoObj);
+  return {
+    type: ADD_CONVERSATION,
+    payload: convoObj,
+  };
+};
+
+
+export const removeConversationAction = (convoObj) => {
+  console.log(convoObj);
+  return {
+    type: REMOVE_CONVERSATION,
+    payload: convoObj,
 
   };
 };

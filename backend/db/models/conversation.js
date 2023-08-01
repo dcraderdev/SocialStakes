@@ -48,6 +48,7 @@ module.exports = (sequelize, DataTypes) => {
     isDirectMessage: {
       type: DataTypes.BOOLEAN,
     },
+
   }, {
     sequelize,
     modelName: 'Conversation',

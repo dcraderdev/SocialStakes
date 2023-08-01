@@ -7,8 +7,11 @@ const {
   handSummary,
   bestValue,
 } = require('./controllers/cardController');
+const { connect } = require('./routes/api/session');
 
 module.exports = function (io) {
+
+  const connections = {}
 
   const rooms = {};
   const disconnectTimeouts = {};
@@ -34,7 +37,7 @@ module.exports = function (io) {
         otherCards: [],
         handSummary: null,
         bestValue: null,
-      },
+      }, 
       messages: [],
       sortedActivePlayers: [],
       sortedFinishedPlayers: [],
@@ -55,23 +58,50 @@ module.exports = function (io) {
     const userFriends = await friendController.getUserFriends(userId);
     const userConversations = await chatController.getUserConversations(userId);
 
-    // console.log('-=-=-=-=-=-=-=-=-=');
-    // console.log('--- CONNECTING ---');
-    // console.log('SOCKET ID', socketId);
-    // console.log('A user connected', socket.id, 'Username:', username);
-    // console.log('User Room:', userId);
-    // console.log('userFriends:');
-    // console.log(userFriends);
+    console.log('-=-=-=-=-=-=-=-=-=');
+    console.log('--- CONNECTING ---');
+    console.log('SOCKET ID', socketId);
+    console.log('A user connected', socket.id, 'Username:', username);
+    console.log('User Room:', userId);
+    console.log('userConversations:');
+    console.log(userConversations);
  
-    // console.log('-=-=-=-=-=-=-=-=-=');
- 
-    Object.keys(userConversations).map(conversation=>{
-      socket.join(conversation)
-    })
+    console.log('-=-=-=-=-=-=-=-=-=');
+
+
+    if(!connections[userId]){
+      connections[userId] = {}
+    }
+
+    connections[userId][socketId] = {
+      socket: socket,
+      status: 'connected',
+      connectedAt: Date.now(),
+      timeOfLastAction: Date.now()
+    }
+
+    console.log('----------------------');
+    console.log('----------------------');
+
+    console.log(connections);
+
+    console.log('----------------------');
+    console.log('----------------------');
+
+
+
+    if(userConversations){
+      Object.keys(userConversations).map(conversation=>{
+        console.log(conversation);
+        socket.join(conversation)
+      })
+    } 
+
+
     let initObj = {
       userFriends,
       userConversations
-    }
+    } 
 
     socket.emit('initialize_user', initObj);
 
@@ -359,66 +389,7 @@ module.exports = function (io) {
       // console.log('-=-=-=-=-=-=-=-=-=');
     });
  
-    // Broadcast message to specific room
-    socket.on('message', async (messageObj) => {
-      const { conversationId, content } = messageObj;
-      let room = conversationId;
-
-      const newMessage = await chatController.createMessage(messageObj, userId);
-      if (!newMessage) return false;
-
-
-      newMessageObj = {
-        createdAt: Date.now(),
-        conversationId,
-        content: newMessage.content,
-        id: newMessage.id,
-        userId,
-        username
-      };
-
-
-      if (rooms[room]) {
-        rooms[room].messages.push(newMessageObj);
-      }
-
-      io.in(room).emit('new_message', newMessageObj);
-    }); 
-
-    // Edit message in specific room
-    socket.on('edit_message', async (messageObj) => {
-      const { conversationId, messageId, newContent } = messageObj;
-
-      let room = conversationId;
-      await chatController.editMessage(messageObj, userId);
-
-      io.in(room).emit('edit_message', messageObj);
-    });
-
-    // Edit message in specific room
-    socket.on('delete_message', async (messageObj) => {
-      const { conversationId, messageId } = messageObj;
-      let room = conversationId;
-      await chatController.deleteMessage(messageObj, userId);
-
-      io.in(room).emit('delete_message', messageObj);
-    });
-
-
-    socket.on('start_private_conversation', async (conversationObj) => {
-    console.log('clik');
-    console.log('clik');
-    console.log('clik');
-
-      // const { friendshipId, friend } = conversationObj;
-      // await chatController.startPrivateConversation(conversationObj, userId, username);
-      
-
-      // let room = friendshipId;
-      // io.in(room).emit('delete_message', conversationObj);
-    }); 
-
-
+  
  
 
 
@@ -1721,61 +1692,56 @@ module.exports = function (io) {
   
 
     socket.on('send_friend_request', async (friendRequestObj) => {
+
       let recipientId = friendRequestObj.recipientId
       let recipientUsername = friendRequestObj.recipientUsername
       
-      console.log('sender | ', username, userId);
-      console.log('recip | ', recipientUsername, recipientId);
+      friendRequestObj.username = username
+      friendRequestObj.userId = userId
 
-      const request = await friendController.sendFriendRequest({userId, recipientId});
+      const request = await friendController.sendFriendRequest(friendRequestObj);
       if(request){
 
+        const {friendship, newConversation} = request
+
+
         let senderObj = {
-          friend:{
+          conversationId: newConversation?.id,
+          friend:{ 
             id: recipientId,
             username:recipientUsername,
           },
           requestInfo: { 
-            id: request.id,
-            status: request.status
-          }
+            id: friendship.id,
+            status: friendship.status
+          },
         }
-         
+           
 
         let recipientObj = {
+          conversationId: newConversation?.id,
           friend:{
             id: userId,
             username,
           },
           requestInfo: {
-            id: request.id,
-            status: request.status
-          }
+            id: friendship.id,
+            status: friendship.status
+          },
+          
         }
 
 
-        console.log('-------- request -------');
-        console.log(request);
-        console.log('------------------------');
-
-
-
-        if(request.status === 'accepted'){
-          console.log('says accepted | ', username);
-
-          io.in(userId).emit('accept_friend_request', senderObj);
-          socket.emit('accept_friend_request', recipientObj);
-
-
+        if(friendship.status === 'accepted'){
+          handleAcceptFriendRequest(recipientObj, senderObj, request)
         }
 
-        if(request.status === 'rejected'){
+        if(friendship.status === 'rejected'){
           senderObj.status = 'pending'
           socket.emit('friend_request_sent', senderObj);
-
         }
 
-        if(request.status === 'pending'){
+        if(friendship.status === 'pending'){
           io.in(recipientId).emit('friend_request_received', recipientObj);
           socket.emit('friend_request_sent', senderObj);
         }
@@ -1783,55 +1749,81 @@ module.exports = function (io) {
       }
     });
 
-    socket.on('accept_friend_request', async (friendRequestObj) => {
-      console.log('-----accept_friend_request------');
-      console.log('----------------------');
 
+    function handleAcceptFriendRequest(recipientObj, senderObj, request) { 
+      let recipientId = senderObj.friend.id
+      let senderConnections = connections[userId];
+      let recipientConnections = connections[recipientId];
+      const {friendship, newConversation} = request
+
+      let convoObj = {
+        chatName: newConversation.chatName,
+        conversationId : newConversation.id,
+        messages: [],
+        notification: false
+      }
+
+      io.in(recipientId).emit('accept_friend_request', recipientObj);
+      socket.emit('accept_friend_request', senderObj);
+      
+      
+      Object.values(senderConnections).forEach(connection => {
+        connection.socket.join(newConversation.id);
+      });
+      
+      Object.values(recipientConnections).forEach(connection => {
+        connection.socket.join(newConversation.id);
+      });
+      
+
+      io.in(recipientId).emit('add_conversation', convoObj);
+      socket.emit('add_conversation', convoObj);
+
+    }
+
+    socket.on('accept_friend_request', async (friendRequestObj) => {
 
       let recipientId = friendRequestObj.recipientId
       let recipientUsername = friendRequestObj.recipientUsername
       
- 
-      console.log('sender | ', username, userId);
-      console.log('recip | ', recipientUsername, recipientId);
-
-      console.log(friendRequestObj.username = username);
-      console.log(friendRequestObj.userId = userId);
+      friendRequestObj.username = username
+      friendRequestObj.userId = userId
 
 
       const request = await friendController.acceptFriendRequest(friendRequestObj);
-      if(request && request.status === 'accepted') {
+      if(request && request.friendship.status === 'accepted') {
 
+        const {friendship, newConversation} = request
 
         let senderObj = {
-          friend:{
-            id: recipientId, 
+          conversationId: newConversation?.id,
+          friend:{ 
+            id: recipientId,
             username:recipientUsername,
           },
-          requestInfo: {
-            id: request.id,
-            status: request.status
-          }
+          requestInfo: { 
+            id: friendship.id,
+            status: friendship.status
+          },
         }
-        
+           
 
         let recipientObj = {
+          conversationId: newConversation?.id,
           friend:{
             id: userId,
             username,
           },
           requestInfo: {
-            id: request.id,
-            status: request.status
-          }
+            id: friendship.id,
+            status: friendship.status
+          },
+          
         }
 
 
-        console.log(senderObj);
-        console.log(recipientObj);
-    
-        io.in(recipientId).emit('accept_friend_request', recipientObj);
-        socket.emit('accept_friend_request', senderObj);
+        handleAcceptFriendRequest(recipientObj, senderObj, request)
+
       }
     
       return request;
@@ -1910,6 +1902,70 @@ module.exports = function (io) {
     
      
     });
+
+
+      // Broadcast message to specific room
+      socket.on('message', async (messageObj) => {
+
+
+        console.log('on message');
+        console.log('on message');
+        console.log('on message');
+        console.log('on message');
+        console.log('on message');
+        console.log('on message');
+        console.log('on message');
+
+        const { conversationId, content } = messageObj;
+        let room = conversationId;
+  
+        const newMessage = await chatController.createMessage(messageObj, userId);
+        if (!newMessage) return false;
+  
+  
+        newMessageObj = {
+          createdAt: Date.now(),
+          conversationId,
+          content: newMessage.content,
+          id: newMessage.id,
+          userId,
+          username
+        };
+
+
+        console.log(newMessageObj);
+        console.log(room);
+  
+  
+        if (rooms[room]) {
+          rooms[room].messages.push(newMessageObj);
+        }
+  
+        io.in(room).emit('new_message', newMessageObj);
+      }); 
+  
+      // Edit message in specific room
+      socket.on('edit_message', async (messageObj) => {
+        const { conversationId, messageId, newContent } = messageObj;
+  
+        let room = conversationId;
+        await chatController.editMessage(messageObj, userId);
+  
+        io.in(room).emit('edit_message', messageObj);
+      });
+  
+      // Edit message in specific room
+      socket.on('delete_message', async (messageObj) => {
+        const { conversationId, messageId } = messageObj;
+        let room = conversationId;
+        await chatController.deleteMessage(messageObj, userId);
+  
+        io.in(room).emit('delete_message', messageObj);
+      });
+  
+  
+  
+  
 
 
 

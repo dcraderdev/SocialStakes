@@ -28,6 +28,11 @@ module.exports = (sequelize, DataTypes) => {
       values: ['pending', 'accepted', 'rejected'],
       defaultValue: 'pending',
     },
+    conversationId: {
+      type: DataTypes.UUID,
+      allowNull: true,
+
+    }
   }, 
   {
     sequelize,

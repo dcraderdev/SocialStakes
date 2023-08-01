@@ -65,8 +65,9 @@ const userReducer = (state = initialState, action) => {
     
 
     case ACCEPT_FRIEND_REQUEST: {
-      const { friend, requestInfo } = action.payload;
+      const { friend, requestInfo, conversationId } = action.payload;
       let id = requestInfo.id
+      let status = requestInfo.status
 
       console.log(action.payload);
       console.log(friend);
@@ -90,7 +91,7 @@ const userReducer = (state = initialState, action) => {
       }
     
       // Add to friends list
-      newState.friends[friend.id] = { id, friend };;
+      newState.friends[friend.id] = { id, friend, status, conversationId };;
     
       return {...newState};
     }

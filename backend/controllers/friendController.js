@@ -78,11 +78,129 @@ const friendController = {
 
 
 
+  async startConversation(friendRequestObj) {
+
+    // console.log(conversationObj.friend.username);
+    // console.log(username);
+
+    // let usernames = [conversationObj.friend.username, username]
+
+    //    let user1 = userId
+    //    let user2 = conversationObj.friend.id
+    // const user1Conversations = await User.findByPk(user1, {
+    //   include: [
+    //     {
+    //       model: Conversation,
+    //       as: 'conversations',
+    //       where: {
+    //         tableId: null
+    //       },
+    //       include: [
+    //         {
+    //           model: Message,
+    //           as: 'messages',
+    //           include: {
+    //             model: User,
+    //             attributes: ['id', 'username'],
+    //           },
+    //         },
+    //         {
+    //           model: User,
+    //           as: 'users',
+    //           attributes: ['id', 'username'],
+    //         },
+    //       ],
+    //     },
+    //   ],
+    // });
+
+
+    // // Filter to find a conversation where the second user is also a participant
+    // let commonConvo;
+    // if(user1Conversations){
+    //   for (let conversation of user1Conversations.conversations) {
+    //     // Extract the users from the conversation
+    //     const participants = conversation.users.map(user => user);
+
+    //     if (participants.length > 2) {
+    //       continue;
+    //     }
+    //     if (participants.some(user => user.id === user2)) {
+    //       commonConvo = conversation;
+    //       break;
+    //     }
+    //   }
+    // }
+    // // If conversation exists, return it
+    // if (commonConvo) {
+
+    //   console.log('<><><><><><><><<><><><><><<>');
+    //   console.log('<><><><><><><><<><><><><><<>');
+    //   console.log('commonConvo');
+    //   console.log('commonConvo');
+    //   console.log('commonConvo');
+    //   console.log('commonConvo');
+    //   console.log('commonConvo');
+    //   console.log(commonConvo);
+    //   console.log('<><><><><><><><<><><><><><<>');
+    //   console.log('<><><><><><><><<><><><><><<>');
+
+    //   // const formattedConversation = {
+    //   //   tabName: getTabName(commonConvo, user1),
+    //   //   conversationId: commonConvo.id,
+    //   //   users: newConvoObj.users,
+    //   //   messages: commonConvo.messages,
+    //   //   notification: false,
+    //   // };
+    //   return commonConvo;
+    // }  
+    // // If not, create a new one and add both users
+    // chatName = getChatName(usernames)
+    // const conversation = await Conversation.create({chatName});
+    
+    // console.log('<><><><><><><><<><><><><><<>');
+    // console.log('<><><><><><><><<><><><><><<>');
+    // console.log('new conversation');
+    // console.log(conversation);
+    // console.log('<><><><><><><><<><><><><><<>');
+    // console.log('<><><><><><><><<><><><><><<>');
+
+    // if(conversation){
+    //   console.log('CONVO CREATED');
+    //   console.log('CONVO CREATED');
+    //   console.log('CONVO CREATED');
+    //   console.log('CONVO CREATED');
+    //   await conversation.addUsers([user1, user2]);
+
+    //   const formattedConversation = {
+    //     chatName: conversation.chatName,
+    //       conversationId: conversation.id,
+    //       users: usernames,
+    //       messages: [],
+    //       notification: false,
+    //     };
+    //     return formattedConversation
+    // }
+    // return { message: 'Conversation not found/created' };
+  },
+
+
+
 
   async acceptFriendRequest(friendRequestObj) {
     // console.log('-----acceptFriendRequest------');
     // console.log('----------------------');
     const {userId, recipientId} = friendRequestObj;
+
+
+    console.log('----------------------');
+    console.log('----------------------');
+    console.log('----------------------');
+
+    console.log(friendRequestObj);
+    console.log('----------------------');
+    console.log('----------------------');
+    console.log('----------------------');
 
 
     let user1Id, user2Id;

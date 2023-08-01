@@ -1795,10 +1795,11 @@ module.exports = function (io) {
       console.log('sender | ', username, userId);
       console.log('recip | ', recipientUsername, recipientId);
 
-      console.log(friendRequestObj);
+      console.log(friendRequestObj.username = username);
+      console.log(friendRequestObj.userId = userId);
 
 
-      const request = await friendController.acceptFriendRequest({userId, recipientId});
+      const request = await friendController.acceptFriendRequest(friendRequestObj);
       if(request && request.status === 'accepted') {
 
 

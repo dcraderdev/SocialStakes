@@ -94,114 +94,206 @@ const FriendsPage = () => {
 
 
 
-  // Get header styling/content
-  useEffect(() => {
-    if (showFriendInvites) {
-      setHeader('Friend Invites');
-    }
-    if (showTableInvites) {
-      setHeader('Table Invites');
-    }
-    if (showFriends && currentFriendView) {
-      setHeader(
-        <div className="friendspage-friendview-header flex center">
-          <div className={`friendspage-profile-image-container flex center`}>
-            <div className={`friendspage-profile-image flex center`}>{`:)`}</div>
-          </div>
+//   // Get header styling/content
+//   useEffect(() => {
+//     if (showFriendInvites) {
+//       setHeader('Friend Invites');
+//     }
+//     if (showTableInvites) {
+//       setHeader('Table Invites');
+//     }
+//     if (showFriends && currentFriendView) {
+//       setHeader(
+//         <div className="friendspage-friendview-header flex center">
+//           <div className={`friendspage-profile-image-container flex center`}>
+//             <div className={`friendspage-profile-image flex center`}>{`:)`}</div>
+//           </div>
 
-          <div className={`friendspage-name-container flex center`}>
-            <div className={`friendspage-name flex center`}>
-              {currentFriendView?.friend.username}
-            </div>
+//           <div className={`friendspage-name-container flex center`}>
+//             <div className={`friendspage-name flex center`}>
+//               {currentFriendView?.friend.username}
+//             </div>
 
-            <div className='friendspage-friendmenu-container' >
-              <div ref={submenuButton} className='friendspage-friendmenu-icon flex center' onClick={toggleSubMenu}>
-                <i className="fa-solid fa-ellipsis-vertical"></i>
-              </div>
+//             <div className='friendspage-friendmenu-container' >
+//               <div ref={submenuButton} className='friendspage-friendmenu-icon flex center' onClick={toggleSubMenu}>
+//                 <i className="fa-solid fa-ellipsis-vertical"></i>
+//               </div>
 
-{showFriendSubMenu &&              <div ref={submenu} className='friendspage-submenu-container'>
-                <div onClick={startPrivateConversation} className='friendspage-submenu-item message flex center'>Message <i className="fa-regular fa-message"></i></div>
-                <div onClick={toggleRemoveFriendModal} className='friendspage-submenu-item remove flex center'>Remove <i className="fa-regular fa-trash-can"></i></div>
-              </div>}
+// {showFriendSubMenu &&              <div ref={submenu} className='friendspage-submenu-container'>
+//                 <div onClick={startPrivateConversation} className='friendspage-submenu-item message flex center'>Message <i className="fa-regular fa-message"></i></div>
+//                 <div onClick={toggleRemoveFriendModal} className='friendspage-submenu-item remove flex center'>Remove <i className="fa-regular fa-trash-can"></i></div>
+//               </div>}
 
-            </div>
-          </div>
-        </div>
-      );
-    }
-
-
-
-    if (showConversation && conversations && currentConversationId) {
-      setHeader(
-        <div className="friendspage-friendview-header flex center">
-          <div>
-
-          </div>
-          <div className={`friendspage-profile-image-container flex center`}>
-            <div className={`friendspage-profile-image flex center`}>{`:)`}</div>
-          </div>
-
-          <div className={`friendspage-name-container flex center`}>
-            <div className={`friendspage-name flex center`}>
-              {conversations[currentConversationId].chatName}
-            </div>
-            <div className='friendspage-friendmenu-container' >
-              <div ref={submenuButton} className='friendspage-friendmenu-icon flex center' onClick={toggleSubMenu}>
-                <i className="fa-solid fa-ellipsis-vertical"></i>
-              </div>
-
-{showFriendSubMenu &&      
-              <div onClick={startPrivateConversation} ref={submenu} className='friendspage-submenu-container'>
-
-                <div className='friendspage-submenu-item flex center'>
-                  <div className='friendspage-item-text remove flex center'>Leave</div>
-                  <div className='friendspage-item-icon remove flex center'>
-                    <i className="fa-solid fa-arrow-right-from-bracket"></i>
-                  </div>
-                </div>
-
-                <div className='friendspage-submenu-item flex center'>
-                  <div className='friendspage-item-text  flex center'>Change Name</div>
-                  <div className='friendspage-item-icon flex center'>
-                    <i className="fa-solid fa-font"></i>
-                  </div>
-
-                </div>
+//             </div>
+//           </div>
+//         </div>
+//       );
+//     }
 
 
 
-              </div>}
+//     if (showConversation && conversations && currentConversationId) {
+//       setHeader(
+//         <div className="friendspage-friendview-header flex center">
+//           <div>
 
-          </div>
+//           </div>
+//           <div className={`friendspage-profile-image-container flex center`}>
+//             <div className={`friendspage-profile-image flex center`}>{`:)`}</div>
+//           </div>
 
-          </div>
+//           <div className={`friendspage-name-container flex center`}>
+//             <div className={`friendspage-name flex center`}>
+//               {conversations[currentConversationId].chatName}
+//             </div>
+//             <div className='friendspage-friendmenu-container' >
+//               <div ref={submenuButton} className='friendspage-friendmenu-icon flex center' onClick={toggleSubMenu}>
+//                 <i className="fa-solid fa-ellipsis-vertical"></i>
+//               </div>
+
+// {showFriendSubMenu &&      
+//               <div onClick={startPrivateConversation} ref={submenu} className='friendspage-submenu-container'>
+
+//                 <div className='friendspage-submenu-item flex center'>
+//                   <div className='friendspage-item-text remove flex center'>Leave</div>
+//                   <div className='friendspage-item-icon remove flex center'>
+//                     <i className="fa-solid fa-arrow-right-from-bracket"></i>
+//                   </div>
+//                 </div>
+
+//                 <div className='friendspage-submenu-item flex center'>
+//                   <div className='friendspage-item-text  flex center'>Change Name</div>
+//                   <div className='friendspage-item-icon flex center'>
+//                     <i className="fa-solid fa-font"></i>
+//                   </div>
+
+//                 </div>
+
+
+
+//               </div>}
+
+//           </div>
+
+//           </div>
           
-        </div>
-      );
-    }
+//         </div>
+//       );
+//     }
 
 
 
 
-    if (showFriends && !currentFriendView) {
-      setHeader(
-        <div className="friendspage-friendview-header flex center">
-          <div className={`friendspage-profile-image-container flex center`}>
-            <div className={`friendspage-profile-image flex center`}>{`:(`}</div>
-          </div>
+//     if (showFriends && !currentFriendView) {
+//       setHeader(
+//         <div className="friendspage-friendview-header flex center">
+//           <div className={`friendspage-profile-image-container flex center`}>
+//             <div className={`friendspage-profile-image flex center`}>{`:(`}</div>
+//           </div>
 
-          <div className={`friendspage-name-container flex center`}>
-            <div className={`friendspage-name flex center`}>
-              Friend removed
-            </div>
+//           <div className={`friendspage-name-container flex center`}>
+//             <div className={`friendspage-name flex center`}>
+//               Friend removed
+//             </div>
 
-          </div>
-        </div>
-      );
-    }
-  }, [showFriendInvites, showTableInvites, currentFriendView, showFriendSubMenu, showConversation, currentConversationId]);
+//           </div>
+//         </div>
+//       );
+//     }
+//   }, [showFriendInvites, showTableInvites, currentFriendView, showFriendSubMenu, showConversation, currentConversationId]);
+// Get header styling/content
+useEffect(() => {
 
+
+  if (showFriendInvites) {
+    setHeader(    <div className={`friendspage-name-container`}>
+
+
+
+
+
+    <div className={`friendspage-name flex center`}>
+
+    {'Friend Invites'}
+
+    </div>
+
+
+    </div>);
+  }
+  if (showTableInvites) {
+
+    setHeader(    <div className={`friendspage-name-container`}>
+
+
+
+
+
+      <div className={`friendspage-name flex center`}>
+
+      {'Table Invites'}
+
+      </div>
+
+
+      </div>);
+
+
+  }
+
+  if (showFriends && currentFriendView) {
+
+
+
+    setHeader(    <div className={`friendspage-name-container`}>
+
+    <div className={`friendspage-profile-image-container flex center`}>
+      <div className={`friendspage-profile-image flex center`}>{`:)`}</div>
+    </div>
+
+
+
+      <div className={`friendspage-name flex center`}>
+
+      {currentFriendView?.friend.username}
+
+      </div>
+
+
+      </div>);
+  }
+
+  if (showConversation && conversations && currentConversationId) {
+
+
+    setHeader(    <div className={`friendspage-name-container`}>
+
+    <div className={`friendspage-profile-image-container flex center`}>
+      <div className={`friendspage-profile-image flex center`}>{`:)`}</div>
+    </div>
+
+
+
+      <div className={`friendspage-name flex center`}>
+
+      {conversations[currentConversationId].chatName}
+
+      </div>
+
+
+      </div>);
+
+
+  }
+
+
+  if (showFriends && !currentFriendView) {
+    setHeader('Friend removed');
+  }
+
+
+
+}, [showFriendInvites, showTableInvites, currentFriendView, showFriendSubMenu, showConversation, currentConversationId]);
 
   
   const getViewHeight = () => {
@@ -243,9 +335,34 @@ console.log(showConversation);
       >
         <div className="friendspage-header flex center">
           
+
+
+
           
-          {header}
+        <div className="friendspage-friendview-header flex center">
+        
+
+  {header}
+
+
+
+            <div className='friendspage-friendmenu-container' >
+              <div ref={submenuButton} className='friendspage-friendmenu-icon flex center' onClick={toggleSubMenu}>
+                <i className="fa-solid fa-ellipsis-vertical"></i>
+              </div>
+
+{showFriendSubMenu &&              <div ref={submenu} className='friendspage-submenu-container'>
+                <div onClick={startPrivateConversation} className='friendspage-submenu-item message flex center'>Message <i className="fa-regular fa-message"></i></div>
+                <div onClick={toggleRemoveFriendModal} className='friendspage-submenu-item remove flex center'>Remove <i className="fa-regular fa-trash-can"></i></div>
+              </div>}
+
+            </div>
           
+        </div>
+          
+
+
+
           
           
         </div>

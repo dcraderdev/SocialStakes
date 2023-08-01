@@ -152,9 +152,8 @@ function GameFloor() {
       );
     }
   };
-
-
   
+
 
   return (
     

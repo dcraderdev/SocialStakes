@@ -1,7 +1,6 @@
 const { Card, Deck, User, Friendship, UserFriendship, UserHand, Game, Table, UserGame, UserTable, DeckCard, Message, Conversation, UserConversation } = require('../db/models');
 const { Op } = require('sequelize');
 const Sequelize  = require('sequelize');
-const userconversation = require('../db/models/userconversation');
 
 
 

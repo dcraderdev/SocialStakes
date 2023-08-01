@@ -9,7 +9,8 @@ import {
   editMessageAction,
   deleteMessageAction,
   getUserConversationsAction,
-  addConversationAction
+  addConversationAction,
+  removeConversationAction
   } from '../redux/actions/chatActions';
 
 
@@ -124,12 +125,6 @@ const SocketProvider = ({ children }) => {
       
 
       socket.on('new_message', (messageObj) => {
-        console.log(messageObj);
-        console.log('helloooooooo');
-        console.log('helloooooooo');
-        console.log('helloooooooo');
-        console.log('helloooooooo');
-        console.log('helloooooooo');
         dispatch(addMessageAction(messageObj));
       });
 
@@ -230,8 +225,8 @@ const SocketProvider = ({ children }) => {
 
     // // 
     socket.on('friend_removed', (friendObj) => {
-      console.log(friendObj);
       dispatch(removeFriendAction(friendObj));
+      dispatch(removeConversationAction(friendObj));
     });
 
     // // 

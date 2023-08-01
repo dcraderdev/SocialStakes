@@ -158,20 +158,6 @@ const friendController = {
     // console.log('-----acceptFriendRequest------');
     // console.log('----------------------');
     const {userId, recipientId} = friendRequestObj;
-
-
-
-
-    console.log('----------------------');
-    console.log('----------------------');
-    console.log('----------------------');
-
-    console.log(friendRequestObj);
-    console.log('----------------------');
-    console.log('----------------------');
-    console.log('----------------------');
-
-
     let user1Id, user2Id;
 
     // Ensure user1Id < user2Id to prevent duplication
@@ -192,21 +178,10 @@ const friendController = {
       },
     });
 
-
-
-
     // If there is no existing friendship, return
     if (!existingFriendship) {
       return false;
     } else {
-
-
-
-
-    // console.log('----- existingFriendship.status ------');
-    // console.log(existingFriendship.status);
-    // console.log(existingFriendship.actionUserId);
-    // console.log('=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=');
 
       // Check the status of the existing friendship
       if (
@@ -232,7 +207,6 @@ const friendController = {
 
         }
       } else {
-        console.log('???????????????????');
         return 'Cannot accept friend request - request not in pending state or not initiated by the other user';
       }
     }

@@ -36,13 +36,15 @@ function RemoveFriendModal() {
     const {currentFriendView} = updateObj
     let friendObj = {
       friendshipId: currentFriendView.id,
-      friendId: currentFriendView.friend.id
+      friendId: currentFriendView.friend.id,
+      conversationId: currentFriendView.conversationId
     }
     socket.emit('remove_friend', friendObj)
     closeModal()
     setUpdateObj(null)
     return
   }
+
 
 
 

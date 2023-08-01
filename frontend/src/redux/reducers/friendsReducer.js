@@ -69,19 +69,8 @@ const userReducer = (state = initialState, action) => {
       let id = requestInfo.id
       let status = requestInfo.status
 
-      console.log(action.payload);
-      console.log(friend);
-      console.log(requestInfo);
-    
-      console.log(newState);
-      console.log(newState.incomingRequests);
-
       // Remove from incomingRequests
       if (newState.incomingRequests[friend.id]) {
-        console.log('yes');
-        console.log(newState.incomingRequests);
-        console.log(newState.incomingRequests[friend.id]);
-
         delete newState.incomingRequests[friend.id];
       }
     

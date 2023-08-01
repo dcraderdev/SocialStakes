@@ -1886,14 +1886,14 @@ module.exports = function (io) {
 
       let friendshipId = friendObj.id
       let friendId = friendObj.friendId
-      
- 
-      console.log('friendshipId | ', friendshipId);
-      console.log('friendId | ', friendId);
+      let conversationId = friendObj.conversationId
+
+      // console.log('friendshipId | ', friendshipId);
+      // console.log('friendId | ', friendId);
 
  
 
-      const request = await friendController.removeFriend(userId, friendObj);
+      await friendController.removeFriend(userId, friendObj);
      
       
       socket.emit('friend_removed', friendObj);
@@ -1907,14 +1907,6 @@ module.exports = function (io) {
       // Broadcast message to specific room
       socket.on('message', async (messageObj) => {
 
-
-        console.log('on message');
-        console.log('on message');
-        console.log('on message');
-        console.log('on message');
-        console.log('on message');
-        console.log('on message');
-        console.log('on message');
 
         const { conversationId, content } = messageObj;
         let room = conversationId;

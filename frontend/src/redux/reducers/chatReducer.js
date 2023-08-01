@@ -99,7 +99,6 @@ const gamesReducer = (state = initialState, action) => {
     
     case GET_USER_CONVERSATIONS: {
       let newConversations = action.payload
-      console.log(action.payload);
       return {...newState, conversations: newConversations}
     }
 

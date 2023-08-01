@@ -201,19 +201,16 @@ const SocketProvider = ({ children }) => {
 
     // friends
     socket.on('friend_request_sent', (friendRequestObj) => {
-      console.log(friendRequestObj);
       dispatch(addOutGoingFriendRequest(friendRequestObj));
     });
 
     // // 
     socket.on('friend_request_received', (friendRequestObj) => {
-      console.log('here');
       dispatch(addIncomingFriendRequest(friendRequestObj));
     });
     
 
     socket.on('accept_friend_request', (friendRequestObj) => {
-      console.log(friendRequestObj);
       dispatch(acceptFriendRequest(friendRequestObj));
     });
 
@@ -231,13 +228,11 @@ const SocketProvider = ({ children }) => {
 
     // // 
     socket.on('add_conversation', (convoObj) => {
-      console.log('add_conversation');
       dispatch(addConversationAction(convoObj));
     });
 
     // // 
     socket.on('remove_conversation', (friendObj) => {
-      console.log('remove_conversation');
       dispatch(removeFriendAction(friendObj));
     });
 

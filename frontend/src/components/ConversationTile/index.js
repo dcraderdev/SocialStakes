@@ -11,16 +11,41 @@ import { showConversationAction } from '../../redux/actions/chatActions';
 const ConversationTile = ({ conversation, type }) => {
   const dispatch = useDispatch();
   const currentConversationId = useSelector((state) => state.chats.currentConversation);
+  const conversations = useSelector((state) => state.chats.conversations);
+  const user = useSelector((state) => state.users.user);
   const [isActive, setIsActive ] = useState(false);
+  const [tileText, setTileText ] = useState('');
 
 
   useEffect(()=> {
     setIsActive(false)
-    if(!currentConversationId || !conversation) return
     if(currentConversationId === conversation?.conversationId){
       setIsActive(true)
     }
+
+    setTileText(conversation?.chatName)
+
+    if ( conversation && conversations) {
+      let currentConvo = conversations[conversation.conversationId]
+      let convoIsDM = currentConvo.isDirectMessage
+      let hasDefaultChatName = currentConvo.hasDefaultChatName
+
+      if(convoIsDM && hasDefaultChatName){
+        let chatNameSplit = currentConvo.chatName.split(',')
+        let newChatName = chatNameSplit[0] === user.username ? chatNameSplit[1] : chatNameSplit[0]
+        setTileText(newChatName);
+      } else {
+        setTileText(conversation?.chatName)
+      }
+    }
+
   },[currentConversationId, conversation])
+
+
+console.log(conversation);
+console.log(tileText);
+
+
 
   // sub menu tile
   if (type === 'submenu') {
@@ -38,9 +63,9 @@ const ConversationTile = ({ conversation, type }) => {
             </div>
 
             <div className={`conversationtile-name-container flex center`}>
-{conversation &&              <div className={`conversationtile-name flex center ${isActive ? ' active-name' : ''}`}>
-                {conversation?.chatName || ''}
-              </div>}
+               <div className={`conversationtile-name flex center ${isActive ? ' active-name' : ''}`}>
+                {tileText}
+              </div>
             </div>
           </div>
 

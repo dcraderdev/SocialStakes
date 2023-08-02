@@ -1,0 +1,233 @@
+.friendspage-friendview-header{
+  width: 100%;
+  height: 70px;
+
+  font-size: 30px;
+  color: white;
+}
+
+
+
+
+.friendspage-profile-image-container{
+  position: relative;
+  height: 40px;
+  width: 40px;
+  margin-right: 10px;
+  border-radius: 50%;
+
+}
+
+.friendspage-profile-image{
+  border: rgba(255, 255, 255, 0.238) solid 1px;
+  background-color: rgba(115, 130, 130, 0.135);
+
+  border-radius: 50%;
+  height: 40px;
+  width: 40px;
+}
+
+
+
+.friendspage-name-container{
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+  font-size: min(25px, 3.5vw);
+  position: relative;
+  width:  100%;
+}
+
+.change-chatname{
+  outline: none;
+  border: none;
+  box-shadow: none;
+  background-color: transparent;
+  font-size: min(25px, 3.5vw);
+  color: white;
+  width: 100%;
+  margin-right: 10px;
+  width: 60%;
+
+}
+
+.change-chatname::placeholder {
+  color: #c7461e;
+  font-size: 17px;
+}
+
+
+.change-chatname-option{
+  position: relative;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-size: max(20px, 2vh);
+  margin-left: 5px;
+}
+
+
+.change-chatname-option:hover{
+  background-color: #1a1a1b;
+  cursor: pointer;
+}
+
+
+.change-chatname-option i{
+  transform: scale(1);
+  color: rgb(18, 133, 8);
+}
+
+.change-chatname-option i:hover{
+  transform: scale(1.1);
+  cursor: pointer;
+}
+
+.change-chatname-option i:active{
+  transform: scale(1);
+  cursor: pointer;
+}
+
+
+
+.friendspage-friendmenu-container{
+  width: fit-content;
+  height: fit-content;
+  position: absolute;
+  right: 30px;
+}
+
+
+.friendspage-friendmenu-icon{
+cursor: pointer;
+  background-color: #212220;
+
+width: 40px;
+height: 40px;
+border-radius: 50%;
+border: rgba(0, 0, 0, 0.311) solid 1px;
+
+
+
+}
+
+.friendspage-friendmenu-icon:hover{
+  background-color: #2d2e2c;
+}
+.friendspage-friendmenu-icon:hover > i{
+  transform: scale(1.3);
+}
+
+.friendspage-friendmenu-icon:active > i{
+  transform: scale(1);
+}
+
+.friendspage-friendmenu-icon i{
+
+  width: fit-content;
+  height: fit-content;
+  font-size: 15px;
+}
+
+
+
+
+.friendspage-submenu-container{
+  width: 200px;
+  height: fit-content;
+  border: black solid 1px;
+
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  z-index: 1;
+  box-shadow: #4040402a  0px 5px 5px, #40404014  0px 3px 8px, #51515114  0px 3px 10px;
+  border-bottom: none;
+
+}
+
+
+
+.friendspage-submenu-item{
+  font-size: 16px;
+  width: 100%;
+  height: 30px;
+
+
+  cursor: pointer;
+  background-color: #212220;
+  justify-content: space-around;
+
+  border-top: #404040b0 solid 1px;
+  border-bottom: #000000 solid 2px;
+
+
+}
+
+.friendspage-item-text{
+  font-size: 14px;
+  width: 100%;
+  height: 100%;
+  justify-content: space-around;
+  margin-left: 7px;
+}
+.friendspage-item-icon{
+  font-size: 16px;
+  width: 40%;
+  height: 100%;
+  justify-content: space-around;
+}
+
+
+.friendspage-submenu-item.remove:hover  {
+  background-color: red;
+  background-color: #7b351c;
+  
+}
+
+
+
+
+.friendspage-submenu-container.message:hover,
+.friendspage-submenu-item.message:hover{
+
+  background-color: #2d2e2c;
+  background-color: #1c3d7bcd;
+
+}
+
+
+
+
+.friendspage-directmessage-text{
+  font-size: min(2vw, 12px);
+  color: #7d7d7d7e;
+  top: 5px;
+  position: relative;
+  margin-left: 5px;
+}
+
+
+@media screen and (min-width: 800px) {
+
+
+  .friendspage-name-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 10px;
+    right: 80px;
+    font-size: 25px;
+  }
+
+
+  .change-chatname{
+    width: 100%;
+  }
+
+
+}

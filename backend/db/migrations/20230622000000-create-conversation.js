@@ -26,10 +26,13 @@ module.exports = {
         allowNull: true,
         type: Sequelize.STRING,
       },
+      hasDefaultChatName: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: true
+      },
       isDirectMessage: {
         type: Sequelize.BOOLEAN,
         defaultValue: false
-
       },
       createdAt: {
         type: Sequelize.DATE,

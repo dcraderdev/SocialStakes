@@ -35,7 +35,7 @@ const Chatbox = () => {
 
   useEffect(() => {
     if (currentConversationId && conversations) {
-      let currentMessages = conversations[currentConversationId].messages;
+      let currentMessages = conversations[currentConversationId]?.messages || [];
       setMessages(currentMessages);
     }
   }, [currentConversationId, conversations]);

@@ -18,7 +18,7 @@ const initialState = {
     friends: {},
     showFriendInvites: false,
     showTableInvites: false,
-    showFriends: true,
+    showFriends: false,
     currentFriendView: null,
     showConversation: false,
     currentConversationView: null,

@@ -46,6 +46,13 @@ module.exports = function (io) {
     };
   }; 
 
+
+
+
+
+
+
+
   io.on('connection', async (socket) => {
     const userId = socket.handshake.query.userId;
     const username = socket.handshake.query.username;
@@ -226,6 +233,8 @@ module.exports = function (io) {
       }
     }
  
+
+
     socket.on('disconnect', async () => {
 
       let timer = 5000; // 15 seconds
@@ -266,9 +275,6 @@ module.exports = function (io) {
         }
       }, timer);
     }); 
-
-
-
 
 
 
@@ -1757,6 +1763,8 @@ module.exports = function (io) {
       const {friendship, newConversation} = request
 
       let convoObj = {
+        isDirectMessage: newConversation.isDirectMessage,
+        hasDefaultChatName: newConversation.hasDefaultChatName,
         chatName: newConversation.chatName,
         conversationId : newConversation.id,
         messages: [],

@@ -113,6 +113,8 @@ async deleteMessage(messageObj, userId) {
           acc[conversation.id] = {
             chatName: conversation.chatName,
             conversationId: conversation.id,
+            isDirectMessage: conversation.isDirectMessage,
+            hasDefaultChatName: conversation.hasDefaultChatName,
 
             messages: conversation.messages.map(message => {
               const { id, content, userId, User, createdAt } = message;

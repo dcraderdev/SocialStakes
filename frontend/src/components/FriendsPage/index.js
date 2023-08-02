@@ -13,6 +13,7 @@ import './FriendsPage.css';
 import Chatbox from '../Chatbox';
 import { showConversationAction } from '../../redux/actions/chatActions';
 import ChatInputArea from '../ChatInputArea';
+import FriendsPageHeader from '../FriendsPageHeader';
 
 const FriendsPage = () => {
 
@@ -43,48 +44,48 @@ const FriendsPage = () => {
   const [currentFriendViewTab, setCurrentFriendViewTab] = useState(currentFriendViewConversations);
   const [showFriendSubMenu, setShowFriendSubMenu] = useState(false);
 
-  const submenu = useRef()
-  const submenuButton = useRef()
+  // const submenu = useRef()
+  // const submenuButton = useRef()
 
 
 
-  // friendsTab friend menu modal logic handling
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (submenu.current && !submenu.current.contains(event.target)) {
-        if(event.target === submenuButton.current){
-          return
-        }
-        setShowFriendSubMenu(false)
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
+  // // friendsTab friend menu modal logic handling
+  // useEffect(() => {
+  //   const handleClickOutside = (event) => {
+  //     if (submenu.current && !submenu.current.contains(event.target)) {
+  //       if(event.target === submenuButton.current){
+  //         return
+  //       }
+  //       setShowFriendSubMenu(false)
+  //     }
+  //   };
+  //   document.addEventListener('mousedown', handleClickOutside);
+  //   return () => {
+  //     document.removeEventListener('mousedown', handleClickOutside);
+  //   };
+  // }, []);
 
 
 
 
-  const toggleSubMenu = () => {
-      setShowFriendSubMenu(!showFriendSubMenu)
-  }
+  // const toggleSubMenu = () => {
+  //     setShowFriendSubMenu(!showFriendSubMenu)
+  // }
 
-  const toggleRemoveFriendModal = () => {
-    setUpdateObj({currentFriendView})
-   openModal('RemoveFriendModal')
-  }
+  // const toggleRemoveFriendModal = () => {
+  //   setUpdateObj({currentFriendView})
+  //  openModal('RemoveFriendModal')
+  // }
 
-  const startPrivateConversation = () => {
-    let conversationObj = {
-      friendshipId: currentFriendView.id,
-      friend: currentFriendView.friend
-    }
-    console.log('clik');
-    socket.emit('start_private_conversation', conversationObj)
+  // const startPrivateConversation = () => {
+  //   let conversationObj = {
+  //     friendshipId: currentFriendView.id,
+  //     friend: currentFriendView.friend
+  //   }
+  //   console.log('clik');
+  //   socket.emit('start_private_conversation', conversationObj)
 
-  }
+  // }
 
   //sets hieght for our sidemenu in case we have currentGames
   useEffect(() => {
@@ -93,97 +94,100 @@ const FriendsPage = () => {
 
 
 
-useEffect(() => {
+// useEffect(() => {
 
 
-  if (showFriendInvites) {
-    setHeader(    <div className={`friendspage-name-container`}>
+//   if (showFriendInvites) {
+//     setHeader(    <div className={`friendspage-name-container`}>
 
 
-    <div className={`friendspage-name flex center`}>
+//     <div className={`friendspage-name flex center`}>
 
-    {'Friend Invites'}
+//     {'Friend Invites'}
 
-    </div>
-
-
-    </div>);
-  }
-  if (showTableInvites) {
-
-    setHeader(    <div className={`friendspage-name-container`}>
+//     </div>
 
 
+//     </div>);
+//   }
+//   if (showTableInvites) {
 
-
-
-      <div className={`friendspage-name flex center`}>
-
-      {'Table Invites'}
-
-      </div>
-
-
-      </div>);
-
-
-  }
-
-  if (showFriends && currentFriendView) {
+//     setHeader(    <div className={`friendspage-name-container`}>
 
 
 
-    setHeader(    <div className={`friendspage-name-container`}>
-
-    <div className={`friendspage-profile-image-container flex center`}>
-      <div className={`friendspage-profile-image flex center`}>{`:)`}</div>
-    </div>
 
 
+//       <div className={`friendspage-name flex center`}>
 
-      <div className={`friendspage-name flex center`}>
+//       {'Table Invites'}
 
-      {currentFriendView?.friend.username}
-
-      </div>
-
-
-      </div>);
-  }
-
-  if (showConversation && conversations && currentConversationId) {
+//       </div>
 
 
-    setHeader(    <div className={`friendspage-name-container`}>
+//       </div>);
 
-    <div className={`friendspage-profile-image-container flex center`}>
-      <div className={`friendspage-profile-image flex center`}>{`:)`}</div>
-    </div>
+
+//   }
+
+//   if (showFriends && currentFriendView) {
 
 
 
-      <div className={`friendspage-name flex center`}>
+//     setHeader(    <div className={`friendspage-name-container`}>
 
-      {conversations[currentConversationId].chatName}
-
-      </div>
-
-
-      </div>);
-
-
-  }
-
-
-  if (showFriends && !currentFriendView) {
-    setHeader('Friend removed');
-  }
+//     <div className={`friendspage-profile-image-container flex center`}>
+//       <div className={`friendspage-profile-image flex center`}>{`:)`}</div>
+//     </div>
 
 
 
-}, [showFriendInvites, showTableInvites, currentFriendView, showFriendSubMenu, showConversation, currentConversationId]);
+//       <div className={`friendspage-name flex center`}>
+
+//       {currentFriendView?.friend.username}
+
+//       </div>
+
+
+//       </div>);
+//   }
+
+//   if (showConversation && conversations && currentConversationId) {
+
+
+//     setHeader(    <div className={`friendspage-name-container`}>
+
+//     <div className={`friendspage-profile-image-container flex center`}>
+//       <div className={`friendspage-profile-image flex center`}>{`:)`}</div>
+//     </div>
+
+
+
+//       <div className={`friendspage-name flex center`}>
+
+//       {conversations[currentConversationId].chatName}
+
+//       </div>
+
+
+//       </div>);
+
+
+//   }
+
+
+//   if (showFriends && !currentFriendView) {
+//     setHeader('Friend removed');
+//   }
+
+
+
+// }, [showFriendInvites, showTableInvites, currentFriendView, showFriendSubMenu, showConversation, currentConversationId]);
 
   
+
+
+
   const getViewHeight = () => {
     if(showFriends){
      return hasCurrentTables ? 'friendspage-chatbox-extended lowered' : 'friendspage-chatbox-condensed lowered'
@@ -225,34 +229,11 @@ useEffect(() => {
           
 
 
+    
+          <FriendsPageHeader />
 
           
-        <div className="friendspage-friendview-header flex center">
-        
 
-  {header}
-
-
-
-{            <div className='friendspage-friendmenu-container' >
-              <div ref={submenuButton} className='friendspage-friendmenu-icon flex center' onClick={toggleSubMenu}>
-                <i className="fa-solid fa-ellipsis-vertical"></i>
-              </div>
-
-{showFriendSubMenu &&              <div ref={submenu} className='friendspage-submenu-container'>
-                <div onClick={startPrivateConversation} className='friendspage-submenu-item message flex center'>Message <i className="fa-regular fa-message"></i></div>
-                <div onClick={toggleRemoveFriendModal} className='friendspage-submenu-item remove flex center'>Remove <i className="fa-regular fa-trash-can"></i></div>
-              </div>}
-
-            </div>}
-          
-        </div>
-          
-
-
-
-          
-          
         </div>
 
         <div className="friendspage-content"></div>
@@ -312,9 +293,10 @@ useEffect(() => {
                 <ChatInputArea />
               </div>
             )}
+
+
           </div>
         )}
-
 
         {/* // currentConversationView */}
         {showConversation && (
@@ -323,7 +305,6 @@ useEffect(() => {
             <Chatbox conversation={conversations[currentConversationId]}/>
           </div>
         )}
-        
 
         {showConversation && (
           <div className="chatbox-chatinput-container">

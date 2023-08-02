@@ -228,6 +228,13 @@ const SocketProvider = ({ children }) => {
 
     // // 
     socket.on('add_conversation', (convoObj) => {
+
+      console.log('convoObj');
+      console.log('convoObj');
+      console.log(convoObj);
+      console.log('convoObj');
+      console.log('convoObj');
+
       dispatch(addConversationAction(convoObj));
     });
 

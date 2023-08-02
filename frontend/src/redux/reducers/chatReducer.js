@@ -107,6 +107,8 @@ const gamesReducer = (state = initialState, action) => {
     case ADD_CONVERSATION: {
       let {conversationId} = action.payload
 
+      console.log(action.payload);
+
       let newConversations = {...newState.conversations}
       newConversations[conversationId] = action.payload
 
@@ -125,17 +127,14 @@ const gamesReducer = (state = initialState, action) => {
     }
 
 
-
-
-
     case SHOW_CONVERSATION_BY_ID: {
       let conversation = action.payload
       console.log(action.payload);
       return {...newState, currentConversation: conversation.conversationId}
     }
+
     case SHOW_FRIENDS: {
       let conversation = action.payload
-
       return {...newState, currentConversation: conversation.conversationId}
     }
 

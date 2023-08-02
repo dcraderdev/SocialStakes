@@ -46,21 +46,9 @@ const friendController = {
         user2Id: user2Id,
       },
     });
-
-    console.log('existingFriendship');
-    console.log('existingFriendship');
-    console.log(existingFriendship);
-    console.log('existingFriendship');
-    console.log('existingFriendship');
-
     
     // If there is no existing friendship, create a new one with status 'pending'
     if (!existingFriendship) {
-      console.log('no current relationship', userId, 'is the initiator');
-      console.log('no current relationship', userId, 'is the initiator');
-      console.log('no current relationship', userId, 'is the initiator');
-      console.log('no current relationship', userId, 'is the initiator');
-      console.log('no current relationship', userId, 'is the initiator');
       const newFriendship = await Friendship.create({
         user1Id: user1Id,
         user2Id: user2Id,
@@ -141,7 +129,7 @@ const friendController = {
 
     // If not, create a new one and add both users
     chatName = getChatName(usernames)
-    const conversation = await Conversation.create({chatName, isDirectMessage: true});
+    const conversation = await Conversation.create({chatName, isDirectMessage: true, hasDefaultChatName:true});
     if(conversation){
       await conversation.addUsers([userId, recipientId]);
       return conversation
@@ -190,7 +178,6 @@ const friendController = {
       ) {
 
         const newConversation = await this.startConversation(friendRequestObj)
-        
         existingFriendship.status = 'accepted';
         existingFriendship.conversationId = newConversation.id;
         existingFriendship.actionUserId = userId;

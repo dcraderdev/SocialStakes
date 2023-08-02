@@ -45,6 +45,9 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: true,
     },
+    hasDefaultChatName: {
+      type: DataTypes.BOOLEAN,
+    },
     isDirectMessage: {
       type: DataTypes.BOOLEAN,
     },

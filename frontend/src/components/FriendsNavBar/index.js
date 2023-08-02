@@ -39,21 +39,9 @@ const FriendsNavBar = () => {
     setHasCurrentTables(Object.entries(currentTables).length > 0);
   }, [currentTables]);
 
-  useEffect(() => {
-    setCurrentFocus(viewFriends);
-  }, []);
 
-  const testFriends = {};
 
-  for (let i = 0; i < 40; i++) {
-    let name = 'Friend' + i;
-    let id = Math.floor(Math.random() * 1000000);
-    testFriends[name] = {
-      id: id.toString(),
-      friend: { username: name, rank: i },
-      status: 'accepted',
-    };
-  }
+
 
   //select which submenu is focused(opened)
   const toggleFocus = (focus) => {
@@ -93,6 +81,7 @@ const FriendsNavBar = () => {
       return hasCurrentTables ? 'invites-extra-extended' : ' invites-extended';
     }
   };
+
 
   return (
     <div className={`friendsnavbar-wrapper flex`}>

@@ -116,16 +116,21 @@ const gamesReducer = (state = initialState, action) => {
 
     }
 
+
     case REMOVE_CONVERSATION: {
       let {conversationId} = action.payload
-
+    
       let newConversations = {...newState.conversations}
       delete newConversations[conversationId]
-
-      return {...newState, conversations: newConversations}
-
+    
+      let firstConversationId = Object.keys(newConversations)[0];
+    
+      if (!firstConversationId) {
+        firstConversationId = null;
+      }
+    
+      return {...newState, conversations: newConversations, currentConversation: firstConversationId}
     }
-
 
     case SHOW_CONVERSATION_BY_ID: {
       let conversation = action.payload

@@ -238,7 +238,7 @@ const SocketProvider = ({ children }) => {
 
     // // 
     socket.on('remove_conversation', (convoObj) => {
-      dispatch(removeFriendAction(convoObj));
+      dispatch(removeConversationAction(convoObj));
     });
 
     
@@ -296,7 +296,7 @@ const SocketProvider = ({ children }) => {
         socket.off('remove_conversation');
         socket.off('change_chatname');
 
-
+        
       };
       
     }

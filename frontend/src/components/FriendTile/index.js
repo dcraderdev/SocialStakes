@@ -172,7 +172,7 @@ const FriendTile = ({ friend, type, cb, isInvited }) => {
                           className="friendtile-request invite-friend"
                           onClick={()=>cb(friend,'add')}
                         >
-                          Invite
+                          Add
                         </div>}
 
 
@@ -185,7 +185,7 @@ const FriendTile = ({ friend, type, cb, isInvited }) => {
                         className="friendtile-request"
                         onClick={()=>cb(friend,'remove')}
                         >
-                        Invited!
+                        Added!
                         </div>
   }
 

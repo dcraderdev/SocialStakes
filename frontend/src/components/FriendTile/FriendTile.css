@@ -10,9 +10,6 @@
 }
 
 
-.friendtile-submenu-wrapper:last-child{
-  margin-bottom: 10px;
-}
 
 .friendtile-submenu-wrapper:hover{
   background-color: rgba(228, 228, 228, 0.2508);

@@ -4,7 +4,8 @@ import {
   ACCEPT_FRIEND_REQUEST, 
   DENY_FRIEND_REQUEST,
   GET_USER_FRIENDS,
-  SHOW_TABLE_INVITES, SHOW_FRIEND_INVITES, SHOW_FRIENDS, REMOVE_FRIEND, SHOW_CONVERSATION_BY_ID
+  SHOW_TABLE_INVITES, SHOW_FRIEND_INVITES, SHOW_FRIENDS, REMOVE_FRIEND, 
+  SHOW_CONVERSATION_BY_ID, REMOVE_CONVERSATION
 } from '../actions/actionTypes'
 
 
@@ -21,7 +22,6 @@ const initialState = {
     showFriends: false,
     currentFriendView: null,
     showConversation: false,
-    currentConversationView: null,
 
 
 };

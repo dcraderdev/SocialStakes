@@ -20,6 +20,7 @@ const FriendsNavBar = () => {
 
   const history = useHistory();
   const dispatch = useDispatch();
+  const bottomRef = useRef(null);
 
   const {openModal} = useContext(ModalContext)
 
@@ -30,12 +31,26 @@ const FriendsNavBar = () => {
   const conversations = useSelector((state) => state.chats.conversations);
 
   const currentTables = useSelector((state) => state.games.currentTables);
+
+
   const isShowingFriendInvites = useSelector(
     (state) => state.friends.showFriendInvites
   );
+
+
   const isShowingTableInvites = useSelector(
     (state) => state.friends.showTableInvites
   );
+
+  const showConversation = useSelector(
+    (state) => state.friends.showConversation
+  );
+
+  const showFriends = useSelector(
+    (state) => state.friends.showFriends
+  );
+
+
   const [hasCurrentTables, setHasCurrentTables] = useState(false);
 
   //sets hieght for our sidemenu in case we have currentGames
@@ -53,6 +68,39 @@ const FriendsNavBar = () => {
     }
     setCurrentFocus(focus);
   };
+
+
+
+
+  useEffect(()=>{
+
+    console.log(showConversation);
+    console.log(isShowingTableInvites);
+    console.log(isShowingFriendInvites);
+    console.log(showFriends);
+
+    if(showConversation){
+      setCurrentFocus(viewConversations);
+
+    }
+
+    
+    if (showConversation && bottomRef.current) {
+      bottomRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  
+
+
+
+
+  }, [isShowingFriendInvites,isShowingTableInvites,showConversation, showFriends])
+
+
+
+
+
+
+
 
   const getViewHeight = () => {
     if (currentFocus === viewFriends) {
@@ -193,6 +241,8 @@ const FriendsNavBar = () => {
 {!conversations || Object.entries(conversations).length === 0 && (
               <div className='friendsnavbar-content-missing flex center'>No conversations.</div>
             )}
+
+          <div ref={bottomRef} />
 
 
           </div>

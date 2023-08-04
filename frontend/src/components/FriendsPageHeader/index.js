@@ -84,20 +84,20 @@ const FriendsPageHeader = () => {
     }
 
     if (showConversation && conversations && currentConversationId) {
-      let convoIsDM = conversations[currentConversationId].isDirectMessage;
+      let convoIsDM = conversations?.[currentConversationId]?.isDirectMessage;
       setIsDirectMessage(convoIsDM);
       setShowSubMenuButton(true);
 
       if (convoIsDM) {
         let chatNameSplit =
-          conversations[currentConversationId].chatName.split(',');
+          conversations?.[currentConversationId]?.chatName.split(',');
         let newChatName =
-          chatNameSplit[0] === user.username
+          chatNameSplit[0] === user?.username
             ? chatNameSplit[1]
             : chatNameSplit[0];
         setHeader(newChatName);
       } else {
-        setHeader(conversations[currentConversationId].chatName);
+        setHeader(conversations?.[currentConversationId]?.chatName);
       }
     }
 
@@ -134,6 +134,15 @@ const FriendsPageHeader = () => {
     setUpdateObj({ currentFriendView });
     openModal('RemoveFriendModal');
   };
+
+
+
+  const toggleLeaveConversationModal = () => {
+    setUpdateObj({ currentConversationId });
+    openModal('LeaveConversationModal');
+  };
+
+  
 
 
   const handleChatNameChange = (e) => {
@@ -244,6 +253,7 @@ const FriendsPageHeader = () => {
 
   useEffect(() => {
     const errors = {};
+    if(!header) return
     if (!header.length) errors['header'] = 'Please enter at least one character';
     if (!header.trim().length) errors['trimmed-error'] = 'Please enter at least one character';
     if (header.length > 30) errors['length'] = 'Must be 30 characters or less';
@@ -381,7 +391,7 @@ const FriendsPageHeader = () => {
 
               {showSubMenu && !isDirectMessage && (
                 <div
-                  onClick={null}
+                  onClick={toggleLeaveConversationModal}
                   className="friendspage-submenu-item remove flex center"
                 >
                   <div className="friendspage-item-text flex center">Leave</div>

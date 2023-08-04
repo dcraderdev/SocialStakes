@@ -90,8 +90,37 @@ async deleteMessage(messageObj, userId) {
 
       let conversations
       if(userConversations){
-        conversations = userConversations.map(convo=>convo.conversations);
+        conversations = userConversations.map(convo=>{
+          console.log('<><><><><><><><><><><><><><>');
+          console.log('<><><><><><><><><><><><><><>');
+          console.log(convo.hasLeft);
+          console.log(convo);
+          console.log('<><><><><><><><><><><><><><>');
+          console.log('<><><><><><><><><><><><><><>');
+          return convo.conversations
+        });
       }
+
+      // console.log('-=-=-=-=-=-=-=-=-=');
+      // console.log('-=-=-=-=-=-=-=-=-=');
+      // console.log('-=-=-=-=-=-=-=-=-=');
+      // console.log('-=-=-=-=-=-=-=-=-=');
+      // console.log(userConversations[2]);
+      // console.log('<><><><><><><><><><><><><><>');
+      // console.log('<><><><><><><><><><><><><><>');
+
+      // console.log(userConversations[2].conversations);
+      // // id: 'b0b487ff-eca5-43a2-8a07-0e216ff83b08',
+   
+      // console.log('-=-=-=-=-=-=-=-=-=');
+      // console.log('-=-=-=-=-=-=-=-=-=');
+      // console.log('-=-=-=-=-=-=-=-=-=');
+      // console.log('-=-=-=-=-=-=-=-=-=');
+
+
+
+
+
   
       if (conversations) {
 
@@ -162,7 +191,40 @@ async deleteMessage(messageObj, userId) {
   },
 
   
+  async leaveConversation(conversationId, userId) {
 
+
+    console.log('-=-=-=-=-=-=-=-=-=');
+    console.log('-=-=-=-=-=-=-=-=-=');
+    console.log(conversationId);
+    console.log('-=-=-=-=-=-=-=-=-=');
+    console.log('-=-=-=-=-=-=-=-=-=');
+
+    const conversation = await UserConversation.findOne({
+      where: {
+        userId,
+        conversationId: conversationId
+      }
+    });
+
+    if(!conversation){
+      return false
+    }
+
+
+    console.log('-=-=-=-=-=-=-=-=-=');
+    console.log('-=-=-=-=-=-=-=-=-=');
+    console.log(conversation);   
+    console.log(conversationId);
+    console.log('-=-=-=-=-=-=-=-=-=');
+    console.log('-=-=-=-=-=-=-=-=-=');
+
+    conversation.hasLeft = true
+    await conversation.save();
+    return true
+
+  
+  },
 
 
 

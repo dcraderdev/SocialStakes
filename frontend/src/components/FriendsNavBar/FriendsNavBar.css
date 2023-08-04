@@ -136,7 +136,7 @@
 }
 
 .friends-extra-extended{
-  height: calc(100vh - 270px);
+  height: calc(100vh - 260px);
 
 }
 
@@ -144,7 +144,7 @@
 
 .friendsnavbar-content{
   width: 100%;
-  height: calc(100vh - 260px);
+  height: calc(100vh - 270px);
   
   overflow-y: scroll; 
   overflow-x: hidden; 

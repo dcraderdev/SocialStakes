@@ -65,15 +65,15 @@ module.exports = function (io) {
     const userFriends = await friendController.getUserFriends(userId);
     const userConversations = await chatController.getUserConversations(userId);
 
-    console.log('-=-=-=-=-=-=-=-=-=');
-    console.log('--- CONNECTING ---');
-    console.log('SOCKET ID', socketId);
-    console.log('A user connected', socket.id, 'Username:', username);
-    console.log('User Room:', userId);
-    console.log('userConversations:');
-    console.log(userConversations);
+    // console.log('-=-=-=-=-=-=-=-=-=');
+    // console.log('--- CONNECTING ---');
+    // console.log('SOCKET ID', socketId);
+    // console.log('A user connected', socket.id, 'Username:', username);
+    // console.log('User Room:', userId);
+    // console.log('userConversations:');
+    // console.log(userConversations);
  
-    console.log('-=-=-=-=-=-=-=-=-=');
+    // console.log('-=-=-=-=-=-=-=-=-=');
 
 
     if(!connections[userId]){
@@ -1976,14 +1976,22 @@ module.exports = function (io) {
               });
             }
           })
-
-
           socket.emit('add_conversation', newConversation)
           socket.emit('go_to_conversation', newConversation)
           socket.join(newConversation.id)
         }
+      })
 
 
+
+
+      // Edit message in specific room
+      socket.on('leave_conversation', async (leaveObj) => {
+        const { conversationId } = leaveObj;
+        let leaveConversation = await chatController.leaveConversation(conversationId, userId);
+        if(leaveConversation){
+          socket.emit('remove_conversation', leaveObj)
+        }
       })
 
 

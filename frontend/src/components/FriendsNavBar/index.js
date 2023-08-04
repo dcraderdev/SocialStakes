@@ -6,6 +6,7 @@ import './FriendsNavBar.css';
 import SearchBar from '../SearchBar';
 import FriendTile from '../FriendTile';
 import ConversationTile from '../ConversationTile';
+import { ModalContext } from '../../context/ModalContext';
 
 import {
   showFriendInvitesAction,
@@ -19,6 +20,9 @@ const FriendsNavBar = () => {
 
   const history = useHistory();
   const dispatch = useDispatch();
+
+  const {openModal} = useContext(ModalContext)
+
 
   const [currentFocus, setCurrentFocus] = useState(null);
 
@@ -38,8 +42,6 @@ const FriendsNavBar = () => {
   useEffect(() => {
     setHasCurrentTables(Object.entries(currentTables).length > 0);
   }, [currentTables]);
-
-
 
 
 
@@ -81,6 +83,12 @@ const FriendsNavBar = () => {
       return hasCurrentTables ? 'invites-extra-extended' : ' invites-extended';
     }
   };
+
+
+
+  console.log(conversations);
+
+
 
 
   return (
@@ -152,6 +160,14 @@ const FriendsNavBar = () => {
             }`}
           >
             <div>Conversations</div>
+            <div onClick={(e)=>{
+              e.preventDefault()
+              e.stopPropagation()
+              openModal('newConversation')
+            }} className='friendsnavbar-startconvo-button flex center'>
+              <i className="fa-solid fa-plus"></i>
+            </div>
+
           </div>
           <div
             className={`friendsnavbar-content ${

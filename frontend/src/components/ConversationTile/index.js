@@ -17,6 +17,7 @@ const ConversationTile = ({ conversation, type }) => {
   const [tileText, setTileText ] = useState('');
 
 
+
   useEffect(()=> {
     setIsActive(false)
     if(currentConversationId === conversation?.conversationId){
@@ -27,24 +28,19 @@ const ConversationTile = ({ conversation, type }) => {
 
     if ( conversation && conversations) {
       let currentConvo = conversations[conversation.conversationId]
-      let convoIsDM = currentConvo.isDirectMessage
-      let hasDefaultChatName = currentConvo.hasDefaultChatName
+      let convoIsDM = currentConvo?.isDirectMessage
+      let hasDefaultChatName = currentConvo?.hasDefaultChatName
 
       if(convoIsDM && hasDefaultChatName){
-        let chatNameSplit = currentConvo.chatName.split(',')
-        let newChatName = chatNameSplit[0] === user.username ? chatNameSplit[1] : chatNameSplit[0]
+        let chatNameSplit = currentConvo?.chatName.split(',')
+        let newChatName = chatNameSplit[0] === user?.username ? chatNameSplit[1] : chatNameSplit[0]
         setTileText(newChatName);
       } else {
         setTileText(conversation?.chatName)
       }
     }
 
-  },[currentConversationId, conversation])
-
-
-console.log(conversation);
-console.log(tileText);
-
+  },[currentConversationId, conversation, conversations])
 
 
   // sub menu tile
@@ -55,15 +51,15 @@ console.log(tileText);
         className={`conversationtile-submenu-wrapper flex`}
       >
         <div className={`conversationtile-container flex`}>
-          <div className="flex">
+          <div className="flex align-center">
             <div className={`conversationtile-profile-image-container flex center ${isActive ? ' active-conversation' : ''}`}>
               <div className={`conversationtile-profile-image flex center`}>
                 {`:)`}
               </div>
             </div>
 
-            <div className={`conversationtile-name-container flex center`}>
-               <div className={`conversationtile-name flex center ${isActive ? ' active-name' : ''}`}>
+            <div className={`conversationtile-name-container`}>
+               <div className={`conversationtile-name ${isActive ? ' active-name' : ''}`}>
                 {tileText}
               </div>
             </div>

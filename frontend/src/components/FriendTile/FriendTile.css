@@ -1,5 +1,7 @@
 .friendtile-submenu-wrapper{
   border: rgba(0, 0, 0, 0.238) solid 1px;
+  border-left: none;
+
   cursor: pointer;
   
   height: 50px;
@@ -7,10 +9,16 @@
   
 }
 
-.friendtile-submenu-wrapper:hover{
-  background-color: #2d2e2c;
-  
+
+.friendtile-submenu-wrapper:last-child{
+  margin-bottom: 10px;
 }
+
+.friendtile-submenu-wrapper:hover{
+  background-color: rgba(228, 228, 228, 0.2508);
+}
+
+
 
 .friendtile-container{
   border-top: #404040b0 solid 1px;
@@ -129,4 +137,23 @@
 
 .friendtile-request-option:active > i {
   transform: scale(1.3);
+}
+
+
+
+
+
+.friendtile-request{
+  font-size: 18px;
+
+}
+
+
+.friendtile-request.invite-friend:hover{
+  color: rgb(18, 133, 8);
+}
+
+.friendtile-request.remove{
+  color: red;
+
 }

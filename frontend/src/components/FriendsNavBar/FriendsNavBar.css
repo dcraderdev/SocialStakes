@@ -76,7 +76,6 @@
   color: #fdfcfc;
   border-bottom: solid rgba(0, 0, 0, 0.287) 1px;
   z-index: 100;
-
 }
 
 .friendsnavbar-nav{
@@ -91,7 +90,33 @@
 }
 
 
+.friendsnavbar-startconvo-button{
+  position: absolute;
+  border: rgba(0, 0, 0, 0.376) solid 1px;
+  border-radius: 50%;
+  right: 5px;
+  width: 25px;
+  height: 25px;
+  background-color: #2d2e2c;
+}
 
+.friendsnavbar-startconvo-button:hover{
+  background-color: #2d2e2c;
+}
+.friendsnavbar-startconvo-button:hover > i{
+  transform: scale(1.2);
+}
+
+.friendsnavbar-startconvo-button:active > i{
+  transform: scale(1);
+}
+
+.friendsnavbar-startconvo-button i{
+
+  width: fit-content;
+  height: fit-content;
+  font-size: 13px;
+}
 
 
 

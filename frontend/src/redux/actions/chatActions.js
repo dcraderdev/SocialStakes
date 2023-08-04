@@ -1,6 +1,11 @@
 
 import {
-  ADD_MESSAGE, EDIT_MESSAGE, DELETE_MESSAGE, GET_USER_CONVERSATIONS, SHOW_CONVERSATION_BY_ID, ADD_CONVERSATION, REMOVE_CONVERSATION
+  ADD_MESSAGE, EDIT_MESSAGE, DELETE_MESSAGE, 
+  GET_USER_CONVERSATIONS, 
+  SHOW_CONVERSATION_BY_ID, 
+  ADD_CONVERSATION, REMOVE_CONVERSATION,
+  CHANGE_CHAT_NAME,
+  ADD_CONVERSATION_INIVTE
 } from './actionTypes'
 
 
@@ -64,5 +69,31 @@ export const removeConversationAction = (convoObj) => {
     type: REMOVE_CONVERSATION,
     payload: convoObj,
 
+  };
+};
+
+export const changeChatNameAction = (changeObj) => {
+  console.log(changeObj);
+  return {
+    type: CHANGE_CHAT_NAME,
+    payload: changeObj,
+
+  };
+};
+
+export const addConversationInviteAction = (changeObj) => {
+  console.log(changeObj);
+  return {
+    type: ADD_CONVERSATION_INIVTE,
+    payload: changeObj,
+  };
+};
+
+
+export const removeConversationInviteAction = (changeObj) => {
+  console.log(changeObj);
+  return {
+    type: REMOVE_CONVERSATION_INVITE,
+    payload: changeObj,
   };
 };

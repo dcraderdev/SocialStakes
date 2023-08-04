@@ -87,19 +87,8 @@ module.exports = function (io) {
       timeOfLastAction: Date.now()
     }
 
-    console.log('----------------------');
-    console.log('----------------------');
-
-    console.log(connections);
-
-    console.log('----------------------');
-    console.log('----------------------');
-
-
-
     if(userConversations){
       Object.keys(userConversations).map(conversation=>{
-        console.log(conversation);
         socket.join(conversation)
       })
     } 
@@ -1932,11 +1921,8 @@ module.exports = function (io) {
           username
         };
 
-
         console.log(newMessageObj);
-        console.log(room);
-  
-  
+
         if (rooms[room]) {
           rooms[room].messages.push(newMessageObj);
         }
@@ -1963,9 +1949,42 @@ module.exports = function (io) {
         io.in(room).emit('delete_message', messageObj);
       });
   
+      // Edit message in specific room
+      socket.on('change_chatname', async (changeObj) => {
+        const { conversationId } = changeObj;
+        let room = conversationId;
+        let changeChatNameRequest = await chatController.changeChatName(changeObj);
+        if(changeChatNameRequest){
+          io.in(room).emit('change_chatname', changeObj);
+        }
+      })
   
-  
-  
+      // Edit message in specific room
+      socket.on('start_conversation', async (convoObj) => {
+        const { friendListIds } = convoObj;
+        let newConversation = await chatController.startConversation(convoObj, userId, username);
+
+
+        if(newConversation){
+          friendListIds.map(id=>{
+            let recipientConnections = connections[id];
+
+            if(recipientConnections){
+              Object.values(recipientConnections).forEach(connection => {
+                connection.socket.join(newConversation.id)
+                connection.socket.emit('add_conversation', newConversation)
+              });
+            }
+          })
+
+
+          socket.emit('add_conversation', newConversation)
+          socket.emit('go_to_conversation', newConversation)
+          socket.join(newConversation.id)
+        }
+
+
+      })
 
 
 

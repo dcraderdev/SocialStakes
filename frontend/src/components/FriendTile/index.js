@@ -5,7 +5,7 @@ import './FriendTile.css';
 import { showFriendsAction } from '../../redux/actions/friendActions';
 import { SocketContext } from '../../context/SocketContext';
 import { ModalContext } from '../../context/ModalContext';
-const FriendTile = ({ friend, type }) => {
+const FriendTile = ({ friend, type, cb, isInvited }) => {
   const dispatch = useDispatch();
   const {socket} = useContext(SocketContext)
 
@@ -13,6 +13,7 @@ const FriendTile = ({ friend, type }) => {
   const [status, setStatus] = useState('online');
   const [isActive, setIsActive ] = useState(false);
   const user = useSelector((state) => state.users.user);
+  const [isHovering, setIsHovering] = useState(false)
 
   useEffect(()=> {
     setIsActive(false)
@@ -137,5 +138,82 @@ const FriendTile = ({ friend, type }) => {
       </div>
     );
   }
+
+
+
+
+
+  //invite to convo modal tile below
+
+  if (type === 'invite-to-conversation') {
+    return (
+      <div
+        className={`friendtile-submenu-wrapper flex`}
+      >
+        <div className={`friendtile-container flex`}>
+          <div className="flex">
+            <div className={`friendtile-profile-image-container flex center`}>
+              <div className={`friendtile-profile-image flex center`}>
+                {`:)`}
+              </div>
+            </div>
+
+            <div className={`friendtile-name-container flex center`}>
+  {friend &&            <div className={`friendtile-name flex center`}>
+                {friend?.friend?.username}
+              </div>}
+            </div>
+          </div>
+
+          <div className={`friendtile-request-option-container flex center`}>
+
+
+{!isInvited &&         <div
+                          className="friendtile-request invite-friend"
+                          onClick={()=>cb(friend,'add')}
+                        >
+                          Invite
+                        </div>}
+
+
+
+
+                        {isInvited && !isHovering &&         <div
+                        onMouseEnter={()=>setIsHovering(true)}
+                        onMouseLeave={()=>setIsHovering(false)}
+
+                        className="friendtile-request"
+                        onClick={()=>cb(friend,'remove')}
+                        >
+                        Invited!
+                        </div>
+  }
+
+
+{isInvited && isHovering &&         <div
+                        onMouseEnter={()=>setIsHovering(true)}
+                        onMouseLeave={()=>setIsHovering(false)}
+
+                        className="friendtile-request remove"
+                        onClick={()=>cb(friend,'remove')}
+                        >
+                        Remove?
+                        </div>
+  }
+
+
+
+
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+
+
+
+
+
 };
 export default FriendTile;

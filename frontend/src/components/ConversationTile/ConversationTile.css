@@ -22,9 +22,10 @@
   justify-content: space-between;
   border-top: #404040b0 solid 1px;
   border-bottom: #000000 solid 1px;
+}
 
-
-  
+.conversationtile-submenu-wrapper:last-child{
+  margin-bottom: 10px;
 }
 
 
@@ -52,8 +53,28 @@
   font-size: 16px;
   color: azure;
   font-weight: 300;
+  height: fit-content;
 
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 120px;
+  min-width: 0;
+  text-align: center;
 }
+
+
+.conversationtile-name{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+
+
+
+
 
 .active-conversation{
   border: rgba(218, 165, 32, 0.38) solid 2px;
@@ -89,6 +110,7 @@
 @media screen and (min-width: 800px) {
   .conversationtile-name-container{
     font-size: 20px;
+    width: 220px;
   }
 }
 

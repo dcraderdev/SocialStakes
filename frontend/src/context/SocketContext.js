@@ -10,7 +10,10 @@ import {
   deleteMessageAction,
   getUserConversationsAction,
   addConversationAction,
-  removeConversationAction
+  removeConversationAction,
+  changeChatNameAction,
+  addConversationInviteAction,
+  showConversationAction
   } from '../redux/actions/chatActions';
 
 
@@ -226,22 +229,32 @@ const SocketProvider = ({ children }) => {
       dispatch(removeConversationAction(friendObj));
     });
 
+
+    
     // // 
     socket.on('add_conversation', (convoObj) => {
-
-      console.log('convoObj');
-      console.log('convoObj');
-      console.log(convoObj);
-      console.log('convoObj');
-      console.log('convoObj');
-
       dispatch(addConversationAction(convoObj));
     });
 
     // // 
-    socket.on('remove_conversation', (friendObj) => {
-      dispatch(removeFriendAction(friendObj));
+    socket.on('remove_conversation', (convoObj) => {
+      dispatch(removeFriendAction(convoObj));
     });
+
+    
+    socket.on('go_to_conversation', (convoObj) => {
+      dispatch(showConversationAction(convoObj));
+    });
+
+
+    // // 
+    socket.on('change_chatname', (changeObj) => {
+      dispatch(changeChatNameAction(changeObj));
+    });
+
+
+
+
 
 
 
@@ -279,9 +292,11 @@ const SocketProvider = ({ children }) => {
         socket.off('friend_removed');
 
         socket.off('add_conversation');
+        socket.off('go_to_conversation');
         socket.off('remove_conversation');
+        socket.off('change_chatname');
 
-        
+
       };
       
     }

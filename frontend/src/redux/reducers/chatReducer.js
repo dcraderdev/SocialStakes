@@ -1,6 +1,6 @@
 
 import { 
-  ADD_MESSAGE, EDIT_MESSAGE, DELETE_MESSAGE, GET_USER_CONVERSATIONS, SHOW_CONVERSATION_BY_ID, SHOW_FRIENDS, ADD_CONVERSATION, REMOVE_CONVERSATION, REMOVE_FRIEND
+  ADD_MESSAGE, EDIT_MESSAGE, DELETE_MESSAGE, GET_USER_CONVERSATIONS, SHOW_CONVERSATION_BY_ID, SHOW_FRIENDS, ADD_CONVERSATION, REMOVE_CONVERSATION, REMOVE_FRIEND, CHANGE_CHAT_NAME
 
 } from '../actions/actionTypes'
 
@@ -139,6 +139,19 @@ const gamesReducer = (state = initialState, action) => {
     }
 
     
+    case CHANGE_CHAT_NAME: {
+      let {newChatName, conversationId} = action.payload
+      let newConversations = {...newState.conversations}
+
+      if(newConversations[conversationId]){
+        console.log(newConversations[conversationId]);
+        newConversations[conversationId].chatName = newChatName
+      }
+
+      console.log(newConversations[conversationId]);
+
+      return {...newState, conversations: newConversations}
+    }
 
     
 

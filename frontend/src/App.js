@@ -27,6 +27,7 @@ import UnknownRoutePage from './components/UnknownRoutePage';
 import StatPage from './components/StatPage';
 import RemoveFriendModal from './components/RemoveFriendModal';
 import ProfileButtonModal from './components/ProfileButtonModal';
+import StartConversationModal from './components/StartConversationModal';
 
 function App() {
 
@@ -122,6 +123,12 @@ console.log(modal);
 {modal  === 'RemoveFriendModal' && (
         <div className='modal-container'>
           {modal === 'RemoveFriendModal' && <RemoveFriendModal />}
+        </div>
+      )}
+
+{modal  === 'newConversation' && (
+        <div className='modal-container'>
+          {modal === 'newConversation' && <StartConversationModal />}
         </div>
       )}
 

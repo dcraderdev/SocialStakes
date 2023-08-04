@@ -311,6 +311,10 @@ body{
   margin-left: 5px;
 }
 
+.align-center{
+  align-items: center;
+}
+
 
 .balancemodal-disabled{
   color: rgba(255, 255, 255, 0.297);

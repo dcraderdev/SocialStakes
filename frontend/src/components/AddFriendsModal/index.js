@@ -5,15 +5,16 @@ import { ModalContext } from '../../context/ModalContext';
 import { SocketContext } from '../../context/SocketContext';
 import FriendTile from '../FriendTile';
 
-import './StartConversationModal.css'
+import './AddFriendsModal.css'
 
 
-const StartConversationModal = () => {
+const AddFriendsModal = () => {
 
   const { modal, openModal, closeModal, updateObj, setUpdateObj } = useContext(ModalContext);
   const { socket } = useContext(SocketContext);
   const user = useSelector((state) => state.users.user);
   const friends = useSelector((state) => state.friends);
+  const conversations = useSelector((state) => state.chats.conversations);
 
   const dispatch = useDispatch();
   const formRef = useRef()
@@ -21,7 +22,6 @@ const StartConversationModal = () => {
   const [friendList, setFriendList] = useState({})
 
   const [chatName, setChatName] = useState('');
-  const [chatNameText, setChatNameText] = useState({});
   
   const [validationErrors, setValidationErrors] = useState({});
   const [showValidationError, setShowValidationError] = useState(false);
@@ -29,7 +29,6 @@ const StartConversationModal = () => {
   const [disabledButton, setDisabledButton] = useState(false);
   const [buttonClass, setButtonClass] = useState('startconversation-submit-button');
 
-  const chatNameRef = useRef()
 
   useEffect(() => {
     if (Object.keys(validationErrors).length > 0) {
@@ -41,19 +40,22 @@ const StartConversationModal = () => {
 
 
 
+
   useEffect(() => {
     const errors = {};
-    if (!chatName.length) errors['chatName'] = 'Please enter at least one character';
-    if (!chatName.trim().length) errors['trimmed-error'] = 'Please enter at least one character';
-    if (chatName.length > 30) errors['length'] = 'Must be 30 characters or less';
+    if (!Object.values(friendList).length) errors['none-added'] = 'Please add at least one friend';
     setValidationErrors(errors);
-  }, [chatName]);
+  }, [friendList]);
 
 
 
   useEffect(() => {
-
-    chatNameRef.current.focus();
+    if(updateObj.currentConversationId && conversations){
+      console.log(updateObj.currentConversationId);
+      console.log(conversations);
+      console.log();
+      setChatName(conversations[updateObj.currentConversationId].chatName)
+    }
 
 
     const handleClickOutside = (event) => {
@@ -84,13 +86,9 @@ const StartConversationModal = () => {
   }
 
 
-  const addFriendsToGroupConversation = () =>{
-
-
+  const startGroupConversation = () =>{
     console.log(friendList);
-
-
-    if(validationErrors['length'] || validationErrors['trimmed-error']){
+    if(validationErrors['none-added']){
       if(!showValidationError){
         setShowValidationError(true)
         setTimeout(() => {
@@ -111,15 +109,14 @@ const StartConversationModal = () => {
     console.log(friendListNames);
 
     let convoObj = {
-      chatName,
+      conversationId: updateObj.currentConversationId,
       friendList,
       friendListNames,
       friendListIds
     }
 
-    socket.emit('start_conversation', convoObj)
+    socket.emit('add_friends_to_conversation', convoObj)
     closeModal()
-
 
     return
   }
@@ -131,8 +128,10 @@ const StartConversationModal = () => {
 
 
   return (
-    <div className="startconversation-container flex between" ref={formRef}>
-    <div className="startconversation-header">Start Conversation</div>
+    <div className="addfriends-container flex between" ref={formRef}>
+    <div className="addfriends-header">Add friends</div>
+
+    <div className="addfriends-chatname flex center">{chatName}</div>
 
 
     {showValidationError && (
@@ -143,46 +142,9 @@ const StartConversationModal = () => {
       </div>
     )}
 
-    <form onSubmit={(e)=>{
-      e.preventDefault()
-      startGroupConversation()
-      }} 
-      className="startconversation-form flex between"
-      >
-
-    <label className="startconversation-label flex center">Chat Name</label>
-        <input
-          ref={chatNameRef}
-          className="startconversation-chatname"
-          type="text"
-          value={chatName}
-          onChange={(e) => setChatName(e.target.value)}
-          required
-          placeholder={validationErrors['chatName'] || ''}
-        />
-
-        {/* <button 
-          type="submit" 
-          className={buttonClass}
-          disabled={Object.keys(validationErrors).length > 0 || disabledButton}>
-            Start Conversation
-        </button> */}
-
-        <button 
-          type="submit" 
-          style={{display:'none'}}
-          className={buttonClass}
-          disabled={Object.keys(validationErrors).length > 0 || disabledButton}>
-            Start Conversation
-        </button>
 
 
-
-
-    </form>
-
-
-    <div className="startconversation-friendinvite-container">
+    <div className="addfriends-friendinvite-container">
 
     {friends &&
       Object.entries(friends.friends).map(([key, friend], index) => {
@@ -194,9 +156,9 @@ const StartConversationModal = () => {
     </div>
 
 
-    <div onClick={addFriendsToGroupConversation} className={buttonClass}>
+    <div onClick={startGroupConversation} className={buttonClass}>
 
-      Start Conversation
+      Add friends
 
     </div>
 
@@ -205,4 +167,4 @@ const StartConversationModal = () => {
 );
   
 }
-export default StartConversationModal
+export default AddFriendsModal

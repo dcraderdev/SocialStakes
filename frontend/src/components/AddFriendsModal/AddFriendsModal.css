@@ -1,0 +1,170 @@
+
+.addfriends-container {
+  z-index: 1000000;
+  position: absolute;
+  border: 1px solid rgb(0, 0, 0);
+  background-color: rgb(53, 49, 49);
+  padding: 20px;
+  color: white;
+
+
+  top: max(20%, 70px);
+
+  font-size:20px;
+  border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 50%;
+  height: 50%;
+  min-width: 400px;
+  min-height: 200px;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+
+.addfriends-form{
+  top: 15%;
+  position: absolute;
+  width: 90%;
+
+
+
+}
+
+
+
+.addfriends-header{
+  position: absolute;
+  top: 2%;
+  font-size: max(4vh,22px);
+  text-shadow: -1px 0 black, 0 3px black, 3px 0 black, 0 -1px black;
+
+}
+
+
+
+.addfriends-label{
+  text-align: center;
+  margin-right: 10px;
+  width: 30%;
+
+}
+
+
+
+
+
+.addfriends-chatname{
+  outline: none;
+  border: none;
+  border-bottom: black solid 1px;
+  position: relative;
+  top: 10%;
+
+  box-shadow: none;
+  background-color: transparent;
+  font-size: max(3.5vh,18px);
+
+  color: white;
+  width: 80%;
+
+}
+
+
+
+.addfriends-chatname::placeholder {
+  color: #c7461e;
+  font-size: min(2vw, 15px);
+}
+
+.validation-handling {
+  position: absolute;
+  color: #c7461e;
+  font-size: min(2.2vw, 17px);
+  top: -15px;
+}
+
+
+
+
+.addfriends-friendinvite-container{
+  overflow-y: scroll; 
+  overflow-x: hidden; 
+}
+
+
+/* Styling the scrollbar */
+.addfriends-friendinvite-container::-webkit-scrollbar{
+  width: 5px; /* Width of the scrollbar */
+}
+
+.addfriends-friendinvite-container::-webkit-scrollbar-track {
+  background:transparent; /* Color of the track of the scrollbar */
+}
+
+.addfriends-friendinvite-container::-webkit-scrollbar-thumb {
+  background: #131312; /* Color of the thumb of the scrollbar */
+}
+
+.addfriends-friendinvite-container::-webkit-scrollbar-thumb:hover {
+  background: darkgrey; /* Color of the thumb of the scrollbar when hovered */
+}
+
+
+
+
+
+
+.addfriends-friendinvite-container{
+
+  position: absolute;
+  top: 25%;
+  width: 95%;
+  height: 60%;
+
+  border-top: #404040b0 solid 1px;
+  border-bottom: #000000 solid 1px;
+
+}
+
+.addfriends-submit-button{
+  position: absolute;
+  bottom: 2%;
+  border: rgba(0, 0, 0, 0.452) solid 1px;
+  padding: 5px;
+  padding-left: 15px;
+  padding-right: 15px;
+  cursor: pointer;
+  border-radius: 5px;
+  border-top: #404040b0 solid 1px;
+  border-bottom: #000000 solid 2px;
+}
+
+.addfriends-submit-button:hover{
+  background-color: rgba(228, 228, 228, 0.2508);
+}
+
+.addfriends-submit-button:active{
+  border-bottom: #000000 solid 1px;
+  box-shadow: 0 -1px 1px rgba(0, 0, 0, .2);
+
+
+}
+
+
+.addfriends-submit-button.disabled{
+  position: absolute;
+  bottom: 2%;
+  border: rgba(91, 89, 89, 0.452) solid 1px;
+  color: rgba(128, 128, 128, 0.275);
+  padding: 5px;
+  padding-left: 15px;
+  padding-right: 15px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.addfriends-submit-button.disabled:hover{
+  border: rgba(239, 14, 14, 0.251) solid 1px;
+}

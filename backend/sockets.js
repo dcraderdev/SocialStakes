@@ -1984,7 +1984,6 @@ module.exports = function (io) {
 
 
 
-
       // Edit message in specific room
       socket.on('leave_conversation', async (leaveObj) => {
         const { conversationId } = leaveObj;
@@ -1994,6 +1993,28 @@ module.exports = function (io) {
         }
       })
 
+
+      // Edit message in specific room
+      socket.on('add_friends_to_conversation', async (convoObj) => {
+        const { friendListIds } = convoObj;
+        let conversation = await chatController.addFriendsToConversation(convoObj);
+        
+        if(conversation){
+          friendListIds.map(id=>{
+            let recipientConnections = connections[id];
+
+            if(recipientConnections){
+              Object.values(recipientConnections).forEach(connection => {
+                connection.socket.join(conversation.id)
+                connection.socket.emit('add_conversation', conversation)
+              });
+            }
+          })
+          socket.emit('add_conversation', conversation)
+          socket.emit('go_to_conversation', conversation)
+          socket.join(conversation.id)
+        }
+      })
 
 
   });

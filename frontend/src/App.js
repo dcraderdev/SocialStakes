@@ -29,6 +29,7 @@ import RemoveFriendModal from './components/RemoveFriendModal';
 import ProfileButtonModal from './components/ProfileButtonModal';
 import StartConversationModal from './components/StartConversationModal';
 import LeaveConversationModal from './components/LeaveConversationModal';
+import AddFriendsModal from './components/AddFriendsModal';
 
 function App() {
 
@@ -141,6 +142,12 @@ console.log(modal);
         </div>
       )}
 
+
+{modal  === 'AddFriendsModal' && (
+        <div className='modal-container'>
+          {modal === 'AddFriendsModal' && <AddFriendsModal />}
+        </div>
+      )}
 
 
         <div className={`profile-modal ${modal === 'profileModal' ? ' visible' : ' hidden'}`} >

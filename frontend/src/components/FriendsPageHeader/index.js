@@ -142,6 +142,11 @@ const FriendsPageHeader = () => {
     openModal('LeaveConversationModal');
   };
 
+  const toggleAddFriendsModal = () => {
+    setUpdateObj({ currentConversationId });
+    openModal('AddFriendsModal');
+  };
+
   
 
 
@@ -389,6 +394,24 @@ const FriendsPageHeader = () => {
                 </div>
               </div>
 
+
+              {showSubMenu && !isDirectMessage && (
+                <div
+                  onClick={toggleAddFriendsModal}
+                  className="friendspage-submenu-item message flex center"
+                >
+                  <div className="friendspage-item-text flex center">
+                    Add friends
+                  </div>
+                  <div className="friendspage-item-icon flex center">
+                    <i className="fa-solid fa-right-to-bracket"></i>
+                  </div>
+                </div>
+              )}
+
+
+
+
               {showSubMenu && !isDirectMessage && (
                 <div
                   onClick={toggleLeaveConversationModal}
@@ -417,7 +440,7 @@ const FriendsPageHeader = () => {
             </div>
           )}
 
-          {/* SubMenu within convos tab */}
+          {/* SubMenu within friends tab */}
           {showSubMenu && showFriends && (
             <div ref={submenu} className="friendspage-submenu-container">
               <div

@@ -13,7 +13,9 @@ import {
   removeConversationAction,
   changeChatNameAction,
   addConversationInviteAction,
-  showConversationAction
+  showConversationAction,
+  removeUserFromConversationAction,
+  addUserToConversationAction 
   } from '../redux/actions/chatActions';
 
 
@@ -253,7 +255,15 @@ const SocketProvider = ({ children }) => {
     });
 
 
+    // // 
+    socket.on('user_left_conversation', (leaveObj) => {
+      dispatch(removeUserFromConversationAction(leaveObj));
+    });
 
+    // // 
+    socket.on('user_joined_conversation', (convoObj) => {
+      dispatch(addUserToConversationAction(convoObj));
+    });
 
 
 
@@ -295,6 +305,8 @@ const SocketProvider = ({ children }) => {
         socket.off('go_to_conversation');
         socket.off('remove_conversation');
         socket.off('change_chatname');
+        socket.off('user_left_conversation');
+        socket.off('user_joined_conversation');
 
         
       };

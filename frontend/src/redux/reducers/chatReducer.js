@@ -1,6 +1,10 @@
 
 import { 
-  ADD_MESSAGE, EDIT_MESSAGE, DELETE_MESSAGE, GET_USER_CONVERSATIONS, SHOW_CONVERSATION_BY_ID, SHOW_FRIENDS, ADD_CONVERSATION, REMOVE_CONVERSATION, REMOVE_FRIEND, CHANGE_CHAT_NAME
+  ADD_MESSAGE, EDIT_MESSAGE, DELETE_MESSAGE, GET_USER_CONVERSATIONS, SHOW_CONVERSATION_BY_ID, SHOW_FRIENDS, ADD_CONVERSATION, REMOVE_CONVERSATION,
+   REMOVE_FRIEND, 
+   CHANGE_CHAT_NAME, 
+   REMOVE_USER_FROM_CONVERSATION,
+   ADD_USER_TO_CONVERSATION
 
 } from '../actions/actionTypes'
 
@@ -89,8 +93,6 @@ const gamesReducer = (state = initialState, action) => {
         }
       }
 
-      
-      
       return { ...newState, conversations: newConversations };
     }
     
@@ -106,8 +108,6 @@ const gamesReducer = (state = initialState, action) => {
 
     case ADD_CONVERSATION: {
       let {conversationId} = action.payload
-
-      console.log(action.payload);
 
       let newConversations = {...newState.conversations}
       newConversations[conversationId] = action.payload
@@ -132,9 +132,43 @@ const gamesReducer = (state = initialState, action) => {
       return {...newState, conversations: newConversations, currentConversation: firstConversationId}
     }
 
+    case REMOVE_USER_FROM_CONVERSATION: {
+      let {conversationId, userId} = action.payload
+      let newConversations = {...newState.conversations}
+      delete newConversations[conversationId].members[userId]
+      return { ...newState, conversations: newConversations }
+    }
+
+    case ADD_USER_TO_CONVERSATION: {
+      let {friendList, conversationId} = action.payload
+
+      console.log(action.payload);
+
+      let newConversations = {...newState.conversations}
+
+      let newConversation = {...newState.conversations[conversationId]}
+
+
+      console.log(newConversation);
+      console.log(friendList);
+
+      // newConversation.members = {...newConversation.members, ...friendList};
+
+      Object.entries(friendList).forEach(([key, value]) => {
+        newConversation.members[value.friend.id] = value.friend;
+      })
+      
+      newConversations[conversationId] = newConversation;
+
+
+      console.log(newConversation);
+
+      return { ...newState, conversations: newConversations }
+    }
+
+
     case SHOW_CONVERSATION_BY_ID: {
       let conversation = action.payload
-      console.log(action.payload);
       return {...newState, currentConversation: conversation.conversationId}
     }
 
@@ -152,8 +186,6 @@ const gamesReducer = (state = initialState, action) => {
         console.log(newConversations[conversationId]);
         newConversations[conversationId].chatName = newChatName
       }
-
-      console.log(newConversations[conversationId]);
 
       return {...newState, conversations: newConversations}
     }

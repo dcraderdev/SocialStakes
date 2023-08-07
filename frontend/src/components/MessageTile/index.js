@@ -43,7 +43,13 @@ const MessageTile = ({message}) => {
   
         // Check if there is no selected message
         if (!selectedMessage) return false;
+
+        // Check if the selected message is from roomAdmin
+        if (selectedMessage.userId === 'e10d8de4-f4c7-0000-0000-000000000000') return false;        
   
+        // Check if the selected message is from roomAdmin
+        if (selectedMessage.username === 'Room') return false;   
+
         // Check if the selected message is from the current user
         if (selectedMessage.userId === user.id) return false;
   

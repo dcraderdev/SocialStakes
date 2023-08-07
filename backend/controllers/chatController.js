@@ -75,7 +75,6 @@ const chatController = {
               tableId: null,
               // isDirectMessage: false,
             },
-
             include: [
               {
                 model: Message,
@@ -87,19 +86,17 @@ const chatController = {
                   },
                 ],
               },
-
               {
                 model: User,
                 as: 'users',
                 attributes: ['id', 'username'],
+                through: {
+                  attributes: [],
+                  where: { hasLeft: false }
+                }
               },
-
-
             ],
-
           },
-
-
         ],
         order: [
           ['conversations', 'createdAt', 'ASC'],
@@ -117,25 +114,17 @@ const chatController = {
       if (conversations) {
         const formattedConversations = conversations.reduce(
           (acc, conversation) => {
-            
-
             acc[conversation.id] = {
               chatName: conversation.chatName,
               conversationId: conversation.id,
               isDirectMessage: conversation?.isDirectMessage,
               hasDefaultChatName: conversation?.hasDefaultChatName,
 
-
-
               members: conversation?.users.reduce((acc, member) => {
                 const { id, username } = member;
                 acc[id] = { id, username };
                 return acc;
               }, {}),
-
-
-
-
 
               messages: conversation.messages.map((message) => {
                 const { id, content, userId, User, createdAt } = message;
@@ -175,6 +164,7 @@ const chatController = {
       acc[friend.friend.id] = friend.friend
       return acc
     },{})
+    members[userId] = {userId, username}
 
 
     const newConversation = await Conversation.create({
@@ -272,8 +262,7 @@ const chatController = {
       return false;
     }
 
-    conversation.hasLeft = true;
-    await conversation.save();
+    await conversation.destroy();
     return true;
   },
 

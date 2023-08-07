@@ -51,19 +51,6 @@ const AddFriendsModal = () => {
 
 
   useEffect(() => {
-    if(updateObj.currentConversationId && conversations){
-      setChatName(conversations[updateObj.currentConversationId].chatName)
-
-
-      setCurrentMemebers(conversations?.[updateObj?.currentConversationId].members);
-
-
-    }
-
-
-
-
-
     const handleClickOutside = (event) => {
       if (formRef.current && !formRef.current.contains(event.target)) {
         closeModal();
@@ -74,6 +61,19 @@ const AddFriendsModal = () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
+
+
+
+
+  useEffect(() => {
+    if(updateObj?.currentConversationId && conversations){
+      setChatName(conversations[updateObj.currentConversationId].chatName)
+      setCurrentMemebers(conversations?.[updateObj?.currentConversationId].members);
+    }
+
+  }, [conversations, updateObj]);
+
+
 
 
   const handleList = (friend, option) =>{
@@ -105,6 +105,10 @@ const AddFriendsModal = () => {
     }
 
     if(Object.values(validationErrors).length){
+      return
+    }
+
+    if(Object.values(friendList).length === 0 ){
       return
     }
 

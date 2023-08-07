@@ -7,7 +7,6 @@ const {
   handSummary,
   bestValue,
 } = require('./controllers/cardController');
-const { connect } = require('./routes/api/session');
 
 module.exports = function (io) {
 
@@ -385,17 +384,6 @@ module.exports = function (io) {
     });
  
   
- 
-
-
-
-
-
-
-
-
-
-
 
 
     socket.on('take_seat', async (seatObj) => {
@@ -1763,7 +1751,6 @@ module.exports = function (io) {
       io.in(recipientId).emit('accept_friend_request', recipientObj);
       socket.emit('accept_friend_request', senderObj);
       
-      
       Object.values(senderConnections).forEach(connection => {
         connection.socket.join(newConversation.id);
       });
@@ -1961,7 +1948,7 @@ module.exports = function (io) {
   
       // Edit message in specific room
       socket.on('start_conversation', async (convoObj) => {
-        const { friendListIds } = convoObj;
+        const { friendListIds, friendListNames } = convoObj;
         let newConversation = await chatController.startConversation(convoObj, userId, username);
 
 
@@ -1979,6 +1966,34 @@ module.exports = function (io) {
           socket.emit('add_conversation', newConversation)
           socket.emit('go_to_conversation', newConversation)
           socket.join(newConversation.id)
+
+
+
+          let content;
+
+
+          content = `${username} has started a new conversation!`
+          emitCustomMessage({conversationId:newConversation.id, content})
+
+
+
+
+          if (friendListNames.length === 1) {
+              content = `${friendListNames[0]} has been added to the conversation!`
+
+
+          } else if(friendListNames.length === 2){
+            content = `${friendListNames[0]} and ${friendListNames[1]} have been added to the conversation!`
+          }
+          
+        
+          else {
+              let lastFriend = friendListNames.pop();
+              content = `${friendListNames.join(', ')}, and ${lastFriend} have been added to the conversation!`
+          }
+
+          emitCustomMessage({conversationId:newConversation.id, content})
+
         }
       })
 
@@ -1989,17 +2004,42 @@ module.exports = function (io) {
         const { conversationId } = leaveObj;
         let leaveConversation = await chatController.leaveConversation(conversationId, userId);
         if(leaveConversation){
+
+          let currentConnections = connections[userId];
+      
+          Object.values(currentConnections).forEach(connection => {
+            connection.socket.leave(conversationId);
+          });
+
+
+
           socket.emit('remove_conversation', leaveObj)
+
+          content = `${username} has left the conversation!`
+          emitCustomMessage({conversationId, content})
+
+          io.in(conversationId).emit('user_left_conversation', {conversationId, userId});
+
+
+
+
+
+
         }
       })
 
  
       // Edit message in specific room
       socket.on('add_friends_to_conversation', async (convoObj) => {
-        const { friendListIds } = convoObj;
+        const { friendListIds, friendListNames } = convoObj;
+
+        let room = convoObj.conversationId
         let conversation = await chatController.addFriendsToConversation(convoObj);
         
         if(conversation){
+
+        io.in(room).emit('user_joined_conversation', convoObj);
+
 
           friendListIds.map(id=>{
             let recipientConnections = connections[id];
@@ -2011,11 +2051,58 @@ module.exports = function (io) {
               });
             }
           })
-          socket.emit('add_conversation', conversation)
-          socket.emit('go_to_conversation', conversation)
-          socket.join(conversation.id)
+
+          let content;
+          if (friendListNames.length === 1) {
+              content = `${username} has added ${friendListNames[0]} to the conversation!`
+
+
+          } else if(friendListNames.length === 2){
+            content = `${username} has added ${friendListNames[0]} and ${friendListNames[1]} to the conversation!`
+          }
+          
+        
+          else {
+              let lastFriend = friendListNames.pop(); 
+              content = `${username} has added ${friendListNames.join(', ')}, and ${lastFriend} to the conversation!`
+          }
+
+          emitCustomMessage({conversationId:conversation.id, content})
         }
-      })
+      }) 
+
+
+     async function emitCustomMessage(messageObj){
+        // Broadcast message to specific room
+
+
+        const { conversationId, content } = messageObj;
+        let room = conversationId;
+  
+        const newMessage = await chatController.createMessage(messageObj, 'e10d8de4-f4c7-0000-0000-000000000000');
+        if (!newMessage) return false;
+  
+  
+        newMessageObj = {
+          createdAt: Date.now(),
+          conversationId,
+          content,
+          id: 100000,
+          userId: 0,
+          username: 'Room'
+        }; 
+
+        console.log(newMessageObj);
+
+        if (rooms[room]) {
+          rooms[room].messages.push(newMessageObj);
+        }
+  
+        io.in(room).emit('new_message', newMessageObj);
+
+      }
+
+
 
 
   });

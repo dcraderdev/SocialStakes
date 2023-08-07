@@ -69,20 +69,36 @@
   color: white;
   width: 80%;
 
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-align: center;
+
 }
 
 
 
-.addfriends-chatname::placeholder {
+
+
+
+
+
+
+.startconversation-chatname::placeholder {
   color: #c7461e;
   font-size: min(2vw, 15px);
 }
 
-.validation-handling {
+
+
+
+
+
+.startconversation-name.validation-handling {
   position: absolute;
   color: #c7461e;
   font-size: min(2.2vw, 17px);
-  top: -15px;
+  top: 10%;
 }
 
 

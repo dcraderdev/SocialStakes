@@ -45,7 +45,7 @@ const StartConversationModal = () => {
     const errors = {};
     if (!chatName.length) errors['chatName'] = 'Please enter at least one character';
     if (!chatName.trim().length) errors['trimmed-error'] = 'Please enter at least one character';
-    if (chatName.length > 30) errors['length'] = 'Must be 30 characters or less';
+    if (chatName.length > 30) errors['length'] = 'Chatname must be 30 characters or less';
     setValidationErrors(errors);
   }, [chatName]);
 
@@ -85,6 +85,17 @@ const StartConversationModal = () => {
 
 
   const addFriendsToGroupConversation = () =>{
+
+
+    console.log(friendList);
+    console.log(Object.values(friendList));
+
+
+
+
+    if(Object.values(friendList).length === 0 ){
+      return
+    }
 
 
     console.log(friendList);
@@ -136,7 +147,7 @@ const StartConversationModal = () => {
 
 
     {showValidationError && (
-      <div className={`friendspage-name flex center validation-handling`}>
+      <div className={`startconversation-name flex center validation-handling`}>
 
         {validationErrors['trimmed-error'] && validationErrors['trimmed-error']}
         {showValidationError && validationErrors['length'] && validationErrors['length']}
@@ -145,7 +156,7 @@ const StartConversationModal = () => {
 
     <form onSubmit={(e)=>{
       e.preventDefault()
-      startGroupConversation()
+      addFriendsToGroupConversation()
       }} 
       className="startconversation-form flex between"
       >

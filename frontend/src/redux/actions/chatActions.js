@@ -5,7 +5,8 @@ import {
   SHOW_CONVERSATION_BY_ID, 
   ADD_CONVERSATION, REMOVE_CONVERSATION,
   CHANGE_CHAT_NAME,
-  ADD_CONVERSATION_INIVTE
+  REMOVE_USER_FROM_CONVERSATION,
+  ADD_USER_TO_CONVERSATION
 } from './actionTypes'
 
 
@@ -81,19 +82,21 @@ export const changeChatNameAction = (changeObj) => {
   };
 };
 
-export const addConversationInviteAction = (changeObj) => {
-  console.log(changeObj);
+
+
+
+export const removeUserFromConversationAction = (leaveObj) => {
+  console.log(leaveObj);
   return {
-    type: ADD_CONVERSATION_INIVTE,
-    payload: changeObj,
+    type: REMOVE_USER_FROM_CONVERSATION,
+    payload: leaveObj,
   };
 };
 
-
-export const removeConversationInviteAction = (changeObj) => {
-  console.log(changeObj);
+export const addUserToConversationAction = (convoObj) => {
+  console.log(convoObj);
   return {
-    type: REMOVE_CONVERSATION_INVITE,
-    payload: changeObj,
+    type: ADD_USER_TO_CONVERSATION,
+    payload: convoObj,
   };
 };

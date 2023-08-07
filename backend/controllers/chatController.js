@@ -75,6 +75,7 @@ const chatController = {
               tableId: null,
               // isDirectMessage: false,
             },
+
             include: [
               {
                 model: Message,
@@ -82,12 +83,23 @@ const chatController = {
                 include: [
                   {
                     model: User,
-                    attributes: ['id', 'username', 'rank'],
+                    attributes: ['id', 'username'],
                   },
                 ],
               },
+
+              {
+                model: User,
+                as: 'users',
+                attributes: ['id', 'username'],
+              },
+
+
             ],
+
           },
+
+
         ],
         order: [
           ['conversations', 'createdAt', 'ASC'],
@@ -98,40 +110,32 @@ const chatController = {
       let conversations;
       if (userConversations) {
         conversations = userConversations.map((convo) => {
-          console.log('<><><><><><><><><><><><><><>');
-          console.log('<><><><><><><><><><><><><><>');
-          console.log(convo.hasLeft);
-          console.log(convo);
-          console.log('<><><><><><><><><><><><><><>');
-          console.log('<><><><><><><><><><><><><><>');
           return convo.conversations;
         });
       }
 
-      // console.log('-=-=-=-=-=-=-=-=-=');
-      // console.log('-=-=-=-=-=-=-=-=-=');
-      // console.log('-=-=-=-=-=-=-=-=-=');
-      // console.log('-=-=-=-=-=-=-=-=-=');
-      // console.log(userConversations[2]);
-      // console.log('<><><><><><><><><><><><><><>');
-      // console.log('<><><><><><><><><><><><><><>');
-
-      // console.log(userConversations[2].conversations);
-      // // id: 'b0b487ff-eca5-43a2-8a07-0e216ff83b08',
-
-      // console.log('-=-=-=-=-=-=-=-=-=');
-      // console.log('-=-=-=-=-=-=-=-=-=');
-      // console.log('-=-=-=-=-=-=-=-=-=');
-      // console.log('-=-=-=-=-=-=-=-=-=');
-
       if (conversations) {
         const formattedConversations = conversations.reduce(
           (acc, conversation) => {
+            
+
             acc[conversation.id] = {
               chatName: conversation.chatName,
               conversationId: conversation.id,
               isDirectMessage: conversation?.isDirectMessage,
               hasDefaultChatName: conversation?.hasDefaultChatName,
+
+
+
+              members: conversation?.users.reduce((acc, member) => {
+                const { id, username } = member;
+                acc[id] = { id, username };
+                return acc;
+              }, {}),
+
+
+
+
 
               messages: conversation.messages.map((message) => {
                 const { id, content, userId, User, createdAt } = message;
@@ -162,10 +166,16 @@ const chatController = {
     }
   },
 
+
   async startConversation(convoObj, userId, username) {
     let friendListIds = [...convoObj.friendListIds, userId];
-    let usernames = [...convoObj.friendListNames, username];
     let chatName = convoObj.chatName;
+
+    let members = Object.values(convoObj.friendList).reduce( (acc, friend) =>{
+      acc[friend.friend.id] = friend.friend
+      return acc
+    },{})
+
 
     const newConversation = await Conversation.create({
       chatName,
@@ -179,12 +189,12 @@ const chatController = {
       }
 
       const formattedConversation = {
-        id: newConversation.id,
         chatName: newConversation.chatName,
+        conversationId: newConversation.id,
         isDirectMessage: newConversation.isDirectMessage,
         hasDefaultChatName: newConversation.hasDefaultChatName,
-        conversationId: newConversation.id,
-        users: [usernames],
+        id: newConversation.id,
+        members,
         messages: [],
         notification: false,
       };
@@ -194,26 +204,52 @@ const chatController = {
     return { message: 'Conversation not found/created' };
   },
 
+
+
   async addFriendsToConversation(convoObj) {
     const { conversationId, friendListIds } = convoObj;
 
-    const conversation = await Conversation.findByPk();
+    let currentMembers = Object.values(convoObj.friendList).reduce( (acc, friend) =>{
+      acc[friend.friend.id] = friend.friend
+      return acc
+    },{})
+
+    const conversation = await Conversation.findByPk(conversationId,{
+      include: [
+        {
+          model: User,
+          as: 'users',
+          attributes: ['id', 'username'],
+        },
+      ],
+    });
+
 
     if (!conversation) {
       return false
     }
-    
+
     if (conversation) {
       for (let id of friendListIds) {
         await conversation.addUser(id);
       }
 
+      let newMembers = conversation?.users.reduce((acc, member) => {
+        const { id, username } = member;
+        acc[id] = { id, username };
+        return acc;
+      }, {})
+
+      let allMembers = {...currentMembers, ...newMembers}
+
       const formattedConversation = {
-        id: conversation.id,
         chatName: conversation.chatName,
-        isDirectMessage: conversation.isDirectMessage,
-        hasDefaultChatName: conversation.hasDefaultChatName,
         conversationId: conversation.id,
+        hasDefaultChatName: conversation.hasDefaultChatName,
+        isDirectMessage: conversation.isDirectMessage,
+        id: conversation.id,
+        members: allMembers,
+
         messages: [],
         notification: false,
       };

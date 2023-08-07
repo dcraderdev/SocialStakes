@@ -66,7 +66,6 @@ const FriendTile = ({ friend, type, cb, isInvited }) => {
       <div
         onClick={() => {
         dispatch(showFriendsAction(friend))
-        console.log(friend);
         
         }}
         className={`friendtile-submenu-wrapper flex`}

@@ -28,6 +28,7 @@ const AddFriendsModal = () => {
 
   const [disabledButton, setDisabledButton] = useState(false);
   const [buttonClass, setButtonClass] = useState('startconversation-submit-button');
+  const [currentMembers, setCurrentMemebers] = useState(null);
 
 
   useEffect(() => {
@@ -51,11 +52,16 @@ const AddFriendsModal = () => {
 
   useEffect(() => {
     if(updateObj.currentConversationId && conversations){
-      console.log(updateObj.currentConversationId);
-      console.log(conversations);
-      console.log();
       setChatName(conversations[updateObj.currentConversationId].chatName)
+
+
+      setCurrentMemebers(conversations?.[updateObj?.currentConversationId].members);
+
+
     }
+
+
+
 
 
     const handleClickOutside = (event) => {
@@ -146,9 +152,9 @@ const AddFriendsModal = () => {
 
     <div className="addfriends-friendinvite-container">
 
-    {friends &&
+    {friends && currentMembers &&
       Object.entries(friends.friends).map(([key, friend], index) => {
-        return (
+        return !currentMembers[key] && (
           <FriendTile key={index} friend={friend} type={'invite-to-conversation'} cb={handleList} isInvited={friendList[friend?.id]} />
         );
       })}

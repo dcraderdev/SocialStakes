@@ -1993,13 +1993,14 @@ module.exports = function (io) {
         }
       })
 
-
+ 
       // Edit message in specific room
       socket.on('add_friends_to_conversation', async (convoObj) => {
         const { friendListIds } = convoObj;
         let conversation = await chatController.addFriendsToConversation(convoObj);
         
         if(conversation){
+
           friendListIds.map(id=>{
             let recipientConnections = connections[id];
 

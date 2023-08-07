@@ -404,7 +404,7 @@ const FriendsPageHeader = () => {
                     Add friends
                   </div>
                   <div className="friendspage-item-icon flex center">
-                    <i className="fa-solid fa-right-to-bracket"></i>
+                    <i className="fa-solid fa-user-plus"></i>
                   </div>
                 </div>
               )}

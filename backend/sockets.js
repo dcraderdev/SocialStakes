@@ -1683,6 +1683,8 @@ module.exports = function (io) {
       friendRequestObj.userId = userId
 
       const request = await friendController.sendFriendRequest(friendRequestObj);
+
+      
       if(request){
 
         const {friendship, newConversation} = request
@@ -1700,7 +1702,7 @@ module.exports = function (io) {
           },
         }
            
-
+ 
         let recipientObj = {
           conversationId: newConversation?.id,
           friend:{
@@ -1711,7 +1713,7 @@ module.exports = function (io) {
             id: friendship.id,
             status: friendship.status
           },
-          
+           
         }
 
 
@@ -1842,6 +1844,62 @@ module.exports = function (io) {
           }
         }
         
+
+        let recipientObj = {
+          friend:{
+            id: userId,
+            username,
+          },
+          requestInfo: {
+            id: request.id,
+            status: request.status
+          }
+        }
+    
+        io.in(recipientId).emit('deny_friend_request', recipientObj);
+        socket.emit('deny_friend_request', senderObj);
+      }
+    
+      return request;
+    });
+
+
+
+    socket.on('cancel_friend_request', async (friendRequestObj) => {
+      console.log('-----cancel_friend_request------');
+      console.log('----------------------');
+
+
+      let recipientId = friendRequestObj.recipientId
+      let friendshipId = friendRequestObj.friendshipId
+ 
+      console.log('sender | ', username, userId);
+      console.log('recip | ', recipientId);
+
+      console.log(friendRequestObj);
+
+
+      const request = await friendController.cancelFriendRequest({friendshipId});
+      if(request) {
+
+      console.log('----------------------');
+      console.log('----------------------');
+      console.log(request);
+      console.log('----------------------');
+      console.log('----------------------');
+      console.log('----------------------');
+
+    
+        let senderObj = {
+          friend:{
+            id: recipientId, 
+          },
+          requestInfo: {
+            id: request.id,
+            status: request.status
+          }
+        }
+         
 
         let recipientObj = {
           friend:{

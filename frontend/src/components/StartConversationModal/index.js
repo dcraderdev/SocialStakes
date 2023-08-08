@@ -86,20 +86,9 @@ const StartConversationModal = () => {
 
   const addFriendsToGroupConversation = () =>{
 
-
-    console.log(friendList);
-    console.log(Object.values(friendList));
-
-
-
-
     if(Object.values(friendList).length === 0 ){
       return
     }
-
-
-    console.log(friendList);
-
 
     if(validationErrors['length'] || validationErrors['trimmed-error']){
       if(!showValidationError){
@@ -115,7 +104,6 @@ const StartConversationModal = () => {
       return
     }
 
-    console.log(friendList);
     let friendListNames = Object.values(friendList).map(friend=>friend.friend.username)
     let friendListIds = Object.values(friendList).map(friend=>friend.friend.id)
 

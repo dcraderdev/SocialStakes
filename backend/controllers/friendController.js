@@ -20,12 +20,6 @@ const getChatName = (usernames) =>{
 
 const friendController = {
   async sendFriendRequest(friendRequestObj) {
-    console.log('here');
-    console.log('here');
-    console.log('here');
-    console.log('here');
-    console.log('here');
-    console.log('here');
     const {userId, recipientId} = friendRequestObj;
 
     let user1Id, user2Id;
@@ -116,7 +110,7 @@ const friendController = {
           };
         }
     }
-    return 'Unexpected status';
+    return false;
   },
 
 
@@ -239,11 +233,27 @@ const friendController = {
     }
   },
 
+  async cancelFriendRequest(friendRequestObj) {
+    const {friendshipId} = friendRequestObj;
+
+
+    const existingFriendship = await Friendship.findByPk(friendshipId);
+
+    // If there is no existing friendship, return
+    if (!existingFriendship) {
+      return false;
+    } 
+
+    return await existingFriendship.destroy()
+
+    
+  },
+
   async getUserFriends(userId){
 
     const usersFriendships = await Friendship.findAll( {
       where: {
-        status: { [Op.or]: ['accepted', 'pending'] },
+        status: { [Op.or]: ['accepted', 'pending', 'rejected'] },
         [Op.or]: [
           { user1Id: userId },
           { user2Id: userId },
@@ -268,7 +278,7 @@ const friendController = {
       return false
     }
 
-    let friendships = { incomingRequests: {}, outgoingRequests: {}, friends: {} };
+    let friendships = { incomingRequests: {}, outgoingRequests: {}, rejectedRequests: {}, friends: {} };
 
     const formattedResults = usersFriendships.reduce((acc, friendship) => {
       const { id, status, user1, user2, actionUserId, conversationId } = friendship;
@@ -293,6 +303,10 @@ const friendController = {
           acc.outgoingRequests[friend.id] = formattedFriendship;
         } else {
           acc.incomingRequests[friend.id] = formattedFriendship;
+        }
+      } else if(status === 'rejected'){
+        if(actionUserId !== userId){
+          acc.rejectedRequests[friend.id] = formattedFriendship;
         }
       }
     

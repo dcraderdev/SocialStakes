@@ -16,6 +16,7 @@ import {
 const initialState = {
     incomingRequests: {}, 
     outgoingRequests: {}, 
+    rejectedRequests: {}, 
     friends: {},
     showFriendInvites: false,
     showTableInvites: false,
@@ -144,6 +145,7 @@ const userReducer = (state = initialState, action) => {
         ...newState,
         incomingRequests: action.payload.incomingRequests, 
         outgoingRequests: action.payload.outgoingRequests, 
+        rejectedRequests: action.payload.rejectedRequests, 
         friends: action.payload.friends
       }
     }

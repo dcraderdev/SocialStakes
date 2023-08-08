@@ -116,8 +116,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 100;
   cursor: pointer;
+
+  border: #1d1e1c solid 1px;
+  background-color: #1d1e1c8b;
 }
 
 
@@ -128,13 +130,39 @@
 
 .friendtile-request-option i{
   font-size: 20px;
-  color: rgb(18, 133, 8);
+  color: rgb(255, 255, 255);
 }
 
 
 .friendtile-request-option:active > i {
   transform: scale(1.3);
 }
+
+
+
+
+
+
+.friendtile-request-option:hover {
+  background-color: #2728258b;
+}
+
+.friendtile-request-option:hover i {
+  transform: scale(1.1);
+}
+.friendtile-request-option:active i {
+  transform: scale(1);
+}
+
+.table-home-button-subcontainer i{
+  width: 100%;
+  height: 100%;
+  font-size: 25px;
+  color: white;
+  object-fit: cover;
+}
+
+
 
 
 

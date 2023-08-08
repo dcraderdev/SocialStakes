@@ -93,7 +93,6 @@ const AddFriendsModal = () => {
 
 
   const startGroupConversation = () =>{
-    console.log(friendList);
     if(validationErrors['none-added']){
       if(!showValidationError){
         setShowValidationError(true)
@@ -112,11 +111,9 @@ const AddFriendsModal = () => {
       return
     }
 
-    console.log(friendList);
     let friendListNames = Object.values(friendList).map(friend=>friend.friend.username)
     let friendListIds = Object.values(friendList).map(friend=>friend.friend.id)
 
-    console.log(friendListNames);
 
     let convoObj = {
       conversationId: updateObj.currentConversationId,

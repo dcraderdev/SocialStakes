@@ -59,8 +59,10 @@ const MessageTile = ({message}) => {
         // Check if the selected message's user is already a friend or has a pending request
         const currentFriends = friends.friends;
         const outgoingRequests = friends.outgoingRequests;
+        const rejectedRequests = friends.rejectedRequests;
         const selectedMessageUserId = selectedMessage.userId;
-        if (currentFriends[selectedMessageUserId] || outgoingRequests[selectedMessageUserId]) {
+
+        if (currentFriends[selectedMessageUserId] || outgoingRequests[selectedMessageUserId] || rejectedRequests[selectedMessageUserId] ) {
           return false;
         }
   

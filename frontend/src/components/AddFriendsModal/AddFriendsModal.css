@@ -68,8 +68,6 @@
 
   color: white;
   width: 80%;
-
-
   white-space: nowrap;
   text-overflow: ellipsis;
   text-align: center;
@@ -78,19 +76,10 @@
 
 
 
-
-
-
-
-
-
 .startconversation-chatname::placeholder {
   color: #c7461e;
   font-size: min(2vw, 15px);
 }
-
-
-
 
 
 

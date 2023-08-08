@@ -123,20 +123,7 @@ const Table = () => {
       </div>
 
 
-{/* <div className='seats-container'>
-          <div className='top-seats flex between'>
-            <TableSeat seatNumber={1} />
-            <TableSeat seatNumber={6} />
-          </div>
-          <div className='mid-seats flex between'>
-            <TableSeat seatNumber={2} />
-            <TableSeat seatNumber={5} />
-          </div>
-          <div className='bot-seats flex between'>
-            <TableSeat seatNumber={3} />
-            <TableSeat seatNumber={4} />
-          </div>
-        </div> */}
+
 
 <div className='seats-container flex center'>
             <TableSeat seatNumber={1} />

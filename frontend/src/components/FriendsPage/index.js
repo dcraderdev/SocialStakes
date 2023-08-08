@@ -44,148 +44,11 @@ const FriendsPage = () => {
   const [currentFriendViewTab, setCurrentFriendViewTab] = useState(currentFriendViewConversations);
   const [showFriendSubMenu, setShowFriendSubMenu] = useState(false);
 
-  // const submenu = useRef()
-  // const submenuButton = useRef()
-
-
-
-  // // friendsTab friend menu modal logic handling
-  // useEffect(() => {
-  //   const handleClickOutside = (event) => {
-  //     if (submenu.current && !submenu.current.contains(event.target)) {
-  //       if(event.target === submenuButton.current){
-  //         return
-  //       }
-  //       setShowFriendSubMenu(false)
-  //     }
-  //   };
-  //   document.addEventListener('mousedown', handleClickOutside);
-  //   return () => {
-  //     document.removeEventListener('mousedown', handleClickOutside);
-  //   };
-  // }, []);
-
-
-
-
-  // const toggleSubMenu = () => {
-  //     setShowFriendSubMenu(!showFriendSubMenu)
-  // }
-
-  // const toggleRemoveFriendModal = () => {
-  //   setUpdateObj({currentFriendView})
-  //  openModal('RemoveFriendModal')
-  // }
-
-  // const startPrivateConversation = () => {
-  //   let conversationObj = {
-  //     friendshipId: currentFriendView.id,
-  //     friend: currentFriendView.friend
-  //   }
-  //   console.log('clik');
-  //   socket.emit('start_private_conversation', conversationObj)
-
-  // }
 
   //sets hieght for our sidemenu in case we have currentGames
   useEffect(() => {
     setHasCurrentTables(Object.entries(currentTables).length > 0);
   }, [currentTables]);
-
-
-
-// useEffect(() => {
-
-
-//   if (showFriendInvites) {
-//     setHeader(    <div className={`friendspage-name-container`}>
-
-
-//     <div className={`friendspage-name flex center`}>
-
-//     {'Friend Invites'}
-
-//     </div>
-
-
-//     </div>);
-//   }
-//   if (showTableInvites) {
-
-//     setHeader(    <div className={`friendspage-name-container`}>
-
-
-
-
-
-//       <div className={`friendspage-name flex center`}>
-
-//       {'Table Invites'}
-
-//       </div>
-
-
-//       </div>);
-
-
-//   }
-
-//   if (showFriends && currentFriendView) {
-
-
-
-//     setHeader(    <div className={`friendspage-name-container`}>
-
-//     <div className={`friendspage-profile-image-container flex center`}>
-//       <div className={`friendspage-profile-image flex center`}>{`:)`}</div>
-//     </div>
-
-
-
-//       <div className={`friendspage-name flex center`}>
-
-//       {currentFriendView?.friend.username}
-
-//       </div>
-
-
-//       </div>);
-//   }
-
-//   if (showConversation && conversations && currentConversationId) {
-
-
-//     setHeader(    <div className={`friendspage-name-container`}>
-
-//     <div className={`friendspage-profile-image-container flex center`}>
-//       <div className={`friendspage-profile-image flex center`}>{`:)`}</div>
-//     </div>
-
-
-
-//       <div className={`friendspage-name flex center`}>
-
-//       {conversations[currentConversationId].chatName}
-
-//       </div>
-
-
-//       </div>);
-
-
-//   }
-
-
-//   if (showFriends && !currentFriendView) {
-//     setHeader('Friend removed');
-//   }
-
-
-
-// }, [showFriendInvites, showTableInvites, currentFriendView, showFriendSubMenu, showConversation, currentConversationId]);
-
-  
-
 
 
   const getViewHeight = () => {
@@ -199,13 +62,6 @@ const FriendsPage = () => {
 
 
   }
-
-
-
-
-
-
-
 
 
   if (!user) return;
@@ -236,28 +92,34 @@ const FriendsPage = () => {
 
         </div>
 
-        <div className="friendspage-content"></div>
 
         {showFriendInvites && (
           <div>
-            <div className="friendspage-header flex">Incoming</div>
-            {Object.entries(friends.incomingRequests).map(
-              ([key, friend], index) => {
-                return (
-                  <div key={index} className="friendtile-wrapper">
-                    <FriendTile friend={friend} type={'invite'}/>
-                  </div>
-                );
-              }
-            )}
+            <div className="friendspage-invite-header top flex">
+              <div  className="friendspage-invite-text flex center">Incoming</div>
+            </div>
 
-            <div className="friendspage-header flex">Outgoing</div>
+            <div className='friendspage-requests-container'>
+              {Object.entries(friends.incomingRequests).map(
+                ([key, friend], index) => {
+                  return (
+                    <div key={index} className="friendtile-wrapper">
+                      <FriendTile friend={friend} type={'invite-incoming'}/>
+                    </div>
+                  );
+                }
+              )}
+            </div>
+
+            <div className="friendspage-invite-header flex">
+              <div  className="friendspage-invite-text flex center">Outgoing</div>
+              
+            </div>
             {Object.entries(friends.outgoingRequests).map(
               ([key, friend], index) => {
                 return (
                   <div key={index} className="friendtile-wrapper">
-                    {friend?.friend?.username || ''}
-                    <FriendTile friend={friend} type={'submenu'}/>
+                    <FriendTile friend={friend} type={'invite-outgoing'}/>
                   </div>
                 );
               }

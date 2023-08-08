@@ -58,6 +58,23 @@ const FriendTile = ({ friend, type, cb, isInvited }) => {
   }
 
 
+  console.log(friend);
+
+  const cancelRequest = () =>{
+    if(!user || !friend) return
+
+    
+    let friendObj = {
+      friendshipId: friend.id,
+      recipientId:friend.friend.id,
+    }
+
+    console.log(friendObj);
+
+
+    socket.emit('cancel_friend_request', friendObj);
+
+  }
 
 
   // sub menu tile
@@ -97,7 +114,7 @@ const FriendTile = ({ friend, type, cb, isInvited }) => {
 
   //main friend tile below
 
-  if (type === 'invite') {
+  if (type === 'invite-incoming') {
     return (
       <div
         className={`friendtile-submenu-wrapper flex`}
@@ -128,6 +145,44 @@ const FriendTile = ({ friend, type, cb, isInvited }) => {
                         <div
                         className="friendtile-request-option"
                         onClick={declineRequest}
+                        >
+                        <i className="delete-x fa-solid fa-x"></i>
+                        </div>
+
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+
+
+  if (type === 'invite-outgoing') {
+    return (
+      <div
+        className={`friendtile-submenu-wrapper flex`}
+      >
+        <div className={`friendtile-container flex`}>
+          <div className="flex">
+            <div className={`friendtile-profile-image-container flex center ${isActive ? ' active-friend' : ''}`}>
+              <div className={`friendtile-profile-image flex center`}>
+                {`:)`}
+              </div>
+            </div>
+
+            <div className={`friendtile-name-container flex center`}>
+  {friend &&            <div className={`friendtile-name flex center`}>
+                {friend?.friend?.username}
+              </div>}
+            </div>
+          </div>
+
+          <div className={`friendtile-request-option-container flex center`}>
+
+
+                        <div
+                        className="friendtile-request-option"
+                        onClick={cancelRequest}
                         >
                         <i className="delete-x fa-solid fa-x"></i>
                         </div>

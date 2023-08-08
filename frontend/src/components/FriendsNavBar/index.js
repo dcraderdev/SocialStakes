@@ -71,34 +71,16 @@ const FriendsNavBar = () => {
 
 
 
-
   useEffect(()=>{
-
-    console.log(showConversation);
-    console.log(isShowingTableInvites);
-    console.log(isShowingFriendInvites);
-    console.log(showFriends);
-
     if(showConversation){
       setCurrentFocus(viewConversations);
-
     }
 
-    
     if (showConversation && bottomRef.current) {
       bottomRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  
-
-
-
 
   }, [isShowingFriendInvites,isShowingTableInvites,showConversation, showFriends])
-
-
-
-
-
 
 
 
@@ -131,11 +113,6 @@ const FriendsNavBar = () => {
       return hasCurrentTables ? 'invites-extra-extended' : ' invites-extended';
     }
   };
-
-
-
-  console.log(conversations);
-
 
 
 

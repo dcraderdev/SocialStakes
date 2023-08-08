@@ -70,23 +70,50 @@
 
 }
 
-
+.friendspage-invite-header,
 .friendspage-header{
   width: 100%;
   height: 60px;
   border-bottom: #000000 solid 1px;
-  border-left: #000000 solid 1px;
-  background-color:#000000;
   z-index: 1;
   background-color: #1f201f;
-
   font-size: 30px;
-  color: white;
-  
+  color: white; 
 }
 
 
 
+.friendspage-invite-header{
+  border-top: #404040b0 solid 1px;
+  border-bottom: #000000 solid 1px;
+  position: relative;
+  left: 1px;
+}
+
+
+.friendspage-invite-header.top{
+  border-top: none;
+  border-top: #404040b0 solid 1px;
+  border-bottom: #000000 solid 1px;
+}
+
+
+
+.friendspage-invite-text{
+  height: 100%;
+  text-align: center;
+  margin-left: 10px;
+  
+  font-size: min(25px, 4vw);
+
+}
+
+
+.friendspage-requests-container{
+  height: fit-content;
+  /* border: white solid 1px; */
+  transition: ease all 1s;
+}
 
 
 

@@ -59,7 +59,7 @@ const chatController = {
     await message.destroy();
     return true;
   },
-
+ 
   async getUserConversations(userId) {
     try {
       const userConversations = await UserConversation.findAll({

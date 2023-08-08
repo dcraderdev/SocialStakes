@@ -202,7 +202,6 @@ const FriendsNavBar = () => {
             {conversations &&
               Object.entries(conversations).map(
                 ([key, conversation], index) => {
-                  console.log(conversation);
                   if (!conversation.isTableChat) {
                     return (
                       <ConversationTile

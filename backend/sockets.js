@@ -221,6 +221,25 @@ module.exports = function (io) {
         }
       }
     }
+
+
+
+    async function handleEmit(emitObj) {
+      const { cb, updateObj } = emitObj
+      let currentConnections = connections[userId];
+
+      Object.values(currentConnections).forEach(connection => {
+        connection.socket.emit(cb, updateObj);
+      });
+    }
+
+    async function handleJoin(room) {
+      let currentConnections = connections[userId];
+
+      Object.values(currentConnections).forEach(connection => {
+        connection.socket.join(room);
+      });
+    }
  
 
 
@@ -304,7 +323,10 @@ module.exports = function (io) {
       let conversationId = rooms[tableId].conversationId
       let content = `${username} has joined the room.`
 
-      socket.join(conversationId);
+      // socket.join(conversationId);
+      // socket.join(tableId);
+      handleJoin(conversationId)
+      handleJoin(tableId)
       
       await emitCustomMessage({ conversationId, content, tableId })
 
@@ -394,7 +416,16 @@ module.exports = function (io) {
         amount
       );
 
+
       if (!takeSeat) {
+        console.log('no take seat');
+        console.log('no take seat');
+        console.log('no take seat');
+        console.log('no take seat');
+        console.log('no take seat');
+        console.log('no take seat');
+        console.log('no take seat');
+        console.log('no take seat');
         return;
       }
 

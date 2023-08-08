@@ -188,11 +188,28 @@ const gameController = {
     if(!newServerSeed){
       return false
     }
+
+    const conversation = await Conversation.create({
+      tableId:table.id, 
+      chatName:nickname, 
+      isDirectMessage: false, 
+      hasDefaultChatName: false
+    });
+    if(!conversation){
+      return false
+    }
+    await conversation.addUsers([userId]);
+
+
+
     let tableData = table.toJSON();
     tableData.Game = game;
     tableData.gameSession = gameSession;
     return tableData;
   },
+
+
+
 
 
   async editTableById(tableObj){

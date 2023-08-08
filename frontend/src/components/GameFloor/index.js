@@ -74,14 +74,14 @@ function GameFloor() {
       return;
     }
     if (user) {
-      if (currentTables[table.id]) {
-        socket.emit('view_room', table.id);
+      if (currentTables[table?.id]) {
+        socket.emit('view_room', table?.id);
       } else {
         if(table.private){
-          setUpdateObj({tableId:table.id})
+          setUpdateObj({tableId:table?.id})
           openModal('joinPrivateGame');
         } else {
-          socket.emit('join_room', table.id);
+          socket.emit('join_room', table?.id);
         }
       }
     }

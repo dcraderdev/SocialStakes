@@ -224,21 +224,43 @@ module.exports = function (io) {
 
 
 
-    async function handleEmit(emitObj) {
-      const { cb, updateObj } = emitObj
-      let currentConnections = connections[userId];
+    //takes in the function we want to emit and the object we will be emitting
+    // has optional userId field in case function is not directed at currentUser
+    async function handleEmit(cb, updateObj, targetUserId = userId) {
+      let currentConnections = connections[targetUserId];
 
       Object.values(currentConnections).forEach(connection => {
         connection.socket.emit(cb, updateObj);
       });
     }
 
-    async function handleJoin(room) {
-      let currentConnections = connections[userId];
+  
+
+    async function handleJoin(room, targetUserId = userId) {
+      let currentConnections = connections[targetUserId];
 
       Object.values(currentConnections).forEach(connection => {
         connection.socket.join(room);
       });
+    }
+
+    async function fetchUpdatedTable(tableId){
+
+      let updatedTable = await gameController.getTableById(tableId);
+      if(!updatedTable) return
+
+      if (!rooms[tableId]) {
+        rooms[tableId] = roomInit();
+        rooms[tableId].gameSessionId = updatedTable.gameSessions[0].id;
+        rooms[tableId].blockHash = updatedTable.gameSessions[0].blockHash;
+        rooms[tableId].decksUsed = updatedTable.Game.decksUsed;
+        rooms[tableId].shufflePoint = updatedTable.shufflePoint;
+        rooms[tableId].conversationId = updatedTable.Conversation.id;
+        rooms[tableId].chatName = updatedTable.Conversation.chatName;
+      }
+
+      return updatedTable
+
     }
  
 
@@ -286,24 +308,10 @@ module.exports = function (io) {
 
 
 
-    socket.on('join_room', async (room) => {
-      let tableId = room;
-      let updatedTable = await gameController.getTableById(tableId);
+    socket.on('join_room', async (tableId) => {
 
-      if (!updatedTable) {
-        // TODO: Create logic for creating a new game
-      }
-
-      // If the room doesnt exist create a new room
-      if (!rooms[tableId]) {
-        rooms[tableId] = roomInit();
-        rooms[tableId].gameSessionId = updatedTable.gameSessions[0].id;
-        rooms[tableId].blockHash = updatedTable.gameSessions[0].blockHash;
-        rooms[tableId].decksUsed = updatedTable.Game.decksUsed;
-        rooms[tableId].shufflePoint = updatedTable.shufflePoint;
-        rooms[tableId].conversationId = updatedTable.Conversation.id;
-        rooms[tableId].chatName = updatedTable.Conversation.chatName;
-      }
+      let updatedTable = await fetchUpdatedTable(tableId)
+      if(!updatedTable) return
 
       let updateObj = {
         tableId,
@@ -317,6 +325,8 @@ module.exports = function (io) {
           dealerCards: {
             visibleCards: rooms[tableId].dealerCards.visibleCards,
           },
+          conversationId: rooms[tableId].conversationId,
+          chatName: rooms[tableId].chatName,
         },
       };
  
@@ -329,9 +339,14 @@ module.exports = function (io) {
       handleJoin(tableId)
       
       await emitCustomMessage({ conversationId, content, tableId })
+      
+      handleEmit('join_table', updatedTable)
+      socket.emit('view_table', { id: tableId })
+      handleEmit('get_updated_table', updateObj)
+      
+      // socket.emit('join_table', updatedTable);
+      // socket.emit('get_updated_table', updateObj);
 
-      socket.emit('join_table', updatedTable);
-      socket.emit('get_updated_table', updateObj);
     });
 
 
@@ -367,7 +382,9 @@ module.exports = function (io) {
         };
 
         gameController.leaveSeat(leaveSeatObj);
+
         io.in(userId).emit('player_leave', leaveSeatObj);
+        handleEmit('player_leave',leaveSeatObj, userId)
         return;
       });
 
@@ -400,15 +417,6 @@ module.exports = function (io) {
       const { room, seat, user, amount } = seatObj;
       let tableId = room;
 
-      let messageObj = {
-        tableId,
-        user: { username: 'Room', id: 1, rank: 0 },
-        message: {
-          content: `${username} has taken seat ${seat}.`,
-          id: 0,
-        },
-      };
-
       const takeSeat = await gameController.takeSeat(
         tableId,
         seat,
@@ -418,14 +426,6 @@ module.exports = function (io) {
 
 
       if (!takeSeat) {
-        console.log('no take seat');
-        console.log('no take seat');
-        console.log('no take seat');
-        console.log('no take seat');
-        console.log('no take seat');
-        console.log('no take seat');
-        console.log('no take seat');
-        console.log('no take seat');
         return;
       }
 
@@ -461,7 +461,13 @@ module.exports = function (io) {
       // Add the player to the room
       rooms[tableId].seats[seat] = takeSeatObj;
 
-      io.in(room).emit('new_message', messageObj);
+
+      let content = `${username} has taken seat ${seat}.`
+      let conversationId = rooms?.[tableId]?.conversationId
+
+      await emitCustomMessage({ conversationId, content, tableId })
+
+      // io.in(room).emit('new_message', messageObj);
       io.in(room).emit('new_player', takeSeatObj);
 
       // console.log('--------------');

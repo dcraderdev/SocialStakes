@@ -98,17 +98,17 @@ const gamesReducer = (state = initialState, action) => {
     }
 
 
-    case CREATE_TABLE:{
+    // case CREATE_TABLE:{
       
-      const table = action.payload.table
+    //   const table = action.payload.table
 
-      let updatedCurrentTables = {...newState.currentTables};
-      updatedCurrentTables[table.id] = table
-      updatedCurrentTables[table.id].messages = []
+    //   let updatedCurrentTables = {...newState.currentTables};
+    //   updatedCurrentTables[table.id] = table
+    //   updatedCurrentTables[table.id].messages = []
 
 
-      return {...newState, currentTables:updatedCurrentTables, showCreatingGame:false, showGames: false, showTables: false, showActiveTable: true}
-    }
+    //   return {...newState, currentTables:updatedCurrentTables, showCreatingGame:false, showGames: false, showTables: false, showActiveTable: true}
+    // }
 
     case UPDATE_TABLE_NAME:{
       const {tableId, tableName} = action.payload
@@ -194,9 +194,8 @@ const gamesReducer = (state = initialState, action) => {
       let newCurrentTables = {...newState.currentTables}
       newCurrentTables[action.payload.id] = action.payload
       newCurrentTables[action.payload.id].messages = []
-      return {...newState, currentTables: newCurrentTables, activeTable:action.payload, showGames: false, showTables: false, showActiveTable: true}
+      return {...newState, currentTables: newCurrentTables}
     }
-
 
     case LEAVE_TABLE: {
       let newCurrentTables = { ...newState.currentTables };

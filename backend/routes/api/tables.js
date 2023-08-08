@@ -42,7 +42,7 @@ router.get('/game/:gameId', async (req, res, next) => {
   })
 
 
-
+ 
 
 
 // Create new custom table
@@ -60,7 +60,7 @@ router.post('/create',requireAuth, async (req, res, next) => {
   }
 
   return res.status(200).json({ table });
-});
+}); 
 
 
 // Get table by tableId

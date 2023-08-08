@@ -105,6 +105,7 @@ const CreatingGameView = () => {
     if (gameType === 'hi_lo') {
       return 'Hi Lo';
     }
+    return 'Coming Soon.'
   };
 
   const gameSelect = (gameType) => {

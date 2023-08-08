@@ -130,9 +130,39 @@ const FriendsPageHeader = () => {
     };
   }, []);
 
+
+
+console.log(friends);
+console.log(conversations);
+
+
   const toggleRemoveFriendModal = () => {
-    setUpdateObj({ currentFriendView });
-    openModal('RemoveFriendModal');
+
+
+    let friendInfo
+    if(showConversation && isDirectMessage){
+
+      let friend = Object.values(conversations?.[currentConversationId].members).find(member => member.id !== user.id);
+
+
+      console.log(friend);
+      friendInfo = friends.friends[friend.id]
+
+      console.log(friendInfo);
+
+      friendInfo.conversationId = currentConversationId
+
+
+      setUpdateObj({ friendInfo : friendInfo });
+      openModal('RemoveFriendModal');
+
+    }
+
+
+    if(showFriends){
+      setUpdateObj({ friendInfo : currentFriendView });
+      openModal('RemoveFriendModal');
+    }
   };
 
 
@@ -253,7 +283,6 @@ const FriendsPageHeader = () => {
   }, [isChangingChatName, validationErrors]);
 
 
-
   
 
   useEffect(() => {
@@ -343,12 +372,10 @@ const FriendsPageHeader = () => {
           </div>
         )}
 
-
-
-
-
-
       </div>
+
+
+
 
       {showSubMenuButton && !isChangingChatName &&(
         <div className="friendspage-friendmenu-container">

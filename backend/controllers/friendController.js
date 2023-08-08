@@ -126,7 +126,30 @@ const friendController = {
     const conversation = await Conversation.create({chatName, isDirectMessage: true, hasDefaultChatName:true});
     if(conversation){
       await conversation.addUsers([userId, recipientId]);
-      return conversation
+
+      let members = {}
+      members[userId] = {            
+        id:userId,
+        username:username
+      } 
+      members[recipientId] = {            
+        id:recipientId,
+        username:recipientUsername
+      } 
+
+      const formattedConversation = {
+        chatName: conversation.chatName,
+        conversationId: conversation.id,
+        hasDefaultChatName: conversation.hasDefaultChatName,
+        isDirectMessage: conversation.isDirectMessage,
+        id: conversation.id,
+        members,
+        messages: [],
+        notification: false,
+      };
+      return formattedConversation;
+
+
     }
     return false;
   },

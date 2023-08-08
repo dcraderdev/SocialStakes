@@ -1746,6 +1746,7 @@ module.exports = function (io) {
         hasDefaultChatName: newConversation.hasDefaultChatName,
         chatName: newConversation.chatName,
         conversationId : newConversation.id,
+        members: newConversation.members,
         messages: [],
         notification: false
       }
@@ -1780,6 +1781,15 @@ module.exports = function (io) {
       if(request && request.friendship.status === 'accepted') {
 
         const {friendship, newConversation} = request
+
+        console.log('<><><><><><><><><><><><><><><>');
+        console.log('<><><><><><><><><><><><><><><>');
+        console.log('<><><><><><><><><><><><><><><>');
+        console.log(newConversation);
+        console.log('<><><><><><><><><><><><><><><>');
+        console.log('<><><><><><><><><><><><><><><>');
+        console.log('<><><><><><><><><><><><><><><>');
+
 
         let senderObj = {
           conversationId: newConversation?.id,

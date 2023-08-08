@@ -130,6 +130,7 @@ const SocketProvider = ({ children }) => {
       
 
       socket.on('new_message', (messageObj) => {
+        console.log(messageObj);
         dispatch(addMessageAction(messageObj));
       });
 
@@ -192,12 +193,10 @@ const SocketProvider = ({ children }) => {
       });  
 
       socket.on('countdown_update', (countdownObj) => {
-        console.log(countdownObj);
         dispatch(updateTableCountdownAction(countdownObj)); 
       });  
 
       socket.on('collect_bets', (countdownObj) => {
-        let tableId = countdownObj.tableId
         dispatch(collectBetsAction(countdownObj)); 
       });  
 
@@ -221,7 +220,6 @@ const SocketProvider = ({ children }) => {
 
     // // 
     socket.on('deny_friend_request', (friendRequestObj) => {
-      console.log(friendRequestObj);
       dispatch(denyFriendRequest(friendRequestObj));
     });
 

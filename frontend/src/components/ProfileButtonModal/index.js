@@ -29,7 +29,7 @@ function ProfileButtonModal() {
   const { profileBtnRef } = useContext(WindowContext);
 
   const [showTables, setShowTables] = useState(false);
-  const [activeTab, setActiveTab] = useState(null);
+  const [totalBalance, setTotalBalance] = useState(null);
 
   const logout = (e) => {
     socket.emit('disconnect_user');
@@ -43,7 +43,6 @@ function ProfileButtonModal() {
     closeModal();
     openModal(type);
   };
-
   
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -92,7 +91,7 @@ function ProfileButtonModal() {
                       user && user.balance > 0 ? 'green' : 'red'
                     }`}
                   >
-                    ${user.balance}
+                    ${balance}
                   </div>
                 </div>
               </div>

@@ -202,6 +202,7 @@ const FriendsNavBar = () => {
             {conversations &&
               Object.entries(conversations).map(
                 ([key, conversation], index) => {
+                  console.log(conversation);
                   return (
                     <ConversationTile
                       key={index}

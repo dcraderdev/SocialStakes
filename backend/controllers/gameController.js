@@ -8,6 +8,7 @@ const {
   Round,
   Hand,
   GameSession,
+  Conversation,
   Action,
   Friendship,
   Pot,
@@ -77,6 +78,12 @@ const gameController = {
           as: 'gameSessions',
           attributes: ['id','nonce','blockHash'],
         },
+        {
+          model: Conversation,
+          attributes: ['id', 'chatName'],
+        },
+
+
       ],
       attributes: ['id','private', 'shufflePoint', 'tableName', 'userId'],
     });
@@ -84,7 +91,6 @@ const gameController = {
     if (!table) {
       return false;
     }
-
 
     return table;
   },

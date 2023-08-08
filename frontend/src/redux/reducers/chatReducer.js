@@ -26,17 +26,33 @@ const gamesReducer = (state = initialState, action) => {
   switch (action.type) {
 
     case ADD_MESSAGE: {
-      const { id, conversationId, userId, username, content } = action.payload;
+      console.log('adding message');
+      const { id, conversationId, userId, username, content, tableId, chatName } = action.payload;
 
-
-      console.log({ id, conversationId, userId, username, content });
+ 
+      console.log({ id, conversationId, userId, username, content, tableId });
 
       const newConversations = { ...newState.conversations };
 
       if (!newConversations[conversationId]) {
+
         newConversations[conversationId] = {}
+
+        if(chatName) {
+          newConversations[conversationId].chatName = chatName
+        }
+
+        if(tableId) {
+          newConversations[conversationId].isTableChat = true
+          newConversations[conversationId].tableId = tableId
+          newConversations[conversationId].isDirectMessage = false
+        }
+        
+        newConversations[conversationId].conversationId = conversationId
         newConversations[conversationId].messages = []
+
       }
+
     
       if (newConversations[conversationId]) {
         const newMessage = action.payload;
@@ -157,7 +173,7 @@ const gamesReducer = (state = initialState, action) => {
       Object.entries(friendList).forEach(([key, value]) => {
         newConversation.members[value.friend.id] = value.friend;
       })
-      
+
       newConversations[conversationId] = newConversation;
 
 

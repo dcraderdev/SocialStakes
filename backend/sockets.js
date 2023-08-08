@@ -38,6 +38,7 @@ module.exports = function (io) {
         bestValue: null,
       }, 
       messages: [],
+      conversationId: null,
       sortedActivePlayers: [],
       sortedFinishedPlayers: [],
       forfeitedPlayers: [],
@@ -268,16 +269,6 @@ module.exports = function (io) {
 
     socket.on('join_room', async (room) => {
       let tableId = room;
-
-      let messageObj = {
-        tableId,
-        user: { username: 'Room', id: 1, rank: 0 },
-        message: {
-          content: `${username} has joined the room.`,
-          id: 0,
-        },
-      };
-
       let updatedTable = await gameController.getTableById(tableId);
 
       if (!updatedTable) {
@@ -291,6 +282,8 @@ module.exports = function (io) {
         rooms[tableId].blockHash = updatedTable.gameSessions[0].blockHash;
         rooms[tableId].decksUsed = updatedTable.Game.decksUsed;
         rooms[tableId].shufflePoint = updatedTable.shufflePoint;
+        rooms[tableId].conversationId = updatedTable.Conversation.id;
+        rooms[tableId].chatName = updatedTable.Conversation.chatName;
       }
 
       let updateObj = {
@@ -307,31 +300,28 @@ module.exports = function (io) {
           },
         },
       };
+ 
+      let conversationId = rooms[tableId].conversationId
+      let content = `${username} has joined the room.`
 
+      socket.join(conversationId);
+      
+      await emitCustomMessage({ conversationId, content, tableId })
 
-      socket.join(room);
       socket.emit('join_table', updatedTable);
       socket.emit('get_updated_table', updateObj);
-      io.in(room).emit('new_message', messageObj);
     });
+
 
     socket.on('update_table_name', async (updateObj) => {
       const { tableId, tableName } = updateObj;
-      let room = tableId;
+      let content = `${username} has updated the table name to ${tableName}.`
+      let conversationId = rooms?.[tableId]?.conversationId
 
-      let messageObj = {
-        tableId,
-        user: { username: 'Room', id: 1, rank: 0 },
-        message: {
-          content: `${username} has updated the table name to ${tableName}.`,
-          id: 0,
-        },
-      };
-
-
-      io.in(room).emit('update_table_name', updateObj);
-      io.in(room).emit('new_message', messageObj);
+      await emitCustomMessage({ conversationId, content, tableId })
+      io.in(conversationId).emit('update_table_name', updateObj);
     });
+
 
     socket.on('view_room', async (tableId) => {
       let table = { id: tableId };
@@ -383,8 +373,6 @@ module.exports = function (io) {
       // console.log('-=-=-=-=-=-=-=-=-=');
     });
  
-  
-
 
     socket.on('take_seat', async (seatObj) => {
       const { room, seat, user, amount } = seatObj;
@@ -1782,15 +1770,6 @@ module.exports = function (io) {
 
         const {friendship, newConversation} = request
 
-        console.log('<><><><><><><><><><><><><><><>');
-        console.log('<><><><><><><><><><><><><><><>');
-        console.log('<><><><><><><><><><><><><><><>');
-        console.log(newConversation);
-        console.log('<><><><><><><><><><><><><><><>');
-        console.log('<><><><><><><><><><><><><><><>');
-        console.log('<><><><><><><><><><><><><><><>');
-
-
         let senderObj = {
           conversationId: newConversation?.id,
           friend:{ 
@@ -1826,18 +1805,18 @@ module.exports = function (io) {
     });
     
     socket.on('decline_friend_request', async (friendRequestObj) => {
-      console.log('-----deny_friend_request------');
-      console.log('----------------------');
+      // console.log('-----deny_friend_request------');
+      // console.log('----------------------');
 
 
       let recipientId = friendRequestObj.recipientId
       let recipientUsername = friendRequestObj.recipientUsername
       
  
-      console.log('sender | ', username, userId);
-      console.log('recip | ', recipientUsername, recipientId);
+      // console.log('sender | ', username, userId);
+      // console.log('recip | ', recipientUsername, recipientId);
 
-      console.log(friendRequestObj);
+      // console.log(friendRequestObj);
 
 
       const request = await friendController.declineFriendRequest({userId, recipientId});
@@ -1876,30 +1855,22 @@ module.exports = function (io) {
 
 
     socket.on('cancel_friend_request', async (friendRequestObj) => {
-      console.log('-----cancel_friend_request------');
-      console.log('----------------------');
+      // console.log('-----cancel_friend_request------');
+      // console.log('----------------------');
 
 
       let recipientId = friendRequestObj.recipientId
       let friendshipId = friendRequestObj.friendshipId
  
-      console.log('sender | ', username, userId);
-      console.log('recip | ', recipientId);
+      // console.log('sender | ', username, userId);
+      // console.log('recip | ', recipientId);
 
-      console.log(friendRequestObj);
+      // console.log(friendRequestObj);
 
 
       const request = await friendController.cancelFriendRequest({friendshipId});
       if(request) {
 
-      console.log('----------------------');
-      console.log('----------------------');
-      console.log(request);
-      console.log('----------------------');
-      console.log('----------------------');
-      console.log('----------------------');
-
-    
         let senderObj = {
           friend:{
             id: recipientId, 
@@ -1976,7 +1947,7 @@ module.exports = function (io) {
           username
         };
 
-        console.log(newMessageObj);
+        // console.log(newMessageObj);
 
         if (rooms[room]) {
           rooms[room].messages.push(newMessageObj);
@@ -2143,11 +2114,15 @@ module.exports = function (io) {
      async function emitCustomMessage(messageObj){
         // Broadcast message to specific room
 
+        let roomUserId = 'e10d8de4-f4c7-0000-0000-000000000000'
 
-        const { conversationId, content } = messageObj;
+        const { conversationId, content, tableId } = messageObj;
         let room = conversationId;
   
-        const newMessage = await chatController.createMessage(messageObj, 'e10d8de4-f4c7-0000-0000-000000000000');
+        const newMessage = await chatController.createMessage(messageObj, roomUserId);
+
+        if (!newMessage) console.log('no message');;
+
         if (!newMessage) return false;
   
   
@@ -2155,17 +2130,18 @@ module.exports = function (io) {
           createdAt: Date.now(),
           conversationId,
           content,
-          id: 100000,
-          userId: 0,
+          id: newMessage.id,
+          userId: roomUserId,
           username: 'Room'
         }; 
 
+        if(tableId){
+          newMessageObj.tableId = tableId
+          newMessageObj.chatName = rooms?.[tableId]?.chatName
+        }
+        
         console.log(newMessageObj);
 
-        if (rooms[room]) {
-          rooms[room].messages.push(newMessageObj);
-        }
-  
         io.in(room).emit('new_message', newMessageObj);
 
       }

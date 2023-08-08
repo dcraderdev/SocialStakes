@@ -16,6 +16,7 @@ module.exports = (sequelize, DataTypes) => {
       // Table.hasMany(models.Message, {foreignKey:'tableId'})
       Table.hasMany(models.UserTable, {foreignKey:'tableId', as: 'tableUsers'})
       Table.hasMany(models.GameSession, {foreignKey:'tableId', as: 'gameSessions'})
+      Table.hasOne(models.Conversation, {foreignKey:'tableId'})
     }
   }
 

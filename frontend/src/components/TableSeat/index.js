@@ -62,16 +62,15 @@ const TableSeat = ({seatNumber}) => {
   }, [currentTables, activeTable, seatNumber]);
 
 
-   console.log(windowHeight);
-    console.log(windowWidth);
+
 
   useEffect(() => {
-    console.log(windowHeight);
-    console.log(windowWidth);
+    // console.log(windowHeight);
+    // console.log(windowWidth);
 
     let measurement = Math.max(windowHeight, windowWidth)
 
-    console.log(measurement);
+    // console.log(measurement);
 
     let newScale = measurement / 1100
 

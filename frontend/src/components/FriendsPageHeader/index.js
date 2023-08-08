@@ -131,28 +131,12 @@ const FriendsPageHeader = () => {
   }, []);
 
 
-
-console.log(friends);
-console.log(conversations);
-
-
   const toggleRemoveFriendModal = () => {
 
-
-    let friendInfo
     if(showConversation && isDirectMessage){
-
       let friend = Object.values(conversations?.[currentConversationId].members).find(member => member.id !== user.id);
-
-
-      console.log(friend);
-      friendInfo = friends.friends[friend.id]
-
-      console.log(friendInfo);
-
+      let friendInfo = friends.friends[friend.id]
       friendInfo.conversationId = currentConversationId
-
-
       setUpdateObj({ friendInfo : friendInfo });
       openModal('RemoveFriendModal');
 

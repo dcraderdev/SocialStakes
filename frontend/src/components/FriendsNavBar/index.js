@@ -203,13 +203,15 @@ const FriendsNavBar = () => {
               Object.entries(conversations).map(
                 ([key, conversation], index) => {
                   console.log(conversation);
-                  return (
-                    <ConversationTile
-                      key={index}
-                      conversation={conversation}
-                      type={'submenu'}
-                    />
-                  );
+                  if (!conversation.isTableChat) {
+                    return (
+                      <ConversationTile
+                        key={index}
+                        conversation={conversation}
+                        type={'submenu'}
+                      />
+                    )
+                  }
                 }
               )}
 

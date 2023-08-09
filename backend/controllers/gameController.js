@@ -255,6 +255,16 @@ try{
     console.log('<><><><><><><><><><><><><><>');
 
     
+    console.log('<><><><><><><><><><><><><><>');
+    console.log('<><><><><><><><><><><><><><>');
+    console.log({
+      userId,
+      conversationId: conversation.id
+    });
+    console.log('<><><><><><><><><><><><><><>');
+    console.log('<><><><><><><><><><><><><><>');
+
+
     
     try {
       await UserConversation.create({

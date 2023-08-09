@@ -9,6 +9,7 @@ const {
   Hand,
   GameSession,
   Conversation,
+  UserConversation,
   Action,
   Friendship,
   Pot,

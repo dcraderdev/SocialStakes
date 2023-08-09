@@ -38,7 +38,7 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: () => uuid.v4(), 
     },
     tableId: {
-      type: DataTypes.STRING,
+      type: DataTypes.UUID,
       allowNull: true,
     },
     chatName: {

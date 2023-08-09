@@ -68,8 +68,6 @@ module.exports = {
         let user2Name = userIds[i].username
         let conversationId = convoUUIDs[i]
 
-        console.log(conversationId);
-
 
         let conversation = {
           id: conversationId,

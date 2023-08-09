@@ -16,7 +16,7 @@ module.exports = {
       },
       tableId: {
         allowNull: true,
-        type: Sequelize.STRING,
+        type: Sequelize.UUID,
         references: {
           model: 'Tables',
           key: 'id',

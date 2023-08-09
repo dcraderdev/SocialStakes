@@ -203,6 +203,13 @@ const gamesReducer = (state = initialState, action) => {
 
       delete newCurrentTables[action.payload];
 
+      if(newState.showCreatingGame){
+        return { ...newState, currentTables: newCurrentTables, showGames: false, showTables: false, showCreatingGame:true };
+      }
+      if(newState.showTables){
+        return { ...newState, currentTables: newCurrentTables, activeTable, showGames: false, showTables: true, showCreatingGame:false };
+      }
+
       // if active table still exists dont switch
       if(newCurrentTables[activeTable.id]){
         return { ...newState, currentTables: newCurrentTables, activeTable};
@@ -214,12 +221,7 @@ const gamesReducer = (state = initialState, action) => {
           activeTable = newCurrentTables[tableIds[0]];
           return { ...newState, currentTables: newCurrentTables, activeTable };
       }
-      if(newState.showTables){
-        return { ...newState, currentTables: newCurrentTables, activeTable, showGames: false, showTables: true, showCreatingGame:false };
-      }
-      if(newState.showCreatingGame){
-        return { ...newState, currentTables: newCurrentTables, activeTable, showGames: false, showTables: false, showCreatingGame:true };
-      }
+
 
       return { ...newState, currentTables: newCurrentTables, activeTable, showGames: true, showTables: false, showCreatingGame:false };
       }

@@ -214,7 +214,7 @@ function GameFloor() {
               <div className="games-grid">
                 {allGames &&
                   Object.values(allGames).map((game, index) => (
-                    <GameTile key={index} game={game} cbFunc={checkTables} delay={index} />
+                    <GameTile key={index} game={game} cbFunc={checkTables} delay={index} style={{animationDelay: `${index * 3}s`}} />
                   ))}
               </div>
             )}

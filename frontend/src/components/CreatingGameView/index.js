@@ -48,8 +48,9 @@ const CreatingGameView = () => {
   const [hasCurrentTables, setHasCurrentTables] = useState('');
 
 
+  const [displayGameType, setDisplayGameType] = useState(null);
   const [gameType, setGameType] = useState(null);
-  const [deckSize, setDeckSize] = useState(2);
+  const [deckSize, setDeckSize] = useState(1);
   const [betSizing, setBetSizing] = useState(null);
   const [isPrivate, setIsPrivate] = useState(null);
 
@@ -57,12 +58,15 @@ const CreatingGameView = () => {
 
   const [friendList, setFriendList] = useState({})
 
-
+  const [tableStartValidationErrors, setTableStartValidationErrors] = useState({});
   const [disabledButton, setDisabledButton] = useState(false);
   const [buttonClass, setButtonClass] = useState('starttable-submit-button');
 
+  const [animateTiles, setAnimateTiles] = useState(false);
+
+
   const blackjackObj = {
-    2: {
+    1: {
       betSizes: [
         {
           minBet: 1,
@@ -149,15 +153,18 @@ const CreatingGameView = () => {
     if(nonActiveGames.includes(gameType)){
       return
     }
-    setGameType(()=>getGameName(gameType));
+    
+    setGameType(gameType);
+    setDisplayGameType(()=>getGameName(gameType))
     setFocus(choosingSettings)
   };
 
 
 
   const createTable = () => {
-    if(!user) return
 
+    if(disabledButton) return
+    if(!user) return
     if(validationErrors['tableName']){
       return
     }
@@ -167,7 +174,7 @@ const CreatingGameView = () => {
         setShowValidationError(true)
         setTimeout(() => {
           setShowValidationError(false)
-        }, 3000);
+        }, 300000);
       }
       return
     }
@@ -176,8 +183,13 @@ const CreatingGameView = () => {
       return
     }
 
+    // handling for button spammers
+    setDisabledButton(true)
+    setTimeout(() => {
+      setDisabledButton(false)
+    }, 2000);
+
     let tableObj = {
-      userId: user.id,
       gameType,
       deckSize,
       betSizing,
@@ -185,14 +197,14 @@ const CreatingGameView = () => {
       privateKey,
       tableName,
     };
+
     dispatch(gameActions.createTable(tableObj, socket));
   };
 
 
 
-
+// Table Name validation errors
   useEffect(() => {
-    console.log(tableName);
     const errors = {};
     if (!tableName.length) errors['tableName'] = 'Please enter at least one character';
     if (!tableName.trim().length) errors['trimmed-error'] = 'Please enter at least one character';
@@ -202,15 +214,24 @@ const CreatingGameView = () => {
 
 
 
-
-
+  // Table Start validation errors
   useEffect(() => {
-    if (Object.keys(validationErrors).length > 0) {
+    const errors = {};
+    if (!deckSize) errors['deckSize'] = 'Please choose a deck size';
+    if (!betSizing) errors['betSizing'] = 'Please choose a bet sizing';
+    setTableStartValidationErrors(errors);
+  }, [deckSize, betSizing ]);
+
+
+
+  // Disable Table Start IF validation errors
+  useEffect(() => {
+    if (Object.keys(tableStartValidationErrors).length > 0) {
       setButtonClass('starttable-submit-button disabled');
     } else {
       setButtonClass('starttable-submit-button');
     }
-  }, [validationErrors]);
+  }, [tableStartValidationErrors]);
   
   
 
@@ -256,6 +277,37 @@ const handleList = (friend, option) =>{
 
 }
 
+const handleAnimation = () =>{
+  if(!Object.values(allGames)) return
+  let timer = Object.values(allGames).length * 300
+  setAnimateTiles(true);
+  setTimeout(() => {
+    
+    setAnimateTiles(false);
+  }, timer);
+  return
+
+}
+
+
+const toggleFocus = (newFocus) =>{
+  setAnimateTiles(true);
+  setAnimateTiles(false);
+
+  if(!gameType) {
+    handleAnimation()
+    return
+  }
+
+  setFocus(newFocus)
+
+
+  
+
+  return
+
+}
+
 
 
 
@@ -277,20 +329,29 @@ const handleList = (friend, option) =>{
         </div>
       </div>
 
-      <div  onClick={()=>setFocus(choosingSettings)} className='creatinggameview-nav-option flex center'>
+      <div  
+      onClick={()=>toggleFocus(choosingSettings)} 
+      className='creatinggameview-nav-option flex center'
+      >
         <div className={`creatinggameview-option-header ${focus === choosingSettings ? ' creatinggameview-active-nav' : ''} flex center`}>
           Settings
         </div>
       </div>
 
-      <div onClick={()=>setFocus(invitingFriends)}  className='creatinggameview-nav-option flex center'>
+      <div 
+      onClick={()=>toggleFocus(invitingFriends)}
+      className='creatinggameview-nav-option flex center'
+      >
         <div className={`creatinggameview-option-header ${focus === invitingFriends ? ' creatinggameview-active-nav' : ''} flex center`}>
           Invite Friends
         </div>
       </div>
 
 
-      <div onClick={()=>setFocus(reviewingGameOptions)}  className='creatinggameview-nav-option flex center'>
+      <div
+      onClick={()=>toggleFocus(reviewingGameOptions)}
+      className='creatinggameview-nav-option flex center'
+      >
         <div className={`creatinggameview-option-header ${focus === reviewingGameOptions ? ' creatinggameview-active-nav' : ''} flex center`}>
           Review and Start
         </div>
@@ -306,7 +367,7 @@ const handleList = (friend, option) =>{
     <div className='creatinggameview-tablename-container flex center'>
 
       {showValidationError && (
-        <div className={`friendspage-name flex center validation-handling`}>
+        <div className={`creatinggameview validation-handling flex center `}>
           {validationErrors['trimmed-error'] && validationErrors['trimmed-error']}
           {showValidationError && validationErrors['length'] && validationErrors['length']}
         </div>
@@ -355,14 +416,16 @@ const handleList = (friend, option) =>{
           <div className={`creatinggameview-isPickingGameType-container styled-scrollbar ${hasCurrentTables ? '' : ' extended'} flex center`}>
             {allGames &&
               Object.values(allGames).map((game, index) => (
-                <GameTile key={index} game={game} cbFunc={gameSelect} />
+                
+                
+                <div className={`creatinggameview-gametile-wrapper ${animateTiles ? 'animate' : ''}`} style={{animationDelay: `${index * 0.15}s`}} >
+                  <GameTile key={index} game={game} cbFunc={gameSelect}  />
+                </div>
+
               ))}
           </div>
 
   </div>
-
-
-
 
       )}
 
@@ -374,7 +437,7 @@ const handleList = (friend, option) =>{
         <div className="creatinggameview-settings-header flex center">
           
           <div className="creatinggameview-settings-header-text flex center">
-            {gameType} Settings
+            {displayGameType} Settings
           </div>
         </div>
 
@@ -456,17 +519,23 @@ const handleList = (friend, option) =>{
             <div className='creatinggameview-settings-button-container flex center'>
               <div className='creatinggameview-settings-option-button flex center'>
                 <div className='creatinggameview-button-header'>
-                  2
+                  1
                 </div>  
-                <div onClick={()=>setDeckSize(2)} className='creatinggameview-button-button flex center'>
-                  {deckSize === 2 && <i className="fa-solid fa-check priority"></i>}
+                <div onClick={()=>{
+                  setDeckSize(1)
+                  setBetSizing(null)
+                  }} className='creatinggameview-button-button flex center'>
+                  {deckSize === 1 && <i className="fa-solid fa-check priority"></i>}
                 </div>
               </div>
               <div className='creatinggameview-settings-option-button flex center'>
                 <div className='creatinggameview-button-header'>
                   4
                 </div>  
-                <div onClick={()=>setDeckSize(4)} className='creatinggameview-button-button flex center'>
+                <div onClick={()=>{
+                  setDeckSize(4)
+                  setBetSizing(null)
+                  }} className='creatinggameview-button-button flex center'>
                 {deckSize === 4 && <i className="fa-solid fa-check priority"></i>}
                 </div>
               </div>
@@ -474,7 +543,10 @@ const handleList = (friend, option) =>{
                 <div className='creatinggameview-button-header'>
                   6
                 </div>  
-                <div onClick={()=>setDeckSize(6)} className='creatinggameview-button-button flex center'>
+                <div onClick={()=>{
+                  setDeckSize(6)
+                  setBetSizing(null)
+                  }} className='creatinggameview-button-button flex center'>
                 {deckSize === 6 && <i className="fa-solid fa-check priority"></i>}
                 </div>
               </div>
@@ -556,13 +628,40 @@ const handleList = (friend, option) =>{
 
               <div className='creatinggameview-review-option flex center'>
                 <div className='creatinggameview-settings-option-header flex center'>
+                  Game Type - {displayGameType}
+                </div>
+              </div>
+
+              <div className='creatinggameview-review-option flex center'>
+                <div className='creatinggameview-settings-option-header flex center'>
                   Private Game - {isPrivate ? 'Yes' : 'No'}
                 </div>
               </div>
               
 { isPrivate && <div className='creatinggameview-review-option flex center'>
                   <div className='creatinggameview-settings-option-header flex center'>
-                    Private Key - {privateKey}
+                    <div>Private Key - </div>
+                    { !privateWarning && <div>{privateKey}</div>}
+                    { privateWarning && 
+
+                    <div className='flex'>   
+                      <div 
+                        onClick={()=>{
+                          setFocus(choosingSettings)
+                          setTimeout(() => {
+                            privateKeyInputRef.current.focus();
+                          }, 500);
+                        }} 
+                        className={`creatinggameview-settings-selection flex center ${privateWarning ? ' red' : ' '}`}>
+                        {'None '}
+                      </div>
+                      <div className='creatinggameview-noprivatekey'>{'(table will be set to open)'}</div>
+                    </div>
+
+                    
+                    }
+                    
+
                   </div>
                 </div>
                 }
@@ -575,13 +674,20 @@ const handleList = (friend, option) =>{
               </div>
 
               <div className='creatinggameview-review-option flex center'>
-                  <div className='creatinggameview-settings-option-header flex center'>
-                  {`Number of decks - `}
+                  <div className={`creatinggameview-settings-option-header flex center`}>
+                  {`Min/Max Bets -  `}
+
+                  <div onClick={()=>setFocus(choosingSettings)} className={`creatinggameview-settings-selection flex center ${betSizing ? '' : ' red'}`}>
+
                       {
                           betSizing?.minBet && betSizing?.maxBet 
-                              ? `Min/Max Bets - ${betSizing.minBet}/${betSizing.maxBet}`
-                              : `None set`
+                              ? `${betSizing.minBet}/${betSizing.maxBet}`
+                              : `None`
                       }
+
+                  </div>
+
+
                   </div>
               </div>
               
@@ -608,7 +714,7 @@ const handleList = (friend, option) =>{
 
 
               <div className='creatinggameview-start-option flex center'>
-                <div className={buttonClass}>
+                <div onClick={createTable} className={buttonClass}>
                   Start Table
                 </div>
               </div>

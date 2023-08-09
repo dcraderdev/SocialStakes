@@ -99,8 +99,21 @@
   height: 100%;
   position: relative;
   text-align: center;
-
   border-bottom: #000000 solid 1px;
+}
+
+
+
+.creatinggameview-chatname::placeholder {
+  color: #c7461e;
+  font-size: min(2vw, 15px);
+}
+
+.creatinggameview.validation-handling {
+  position: absolute;
+  color: #c7461e;
+  font-size: min(2.2vw, 17px);
+  top: 15px;
 }
 
 
@@ -300,6 +313,20 @@
 }
 
 
+.creatinggameview-settings-selection{
+  margin-left: 5px;
+}
+
+
+.creatinggameview-settings-selection.red{
+  color: rgba(230, 28, 28, 0.883);
+  position: relative;
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+
+
 .creatinggameview-settings-option-header.grey{
   color: rgba(128, 128, 128, 0.37);
 }
@@ -410,6 +437,7 @@
   flex-direction: column;
   overflow-y: scroll;
   overflow-x: hidden;
+
 }
 
 
@@ -425,6 +453,16 @@
 }
 
 
+.creatinggameview-noprivatekey{
+  font-size: min(14px, 2vw);
+  color: rgba(128, 128, 128);
+  position: relative;
+  top: 10px;
+  margin-left: 5px;
+
+}
+
+
 
 .creatinggameview-friends-option {
   display: grid;
@@ -432,45 +470,40 @@
   gap: 10px;
   overflow-y: scroll;
   overflow-x: hidden;
-
-
-
   width: 100%;
-  height: 170px;
+  height: 130px;
   padding-top: 20px;
   padding-bottom: 20px;
 
-
-
-
   border-top: #404040b0 solid 1px;
-  border-bottom: #000000 solid 2px;
+  border-bottom: #000000 solid 1px;
+
+  justify-items: center;
+
 }
 
+
+
 .creatinggameview-start-option{
-  height: 50px;
+  height: 100px;
+  width: 100%;
 
 }
 
 .creatinggameview-nofriends-option{
   width: 100%;
-  height: 170px;
+  height: 60px;
   padding-top: 20px;
   padding-bottom: 20px;
   border-top: #404040b0 solid 1px;
-  border-bottom: #000000 solid 2px;
+  border-bottom: #000000 solid 1px;
   flex-direction: column;
-}
-
-.creatinggameview-settings-option-header.nofriends{
-  margin-bottom: 60px;
-
 }
 
 
 .creatinggameview-invitefriends-button{
   margin-top: 15px;
-  position: absolute;
+  position: relative;
   border: rgba(0, 0, 0, 0.452) solid 1px;
   padding: 5px;
   padding-left: 15px;
@@ -480,6 +513,8 @@
   border-top: #404040b0 solid 1px;
   border-bottom: #000000 solid 2px;
   color: white;
+  top: 5px;
+
 }
 
 .creatinggameview-invitefriends-button:hover{
@@ -507,6 +542,22 @@
   border-radius: 5px;
   border-top: #404040b0 solid 1px;
   border-bottom: #000000 solid 2px;
+
+
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 140px;
+  height: 30px;
+
+  font-size: 18px;
+
+  background-color: #343131;
+  color: rgb(255, 255, 255);
+
+  
+
 }
 
 .starttable-submit-button:hover{
@@ -545,3 +596,5 @@
       grid-template-columns: repeat(1, 1fr);
   }
 }
+
+

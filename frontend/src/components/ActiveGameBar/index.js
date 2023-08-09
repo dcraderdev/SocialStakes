@@ -85,7 +85,8 @@ const ActiveGameBar = () => {
         <div onClick={()=>viewTable(tableId)} className={`gamebar-table-tab flex center ${handNeedsAttention ? ' active-tab' : ''}`} key={index}>
           <div onClick={
             (e)=>{
-
+              e.preventDefault()
+              e.stopPropagation()
               closeTable(e,tableId)
             }} 
             className='gamebar-close-button'

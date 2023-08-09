@@ -69,6 +69,10 @@ import { ModalContext } from '../../context/ModalContext';
 
 
   useEffect(() => {
+
+    if(!currentTables || activeTable || currentTables[activeTable.id]) return
+
+
     if(currentTables && activeTable){
 
       let userInActiveSeat = currentTables[activeTable.id]?.actionSeat === currentSeat && currentSeat !== null;

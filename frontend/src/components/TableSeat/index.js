@@ -51,7 +51,7 @@ const TableSeat = ({seatNumber}) => {
   const [scale, setScale] = useState(1);
 
   useEffect(() => {
-    if(currentTables && activeTable && currentTables[activeTable.id].tableUsers){
+    if(currentTables && activeTable && currentTables?.[activeTable.id]?.tableUsers){
       if( currentTables[activeTable.id].tableUsers[seatNumber]){
         setPlayer(currentTables[activeTable.id].tableUsers[seatNumber]);
       } else {

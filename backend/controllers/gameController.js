@@ -131,13 +131,29 @@ const gameController = {
 
 
 
-  async createTable(tableObj) {
+  async createTable(tableObj, user) {
 
-    const {gameType, deckSize, betSizing, isPrivate, privateKey, tableName, userId } = tableObj
-    let private = isPrivate
+    
+    const {gameType, deckSize, betSizing, isPrivate, privateKey, tableName } = tableObj
+    const userId = user.id
+
+
+
+    console.log(tableObj);
+    console.log(userId);
+
+    let private = isPrivate && privateKey.trim().length > 0 ? isPrivate : false 
     let nickname = tableName.length ? tableName : null
     let shufflePoint
-    let decksUsed = parseInt(deckSize.split(' ')[0])
+    let decksUsed = deckSize
+
+
+    console.log({
+      gameType,
+      decksUsed,
+      minBet: betSizing.minBet,
+      maxBet: betSizing.maxBet
+    });
     
     const game = await Game.findOne({
       where: {
@@ -150,6 +166,11 @@ const gameController = {
     if(!game){
       return false
     }
+    console.log('<><><><><><><><><><><><><><>');
+    console.log('<><><><><><><><><><><><><><>');
+    console.log('here 1');
+    console.log('<><><><><><><><><><><><><><>');
+    console.log('<><><><><><><><><><><><><><>');
 
     if(decksUsed === 1) shufflePoint = 25
     if(decksUsed === 4) shufflePoint = 136
@@ -167,6 +188,12 @@ const gameController = {
     if (!table) {
       return false;
     }
+
+    console.log('<><><><><><><><><><><><><><>');
+    console.log('<><><><><><><><><><><><><><>');
+    console.log('here 2');
+    console.log('<><><><><><><><><><><><><><>');
+    console.log('<><><><><><><><><><><><><><>');
     let blockHash = await fetchLatestBlock()
 
     const gameSession = await GameSession.create({
@@ -178,6 +205,12 @@ const gameController = {
     if (!gameSession) {
       return false;
     }
+
+    console.log('<><><><><><><><><><><><><><>');
+    console.log('<><><><><><><><><><><><><><>');
+    console.log('here 3');
+    console.log('<><><><><><><><><><><><><><>');
+    console.log('<><><><><><><><><><><><><><>');
     let serverSeed = generateSeed()
 
     const newServerSeed = await ServerSeed.create({
@@ -189,6 +222,12 @@ const gameController = {
       return false
     }
 
+    console.log('<><><><><><><><><><><><><><>');
+    console.log('<><><><><><><><><><><><><><>');
+    console.log('here 4');
+    console.log('<><><><><><><><><><><><><><>');
+    console.log('<><><><><><><><><><><><><><>');
+
     const conversation = await Conversation.create({
       tableId:table.id, 
       chatName:nickname, 
@@ -199,6 +238,12 @@ const gameController = {
       return false
     }
     await conversation.addUsers([userId]);
+
+    console.log('<><><><><><><><><><><><><><>');
+    console.log('<><><><><><><><><><><><><><>');
+    console.log('here 5');
+    console.log('<><><><><><><><><><><><><><>');
+    console.log('<><><><><><><><><><><><><><>');
 
 
 

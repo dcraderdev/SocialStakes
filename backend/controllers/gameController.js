@@ -254,13 +254,14 @@ try{
     console.log('<><><><><><><><><><><><><><>');
 
     
-  
-    try{
-      await conversation.addUsers([userId]);
-    }catch(err){
-      console.log(err);
-      console.log(err.status);
     
+    try {
+      await UserConversation.create({
+        userId,
+        conversationId: conversation.id
+      });
+    } catch (err) {
+      console.error('Error adding user to conversation:', err);
     }
 
 

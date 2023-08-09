@@ -197,35 +197,67 @@ const gamesReducer = (state = initialState, action) => {
       return {...newState, currentTables: newCurrentTables}
     }
 
+    // case LEAVE_TABLE: {
+    //   let newCurrentTables = { ...newState.currentTables };
+    //   let activeTable = { ...newState.activeTable}
+
+    //   delete newCurrentTables[action.payload];
+
+    //   if(newState.showCreatingGame){
+    //     return { ...newState, currentTables: newCurrentTables, showGames: false, showTables: false, showCreatingGame:true };
+    //   }
+    //   if(newState.showTables){
+    //     return { ...newState, currentTables: newCurrentTables, activeTable, showGames: false, showTables: true, showCreatingGame:false };
+    //   }
+
+    //   // if active table still exists dont switch
+    //   if(newCurrentTables[activeTable.id]){
+    //     return { ...newState, currentTables: newCurrentTables, activeTable};
+    //   } else {
+    //   //Check if any tables left, if so switch to the first one
+    //   const tableIds = Object.keys(newCurrentTables);
+    //   let activeTable = null;
+    //   if (tableIds.length > 0) {
+    //       activeTable = newCurrentTables[tableIds[0]];
+    //       return { ...newState, currentTables: newCurrentTables, activeTable };
+    //   }
+
+
+    //   return { ...newState, currentTables: newCurrentTables, activeTable, showGames: true, showTables: false, showCreatingGame:false };
+    //   }
+    // }
+
+
     case LEAVE_TABLE: {
+      console.log('hey');
+      console.log(newState);
+      console.log(newState);
+
       let newCurrentTables = { ...newState.currentTables };
-      let activeTable = { ...newState.activeTable}
-
       delete newCurrentTables[action.payload];
+      console.log('hey');
+    
+      if (newState.showTables) {
+          const tableIds = Object.keys(newCurrentTables);
+          let activeTable = null;
+      console.log('hey');
+          
+          if (tableIds.length > 0) {
+      console.log('hey');
 
-      if(newState.showCreatingGame){
-        return { ...newState, currentTables: newCurrentTables, showGames: false, showTables: false, showCreatingGame:true };
+              activeTable = newCurrentTables[tableIds[0]];
+              return { ...newState, currentTables: newCurrentTables, activeTable };
+          }
+          
+          console.log('returning to games');
+          // If no tables left, return to "home".
+          return { ...newState, currentTables: newCurrentTables, showGames: true, showTables: false, showCreatingGame: false };
       }
-      if(newState.showTables){
-        return { ...newState, currentTables: newCurrentTables, activeTable, showGames: false, showTables: true, showCreatingGame:false };
-      }
-
-      // if active table still exists dont switch
-      if(newCurrentTables[activeTable.id]){
-        return { ...newState, currentTables: newCurrentTables, activeTable};
-      } else {
-      //Check if any tables left, if so switch to the first one
-      const tableIds = Object.keys(newCurrentTables);
-      let activeTable = null;
-      if (tableIds.length > 0) {
-          activeTable = newCurrentTables[tableIds[0]];
-          return { ...newState, currentTables: newCurrentTables, activeTable };
-      }
-
-
-      return { ...newState, currentTables: newCurrentTables, activeTable, showGames: true, showTables: false, showCreatingGame:false };
-      }
-    }
+      
+      // If not in showTables mode, just delete the table and proceed.
+      return { ...newState, currentTables: newCurrentTables };
+  }
+  
 
     case TAKE_SEAT: {
       const {id, seat, tableId} = action.payload

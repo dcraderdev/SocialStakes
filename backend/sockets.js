@@ -10,6 +10,8 @@ const {
 
 module.exports = function (io) {
 
+  const connections = {}
+
   const rooms = {};
   const disconnectTimeouts = {};
   let disconnectTimes = {};
@@ -34,14 +36,22 @@ module.exports = function (io) {
         otherCards: [],
         handSummary: null,
         bestValue: null,
-      },
+      }, 
       messages: [],
+      conversationId: null,
       sortedActivePlayers: [],
       sortedFinishedPlayers: [],
       forfeitedPlayers: [],
       insuredPlayers: {},
     };
-  };
+  }; 
+
+
+
+
+
+
+
 
   io.on('connection', async (socket) => {
     const userId = socket.handshake.query.userId;
@@ -49,17 +59,50 @@ module.exports = function (io) {
 
     let socketId = socket.id;
  
+    socket.join(userId);
+
+    const userTables = await gameController.getUserTables(userId);
+    const userFriends = await friendController.getUserFriends(userId);
+    const userConversations = await chatController.getUserConversations(userId);
+
     // console.log('-=-=-=-=-=-=-=-=-=');
     // console.log('--- CONNECTING ---');
     // console.log('SOCKET ID', socketId);
     // console.log('A user connected', socket.id, 'Username:', username);
     // console.log('User Room:', userId);
-
+    // console.log('userConversations:');
+    // console.log(userConversations);
+ 
     // console.log('-=-=-=-=-=-=-=-=-=');
 
-    socket.join(userId);
 
-    const userTables = await gameController.getUserTables(userId);
+    if(!connections[userId]){
+      connections[userId] = {}
+    }
+
+    connections[userId][socketId] = {
+      socket: socket,
+      status: 'connected',
+      connectedAt: Date.now(),
+      timeOfLastAction: Date.now()
+    }
+
+    if(userConversations){
+      Object.keys(userConversations).map(conversation=>{
+        socket.join(conversation)
+      })
+    } 
+
+
+    let initObj = {
+      userFriends,
+      userConversations
+    } 
+
+    socket.emit('initialize_user', initObj);
+
+    // dispatch(friendActions.getUserFriends())
+    // dispatch(chatActions.getUserConversations())
 
     // Reconnection logic
     if (disconnectTimeouts[userId]) {
@@ -178,7 +221,50 @@ module.exports = function (io) {
         }
       }
     }
+
+
+
+    //takes in the function we want to emit and the object we will be emitting
+    // has optional userId field in case function is not directed at currentUser
+    async function handleEmit(cb, updateObj, targetUserId = userId) {
+      let currentConnections = connections[targetUserId];
+
+      Object.values(currentConnections).forEach(connection => {
+        connection.socket.emit(cb, updateObj);
+      });
+    }
+
+  
+
+    async function handleJoin(room, targetUserId = userId) {
+      let currentConnections = connections[targetUserId];
+
+      Object.values(currentConnections).forEach(connection => {
+        connection.socket.join(room);
+      });
+    }
+
+    async function fetchUpdatedTable(tableId){
+
+      let updatedTable = await gameController.getTableById(tableId);
+      if(!updatedTable) return
+
+      if (!rooms[tableId]) {
+        rooms[tableId] = roomInit();
+        rooms[tableId].gameSessionId = updatedTable.gameSessions[0].id;
+        rooms[tableId].blockHash = updatedTable.gameSessions[0].blockHash;
+        rooms[tableId].decksUsed = updatedTable.Game.decksUsed;
+        rooms[tableId].shufflePoint = updatedTable.shufflePoint;
+        rooms[tableId].conversationId = updatedTable.Conversation.id;
+        rooms[tableId].chatName = updatedTable.Conversation.chatName;
+      }
+
+      return updatedTable
+
+    }
  
+
+
     socket.on('disconnect', async () => {
 
       let timer = 5000; // 15 seconds
@@ -222,35 +308,10 @@ module.exports = function (io) {
 
 
 
+    socket.on('join_room', async (tableId) => {
 
-
-
-    socket.on('join_room', async (room) => {
-      let tableId = room;
-
-      let messageObj = {
-        tableId,
-        user: { username: 'Room', id: 1, rank: 0 },
-        message: {
-          content: `${username} has joined the room.`,
-          id: 0,
-        },
-      };
-
-      let updatedTable = await gameController.getTableById(tableId);
-
-      if (!updatedTable) {
-        // TODO: Create logic for creating a new game
-      }
-
-      // If the room doesnt exist create a new room
-      if (!rooms[tableId]) {
-        rooms[tableId] = roomInit();
-        rooms[tableId].gameSessionId = updatedTable.gameSessions[0].id;
-        rooms[tableId].blockHash = updatedTable.gameSessions[0].blockHash;
-        rooms[tableId].decksUsed = updatedTable.Game.decksUsed;
-        rooms[tableId].shufflePoint = updatedTable.shufflePoint;
-      }
+      let updatedTable = await fetchUpdatedTable(tableId)
+      if(!updatedTable) return
 
       let updateObj = {
         tableId,
@@ -264,33 +325,40 @@ module.exports = function (io) {
           dealerCards: {
             visibleCards: rooms[tableId].dealerCards.visibleCards,
           },
+          conversationId: rooms[tableId].conversationId,
+          chatName: rooms[tableId].chatName,
         },
       };
+ 
+      let conversationId = rooms[tableId].conversationId
+      let content = `${username} has joined the room.`
 
+      // socket.join(conversationId);
+      // socket.join(tableId);
+      handleJoin(conversationId)
+      handleJoin(tableId)
+      
+      await emitCustomMessage({ conversationId, content, tableId })
+      
+      handleEmit('join_table', updatedTable)
+      socket.emit('view_table', { id: tableId })
+      handleEmit('get_updated_table', updateObj)
+      
+      // socket.emit('join_table', updatedTable);
+      // socket.emit('get_updated_table', updateObj);
 
-      socket.join(room);
-      socket.emit('join_table', updatedTable);
-      socket.emit('get_updated_table', updateObj);
-      io.in(room).emit('new_message', messageObj);
     });
+
 
     socket.on('update_table_name', async (updateObj) => {
       const { tableId, tableName } = updateObj;
-      let room = tableId;
+      let content = `${username} has updated the table name to ${tableName}.`
+      let conversationId = rooms?.[tableId]?.conversationId
 
-      let messageObj = {
-        tableId,
-        user: { username: 'Room', id: 1, rank: 0 },
-        message: {
-          content: `${username} has updated the table name to ${tableName}.`,
-          id: 0,
-        },
-      };
-
-
-      io.in(room).emit('update_table_name', updateObj);
-      io.in(room).emit('new_message', messageObj);
+      await emitCustomMessage({ conversationId, content, tableId })
+      io.in(conversationId).emit('update_table_name', updateObj);
     });
+
 
     socket.on('view_room', async (tableId) => {
       let table = { id: tableId };
@@ -314,7 +382,9 @@ module.exports = function (io) {
         };
 
         gameController.leaveSeat(leaveSeatObj);
+
         io.in(userId).emit('player_leave', leaveSeatObj);
+        handleEmit('player_leave',leaveSeatObj, userId)
         return;
       });
 
@@ -342,64 +412,10 @@ module.exports = function (io) {
       // console.log('-=-=-=-=-=-=-=-=-=');
     });
  
-    // Broadcast message to specific room
-    socket.on('message', async (messageObj) => {
-      const { user, tableId, message } = messageObj;
-      let room = tableId;
-
-      const newMessage = await chatController.createMessage(messageObj);
-      if (!newMessage) return false;
-
-      newMessageObj = {
-        tableId,
-        user: {
-          username: user.username,
-          id: user.id,
-          rank: user.rank,
-        },
-        message: {
-          content: newMessage.content,
-          id: newMessage.id,
-        },
-      };
-
-      if (rooms[room]) {
-        rooms[room].messages.push(newMessageObj);
-      }
-
-      io.in(room).emit('new_message', newMessageObj);
-    });
-
-    // Edit message in specific room
-    socket.on('edit_message', async (messageObj) => {
-      const { tableId, userId, messageId, newContent } = messageObj;
-      let room = tableId;
-      await chatController.editMessage(messageObj);
-
-      io.in(room).emit('edit_message', messageObj);
-    });
-
-    // Edit message in specific room
-    socket.on('delete_message', async (messageObj) => {
-      const { tableId, userId, messageId } = messageObj;
-      let room = tableId;
-      await chatController.deleteMessage(messageObj);
-
-      io.in(room).emit('delete_message', messageObj);
-    });
 
     socket.on('take_seat', async (seatObj) => {
       const { room, seat, user, amount } = seatObj;
       let tableId = room;
-
-      let messageObj = {
-        tableId,
-        user: { username: 'Room', id: 1, rank: 0 },
-        message: {
-          content: `${username} has taken seat ${seat}.`,
-          id: 0,
-        },
-      };
 
       const takeSeat = await gameController.takeSeat(
         tableId,
@@ -407,6 +423,7 @@ module.exports = function (io) {
         user,
         amount
       );
+
 
       if (!takeSeat) {
         return;
@@ -444,7 +461,13 @@ module.exports = function (io) {
       // Add the player to the room
       rooms[tableId].seats[seat] = takeSeatObj;
 
-      io.in(room).emit('new_message', messageObj);
+
+      let content = `${username} has taken seat ${seat}.`
+      let conversationId = rooms?.[tableId]?.conversationId
+
+      await emitCustomMessage({ conversationId, content, tableId })
+
+      // io.in(room).emit('new_message', messageObj);
       io.in(room).emit('new_player', takeSeatObj);
 
       // console.log('--------------');
@@ -1677,61 +1700,58 @@ module.exports = function (io) {
   
 
     socket.on('send_friend_request', async (friendRequestObj) => {
+
       let recipientId = friendRequestObj.recipientId
       let recipientUsername = friendRequestObj.recipientUsername
       
-      console.log('sender | ', username, userId);
-      console.log('recip | ', recipientUsername, recipientId);
+      friendRequestObj.username = username
+      friendRequestObj.userId = userId
 
-      const request = await friendController.sendFriendRequest({userId, recipientId});
+      const request = await friendController.sendFriendRequest(friendRequestObj);
+
+      
       if(request){
 
+        const {friendship, newConversation} = request
+
+
         let senderObj = {
-          friend:{
+          conversationId: newConversation?.id,
+          friend:{ 
             id: recipientId,
             username:recipientUsername,
           },
           requestInfo: { 
-            id: request.id,
-            status: request.status
-          }
+            id: friendship.id,
+            status: friendship.status
+          },
         }
-         
-
+           
+ 
         let recipientObj = {
+          conversationId: newConversation?.id,
           friend:{
             id: userId,
             username,
           },
           requestInfo: {
-            id: request.id,
-            status: request.status
-          }
+            id: friendship.id,
+            status: friendship.status
+          },
+           
         }
 
 
-        console.log('-------- request -------');
-        console.log(request);
-        console.log('------------------------');
-
-
-
-        if(request.status === 'accepted'){
-          console.log('says accepted | ', username);
-
-          io.in(userId).emit('accept_friend_request', senderObj);
-          socket.emit('accept_friend_request', recipientObj);
-
-
+        if(friendship.status === 'accepted'){
+          handleAcceptFriendRequest(recipientObj, senderObj, request)
         }
 
-        if(request.status === 'rejected'){
+        if(friendship.status === 'rejected'){
           senderObj.status = 'pending'
           socket.emit('friend_request_sent', senderObj);
-
         }
 
-        if(request.status === 'pending'){
+        if(friendship.status === 'pending'){
           io.in(recipientId).emit('friend_request_received', recipientObj);
           socket.emit('friend_request_sent', senderObj);
         }
@@ -1739,72 +1759,101 @@ module.exports = function (io) {
       }
     });
 
-    socket.on('accept_friend_request', async (friendRequestObj) => {
-      console.log('-----accept_friend_request------');
-      console.log('----------------------');
 
+    function handleAcceptFriendRequest(recipientObj, senderObj, request) { 
+      let recipientId = senderObj.friend.id
+      let senderConnections = connections[userId];
+      let recipientConnections = connections[recipientId];
+      const {friendship, newConversation} = request
+
+      let convoObj = {
+        isDirectMessage: newConversation.isDirectMessage,
+        hasDefaultChatName: newConversation.hasDefaultChatName,
+        chatName: newConversation.chatName,
+        conversationId : newConversation.id,
+        members: newConversation.members,
+        messages: [],
+        notification: false
+      }
+
+      io.in(recipientId).emit('accept_friend_request', recipientObj);
+      socket.emit('accept_friend_request', senderObj);
+      
+      Object.values(senderConnections).forEach(connection => {
+        connection.socket.join(newConversation.id);
+      });
+      
+      Object.values(recipientConnections).forEach(connection => {
+        connection.socket.join(newConversation.id);
+      });
+      
+
+      io.in(recipientId).emit('add_conversation', convoObj);
+      socket.emit('add_conversation', convoObj);
+
+    }
+
+    socket.on('accept_friend_request', async (friendRequestObj) => {
 
       let recipientId = friendRequestObj.recipientId
       let recipientUsername = friendRequestObj.recipientUsername
       
- 
-      console.log('sender | ', username, userId);
-      console.log('recip | ', recipientUsername, recipientId);
-
-      console.log(friendRequestObj);
+      friendRequestObj.username = username
+      friendRequestObj.userId = userId
 
 
-      const request = await friendController.acceptFriendRequest({userId, recipientId});
-      if(request && request.status === 'accepted') {
+      const request = await friendController.acceptFriendRequest(friendRequestObj);
+      if(request && request.friendship.status === 'accepted') {
 
+        const {friendship, newConversation} = request
 
         let senderObj = {
-          friend:{
-            id: recipientId, 
+          conversationId: newConversation?.id,
+          friend:{ 
+            id: recipientId,
             username:recipientUsername,
           },
-          requestInfo: {
-            id: request.id,
-            status: request.status
-          }
+          requestInfo: { 
+            id: friendship.id,
+            status: friendship.status
+          },
         }
-        
+           
 
         let recipientObj = {
+          conversationId: newConversation?.id,
           friend:{
             id: userId,
             username,
           },
           requestInfo: {
-            id: request.id,
-            status: request.status
-          }
+            id: friendship.id,
+            status: friendship.status
+          },
+          
         }
 
 
-        console.log(senderObj);
-        console.log(recipientObj);
-    
-        io.in(recipientId).emit('accept_friend_request', recipientObj);
-        socket.emit('accept_friend_request', senderObj);
+        handleAcceptFriendRequest(recipientObj, senderObj, request)
+
       }
     
       return request;
     });
     
     socket.on('decline_friend_request', async (friendRequestObj) => {
-      console.log('-----deny_friend_request------');
-      console.log('----------------------');
+      // console.log('-----deny_friend_request------');
+      // console.log('----------------------');
 
 
       let recipientId = friendRequestObj.recipientId
       let recipientUsername = friendRequestObj.recipientUsername
       
  
-      console.log('sender | ', username, userId);
-      console.log('recip | ', recipientUsername, recipientId);
+      // console.log('sender | ', username, userId);
+      // console.log('recip | ', recipientUsername, recipientId);
 
-      console.log(friendRequestObj);
+      // console.log(friendRequestObj);
 
 
       const request = await friendController.declineFriendRequest({userId, recipientId});
@@ -1841,6 +1890,54 @@ module.exports = function (io) {
     });
 
 
+
+    socket.on('cancel_friend_request', async (friendRequestObj) => {
+      // console.log('-----cancel_friend_request------');
+      // console.log('----------------------');
+
+
+      let recipientId = friendRequestObj.recipientId
+      let friendshipId = friendRequestObj.friendshipId
+ 
+      // console.log('sender | ', username, userId);
+      // console.log('recip | ', recipientId);
+
+      // console.log(friendRequestObj);
+
+
+      const request = await friendController.cancelFriendRequest({friendshipId});
+      if(request) {
+
+        let senderObj = {
+          friend:{
+            id: recipientId, 
+          },
+          requestInfo: {
+            id: request.id,
+            status: request.status
+          }
+        }
+         
+
+        let recipientObj = {
+          friend:{
+            id: userId,
+            username,
+          },
+          requestInfo: {
+            id: request.id,
+            status: request.status
+          }
+        }
+    
+        io.in(recipientId).emit('deny_friend_request', recipientObj);
+        socket.emit('deny_friend_request', senderObj);
+      }
+    
+      return request;
+    });
+
+
     socket.on('remove_friend', async (friendObj) => {
       console.log('-----remove_friend------');
       console.log('----------------------');
@@ -1849,14 +1946,14 @@ module.exports = function (io) {
 
       let friendshipId = friendObj.id
       let friendId = friendObj.friendId
-      
- 
-      console.log('friendshipId | ', friendshipId);
-      console.log('friendId | ', friendId);
+      let conversationId = friendObj.conversationId
+
+      // console.log('friendshipId | ', friendshipId);
+      // console.log('friendId | ', friendId);
 
  
 
-      const request = await friendController.removeFriend(userId, friendObj);
+      await friendController.removeFriend(userId, friendObj);
      
       
       socket.emit('friend_removed', friendObj);
@@ -1865,6 +1962,227 @@ module.exports = function (io) {
     
      
     });
+
+
+      // Broadcast message to specific room
+      socket.on('message', async (messageObj) => {
+
+
+        const { conversationId, content } = messageObj;
+        let room = conversationId;
+  
+        const newMessage = await chatController.createMessage(messageObj, userId);
+        if (!newMessage) return false;
+  
+  
+        newMessageObj = {
+          createdAt: Date.now(),
+          conversationId,
+          content: newMessage.content,
+          id: newMessage.id,
+          userId,
+          username
+        };
+
+        // console.log(newMessageObj);
+
+        if (rooms[room]) {
+          rooms[room].messages.push(newMessageObj);
+        }
+  
+        io.in(room).emit('new_message', newMessageObj);
+      }); 
+  
+      // Edit message in specific room
+      socket.on('edit_message', async (messageObj) => {
+        const { conversationId, messageId, newContent } = messageObj;
+  
+        let room = conversationId;
+        await chatController.editMessage(messageObj, userId);
+  
+        io.in(room).emit('edit_message', messageObj);
+      });
+  
+      // Edit message in specific room
+      socket.on('delete_message', async (messageObj) => {
+        const { conversationId, messageId } = messageObj;
+        let room = conversationId;
+        await chatController.deleteMessage(messageObj, userId);
+  
+        io.in(room).emit('delete_message', messageObj);
+      });
+  
+      // Edit message in specific room
+      socket.on('change_chatname', async (changeObj) => {
+        const { conversationId } = changeObj;
+        let room = conversationId;
+        let changeChatNameRequest = await chatController.changeChatName(changeObj);
+        if(changeChatNameRequest){
+          io.in(room).emit('change_chatname', changeObj);
+        }
+      })
+  
+      // Edit message in specific room
+      socket.on('start_conversation', async (convoObj) => {
+        const { friendListIds, friendListNames } = convoObj;
+        let newConversation = await chatController.startConversation(convoObj, userId, username);
+
+
+        if(newConversation){
+          friendListIds.map(id=>{
+            let recipientConnections = connections[id];
+
+            if(recipientConnections){
+              Object.values(recipientConnections).forEach(connection => {
+                connection.socket.join(newConversation.id)
+                connection.socket.emit('add_conversation', newConversation)
+              });
+            }
+          })
+          socket.emit('add_conversation', newConversation)
+          socket.emit('go_to_conversation', newConversation)
+          socket.join(newConversation.id)
+
+
+
+          let content;
+
+
+          content = `${username} has started a new conversation!`
+          emitCustomMessage({conversationId:newConversation.id, content})
+
+
+
+
+          if (friendListNames.length === 1) {
+              content = `${friendListNames[0]} has been added to the conversation!`
+
+
+          } else if(friendListNames.length === 2){
+            content = `${friendListNames[0]} and ${friendListNames[1]} have been added to the conversation!`
+          }
+          
+        
+          else {
+              let lastFriend = friendListNames.pop();
+              content = `${friendListNames.join(', ')}, and ${lastFriend} have been added to the conversation!`
+          }
+
+          emitCustomMessage({conversationId:newConversation.id, content})
+
+        }
+      })
+
+
+
+      // Edit message in specific room
+      socket.on('leave_conversation', async (leaveObj) => {
+        const { conversationId } = leaveObj;
+        let leaveConversation = await chatController.leaveConversation(conversationId, userId);
+        if(leaveConversation){
+
+          let currentConnections = connections[userId];
+      
+          Object.values(currentConnections).forEach(connection => {
+            connection.socket.leave(conversationId);
+          });
+
+
+
+          socket.emit('remove_conversation', leaveObj)
+
+          content = `${username} has left the conversation!`
+          emitCustomMessage({conversationId, content})
+
+          io.in(conversationId).emit('user_left_conversation', {conversationId, userId});
+
+
+
+
+
+
+        }
+      })
+
+ 
+      // Edit message in specific room
+      socket.on('add_friends_to_conversation', async (convoObj) => {
+        const { friendListIds, friendListNames } = convoObj;
+
+        let room = convoObj.conversationId
+        let conversation = await chatController.addFriendsToConversation(convoObj);
+        
+        if(conversation){
+
+        io.in(room).emit('user_joined_conversation', convoObj);
+
+
+          friendListIds.map(id=>{
+            let recipientConnections = connections[id];
+
+            if(recipientConnections){
+              Object.values(recipientConnections).forEach(connection => {
+                connection.socket.join(conversation.id)
+                connection.socket.emit('add_conversation', conversation)
+              });
+            }
+          })
+
+          let content;
+          if (friendListNames.length === 1) {
+              content = `${username} has added ${friendListNames[0]} to the conversation!`
+
+
+          } else if(friendListNames.length === 2){
+            content = `${username} has added ${friendListNames[0]} and ${friendListNames[1]} to the conversation!`
+          }
+          
+        
+          else {
+              let lastFriend = friendListNames.pop(); 
+              content = `${username} has added ${friendListNames.join(', ')}, and ${lastFriend} to the conversation!`
+          }
+
+          emitCustomMessage({conversationId:conversation.id, content})
+        }
+      }) 
+
+
+     async function emitCustomMessage(messageObj){
+        // Broadcast message to specific room
+
+        let roomUserId = 'e10d8de4-f4c7-0000-0000-000000000000'
+
+        const { conversationId, content, tableId } = messageObj;
+        let room = conversationId;
+  
+        const newMessage = await chatController.createMessage(messageObj, roomUserId);
+
+        if (!newMessage) console.log('no message');;
+
+        if (!newMessage) return false;
+  
+  
+        newMessageObj = {
+          createdAt: Date.now(),
+          conversationId,
+          content,
+          id: newMessage.id,
+          userId: roomUserId,
+          username: 'Room'
+        }; 
+
+        if(tableId){
+          newMessageObj.tableId = tableId
+          newMessageObj.chatName = rooms?.[tableId]?.chatName
+        }
+        
+        console.log(newMessageObj);
+
+        io.in(room).emit('new_message', newMessageObj);
+
+      }
+
 
 
 

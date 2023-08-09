@@ -7,6 +7,8 @@ const { handleValidationErrors, validateSpotEdit, validateReview, validateSignup
 const router = express.Router();
 const {themeController} = require('../../controllers/themeController')
 const {friendController} = require('../../controllers/friendController')
+const { gameController } = require('../../controllers/gameController');
+const { chatController } = require('../../controllers/chatController');
 const {
   singleFileUpload,
   singleMulterUpload,
@@ -14,7 +16,6 @@ const {
   multipleMulterUpload,
   retrievePrivateFile,
 } = require('../../awsS3');
-const { gameController } = require('../../controllers/gameController');
 
 // Login
 // need to make sure that the correct CSRF token
@@ -114,6 +115,23 @@ router.get('/friends', requireAuth, async (req, res, next) => {
   return res.json(allFriends);
 });
 
+
+// Get user's conversations
+router.get('/conversations', requireAuth, async (req, res, next) => {
+  const { user } = req;
+  const conversations = await chatController.getConversations(user.id)
+
+  console.log(conversations);
+  if(!conversations){
+    const err = new Error("No conversation data found") 
+    err.statusCode = 404
+    err.status = 404;
+    next(err)
+  }
+  return res.json(conversations);
+});
+
+ 
 
 // Restore session user
 router.get('/', requireAuth, restoreUser, (req, res) => {

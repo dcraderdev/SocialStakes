@@ -16,6 +16,7 @@ import { ModalContext } from './context/ModalContext';
 import { SocketContext } from './context/SocketContext';
 import * as sessionActions from './redux/middleware/users';
 import * as friendActions from './redux/middleware/friends';
+import * as chatActions from './redux/middleware/chat';
 import InsuranceModal from './components/InsuranceModal';
 import JoinPrivateGameModal from './components/JoinPrivateGameModal';
 import SettingsModal from './components/SettingsModal';
@@ -26,6 +27,9 @@ import UnknownRoutePage from './components/UnknownRoutePage';
 import StatPage from './components/StatPage';
 import RemoveFriendModal from './components/RemoveFriendModal';
 import ProfileButtonModal from './components/ProfileButtonModal';
+import StartConversationModal from './components/StartConversationModal';
+import LeaveConversationModal from './components/LeaveConversationModal';
+import AddFriendsModal from './components/AddFriendsModal';
 
 function App() {
 
@@ -47,7 +51,8 @@ function App() {
     dispatch(sessionActions.restoreUser())
       .then(() => {
         isLoaded(true);
-        dispatch(friendActions.getUserFriends())
+        // dispatch(friendActions.getUserFriends())
+        // dispatch(chatActions.getUserConversations())
 
       })
       .catch(() => {
@@ -123,15 +128,31 @@ console.log(modal);
         </div>
       )}
 
+{modal  === 'newConversation' && (
+        <div className='modal-container'>
+          {modal === 'newConversation' && <StartConversationModal />}
+        </div>
+      )}
+
+
+
+{modal  === 'LeaveConversationModal' && (
+        <div className='modal-container'>
+          {modal === 'LeaveConversationModal' && <LeaveConversationModal />}
+        </div>
+      )}
+
+
+{modal  === 'AddFriendsModal' && (
+        <div className='modal-container'>
+          {modal === 'AddFriendsModal' && <AddFriendsModal />}
+        </div>
+      )}
 
 
         <div className={`profile-modal ${modal === 'profileModal' ? ' visible' : ' hidden'}`} >
           <ProfileButtonModal />
         </div>
-
-
-
-
 
 
       <div>

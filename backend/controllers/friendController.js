@@ -1,5 +1,22 @@
-const { User, Friendship } = require('../db/models');
+const { User, Friendship, Conversation } = require('../db/models');
 const { Op } = require("sequelize");
+
+
+
+
+const getChatName = (usernames) =>{
+  let sortedNames = usernames.sort((a, b) => {
+     a = a.toLowerCase();
+     b = b.toLowerCase();
+ 
+     if (a < b) return -1;
+     if (a > b) return 1;
+ 
+     return 0;
+ });
+   return sortedNames.join(', ')
+ }
+
 
 const friendController = {
   async sendFriendRequest(friendRequestObj) {
@@ -23,74 +40,129 @@ const friendController = {
         user2Id: user2Id,
       },
     });
-
     
     // If there is no existing friendship, create a new one with status 'pending'
     if (!existingFriendship) {
-      console.log('no current relationship', userId, 'is the initiator');
-      return await Friendship.create({
+      const newFriendship = await Friendship.create({
         user1Id: user1Id,
         user2Id: user2Id,
         actionUserId: userId,
         status: 'pending',
       });
+
+      return {
+        friendship: newFriendship,
+        newConversation: null
+    };
+
     } else {
       // If there is an existing friendship with status 'pending', and the other user initiated - accept the request
       if (
         existingFriendship.status === 'pending' &&
         existingFriendship.actionUserId !== userId
       ) {
+
+        const newConversation = await this.startConversation(friendRequestObj)
+        
         existingFriendship.status = 'accepted';
+        existingFriendship.conversationId = newConversation.id;
         existingFriendship.actionUserId = userId;
-        return await existingFriendship.save().catch((err) => {
-          console.error('There was an error saving the friendship: ', err);
-          throw err;
-        });
-      }
+        
+        try {
+          await existingFriendship.save();
+          return {
+              friendship: existingFriendship,
+              newConversation
+          };
+        } catch (err) {
+            console.error('There was an error saving the friendship: ', err);
+            throw err;
+        }
+        }
+        // If there is an existing friendship with status 'pending', and the we initiated - return
+        if (
+          existingFriendship.status === 'pending' &&
+          existingFriendship.actionUserId === userId
+        ) {
+          console.log('Cannot send friend request - prior request pending');
+          return {
+            friendship: existingFriendship,
+            newConversation: null
+        };
+        }
 
-      // If there is an existing friendship with status 'pending', and the we initiated - return
-      if (
-        existingFriendship.status === 'pending' &&
-        existingFriendship.actionUserId === userId
-      ) {
-        console.log('Cannot send friend request - prior request pending');
-        return existingFriendship;
-      }
-
-      
         // if there is a rejected friendship and the current user is not the one who rejected it, create a new one
         if (
           existingFriendship.status === 'rejected' &&
           existingFriendship.actionUserId === userId
         ) {
-        console.log('rejector is now sending request');
-        console.log('rejector is now sending request');
-        console.log('rejector is now sending request');
-        console.log('rejector is now sending request');
-    
+          existingFriendship.status = 'pending';
+          existingFriendship.actionUserId = userId;
+          await existingFriendship.save()
 
-        existingFriendship.status = 'pending';
-        existingFriendship.actionUserId = userId;
-        return await existingFriendship.save()
-
+          return {
+            friendship: {
+              existingFriendship:{
+                status: 'pending'
+              } 
+            },
+            newConversation: null
+          };
         }
+    }
+    return false;
+  },
+
+
+
+  
+
+  async startConversation(friendRequestObj) {
+    const {userId, username, recipientId, recipientUsername} = friendRequestObj;
+    let usernames = [username, recipientUsername]
+
+    // If not, create a new one and add both users
+    chatName = getChatName(usernames)
+    const conversation = await Conversation.create({chatName, isDirectMessage: true, hasDefaultChatName:true});
+    if(conversation){
+      await conversation.addUsers([userId, recipientId]);
+
+      let members = {}
+      members[userId] = {            
+        id:userId,
+        username:username
+      } 
+      members[recipientId] = {            
+        id:recipientId,
+        username:recipientUsername
+      } 
+
+      const formattedConversation = {
+        chatName: conversation.chatName,
+        conversationId: conversation.id,
+        hasDefaultChatName: conversation.hasDefaultChatName,
+        isDirectMessage: conversation.isDirectMessage,
+        id: conversation.id,
+        members,
+        messages: [],
+        notification: false,
+      };
+      return formattedConversation;
 
 
     }
-
-    return 'Unexpected status';
+    return false;
   },
 
 
 
 
-  async acceptFriendRequest(friendRequestObj) {
-    console.log('-----acceptFriendRequest------');
-    console.log('----------------------');
-    const {userId, recipientId} = friendRequestObj;
-    console.log('-----here 1------');
-    console.log({userId, recipientId});
 
+
+  async acceptFriendRequest(friendRequestObj) {
+    // console.log('-----acceptFriendRequest------');
+    // console.log('----------------------');
+    const {userId, recipientId} = friendRequestObj;
     let user1Id, user2Id;
 
     // Ensure user1Id < user2Id to prevent duplication
@@ -101,7 +173,7 @@ const friendController = {
       user1Id = userId;
       user2Id = recipientId;
     }
-    console.log('-----here2 ------');
+
 
     // Check if there is any existing friendship
     const existingFriendship = await Friendship.findOne({
@@ -111,43 +183,34 @@ const friendController = {
       },
     });
 
-    console.log('-----here3 ------');
-
-
     // If there is no existing friendship, return
     if (!existingFriendship) {
-      console.log('???????????????????');
-      return 'No existing friend request to accept';
-
-      // user1Id` = 'e87a6a96-6ebc-4ef3-b6a1-3058b136f34b'
-      // AND `Friendship`.`user2Id` = 'e10d8de4-f4c7-4d28-9324-56aa9c000001'
+      return false;
     } else {
-      console.log('!!!!!!!!');
-
-
-
-    console.log('----- existingFriendship.status ------');
-    console.log(existingFriendship.status);
-    console.log(existingFriendship.actionUserId);
-    console.log('=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=');
 
       // Check the status of the existing friendship
       if (
         existingFriendship.status === 'pending' &&
         existingFriendship.actionUserId !== userId
       ) {
-        console.log('next');
-        console.log('next');
-        console.log('next');
-        console.log('next');
+
+        const newConversation = await this.startConversation(friendRequestObj)
         existingFriendship.status = 'accepted';
+        existingFriendship.conversationId = newConversation.id;
         existingFriendship.actionUserId = userId;
-        return await existingFriendship.save().catch((err) => {
+        
+        try {
+          await existingFriendship.save();
+          return {
+              friendship: existingFriendship,
+              newConversation
+          };
+        }catch(err){
           console.error('There was an error saving the friendship: ', err);
           throw err;
-        });
+
+        }
       } else {
-        console.log('???????????????????');
         return 'Cannot accept friend request - request not in pending state or not initiated by the other user';
       }
     }
@@ -183,10 +246,7 @@ const friendController = {
         existingFriendship.status === 'pending' &&
         existingFriendship.actionUserId !== userId
       ) {
-        console.log('saving status as rejected');
-        console.log('saving status as rejected');
-        console.log('saving status as rejected');
-        console.log('saving status as rejected');
+
         existingFriendship.status = 'rejected';
         existingFriendship.actionUserId = userId;
         return await existingFriendship.save();
@@ -196,11 +256,27 @@ const friendController = {
     }
   },
 
+  async cancelFriendRequest(friendRequestObj) {
+    const {friendshipId} = friendRequestObj;
+
+
+    const existingFriendship = await Friendship.findByPk(friendshipId);
+
+    // If there is no existing friendship, return
+    if (!existingFriendship) {
+      return false;
+    } 
+
+    return await existingFriendship.destroy()
+
+    
+  },
+
   async getUserFriends(userId){
 
     const usersFriendships = await Friendship.findAll( {
       where: {
-        status: { [Op.or]: ['accepted', 'pending'] },
+        status: { [Op.or]: ['accepted', 'pending', 'rejected'] },
         [Op.or]: [
           { user1Id: userId },
           { user2Id: userId },
@@ -218,17 +294,17 @@ const friendController = {
           attributes: ['id', 'username', 'rank'],
         }
     ],
-      attributes: ['id', 'status', 'actionUserId'],
+      attributes: ['id', 'status', 'actionUserId', 'conversationId'],
   });
 
     if(!usersFriendships){
       return false
     }
 
-    let friendships = { incomingRequests: {}, outgoingRequests: {}, friends: {} };
+    let friendships = { incomingRequests: {}, outgoingRequests: {}, rejectedRequests: {}, friends: {} };
 
     const formattedResults = usersFriendships.reduce((acc, friendship) => {
-      const { id, status, user1, user2, actionUserId } = friendship;
+      const { id, status, user1, user2, actionUserId, conversationId } = friendship;
       let friend, isOutgoingRequest;
 
       if (user1.id === userId) {
@@ -241,7 +317,7 @@ const friendController = {
         isOutgoingRequest = actionUserId === userId;
       }
     
-      const formattedFriendship = { id, friend, status };
+      const formattedFriendship = { id, friend, status, conversationId };
     
       if (status === 'accepted') {
         acc.friends[friend.id] = formattedFriendship;
@@ -250,6 +326,10 @@ const friendController = {
           acc.outgoingRequests[friend.id] = formattedFriendship;
         } else {
           acc.incomingRequests[friend.id] = formattedFriendship;
+        }
+      } else if(status === 'rejected'){
+        if(actionUserId !== userId){
+          acc.rejectedRequests[friend.id] = formattedFriendship;
         }
       }
     
@@ -264,7 +344,6 @@ async removeFriend(userId, friendObj){
 
   const {friendshipId,friendId} = friendObj
 
-
   const existingFriendship = await Friendship.findByPk(friendshipId);
 
   if(!existingFriendship){
@@ -276,8 +355,17 @@ async removeFriend(userId, friendObj){
     (existingFriendship.user1Id === userId && existingFriendship.user2Id === friendId) ||
     (existingFriendship.user1Id === friendId && existingFriendship.user2Id === userId)
   ) {
-    console.log('Friendship is valid.');
+
+    console.log(existingFriendship);
+console.log(existingFriendship.conversationId);
+
+    const existingConversation = await Conversation.findByPk(existingFriendship.conversationId);
+
+    if(existingConversation) {
+      await existingConversation.destroy()
+    }
     await existingFriendship.destroy();
+
   } else {
     console.log('Invalid users for this friendship.');
     return false;

@@ -20,6 +20,7 @@ import Navigation from '../Navigation';
 
 import gameTileBackground from '../../images/game-tile-background.jpeg';
 import TableSortBar from '../TableSortBar';
+import ChatInputArea from '../ChatInputArea';
 
 function GameFloor() {
   const { socket } = useContext(SocketContext);
@@ -39,6 +40,8 @@ function GameFloor() {
 
   const [isLoaded, setIsLoaded] = useState(false);
   const [currTables, setCurrTables] = useState('');
+  
+  const [hasCurrentTables, setHasCurrentTables] = useState(false);
 
 
 
@@ -73,14 +76,14 @@ function GameFloor() {
       return;
     }
     if (user) {
-      if (currentTables[table.id]) {
-        socket.emit('view_room', table.id);
+      if (currentTables[table?.id]) {
+        socket.emit('view_room', table?.id);
       } else {
         if(table.private){
-          setUpdateObj({tableId:table.id})
+          setUpdateObj({tableId:table?.id})
           openModal('joinPrivateGame');
         } else {
-          socket.emit('join_room', table.id);
+          socket.emit('join_room', table?.id);
         }
       }
     }
@@ -153,7 +156,18 @@ function GameFloor() {
   };
 
 
+
+  //sets hieght for our sidemenu in case we have currentGames
+  useEffect(() => {
+    setHasCurrentTables(Object.entries(currentTables).length > 0);
+  }, [currentTables]);
+
+
+  const getViewHeight = () => {
+    return hasCurrentTables ? 'creatinggame-wrapper' : 'creatinggame-wrapper extended';
+  };
   
+
 
   return (
     
@@ -164,6 +178,7 @@ function GameFloor() {
 
             {!activeTable && isLoaded && <Navigation />}
 
+  
 
             {/* private game buttons */}
             {!activeTable && !showCreatingGame && (
@@ -199,7 +214,7 @@ function GameFloor() {
               <div className="games-grid">
                 {allGames &&
                   Object.values(allGames).map((game, index) => (
-                    <GameTile key={index} game={game} cbFunc={checkTables} delay={index} />
+                    <GameTile key={index} game={game} cbFunc={checkTables} delay={index} style={{animationDelay: `${index * 3}s`}} />
                   ))}
               </div>
             )}
@@ -248,7 +263,7 @@ function GameFloor() {
 
             {/* SHOW SELECTED TABLE */}
             {isLoaded && showCreatingGame && (
-              <div className="creatinggame-container">
+              <div className={`creatinggame-wrapper ${hasCurrentTables ? '' : ' extended'}`}>
                 <CreatingGameView />
               </div>
             )}

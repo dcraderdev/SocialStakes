@@ -31,6 +31,8 @@ body{
   background-color: #803a34;*/
   background-color: #2d2e2c;
   background-color: #1d1e1c;
+  background-color: #1b1c1bfa;
+
   /* background: radial-gradient(circle, rgba(111,112,110,1) 0%, rgba(31,32,30,1) 100%); */
   width: 100%;
   overflow-x: hidden;
@@ -248,7 +250,7 @@ body{
 }
 
 .fade-in {
-  animation: fadeIn 1s forwards ease-in;
+  animation: fadeIn .5s forwards ease-in;
 }
 
 
@@ -309,6 +311,10 @@ body{
   margin-left: 5px;
 }
 
+.align-center{
+  align-items: center;
+}
+
 
 .balancemodal-disabled{
   color: rgba(255, 255, 255, 0.297);
@@ -322,6 +328,23 @@ body{
 
 
 
+
+/* Styling the scrollbar */
+.styled-scrollbar::-webkit-scrollbar{
+  width: 8px; /* Width of the scrollbar */
+}
+
+.styled-scrollbar::-webkit-scrollbar-track {
+  background:transparent; /* Color of the track of the scrollbar */
+}
+
+.styled-scrollbar::-webkit-scrollbar-thumb {
+  background: #131312; /* Color of the thumb of the scrollbar */
+}
+
+.styled-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: darkgrey; /* Color of the thumb of the scrollbar when hovered */
+}
 
 
 

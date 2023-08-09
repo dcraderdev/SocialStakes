@@ -69,6 +69,10 @@ import { ModalContext } from '../../context/ModalContext';
 
 
   useEffect(() => {
+
+    if(!currentTables || activeTable || currentTables[activeTable.id]) return
+
+
     if(currentTables && activeTable){
 
       let userInActiveSeat = currentTables[activeTable.id]?.actionSeat === currentSeat && currentSeat !== null;
@@ -392,12 +396,12 @@ const rebet = (multiplier) => {
 
               </div>
 
-              <div
+              {/* <div
                 className={`chatbox-wrapper ${showMessages ? '' : 'minimize'}`}
                 onClick={showMessages ? null : () => dispatch(toggleShowMessages())}
               >
                 <Chatbox showMessages={showMessages} />
-              </div>
+              </div> */}
             </div>
 
 

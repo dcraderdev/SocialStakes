@@ -1,213 +1,600 @@
-
-
-.creatinggameview-isPickingGameType-container,
-.creatinggameview-isPickingVariant-container,
-.creatinggameview-isPickingBetSizing-container{
-  position: relative;
-  height: calc(100vh - 250px);
-  width: 100%;
-  transition: all .5s ease;
-  display: grid;
-  grid-template-rows: repeat(2, 200px);
-  grid-template-columns: repeat(3, 250px);
-  grid-gap: 40px;
-  grid-row-gap: 20px;
-  align-items: center;
-}
-
-.creatinggameview-isPickingBetSizing-container,
-.creatinggameview-isPickingVariant-container{
-  align-items: center;
+.creatinggameview-settings-container {
+  width: 200px;
+  height: calc(100% + 15px);
+  position: sticky;
+  top: -10px;
+  left: 0px;
   display: flex;
+  border-right: rgba(0, 0, 0, 0.466) solid .5px;
+  border-right: rgba(0, 0, 0, 0.466) solid 1px;
+  flex-direction: column;
 }
 
-.creatinggameview-isPickingGameType-wrapper{
-  height: calc(100vh - 250px);
+.creatinggameview-settings-container.extended {
+  width: 200px;
+  height: 100%;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  display: flex;
+  border-right: rgba(0, 0, 0, 0.466) solid .5px;
+  border-right: rgba(0, 0, 0, 0.466) solid 1px;
+  flex-direction: column;
+}
+
+
+
+
+
+
+.creatinggameview-options-wrapper{
+  position: absolute;
+  width: calc(100% - 200px);
+  height: 100%;
+  left: 200px;
+  flex-direction: column;
+
+}
+
+
+
+
+@media screen and (min-width: 800px) {
+  .creatinggameview-settings-container.extended,
+  .creatinggameview-settings-container{
+    width: 300px;
+  }
+  .creatinggameview-options-wrapper{
+    width: calc(100% - 300px);
+    left: 300px;
+
+  }
+}
+
+
+
+
+
+
+
+
+.creatinggameview-tablename-container{
+  height: 50px;
+  justify-content: space-between;
+}
+
+
+
+
+
+
+
+
+.creatinggameview-tablename-container{
+  position: relative;
+  left: 50%;
+  width: 80%;
+
+  transform: translate(-50%, 0);
+}
+
+.creatinggameview-name{
   width: 100%;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
 
 }
+
+
+
+.creatinggameview-chatname{
+  outline: none;
+  border: none;
+  box-shadow: none;
+  background-color: transparent;
+  font-size: min(35px, 4vw);
+  color: white;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  text-align: center;
+  border-bottom: #000000 solid 1px;
+}
+
+
+
+.creatinggameview-chatname::placeholder {
+  color: #c7461e;
+  font-size: min(2vw, 15px);
+}
+
+.creatinggameview.validation-handling {
+  position: absolute;
+  color: #c7461e;
+  font-size: min(2.2vw, 17px);
+  top: 15px;
+}
+
+
+
+
+.creatinggameview-nav-option{
+  border-top: #404040b0 solid 1px;
+  border-bottom: #000000 solid 2px;
+  height: 50px;
+  width: 100%;
+  font-size: 18px;
+  color: #fdfcfc;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.creatinggameview-nav-option:hover{
+  background-color: rgba(228, 228, 228, 0.2508);
+}
+
+
+
+
+.creatinggameview-option-header{
+  height: 80px;
+  width: 100%;
+  font-size: 18px;
+  color: #fdfcfc;
+  overflow: hidden;
+}
+
+
+
+
+.creatinggameview-option-selection{
+  position: absolute;
+  right: 10px;
+  font-size: 13px;
+  font-weight: 300;
+  color: #fdfcfc;
+  overflow: hidden;
+}
+
+
+.creatinggameview-options-container{
+  width: 100%;
+  height: calc(100% - 40px);
+
+}
+
+.creatinggameview-active-nav{
+  color: goldenrod;
+  background-color: rgba(228, 228, 228, 0.213);
+
+}
+
 
 .creatinggameview-isPickingGameType-container{
-align-items: center;
-height: fit-content;
+  position: relative;
+  height: 100%;
+  width: 99%;
+  transition: all .5s ease;
+  display: grid;
+  grid-template-rows: auto;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 230px));
+  grid-gap: 20px;
+  grid-row-gap: 10px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+
+.creatinggameview-isPickingGameType-container > * { 
+  max-width: 400px;
+  max-height: 300px;
+}
+
+
+.creatinggameview-isPickingGameType-container{
+  height: calc(100vh - 220px);
+
+}
+
+.creatinggameview-isPickingGameType-container.extended{
+  position: relative;
+  height: calc(100vh - 170px);
+  flex-direction: column;
+}
+
+
+
+
+
+@media screen and (min-width: 1000px) {
+
+  .creatinggameview-isPickingGameType-container{
+    grid-template-rows: auto;
+    grid-template-columns: repeat(auto-fit, max(150px, 30%));
+    overflow-y: scroll;
+  }
+}
+
+
+
+
+.creatinggameview-selection-container{
+  position: relative;
+  top: 5%;
+  height: 95%;
+  height: 100%;
 
 }
 
 
 
-.creatinggameview-isPickingPrivate-container{
-  position: relative;
-  height: calc(100vh - 250px);
-  width: 100%;
-  transition: all .5s ease;
+.creatinggameview-choosingSettings-container{
   flex-direction: column;
-  height: calc(100vh - 250px);
-  justify-content: space-around;
+  height: calc(100vh - 160px);
+}
+
+.creatinggameview-choosingSettings-container.extended{
+  height: calc(100vh - 100px);
+  flex-direction: column;
+}
+
+
+.creatinggameview-choosingSettings-wrapper{
+  /* overflow-y: scroll;
+  overflow-x: hidden; */
+  width: 99%;
+  height: 100%;
+}
+
+
+
+.creatinggameview-review-header,
+  .creatinggameview-settings-header{
+
+  font-size: min(25px, 3.5vw);
+  position: relative;
+  height: 60px;
+}
+
+
+.creatinggameview-review-header-text,
+  .creatinggameview-settings-header-text{
+  color: goldenrod;
+  box-shadow: 0 10px 10px -10px rgba(0,0,0,0.5);
+  font-size: min(25px, 3.5vw);
+}
+
+
+.creatinggameview-review-wrapper,
+.creatinggameview-settings-options{
+  position: relative;
+  height: 100%;
+  width: 99%;
+  flex-direction: column;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+
+
+
+
+
+.creatinggameview-settings-option{
+  height: 200px;
+  height: fit-content;
+  padding-top: 5vh;
+  padding-bottom: 5vh;
+
+  flex-shrink: 0;
+  width: 100%;
+  /* border: rgb(84, 109, 182) solid 1px; */
+  border-top: #404040b0 solid 1px;
+  border-bottom: #000000 solid 2px;
+
+}
+
+.creatinggameview-settings-option:last-child{
+  border-bottom: #000000 solid 1px;
+
+}
+
+
+.creatinggameview-settings-option-header{
+  color: white;
+  font-size: min(25px, 3.5vw);
+  height: fit-content;
+  width: fit-content;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-align: center;
+  width: 200px;
+}
+
+
+.creatinggameview-settings-selection{
+  margin-left: 5px;
+}
+
+
+.creatinggameview-settings-selection.red{
+  color: rgba(230, 28, 28, 0.883);
+  position: relative;
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+
+
+.creatinggameview-settings-option-header.grey{
+  color: rgba(128, 128, 128, 0.37);
+}
+
+.creatinggameview-chatname.grey{
+  border-bottom: rgba(128, 128, 128, 0.37) solid 1px;
+}
+
+
+
+.creatinggameview-settings-button-container{
+  width: fit-content;
+  height: fit-content;
+  margin-left: 10px;
+}
+
+
+.creatinggameview-settings-option-button{
+  min-width: 90px;
+  width: fit-content;
+  padding-left: 10px;
+
+
+
+
+
+  height: 10vw;
+  min-height: 20px;
+  max-height: 60px;
+}
+
+
+.creatinggameview-button-header{
+  color: white;
+  font-size: min(25px, 3.5vw);
+  height: fit-content;
+  width: fit-content;
+}
+
+.creatinggameview-button-button{
+  border: rgb(255, 255, 255) solid 1px;
+  height: 50%;
+  aspect-ratio: 1/1;
+  border-radius: 50%;
+  margin-left: 10px;
+  cursor: pointer;
+  font-size: min(60px, 7.5vw);
+  color: green;
+} 
+
+.priority{
+  z-index: 100;
+  position: relative;
+  left: 5px;
+  bottom: 10px;
+} 
+
+
+
+.creatinggameview-friendtile-wrapper{
+  color: white;
+}
+
+
+
+
+@media screen and (max-width: 1000px) {
+  .creatinggameview-settings-option{
+    flex-direction: column;
+  }
+
+
+
+.creatinggameview-settings-option-header{
+  margin-bottom: 10px;
+}
   
 }
 
 
-.options-nav{
-  position: absolute;
-  width: 100%;
-  height: 100px;
-  top: -100px;
-  justify-content: space-around;
-  color: white;
-}
-
-
-.optionsnav{
-  width: 23%;
-  min-width: 120px;
-  height: 50%;
-  border-bottom: rgba(255, 217, 0, 0.466) solid .5px;
-  border-top: rgba(255, 217, 0, 0.466) solid .5px;
-  box-shadow: rgba(0, 0, 0, 0.5) 0px 3px 6px, rgba(0, 0, 0, 0.5) 0px 3px 6px;
-
-  flex-direction: column;
-  border-radius: 3px;
-  justify-content: space-around;
-  cursor: pointer;
-  font-size: 12px;
-}
-
-
-
-
-.creatinggameview-create-button:hover,
-.optionsnav:hover{
-  box-shadow: rgba(0, 0, 0) 0px 3px 6px, rgba(0, 0, 0) 0px 3px 6px;
-}
-
-
-
-
-
-
-.offscreen{
-  position: absolute;
-  left: 200vw;
-  top: -50px;
-  width: 95%;
-  height: calc(100vh - 250px);
-  border: green solid 10px;
-  transition: all .5s ease;
-}
-
-
-
-.creatinggameview-options{
-  width: 100px;
-  height: 100px;
-  border-bottom: rgba(255, 217, 0, 0.466) solid .5px;
-  border-top: rgba(255, 217, 0, 0.466) solid .5px;
-  box-shadow: rgba(0, 0, 0, 0.5) 0px 3px 6px, rgba(0, 0, 0, 0.5) 0px 3px 6px;
-  color: white;
-  font-size: 20px;
-  cursor: pointer;
-}
-.creatinggameview-options:hover{
-  box-shadow: rgba(0, 0, 0) 0px 3px 6px, rgba(0, 0, 0) 0px 3px 6px;
-
-}
-
-
-.private-open-buttons-container{
-  width: 600px;
-  justify-content: space-around;
-}
-
-.creatinggameview-tablename-container{
-  width: 650px;
-  height: 50px;
-  justify-content: space-between;
-
-}
-
-.centered{
-  justify-content: center;
-}
-
-
-
-.creatinggameview-privatekey,
-.creatinggameview-tablename{
-  width: 300px;
-  height: 50px;
-}
-
-.creatinggameview-create-button{
-  color: white;
-  border-bottom: rgba(255, 217, 0, 0.466) solid .5px;
-  border-top: rgba(255, 217, 0, 0.466) solid .5px;
-  box-shadow: rgba(0, 0, 0, 0.5) 0px 3px 6px, rgba(0, 0, 0, 0.5) 0px 3px 6px;
-  padding: 20px;
-  cursor: pointer;
-}
-
-
-.highlite{
-  border: rgba(255, 217, 0, 0.466) solid .5px;
-}
-
-
-
-@media screen and (min-width: 700px) {
-  .optionsnav{
-    font-size: 14px;
-  }
-
-}
-
-
-
-@media screen and (min-width: 700px) {
-
-  .creatinggameview-options{
-    width: 200px;
-    height: 200px;
-    border-bottom: rgba(255, 217, 0, 0.466) solid .5px;
-    border-top: rgba(255, 217, 0, 0.466) solid .5px;
-    box-shadow: rgba(0, 0, 0, 0.5) 0px 3px 6px, rgba(0, 0, 0, 0.5) 0px 3px 6px;
-    color: white;
-    font-size: 20px;
-    cursor: pointer;
-  }
-
-
-
-}
-
-
-
 @media screen and (max-width: 600px) {
-  .creatinggameview-isPickingGameType-container{
-    grid-template-columns: repeat(2, 1fr);
 
-    grid-template-rows: repeat(2, 1fr);
-    grid-template-columns: repeat(2, 200px);
-
-
-    grid-auto-rows: 150px;
-    grid-gap: -16px;
-    padding: 5px;
-    transition: all 0.3s ease;
+  .creatinggameview-settings-button-container{
+    flex-direction: column;
   }
 
-
-/* 
-  .creatinggameview-isPickingGameType-container
-{
-  position: relative;
-  height: calc(100vh - 250px);
-  width: 100%;
-  transition: all .5s ease;
-  display: grid;
-  grid-template-rows: repeat(2, 200px);
-  grid-template-columns: repeat(3, 250px);
-  grid-gap: 40px;
-  grid-row-gap: 20px;
-  align-items: center; 
-}*/
+  .creatinggameview-settings-button-container{
+    width: fit-content;
+    height: fit-content;
+    margin-left: 0px;
+  }
+  
 }
+
+
+
+
+
+
+.creatinggameview-button-header.bet-sizing{
+  width: fit-content;
+}
+
+.creatinggameview-friendtiles-container{
+  position: relative;
+  height: 100%;
+  width: 99%;
+  flex-direction: column;
+  overflow-y: scroll;
+  overflow-x: hidden;
+
+}
+
+
+.creatinggameview-review-option{
+  height: 60px;
+
+
+  flex-shrink: 0;
+  width: 100%;
+  /* border: rgb(84, 109, 182) solid 1px; */
+  border-top: #404040b0 solid 1px;
+  border-bottom: #000000 solid 2px;
+}
+
+
+.creatinggameview-noprivatekey{
+  font-size: min(14px, 2vw);
+  color: rgba(128, 128, 128);
+  position: relative;
+  top: 10px;
+  margin-left: 5px;
+
+}
+
+
+
+.creatinggameview-friends-option {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  width: 100%;
+  height: 130px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+
+  border-top: #404040b0 solid 1px;
+  border-bottom: #000000 solid 1px;
+
+  justify-items: center;
+
+}
+
+
+
+.creatinggameview-start-option{
+  height: 100px;
+  width: 100%;
+
+}
+
+.creatinggameview-nofriends-option{
+  width: 100%;
+  height: 60px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  border-top: #404040b0 solid 1px;
+  border-bottom: #000000 solid 1px;
+  flex-direction: column;
+}
+
+
+.creatinggameview-invitefriends-button{
+  margin-top: 15px;
+  position: relative;
+  border: rgba(0, 0, 0, 0.452) solid 1px;
+  padding: 5px;
+  padding-left: 15px;
+  padding-right: 15px;
+  cursor: pointer;
+  border-radius: 5px;
+  border-top: #404040b0 solid 1px;
+  border-bottom: #000000 solid 2px;
+  color: white;
+  top: 5px;
+
+}
+
+.creatinggameview-invitefriends-button:hover{
+  background-color: rgba(228, 228, 228, 0.2508);
+}
+
+.creatinggameview-invitefriends-button:active{
+  border-bottom: #000000 solid 1px;
+  box-shadow: 0 -1px 1px rgba(0, 0, 0, .2);
+}
+
+
+
+
+
+
+.starttable-submit-button{
+  position: relative;
+  top: 5%;
+  border: rgba(0, 0, 0, 0.452) solid 1px;
+  padding: 5px;
+  padding-left: 15px;
+  padding-right: 15px;
+  cursor: pointer;
+  border-radius: 5px;
+  border-top: #404040b0 solid 1px;
+  border-bottom: #000000 solid 2px;
+
+
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 140px;
+  height: 30px;
+
+  font-size: 18px;
+
+  background-color: #343131;
+  color: rgb(255, 255, 255);
+
+  
+
+}
+
+.starttable-submit-button:hover{
+  background-color: rgba(228, 228, 228, 0.2508);
+}
+
+.starttable-submit-button:active{
+  border-bottom: #000000 solid 1px;
+  box-shadow: 0 -1px 1px rgba(0, 0, 0, .2);
+}
+
+
+.starttable-submit-button.disabled{
+  border: rgba(91, 89, 89, 0.452) solid 1px;
+  color: rgba(128, 128, 128, 0.275);
+}
+
+.starttable-submit-button.disabled:hover{
+  border: rgba(239, 14, 14, 0.251) solid 1px;
+}
+
+
+
+
+
+/* For medium screens: 2 columns */
+@media (max-width: 970px) {
+  .creatinggameview-friends-option {
+      grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* For small screens: 1 column */
+@media (max-width: 645px) {
+  .creatinggameview-friends-option {
+      grid-template-columns: repeat(1, 1fr);
+  }
+}
+
+

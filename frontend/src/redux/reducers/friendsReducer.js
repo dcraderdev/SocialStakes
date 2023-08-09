@@ -4,17 +4,26 @@ import {
   ACCEPT_FRIEND_REQUEST, 
   DENY_FRIEND_REQUEST,
   GET_USER_FRIENDS,
-  SHOW_TABLE_INVITES, SHOW_FRIEND_INVITES, SHOW_FRIENDS, REMOVE_FRIEND
+  SHOW_TABLE_INVITES, SHOW_FRIEND_INVITES, SHOW_FRIENDS, REMOVE_FRIEND, 
+  SHOW_CONVERSATION_BY_ID, REMOVE_CONVERSATION
 } from '../actions/actionTypes'
+
+
+
+
+
 
 const initialState = {
     incomingRequests: {}, 
     outgoingRequests: {}, 
+    rejectedRequests: {}, 
     friends: {},
     showFriendInvites: false,
     showTableInvites: false,
     showFriends: false,
     currentFriendView: null,
+    showConversation: false,
+
 
 };
 
@@ -57,22 +66,12 @@ const userReducer = (state = initialState, action) => {
     
 
     case ACCEPT_FRIEND_REQUEST: {
-      const { friend, requestInfo } = action.payload;
+      const { friend, requestInfo, conversationId } = action.payload;
       let id = requestInfo.id
-
-      console.log(action.payload);
-      console.log(friend);
-      console.log(requestInfo);
-    
-      console.log(newState);
-      console.log(newState.incomingRequests);
+      let status = requestInfo.status
 
       // Remove from incomingRequests
       if (newState.incomingRequests[friend.id]) {
-        console.log('yes');
-        console.log(newState.incomingRequests);
-        console.log(newState.incomingRequests[friend.id]);
-
         delete newState.incomingRequests[friend.id];
       }
     
@@ -82,7 +81,7 @@ const userReducer = (state = initialState, action) => {
       }
     
       // Add to friends list
-      newState.friends[friend.id] = { id, friend };;
+      newState.friends[friend.id] = { id, friend, status, conversationId };;
     
       return {...newState};
     }
@@ -146,6 +145,7 @@ const userReducer = (state = initialState, action) => {
         ...newState,
         incomingRequests: action.payload.incomingRequests, 
         outgoingRequests: action.payload.outgoingRequests, 
+        rejectedRequests: action.payload.rejectedRequests, 
         friends: action.payload.friends
       }
     }
@@ -164,6 +164,7 @@ const userReducer = (state = initialState, action) => {
         showFriendInvites:true,
         showFriends: false,
         currentFriendView: null,
+        showConversation: false,
 
       }
       
@@ -176,6 +177,7 @@ const userReducer = (state = initialState, action) => {
         showFriendInvites:false,
         showFriends: false,
         currentFriendView: null,
+        showConversation: false,
 
 
       }
@@ -189,7 +191,22 @@ const userReducer = (state = initialState, action) => {
         showFriends:true,
         showTableInvites:false,
         showFriendInvites:false,
-        currentFriendView: friend
+        currentFriendView: friend,
+        showConversation: false,
+      }
+    }
+
+
+    case SHOW_CONVERSATION_BY_ID: {
+      const conversation = action.payload
+      console.log(conversation);
+      return {
+        ...newState,
+        showConversation: true,
+        showFriends:false,
+        showTableInvites:false,
+        showFriendInvites:false,
+        currentFriendView: null
       }
     }
     

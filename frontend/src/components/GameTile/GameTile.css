@@ -1,6 +1,8 @@
 .game-tile-link {
   text-decoration: none;
   color: inherit;
+
+
 }
 
 .gametile-container {
@@ -15,6 +17,10 @@
   height: 100%;
   width: 100%;
   opacity: 0;
+
+  /* animation: 10s shadowGlow infinite ; */
+
+
 
 }
 
@@ -45,3 +51,28 @@
   top: 0px;
 }
 
+
+
+
+
+.animate {
+  animation: .3s shadowGlow 1 ;
+}
+
+
+
+@keyframes shadowGlow {
+
+  0% {
+
+  box-shadow: rgba(218, 165, 32, 0.187) 0px 1px 3px, rgba(218, 165, 32, 0.272) 0px 1px 3px;
+
+  }
+
+  100% {
+
+  box-shadow: rgba(218, 165, 32, 0.187) 0px 1px 13px, rgba(218, 165, 32, 0.272) 0px 1px 13px;
+
+  }
+
+}

@@ -6,6 +6,7 @@
   left: 0px;
   top: 50px;
   overflow: hidden;
+  
 }
 
 
@@ -64,26 +65,58 @@
 
 .friendspage-content{
   width: 100%;
+  border-top: #404040b0 solid 1px;
+  
+
 }
 
-
+.friendspage-invite-header,
 .friendspage-header{
   width: 100%;
-  height: 70px;
-  border-bottom: solid 1px rgba(255, 255, 255, 0.238);
+  height: 60px;
+  border-bottom: #000000 solid 1px;
+  z-index: 1;
+  background-color: #1f201f;
+  font-size: 30px;
+  color: white; 
+}
 
+
+
+.friendspage-invite-header{
+  border-top: #404040b0 solid 1px;
+  border-bottom: #000000 solid 1px;
   position: relative;
-  font-size: 30px;
-  color: white;
+  left: 1px;
 }
 
-.friendspage-friendview-header{
-  width: 100%;
-  height: 70px;
 
-  font-size: 30px;
-  color: white;
+.friendspage-invite-header.top{
+  border-top: none;
+  border-top: #404040b0 solid 1px;
+  border-bottom: #000000 solid 1px;
 }
+
+
+
+.friendspage-invite-text{
+  height: 100%;
+  text-align: center;
+  margin-left: 10px;
+  
+  font-size: min(25px, 4vw);
+
+}
+
+
+.friendspage-requests-container{
+  height: fit-content;
+  /* border: white solid 1px; */
+  transition: ease all 1s;
+}
+
+
+
 
 .friendtile-wrapper{
   width: 100%;
@@ -91,6 +124,7 @@
   border-bottom: solid 1px rgba(255, 255, 255, 0.1);
 
   color: white;
+  
 }
 
 .friendtile-wrapper:first-child{
@@ -104,37 +138,64 @@
 .friendspage-friendview-container{
   width: 100%;
   height: 100%;
+  flex-direction: column;
 }
 
 
 
-.friendspage-profile-image-container{
+
+
+
+.friendspage-chatbox-extended{
+  height: calc(100vh - 255px);
+
+}
+
+.friendspage-chatbox-condensed{
+  height: calc(100vh - 215px);
+}
+
+.lowered {
   position: relative;
+  top: 10px;
+}
+
+
+.friendspage-chatbox-extended.conversations{
+  height: calc(100vh - 215px);
+
+}
+
+.friendspage-chatbox-condensed.conversations{
+  height: calc(100vh - 175px);
+}
+
+
+
+
+.chatbox-chatinput-container{
+
   height: 40px;
-  width: 40px;
-  margin-left: 5px;
-  border: rgb(255, 255, 255) solid 2px;
-  border-radius: 50%;
+  min-height: 40px;
+  width: 100%;
+  padding-top: 1%;
+  padding-bottom: 1%;
+  position: relative;
+  top: 5px;
+  border-top: 1px solid black;
+  border-left: 1px solid black;
 
+  background-color: #1f201f;
 }
 
-.friendspage-profile-image{
-  border: rgba(255, 255, 255, 0.238) solid 1px;
-  background-color: rgba(115, 130, 130, 0.135);
 
-  border-radius: 50%;
-  height: 40px;
-  width: 40px;
-}
 
-.friendspage-name-container{
-  margin-left: 10px;
 
-}
+
+
 
 
 .friendspage-friendview-nav{
-  border-bottom: solid 1px rgba(255, 255, 255, 0.1);
   height: 40px;
   justify-content: space-around;
 }
@@ -145,6 +206,8 @@
   align-items: center;
   cursor: pointer;
   color: white;
+
+  
 }
 
 .friendview-nav:hover{
@@ -162,84 +225,6 @@
   color: goldenrod;
   border-bottom: solid 1px rgba(218, 165, 32, 0.675);
   box-shadow: 0 10px 10px -10px rgba(0,0,0,0.5);
-}
-
-
-
-.friendpage-friendmenu-container{
-  width: fit-content;
-  height: fit-content;
-
-  position: absolute;
-  right: 20px;
-}
-
-
-.friendpage-friendmenu-icon{
-cursor: pointer;
-  background-color: #212220;
-
-width: 40px;
-height: 40px;
-border-radius: 50%;
-border: rgba(0, 0, 0, 0.311) solid 1px;
-
-
-
-}
-
-.friendpage-friendmenu-icon:hover{
-  background-color: #2d2e2c;
-}
-.friendpage-friendmenu-icon:hover > i{
-  transform: scale(1.3);
-}
-
-.friendpage-friendmenu-icon:active > i{
-  transform: scale(1);
-}
-
-.friendpage-friendmenu-icon i{
-
-  width: fit-content;
-  height: fit-content;
-  font-size: 15px;
-}
-
-
-.friendpage-submenu-container{
-  width: 130px;
-  height: fit-content;
-  border: white solid 1px;
-  position: absolute;
-  right: 20px;
-  top: 20px;
-  z-index: 1;
-}
-
-
-
-.friendpage-submenu-item{
-  font-size: 16px;
-  width: 100%;
-  height: 30px;
-  border: white solid 1px;
-  cursor: pointer;
-  background-color: #212220;
-  justify-content: space-around;
-}
-
-.friendpage-submenu-item.remove:hover{
-
-  background-color: #2d2e2c;
-  background-color: #7b351c;
-}
-
-.friendpage-submenu-item.message:hover{
-
-  background-color: #2d2e2c;
-  background-color: #1c3d7b;
-
 }
 
 

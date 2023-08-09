@@ -3,11 +3,17 @@ import { useDispatch, useSelector } from 'react-redux';
 import { SocketContext } from '../../context/SocketContext';
 
 import { getUserFriends } from '../../redux/middleware/friends';
+import { getUserConversations } from '../../redux/middleware/chat';
 
 import FriendsNavBar from '../FriendsNavBar';
 import FriendTile from '../FriendTile';
+import ConversationTile from '../ConversationTile';
 import { ModalContext } from '../../context/ModalContext';
 import './FriendsPage.css';
+import Chatbox from '../Chatbox';
+import { showConversationAction } from '../../redux/actions/chatActions';
+import ChatInputArea from '../ChatInputArea';
+import FriendsPageHeader from '../FriendsPageHeader';
 
 const FriendsPage = () => {
 
@@ -15,21 +21,22 @@ const FriendsPage = () => {
   const currentFriendViewConversations = 'currentFriendViewConversations'
   const currentFriendViewPastGames = 'currentFriendViewPastGames'
   const currentFriendViewStats = 'currentFriendViewStats'
+
   const dispatch = useDispatch();
   const user = useSelector((state) => state.users.user);
   const friends = useSelector((state) => state.friends);
-  const currentFriendView = useSelector(
-    (state) => state.friends.currentFriendView
-  );
+  const conversations = useSelector((state) => state.chats.conversations);
+  const currentFriendView = useSelector((state) => state.friends.currentFriendView);
+  const currentConversationId = useSelector((state) => state.chats.currentConversation);
   const showFriends = useSelector((state) => state.friends.showFriends);
-  const showTableInvites = useSelector(
-    (state) => state.friends.showTableInvites
-  );
-  const showFriendInvites = useSelector(
-    (state) => state.friends.showFriendInvites
-  );
+
+
+  const showConversation = useSelector((state) => state.friends.showConversation);
+  const showTableInvites = useSelector((state) => state.friends.showTableInvites);
+  const showFriendInvites = useSelector((state) => state.friends.showFriendInvites);
 
   const { openModal, setUpdateObj, updateObj } = useContext(ModalContext);
+  const { socket } = useContext(SocketContext);
 
   const currentTables = useSelector((state) => state.games.currentTables);
   const [hasCurrentTables, setHasCurrentTables] = useState(false);
@@ -37,100 +44,25 @@ const FriendsPage = () => {
   const [currentFriendViewTab, setCurrentFriendViewTab] = useState(currentFriendViewConversations);
   const [showFriendSubMenu, setShowFriendSubMenu] = useState(false);
 
-  const submenu = useRef()
-  const submenuButton = useRef()
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (submenu.current && !submenu.current.contains(event.target)) {
-        if(event.target === submenuButton.current){
-          return
-        }
-        setShowFriendSubMenu(false)
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
-
-
-  const toggleSubMenu = () => {
-      setShowFriendSubMenu(!showFriendSubMenu)
-  }
-
-  const toggleRemoveFriendModal = () => {
-    setUpdateObj({currentFriendView})
-   openModal('RemoveFriendModal')
-  }
 
   //sets hieght for our sidemenu in case we have currentGames
   useEffect(() => {
     setHasCurrentTables(Object.entries(currentTables).length > 0);
   }, [currentTables]);
 
-  useEffect(() => {
-    if (showFriendInvites) {
-      setHeader('Friend Invites');
-    }
-    if (showTableInvites) {
-      setHeader('Table Invites');
-    }
-    if (showFriends && currentFriendView) {
-      setHeader(
-        <div className="friendspage-friendview-header flex center">
-          <div className={`friendspage-profile-image-container flex center`}>
-            <div className={`friendspage-profile-image flex center`}>{`:)`}</div>
-          </div>
 
-          <div className={`friendspage-name-container flex center`}>
-            <div className={`friendspage-name flex center`}>
-              {currentFriendView?.friend.username}
-            </div>
-
-            <div className='friendpage-friendmenu-container' >
-              <div ref={submenuButton} className='friendpage-friendmenu-icon flex center' onClick={toggleSubMenu}>
-                <i className="fa-solid fa-ellipsis-vertical"></i>
-              </div>
-
-{showFriendSubMenu &&              <div ref={submenu} className='friendpage-submenu-container'>
-                <div onClick={toggleRemoveFriendModal} className='friendpage-submenu-item remove flex center'>Remove <i className="fa-regular fa-trash-can"></i></div>
-                <div className='friendpage-submenu-item message flex center'>Message <i className="fa-regular fa-message"></i></div>
-              </div>}
-
-            </div>
-          </div>
-        </div>
-      );
+  const getViewHeight = () => {
+    if(showFriends){
+     return hasCurrentTables ? 'friendspage-chatbox-extended lowered' : 'friendspage-chatbox-condensed lowered'
     }
 
-    if (showFriends && !currentFriendView) {
-      setHeader(
-        <div className="friendspage-friendview-header flex center">
-          <div className={`friendspage-profile-image-container flex center`}>
-            <div className={`friendspage-profile-image flex center`}>{`:(`}</div>
-          </div>
-
-          <div className={`friendspage-name-container flex center`}>
-            <div className={`friendspage-name flex center`}>
-              Friend removed
-            </div>
-
-          </div>
-        </div>
-      );
+    if(showConversation){
+     return hasCurrentTables ? 'friendspage-chatbox-extended conversations' : 'friendspage-chatbox-condensed conversations'
     }
-  }, [showFriendInvites, showTableInvites, currentFriendView, showFriendSubMenu]);
-
-  console.log(currentFriendView);
 
 
+  }
 
-  useEffect(() => {
-    if (!user) return;
-    dispatch(getUserFriends(user.id));
-  }, [user]);
 
   if (!user) return;
 
@@ -149,30 +81,45 @@ const FriendsPage = () => {
           hasCurrentTables ? ' expanded' : ' shrunk'
         }`}
       >
-        <div className="friendspage-header flex center">{header}</div>
+        <div className="friendspage-header flex center">
+          
 
-        <div className="friendspage-content"></div>
+
+    
+          <FriendsPageHeader />
+
+          
+
+        </div>
+
 
         {showFriendInvites && (
           <div>
-            <div className="friendspage-header flex">Incoming</div>
-            {Object.entries(friends.incomingRequests).map(
-              ([key, friend], index) => {
-                return (
-                  <div key={index} className="friendtile-wrapper">
-                    <FriendTile friend={friend} type={'invite'}/>
-                  </div>
-                );
-              }
-            )}
+            <div className="friendspage-invite-header top flex">
+              <div  className="friendspage-invite-text flex center">Incoming</div>
+            </div>
 
-            <div className="friendspage-header flex">Outgoing</div>
+            <div className='friendspage-requests-container'>
+              {Object.entries(friends.incomingRequests).map(
+                ([key, friend], index) => {
+                  return (
+                    <div key={index} className="friendtile-wrapper">
+                      <FriendTile friend={friend} type={'invite-incoming'}/>
+                    </div>
+                  );
+                }
+              )}
+            </div>
+
+            <div className="friendspage-invite-header flex">
+              <div  className="friendspage-invite-text flex center">Outgoing</div>
+              
+            </div>
             {Object.entries(friends.outgoingRequests).map(
               ([key, friend], index) => {
                 return (
                   <div key={index} className="friendtile-wrapper">
-                    {friend?.friend?.username || ''}
-                    <FriendTile friend={friend} type={'submenu'}/>
+                    <FriendTile friend={friend} type={'invite-outgoing'}/>
                   </div>
                 );
               }
@@ -182,11 +129,11 @@ const FriendsPage = () => {
 
         {/* // currentFriendView */}
         {showFriends && (
-          <div className="friendspage-friendview-container">
+          <div className="friendspage-friendview-container flex">
             
             <div className='friendspage-friendview-nav flex'>
               <div onClick={()=>setCurrentFriendViewTab(currentFriendViewConversations)} className={`friendview-nav ${currentFriendViewTab === currentFriendViewConversations ? 'nav-text-active' : ''}`}>
-                <div className='nav-text'>Conversations</div>
+                <div className='nav-text'>Direct Messages</div>
                 </div>
               <div onClick={()=>setCurrentFriendViewTab(currentFriendViewPastGames)} className={`friendview-nav ${currentFriendViewTab === currentFriendViewPastGames ? 'nav-text-active' : ''}`}>
                 <div className='nav-text'>Past Games</div>
@@ -197,8 +144,39 @@ const FriendsPage = () => {
             </div>
 
 
+            {currentFriendViewTab === currentFriendViewConversations && currentFriendView && (
+              <div className={`friendspage-chatbox-container ${getViewHeight()}`}>
+                <Chatbox conversation={conversations[currentFriendView.conversationId]}/>
+              </div>
+            )}
+
+            {currentFriendViewTab === currentFriendViewConversations && currentFriendView && (
+              <div className="chatbox-chatinput-container">
+                <ChatInputArea />
+              </div>
+            )}
+
+
           </div>
         )}
+
+        {/* // currentConversationView */}
+        {showConversation && (
+          <div className={`friendspage-chatbox-container ${getViewHeight()}`} >
+      
+            <Chatbox conversation={conversations[currentConversationId]}/>
+          </div>
+        )}
+
+        {showConversation && (
+          <div className="chatbox-chatinput-container">
+            <ChatInputArea />
+          </div>
+        )}
+
+
+
+
       </div>
     </div>
   );

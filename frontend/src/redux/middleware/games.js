@@ -144,7 +144,7 @@ export const getAllGames = () => async (dispatch) => {
       // console.log(data); 
       // console.log('-=-=-=-=');
       
-      dispatch(createTableAction(data));
+      // dispatch(createTableAction(data));
       let tableId = data.table.id
       socket.emit('join_room', tableId);
       return {data, response};
@@ -152,7 +152,7 @@ export const getAllGames = () => async (dispatch) => {
     }catch(error){
       console.log(error);
     } 
-  };
+  }; 
 
   export const deleteTable = (tableObj) => async (dispatch) => {
     try{

@@ -4,7 +4,19 @@ import io from 'socket.io-client';
 import { ModalContext } from './ModalContext';
 import * as gameActions from '../redux/middleware/games';
 
-import {addMessageAction, editMessageAction,deleteMessageAction} from '../redux/actions/chatActions';
+import {
+  addMessageAction,
+  editMessageAction,
+  deleteMessageAction,
+  getUserConversationsAction,
+  addConversationAction,
+  removeConversationAction,
+  changeChatNameAction,
+  addConversationInviteAction,
+  showConversationAction,
+  removeUserFromConversationAction,
+  addUserToConversationAction 
+  } from '../redux/actions/chatActions';
 
 
 import {
@@ -28,7 +40,8 @@ import {
   addIncomingFriendRequest,
   acceptFriendRequest,
   denyFriendRequest,
-  removeFriendAction
+  removeFriendAction,
+  getUserFriendsAction
 } from '../redux/actions/friendActions';
 
 
@@ -69,6 +82,12 @@ const SocketProvider = ({ children }) => {
   useEffect(() => {
     if(socket){
       
+      socket.on('initialize_user', (initObj) => {
+        dispatch(getUserFriendsAction(initObj.userFriends));
+        dispatch(getUserConversationsAction(initObj.userConversations));
+      }); 
+
+
       socket.on('view_table', (tableId) => {
         dispatch(viewTableAction(tableId));
       }); 
@@ -111,6 +130,7 @@ const SocketProvider = ({ children }) => {
       
 
       socket.on('new_message', (messageObj) => {
+        console.log(messageObj);
         dispatch(addMessageAction(messageObj));
       });
 
@@ -173,12 +193,10 @@ const SocketProvider = ({ children }) => {
       });  
 
       socket.on('countdown_update', (countdownObj) => {
-        console.log(countdownObj);
         dispatch(updateTableCountdownAction(countdownObj)); 
       });  
 
       socket.on('collect_bets', (countdownObj) => {
-        let tableId = countdownObj.tableId
         dispatch(collectBetsAction(countdownObj)); 
       });  
 
@@ -187,37 +205,71 @@ const SocketProvider = ({ children }) => {
 
     // friends
     socket.on('friend_request_sent', (friendRequestObj) => {
-      console.log(friendRequestObj);
       dispatch(addOutGoingFriendRequest(friendRequestObj));
     });
 
     // // 
     socket.on('friend_request_received', (friendRequestObj) => {
-      console.log('here');
       dispatch(addIncomingFriendRequest(friendRequestObj));
     });
     
 
     socket.on('accept_friend_request', (friendRequestObj) => {
-      console.log(friendRequestObj);
       dispatch(acceptFriendRequest(friendRequestObj));
     });
 
     // // 
     socket.on('deny_friend_request', (friendRequestObj) => {
-      console.log(friendRequestObj);
       dispatch(denyFriendRequest(friendRequestObj));
     });
 
     // // 
     socket.on('friend_removed', (friendObj) => {
-      console.log(friendObj);
       dispatch(removeFriendAction(friendObj));
+      dispatch(removeConversationAction(friendObj));
     });
+
+
+    
+    // // 
+    socket.on('add_conversation', (convoObj) => {
+      dispatch(addConversationAction(convoObj));
+    });
+
+    // // 
+    socket.on('remove_conversation', (convoObj) => {
+      dispatch(removeConversationAction(convoObj));
+    });
+
+    
+    socket.on('go_to_conversation', (convoObj) => {
+      dispatch(showConversationAction(convoObj));
+    });
+
+
+    // // 
+    socket.on('change_chatname', (changeObj) => {
+      dispatch(changeChatNameAction(changeObj));
+    });
+
+
+    // // 
+    socket.on('user_left_conversation', (leaveObj) => {
+      dispatch(removeUserFromConversationAction(leaveObj));
+    });
+
+    // // 
+    socket.on('user_joined_conversation', (convoObj) => {
+      dispatch(addUserToConversationAction(convoObj));
+    });
+
+
+
 
 
       return () => {
         
+        socket.off('initialize_user');
         socket.off('player_forfeit');
         socket.off('view_table');
         socket.off('join_table');
@@ -246,6 +298,14 @@ const SocketProvider = ({ children }) => {
         socket.off('accept_friend_request');
         socket.off('deny_friend_request');
         socket.off('friend_removed');
+
+        socket.off('add_conversation');
+        socket.off('go_to_conversation');
+        socket.off('remove_conversation');
+        socket.off('change_chatname');
+        socket.off('user_left_conversation');
+        socket.off('user_joined_conversation');
+
         
       };
       

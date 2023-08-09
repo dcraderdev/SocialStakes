@@ -65,6 +65,55 @@
 }
 
 
+.signinDiv-button{
+  border: rgba(0, 0, 0, 0.452) solid 1px;
+  padding: 5px;
+  padding-left: 15px;
+  padding-right: 15px;
+  cursor: pointer;
+  border-radius: 5px;
+  border-top: #404040b0 solid 1px;
+  border-bottom: #000000 solid 2px;
+
+
+
+
+
+
+}
+
+.signinDiv-button:hover{
+  background-color: rgba(228, 228, 228);
+}
+
+.signinDiv-button:active{
+  border-bottom: #000000 solid 2px;
+  box-shadow: 0 -1px 1px rgba(0, 0, 0, .2);
+
+
+}
+
+
+.signinDiv-button.disabled{
+  bottom: 2%;
+  border: rgba(91, 89, 89, 0.452) solid 1px;
+  color: rgba(128, 128, 128, 0.275);
+  padding: 5px;
+  padding-left: 15px;
+  padding-right: 15px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.signinDiv-button.disabled:hover{
+  border: rgba(239, 14, 14, 0.251) solid 1px;
+}
+
+
+
+
+
+
 
 .altLinks{
   position: relative;

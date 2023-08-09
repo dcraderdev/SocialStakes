@@ -6,6 +6,7 @@
   left: 0px;
   display: flex;
   border-right: rgba(0, 0, 0, 0.466) solid .5px;
+  border-right: rgba(0, 0, 0, 0.466) solid 1px;
   top: -50px;
 }
 
@@ -17,24 +18,39 @@
   flex-direction: column;
 }
 
-.friendsnavbar-main-header{
-  height: 50px;
+
+
+.friendsnavbar-searchbar-container{
+  height: 59px;
   font-size: 18px;
   color: #fdfcfc;
   align-items: center;
+  border-bottom: #000000 solid 1px;
+  transition: 0s all ease;
+
+
+}
+
+
+.friendsnavbar-searchbar-container.raised{
+  position: relative;
+  height: 52px;
+  transition: .1s all;
+
 }
 
 
 
+
 .friendsnavbar-option{
-  border-bottom: rgba(0, 0, 0, 0.466) solid .5px;
-  border-top: rgba(0, 0, 0, 0.466) solid .5px;
+  border-top: #404040b0 solid 1px;
+  border-bottom: #000000 solid 2px;
+
   height: 50px;
   font-size: 18px;
   color: #fdfcfc;
-  box-shadow: rgba(0, 0, 0, 0.5) 0px 1px 2px, rgba(0, 0, 0, 0.5) 0px 1px 2px;
   overflow: hidden;
-  transition: .5s all;
+  transition: 1s all ease;
 }
 
 
@@ -45,7 +61,7 @@
 
 .friendsnavbar-nav:hover,
 .friendsnavbar-nav-header:hover{
-  background-color: #2d2e2c;
+  background-color: rgba(228, 228, 228, 0.2508);
 }
 
 
@@ -58,19 +74,47 @@
   color: #fdfcfc;
   border-bottom: solid rgba(0, 0, 0, 0.287) 1px;
   z-index: 100;
-
 }
 
 .friendsnavbar-nav{
   height: 50px;
   font-size: 18px;
   color: #fdfcfc;
-  border-bottom: solid rgba(0, 0, 0, 0.287) 1px;
+  border-top: #404040b0 solid 1px;
+  border-bottom: #000000 solid 2px;
+  border-right: black 1px solid;
+
   cursor: pointer;
 }
 
 
+.friendsnavbar-startconvo-button{
+  position: absolute;
+  border: rgba(0, 0, 0, 0.376) solid 1px;
+  border-radius: 50%;
+  right: 5px;
+  width: 25px;
+  height: 25px;
+  background-color: #2d2e2c;
+}
 
+.friendsnavbar-startconvo-button:hover{
+  background-color: #2d2e2c;
+}
+.friendsnavbar-startconvo-button:hover > i{
+  transform: scale(1.2);
+}
+
+.friendsnavbar-startconvo-button:active > i{
+  transform: scale(1);
+}
+
+.friendsnavbar-startconvo-button i{
+
+  width: fit-content;
+  height: fit-content;
+  font-size: 13px;
+}
 
 
 
@@ -78,21 +122,27 @@
 
 .invites-extended{
   height: 150px;
+  box-shadow: #40404064  0px 1px 2px, #404040b0  0px 1px 2px;
+
+  border-bottom: #000000 solid 2px;
+
 }
 
 .friends-extended{
-  height: calc(100vh - 210px);
+  height: calc(100vh - 220px);
+
 }
 
 .friends-extra-extended{
   height: calc(100vh - 260px);
+
 }
 
 
 
 .friendsnavbar-content{
   width: 100%;
-  height: calc(100vh - 260px);
+  height: calc(100vh - 270px);
   
   overflow-y: scroll; 
   overflow-x: hidden; 
@@ -107,33 +157,42 @@
 }
 
 
+.friendsnavbar-content-missing{
+  width: 80%;
+  height: 80%;
+  position: relative;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: max(4vh, 17px);
+}
+
+
+
 
 
 
 /* Styling the scrollbar */
-.friendsnavbar-content::-webkit-scrollbar{
-  width: 5px; /* Width of the scrollbar */
+/* .friendsnavbar-content::-webkit-scrollbar{
+  width: 5px; 
 }
 
 .friendsnavbar-content::-webkit-scrollbar-track {
-  background:transparent; /* Color of the track of the scrollbar */
+  background:transparent; 
 }
 
 .friendsnavbar-content::-webkit-scrollbar-thumb {
-  background: #131312; /* Color of the thumb of the scrollbar */
+  background: #131312; 
 }
 
 .friendsnavbar-content::-webkit-scrollbar-thumb:hover {
-  background: darkgrey; /* Color of the thumb of the scrollbar when hovered */
-}
+  background: darkgrey; 
+} */
 
 
 
 .active-nav{
-  border-bottom: rgba(255, 217, 0, 0.429) solid 1px;
-  border-top: rgba(255, 217, 0, 0.429) solid 1px;
-  background-color: #2d2e2c;
-
+  background-color: rgba(228, 228, 228, 0.213);
 }
 
 

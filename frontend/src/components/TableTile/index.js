@@ -1,23 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Route, Router, Switch, NavLink, useHistory, useParams } from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux'
-
-import * as gameActions from '../../redux/middleware/games';
-import * as userActions from '../../redux/middleware/users';
 
 import './TableTile.css'
 
 const TableTile = ({table, viewTable, delay}) => {
 
-  const history = useHistory()
-  const dispatch = useDispatch()
-
-  const activeTable = useSelector(state=>state.games.activeTable)
-  const currentTables = useSelector(state=>state.games.currentTables)
-  const user = useSelector(state => state.users.user)
-
-
- 
   const [status, setStatus] = useState(' open');
   const [isPrivate, setIsPrivate] = useState(false);
   const [playerCount, setPlayerCount] = useState(0);
@@ -87,6 +74,7 @@ const TableTile = ({table, viewTable, delay}) => {
 
   return (
       <div className="tabletile-wrapper fade-in" style={tileStyle} onClick={()=>viewTable(table)}>
+
         <div className='tabletile-container'>
           <div className='tabletile-content flex center'>
 

@@ -22,11 +22,11 @@ module.exports = {
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL',
       },
-      tableId: {
+      conversationId: {
         allowNull: false,
         type: Sequelize.UUID,
         references: {
-          model: 'Tables',
+          model: 'Conversations',
         },
         onDelete: 'CASCADE'
       },

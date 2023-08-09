@@ -42,15 +42,26 @@ router.get('/game/:gameId', async (req, res, next) => {
   })
 
 
-
+ 
 
 
 // Create new custom table
 router.post('/create',requireAuth, async (req, res, next) => {
+
+  console.log('yo ');
+  console.log('yo ');
+  console.log('yo ');
+  console.log('yo ');
+  console.log('yo ');
+  console.log('yo ');
+  console.log('yo ');
+  console.log('yo ');
+  console.log('yo ');
   
   const {tableObj} = req.body
+  const {user} = req
 
-  const table = await gameController.createTable(tableObj)
+  const table = await gameController.createTable(tableObj, user)
 
   if (!table) {
     const err = new Error('table not created');
@@ -60,7 +71,7 @@ router.post('/create',requireAuth, async (req, res, next) => {
   }
 
   return res.status(200).json({ table });
-});
+}); 
 
 
 // Get table by tableId

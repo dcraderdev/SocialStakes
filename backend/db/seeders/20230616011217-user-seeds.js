@@ -102,6 +102,16 @@ module.exports = {
         username: 'admin',
         hashedPassword: await bcrypt.hash('password', salt),
         balance: 90000
+      },
+
+      {
+        id:"e10d8de4-f4c7-0000-0000-000000000000",
+        firstName: 'room',
+        lastName: 'admin',
+        email: 'room-admin@gmail.com',
+        username: 'Room',
+        hashedPassword: await bcrypt.hash('strongpassword', salt),
+        balance: 90000
       }
     ], {});
   },

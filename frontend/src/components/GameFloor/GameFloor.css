@@ -137,16 +137,23 @@
 }
 
 
-.creatinggame-container{
+.creatinggame-wrapper{
   position: absolute;
-  left: 50%;
-  top: -50px;
-  transform: translate(-50%,0);
-  width: 95%;
-  height: calc(100vh - 250px);
-  transition: all .5s ease;
+  left: -5px;
+  width: 100vw;
+  top: -150px;
+  height: calc(100vh - 110px);
+
 
 }
+
+.creatinggame-wrapper.extended{
+  top: -200px;
+  height: calc(100vh - 60px);
+}
+
+
+
 
 .gameicon-container{
   color: white;

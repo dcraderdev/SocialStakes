@@ -98,17 +98,17 @@ const gamesReducer = (state = initialState, action) => {
     }
 
 
-    case CREATE_TABLE:{
+    // case CREATE_TABLE:{
       
-      const table = action.payload.table
+    //   const table = action.payload.table
 
-      let updatedCurrentTables = {...newState.currentTables};
-      updatedCurrentTables[table.id] = table
-      updatedCurrentTables[table.id].messages = []
+    //   let updatedCurrentTables = {...newState.currentTables};
+    //   updatedCurrentTables[table.id] = table
+    //   updatedCurrentTables[table.id].messages = []
 
 
-      return {...newState, currentTables:updatedCurrentTables, showCreatingGame:false, showGames: false, showTables: false, showActiveTable: true}
-    }
+    //   return {...newState, currentTables:updatedCurrentTables, showCreatingGame:false, showGames: false, showTables: false, showActiveTable: true}
+    // }
 
     case UPDATE_TABLE_NAME:{
       const {tableId, tableName} = action.payload
@@ -194,15 +194,21 @@ const gamesReducer = (state = initialState, action) => {
       let newCurrentTables = {...newState.currentTables}
       newCurrentTables[action.payload.id] = action.payload
       newCurrentTables[action.payload.id].messages = []
-      return {...newState, currentTables: newCurrentTables, activeTable:action.payload, showGames: false, showTables: false, showActiveTable: true}
+      return {...newState, currentTables: newCurrentTables}
     }
-
 
     case LEAVE_TABLE: {
       let newCurrentTables = { ...newState.currentTables };
       let activeTable = { ...newState.activeTable}
 
       delete newCurrentTables[action.payload];
+
+      if(newState.showCreatingGame){
+        return { ...newState, currentTables: newCurrentTables, showGames: false, showTables: false, showCreatingGame:true };
+      }
+      if(newState.showTables){
+        return { ...newState, currentTables: newCurrentTables, activeTable, showGames: false, showTables: true, showCreatingGame:false };
+      }
 
       // if active table still exists dont switch
       if(newCurrentTables[activeTable.id]){
@@ -215,12 +221,7 @@ const gamesReducer = (state = initialState, action) => {
           activeTable = newCurrentTables[tableIds[0]];
           return { ...newState, currentTables: newCurrentTables, activeTable };
       }
-      if(newState.showTables){
-        return { ...newState, currentTables: newCurrentTables, activeTable, showGames: false, showTables: true, showCreatingGame:false };
-      }
-      if(newState.showCreatingGame){
-        return { ...newState, currentTables: newCurrentTables, activeTable, showGames: false, showTables: false, showCreatingGame:true };
-      }
+
 
       return { ...newState, currentTables: newCurrentTables, activeTable, showGames: true, showTables: false, showCreatingGame:false };
       }

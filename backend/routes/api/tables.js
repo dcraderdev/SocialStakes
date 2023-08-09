@@ -48,16 +48,6 @@ router.get('/game/:gameId', async (req, res, next) => {
 // Create new custom table
 router.post('/create',requireAuth, async (req, res, next) => {
 
-  console.log('yo ');
-  console.log('yo ');
-  console.log('yo ');
-  console.log('yo ');
-  console.log('yo ');
-  console.log('yo ');
-  console.log('yo ');
-  console.log('yo ');
-  console.log('yo ');
-  
   const {tableObj} = req.body
   const {user} = req
 

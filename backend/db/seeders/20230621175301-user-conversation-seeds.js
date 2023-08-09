@@ -7,7 +7,9 @@ if (process.env.NODE_ENV === 'production') {
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkInsert('UserConversations', [
+    options.tableName = 'UserConversations';
+
+    await queryInterface.bulkInsert(options, [
       {
         id: uuid.v4(),
         userId: 'b16f9b4c-9d72-4e21-81ea-8fcf6a7987d7',  //Bigtree

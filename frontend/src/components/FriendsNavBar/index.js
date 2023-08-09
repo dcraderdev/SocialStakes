@@ -102,11 +102,11 @@ const FriendsNavBar = () => {
     if (currentFocus === viewFriends) {
       return hasCurrentTables
         ? 'friendsnavbar-content-extended'
-        : ' friendsnavbar-content';
+        : '';
     } else if (currentFocus === viewConversations) {
       return hasCurrentTables
         ? 'friendsnavbar-content-extended'
-        : ' friendsnavbar-content';
+        : '';
     }
 
     if (currentFocus === viewInvites) {
@@ -142,7 +142,7 @@ const FriendsNavBar = () => {
           </div>
 
           <div
-            className={`friendsnavbar-content ${
+            className={`friendsnavbar-content styled-scrollbar ${
               currentFocus === viewFriends ? getContentHeight() : ''
             }`}
           >
@@ -195,7 +195,7 @@ const FriendsNavBar = () => {
 
           </div>
           <div
-            className={`friendsnavbar-content ${
+            className={`friendsnavbar-content styled-scrollbar ${
               currentFocus === viewConversations ? getContentHeight() : ''
             }`}
           >

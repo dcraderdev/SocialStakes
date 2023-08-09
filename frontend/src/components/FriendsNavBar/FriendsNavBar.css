@@ -62,8 +62,6 @@
 .friendsnavbar-nav:hover,
 .friendsnavbar-nav-header:hover{
   background-color: rgba(228, 228, 228, 0.2508);
-
-
 }
 
 
@@ -175,21 +173,21 @@
 
 
 /* Styling the scrollbar */
-.friendsnavbar-content::-webkit-scrollbar{
-  width: 5px; /* Width of the scrollbar */
+/* .friendsnavbar-content::-webkit-scrollbar{
+  width: 5px; 
 }
 
 .friendsnavbar-content::-webkit-scrollbar-track {
-  background:transparent; /* Color of the track of the scrollbar */
+  background:transparent; 
 }
 
 .friendsnavbar-content::-webkit-scrollbar-thumb {
-  background: #131312; /* Color of the thumb of the scrollbar */
+  background: #131312; 
 }
 
 .friendsnavbar-content::-webkit-scrollbar-thumb:hover {
-  background: darkgrey; /* Color of the thumb of the scrollbar when hovered */
-}
+  background: darkgrey; 
+} */
 
 
 

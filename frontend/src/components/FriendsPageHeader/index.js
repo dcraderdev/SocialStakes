@@ -54,11 +54,11 @@ const FriendsPageHeader = () => {
   const submenuButton = useRef();
 
   const [header, setHeader] = useState('');
-  const [showValidationError, setShowValidationError] = useState(false);
   const [isChangingChatName, setIsChangingChatName] = useState(false);
-
+  
+  const [showValidationError, setShowValidationError] = useState(false);
   const [validationErrors, setValidationErrors] = useState({});
-  const [headerText, setHeaderText] = useState({});
+  const [headerText, setHeaderText] = useState('');
 
   const nameChangeInputRef = useRef()
   const nameChangeAcceptRef = useRef()
@@ -149,8 +149,6 @@ const FriendsPageHeader = () => {
     }
   };
 
-
-
   const toggleLeaveConversationModal = () => {
     setUpdateObj({ currentConversationId });
     openModal('LeaveConversationModal');
@@ -160,9 +158,6 @@ const FriendsPageHeader = () => {
     setUpdateObj({ currentConversationId });
     openModal('AddFriendsModal');
   };
-
-  
-
 
   const handleChatNameChange = (e) => {
     if(e) e.preventDefault()
@@ -209,7 +204,6 @@ const FriendsPageHeader = () => {
     socket.emit('change_chatname', changeObj);
     return
   }
-
 
 
   useEffect(() => {

@@ -46,8 +46,9 @@ const StartConversationModal = () => {
     if (!chatName.length) errors['chatName'] = 'Please enter at least one character';
     if (!chatName.trim().length) errors['trimmed-error'] = 'Please enter at least one character';
     if (chatName.length > 30) errors['length'] = 'Chatname must be 30 characters or less';
+    if (Object.values(friendList).length === 0) errors['no-friends'] = 'Add at least one friend';
     setValidationErrors(errors);
-  }, [chatName]);
+  }, [chatName, friendList]);
 
 
 

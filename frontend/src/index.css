@@ -329,6 +329,23 @@ body{
 
 
 
+/* Styling the scrollbar */
+.styled-scrollbar::-webkit-scrollbar{
+  width: 8px; /* Width of the scrollbar */
+}
+
+.styled-scrollbar::-webkit-scrollbar-track {
+  background:transparent; /* Color of the track of the scrollbar */
+}
+
+.styled-scrollbar::-webkit-scrollbar-thumb {
+  background: #131312; /* Color of the thumb of the scrollbar */
+}
+
+.styled-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: darkgrey; /* Color of the thumb of the scrollbar when hovered */
+}
+
 
 
 

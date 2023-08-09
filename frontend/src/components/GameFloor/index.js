@@ -40,6 +40,8 @@ function GameFloor() {
 
   const [isLoaded, setIsLoaded] = useState(false);
   const [currTables, setCurrTables] = useState('');
+  
+  const [hasCurrentTables, setHasCurrentTables] = useState(false);
 
 
 
@@ -152,6 +154,18 @@ function GameFloor() {
       );
     }
   };
+
+
+
+  //sets hieght for our sidemenu in case we have currentGames
+  useEffect(() => {
+    setHasCurrentTables(Object.entries(currentTables).length > 0);
+  }, [currentTables]);
+
+
+  const getViewHeight = () => {
+    return hasCurrentTables ? 'creatinggame-wrapper' : 'creatinggame-wrapper extended';
+  };
   
 
 
@@ -249,7 +263,7 @@ function GameFloor() {
 
             {/* SHOW SELECTED TABLE */}
             {isLoaded && showCreatingGame && (
-              <div className="creatinggame-container">
+              <div className={`creatinggame-wrapper ${hasCurrentTables ? '' : ' extended'}`}>
                 <CreatingGameView />
               </div>
             )}

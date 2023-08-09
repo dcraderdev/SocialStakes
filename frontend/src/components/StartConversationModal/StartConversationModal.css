@@ -146,21 +146,12 @@
 .startconversation-submit-button:active{
   border-bottom: #000000 solid 1px;
   box-shadow: 0 -1px 1px rgba(0, 0, 0, .2);
-
-
 }
 
 
 .startconversation-submit-button.disabled{
-  position: absolute;
-  bottom: 2%;
   border: rgba(91, 89, 89, 0.452) solid 1px;
   color: rgba(128, 128, 128, 0.275);
-  padding: 5px;
-  padding-left: 15px;
-  padding-right: 15px;
-  cursor: pointer;
-  border-radius: 5px;
 }
 
 .startconversation-submit-button.disabled:hover{

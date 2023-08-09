@@ -58,6 +58,9 @@
 
 }
 
+
+
+
 .active-friend{
   border: rgba(218, 165, 32, 0.38) solid 2px;
 }
@@ -111,12 +114,13 @@
 .friendtile-request-option{
   position: relative;
   border-radius: 50%;
-  width: 40px;
-  height: 40px;
+  width: 30px;
+  height: 30px;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  font-size: 10px;
 
   border: #1d1e1c solid 1px;
   background-color: #1d1e1c8b;
@@ -129,7 +133,7 @@
 }
 
 .friendtile-request-option i{
-  font-size: 20px;
+  font-size: 18px;
   color: rgb(255, 255, 255);
 }
 
@@ -182,3 +186,89 @@
   color: red;
 
 }
+
+
+
+
+
+/*  invited-to-table */
+
+
+.friendtile-invitedtotable-wrapper{
+  border: rgba(0, 0, 0, 0.238) solid 1px;
+  border-left: none;
+  height: 50px;
+  width: 200px;
+}
+
+
+.friendtile-invitedtotable-remove{
+
+  width: fit-content;
+  height: fit-content;
+  justify-content: space-around;
+  font-size: 12px;
+  cursor: pointer;
+  margin-right: 5px;
+
+}
+
+
+.friendtile-request-name-container{
+  font-size: 20px;
+  font-weight: 300;
+  color: azure;
+
+  
+  width: 100px;
+  margin-right: 5px;
+
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap; 
+}
+
+
+
+
+
+
+/* For small screens: 1 column */
+@media (max-width: 645px) {
+  .friendtile-request-name-container {
+    font-size: 20px;
+    width: 200px;
+    margin-right: 5px;
+  }
+
+  .friendtile-invitedtotable-wrapper{
+    width: 300px;
+
+
+  }
+
+
+}
+
+
+/* For really small screens: 2 columns */
+@media (max-width: 540px) {
+  .friendtile-request-name-container {
+    font-size: 20px;
+    width: 100px;
+    margin-right: 5px;
+  }
+
+
+  .friendtile-invitedtotable-wrapper{
+    width: 250px;
+
+  }
+
+
+}
+
+
+
+

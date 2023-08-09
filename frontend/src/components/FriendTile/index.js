@@ -264,6 +264,49 @@ const FriendTile = ({ friend, type, cb, isInvited }) => {
     );
   }
 
+  if (type === 'invited-to-table') {
+    return (
+      <div
+        className={`friendtile-invitedtotable-wrapper flex`}
+      >
+        <div className={`friendtile-container flex`}>
+          <div className="flex">
+            <div className={`friendtile-profile-image-container flex center`}>
+              <div className={`friendtile-profile-image flex center`}>
+                {`:)`}
+              </div>
+            </div>
+
+            <div className={`friendtile-request-name-container flex center`}>
+  {friend &&            <div className={`friendtile-name flex center`}>
+                {friend?.friend?.username}
+              </div>}
+            </div>
+          </div>
+
+          <div className={`friendtile-invitedtotable-remove flex center`}>
+
+          <div
+                        className="friendtile-request-option"
+                        onClick={()=>cb(friend,'remove')}
+
+                        >
+                        <i className="delete-x fa-solid fa-x"></i>
+                        </div>
+
+
+
+
+
+
+
+
+          </div>
+        </div>
+      </div>
+    );
+  }
+
 
 
 

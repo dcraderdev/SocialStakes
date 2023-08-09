@@ -228,20 +228,45 @@ const gameController = {
     console.log('<><><><><><><><><><><><><><>');
     console.log('<><><><><><><><><><><><><><>');
 
-    const conversation = await Conversation.create({
-      tableId:table.id, 
-      chatName:nickname, 
-      isDirectMessage: false, 
-      hasDefaultChatName: false
-    });
+    let conversation
+try{
+  conversation = await Conversation.create({
+    tableId:table.id, 
+    chatName:nickname, 
+    isDirectMessage: false, 
+    hasDefaultChatName: false
+  });
+}catch(err){
+  console.log(err);
+  console.log(err.status);
+
+}
+
     if(!conversation){
       return false
     }
-    await conversation.addUsers([userId]);
+
 
     console.log('<><><><><><><><><><><><><><>');
     console.log('<><><><><><><><><><><><><><>');
     console.log('here 5');
+    console.log('<><><><><><><><><><><><><><>');
+    console.log('<><><><><><><><><><><><><><>');
+
+    
+  
+    try{
+      await conversation.addUsers([userId]);
+    }catch(err){
+      console.log(err);
+      console.log(err.status);
+    
+    }
+
+
+    console.log('<><><><><><><><><><><><><><>');
+    console.log('<><><><><><><><><><><><><><>');
+    console.log('here 6');
     console.log('<><><><><><><><><><><><><><>');
     console.log('<><><><><><><><><><><><><><>');
 

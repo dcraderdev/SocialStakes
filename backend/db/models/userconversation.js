@@ -7,9 +7,11 @@ module.exports = (sequelize, DataTypes) => {
 
     
     static associate(models) {
-      UserConversation.belongsTo(models.User, {foreignKey:'userId'})
-      UserConversation.belongsTo(models.Conversation, {foreignKey:'conversationId', as: 'conversations'}) 
-  
+      // UserConversation.belongsTo(models.User, {foreignKey:'userId'})
+      // UserConversation.belongsTo(models.Conversation, {foreignKey:'conversationId', as: 'conversations'}) 
+      UserConversation.belongsTo(models.User, {foreignKey:'userId', targetKey: 'id'})
+      UserConversation.belongsTo(models.Conversation, {foreignKey:'conversationId', targetKey: 'id', as: 'conversations'}) 
+      
     }
   }
   UserConversation.init({

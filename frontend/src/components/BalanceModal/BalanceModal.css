@@ -7,7 +7,7 @@
   border-radius: 5px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   width: 450px;
-  height: 170px;
+  height: 190px;
 }
 
 
@@ -15,7 +15,7 @@
 .balancemodal-container{
   flex-direction: column;
   justify-content: space-between;
-  height: 170px;
+  height: 100%;
   
 }
 
@@ -54,6 +54,8 @@
 .balancemodal-user-buttons{
   width: 80%;
   height: 50px;
+  position: relative;
+  top: 10px;
 }
 
 .balancemodal-ok,
@@ -95,7 +97,33 @@
 
 
 
-
 .balancemodal-funding-input{
-  width: 150px;
+  outline: none;
+  border: none;
+  box-shadow: none;
+  background-color: transparent;
+  color: white;
+  height: 100%;
+  position: relative;
+  text-align: center;
+  border-bottom: #000000 solid 1px;
+  font-size: min(25px, 3vw);
+  width: 250px;
+}
+
+
+.balancemodal-funding-label{
+
+  color: white;
+  font-size: min(25px, 3vw);
+}
+
+.balancemodal-funding-input::-webkit-inner-spin-button,
+.balancemodal-funding-input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.balancemodal-funding-input[type=number] {
+  -moz-appearance: textfield;
 }

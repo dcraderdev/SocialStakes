@@ -6,13 +6,18 @@ import './Table.css'
 import {changeNeonThemeAction, changeTableThemeAction} from '../../redux/actions/userActions';
 
 import TableSeat from '../TableSeat';
-import PlayerBetOptions from '../PlayerBetOptions';
 import Card from '../Card';
-import cardConverter from '../../utils/cardConverter'
 
 import { ModalContext } from '../../context/ModalContext';
 import { SocketContext } from '../../context/SocketContext';
-import { showGamesAction } from '../../redux/actions/gameActions';
+
+import {
+  showGamesAction,
+  leaveTableAction,
+  toggleShowMessages,
+  addBetAction,
+  changeActiveTablesAction
+ } from '../../redux/actions/gameActions';
 
 
 
@@ -26,27 +31,38 @@ const Table = () => {
   const tableTheme = useSelector(state=>state.users.tableTheme)
   const activeTable = useSelector(state=>state.games.activeTable)
   const currentTables = useSelector(state=>state.games.currentTables)
+  const showMessages = useSelector((state) => state.games.showMessages);
+
   
   const [countdown, setCountdown] = useState(null);
   const [cards, setCards] = useState([]);
   const [isHandInProgress, setIsHandInProgress] = useState(false);
+  const [isActionSeat, setIsActionSeat] = useState(false);
+  const [isSitting, setIsSitting] = useState(false);
+  const [currentSeat, setCurrentSeat] = useState(false);
 
+  
   const profileBtnRef = useRef()
  
   useEffect(()=>{
 
-    if (!activeTable || !currentTables || !currentTables[activeTable.id]) {
-      return;
-    }
-
     let countdownInterval = null;
-    let countdownRemaining = Math.ceil((currentTables[activeTable.id].countdownEnd - Date.now()) / 1000);
-    let currentTable = currentTables[activeTable.id]
-    let dealerCards = currentTable.dealerCards
+    let currTable = currentTables?.[activeTable?.id]
+    if(!currTable) return
 
-    if(currentTable.handInProgress){
-      setIsHandInProgress(true)
+
+    let countdownRemaining = Math.ceil((currTable.countdownEnd - Date.now()) / 1000);
+    let dealerCards = currTable.dealerCards
+
+    if(currTable.handInProgress){
+      setIsHandInProgress(currTable.handInProgress)
     }
+
+    if(currTable.handInProgress){
+      setIsHandInProgress(currTable.handInProgress)
+    }
+
+
 
     setCards(dealerCards)
 
@@ -58,13 +74,24 @@ const Table = () => {
     } else {
       setCountdown(null);
     }
-  
+
+    if(currTable.tableUsers){
+      Object.values(currTable.tableUsers).map(seat=>{
+        if(seat.userId === user.id){
+          setIsSitting(true)
+          setCurrentSeat(seat.seat)
+        }
+      })
+    }
+
+
     return () => {
       if (countdownInterval) clearInterval(countdownInterval);
     };
 
 
   },[currentTables, activeTable]);
+
 
 
   const handleProfileButtonClick = () => {
@@ -75,6 +102,19 @@ const Table = () => {
     }
   };
 
+  const addBalance = () => {
+    if(!user) return
+    if(!isSitting || !currentSeat) return
+
+    if(currentTables && activeTable){
+      let currMinBet = currentTables[activeTable.id].Game.minBet
+      setUpdateObj({minBet:currMinBet, seatNumber:currentSeat, type:'addDeposit'})
+      openModal('balanceModal')
+    }
+    // setUpdateObj({minBet:activeTable.Game.minBet, seatNumber:currentSeat, type:'addDeposit'})
+    // openModal('balanceModal')
+};
+
 
 
   return (
@@ -82,19 +122,62 @@ const Table = () => {
 
 
 
-        <div onClick={()=>dispatch(showGamesAction())} className='table-home-button-container flex center'>
-          <div className='table-home-button-subcontainer flex center'>
+        <div  ref={profileBtnRef} onClick={handleProfileButtonClick} className='table-button-container menu flex center'>
+          <div className='table-button-subcontainer flex center'>
+            {modal !== 'profileModal' && <i className="fa-solid fa-bars"></i>}
+            {modal === 'profileModal' && <i className="fa-solid fa-x"></i>}
+          </div>
+        </div>
+
+
+{/* home button */}
+        <div onClick={()=>dispatch(showGamesAction())} className='table-button-container home flex center'>
+          <div className='table-button-subcontainer flex center'>
             <i className="fa-solid fa-house"></i>
           </div>
         </div>
 
 
-        <div  ref={profileBtnRef} onClick={handleProfileButtonClick} className='table-menu-button-container flex center'>
-            {modal !== 'profileModal' && <i className="fa-solid fa-bars"></i>}
-            {modal === 'profileModal' && <i className="fa-solid fa-x"></i>}
+        <div onClick={() => dispatch(toggleShowMessages())} className='table-button-container chat flex center'>
+          <div className='table-button-subcontainer flex center'>
+              {showMessages ? (
+                <i className="fa-solid fa-comment-slash"></i>
+              ) : (
+                <i className="fa-solid fa-comment"></i>
+              )}
+          </div>
         </div>
 
-<div></div>
+
+
+        <div onClick={()=>openModal('tableSettings')} className='table-button-container settings flex center'>
+          <div className='table-button-subcontainer flex center'>
+            <i className="fa-solid fa-gears"></i>
+          </div>
+        </div>
+
+
+        <div onClick={addBalance} className='table-button-container money flex center'>
+          <div className='table-button-subcontainer flex center'>
+            <i className="fa-solid fa-dollar-sign"></i>
+          </div>
+        </div>
+
+
+        <div onClick={()=>dispatch(showGamesAction())} className='table-button-container leave flex center'>
+          <div className='table-button-subcontainer flex center'>
+            <i className="fa-solid fa-right-to-bracket"></i>
+          </div>
+        </div>
+
+
+        <div onClick={()=>dispatch(showGamesAction())} className='table-button-container theme flex center'>
+          <div className='table-button-subcontainer flex center'>
+            <i className="fa-solid fa-brush"></i>
+          </div>
+        </div>
+
+
 
 
 

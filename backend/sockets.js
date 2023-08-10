@@ -567,7 +567,7 @@ module.exports = function (io) {
       if(!rooms[tableId].countdownEnd){
         setDealCountdownEndTime(tableId, io)
       }
-
+  
     
       io.in(room).emit('new_bet', betObj);
     });

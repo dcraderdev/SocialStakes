@@ -374,6 +374,7 @@ const toggleFocus = (newFocus) =>{
       )}
       
 {/* TableName form */}
+
         <form 
         onSubmit={(e)=>{
           e.preventDefault()
@@ -381,7 +382,6 @@ const toggleFocus = (newFocus) =>{
         }} 
         className={`creatinggameview-name flex center`}
         >
-
 
         <input
           ref={tableNameInputRef}
@@ -669,7 +669,7 @@ const toggleFocus = (newFocus) =>{
 
               <div className='creatinggameview-review-option flex center'>
                 <div className='creatinggameview-settings-option-header flex center'>
-                  Number of decks - {deckSize}
+                  Number of Decks - {deckSize}
                 </div>
               </div>
 

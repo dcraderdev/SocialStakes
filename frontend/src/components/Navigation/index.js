@@ -82,16 +82,14 @@ function Navigation(){
         <div className={`nav-active-games ${hasCurrentTables ? 'gametabs-expanded' : ' gametabs-shrunk'}`}>
             <ActiveGameBar/>
         </div>
+
+        
       <nav className="nav-bar style2-color1">
-
         <div className='nav-buttons'>
-
           <div className='logo-container flex center'>
-
             <div className='logo-image-container flex center'>
               <img src={socialstakesCards2} alt="cards" onClick={handleLogoClick}></img>
             </div>
-            
               <div className='logo-name' onClick={handleLogoClick}>SOCIAL STAKES</div> 
           </div>
 

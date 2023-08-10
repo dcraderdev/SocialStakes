@@ -11,6 +11,7 @@ function BalanceModal() {
   const dispatch = useDispatch();
   const history = useHistory();
   const formRef = useRef(null);
+  const inputRef = useRef(null);
 
   const [amount, setAmount] = useState('');
   const [modalType, setModalType] = useState('');
@@ -26,6 +27,17 @@ function BalanceModal() {
   const INIT_DEPOSIT_SUFFICIENT_FUNDS = 'user/INITIAL_DEPOSIT_SUFFICIENT'
   const ADD_DEPOSIT = 'user/ADDITIONAL_DEPOSIT'
   const INSURANCE_INSUFFICIENT_FUNDS = 'user/INSURANCE_INSUFFICIENT_FUNDS'
+
+
+  useEffect(() => {
+
+    if(inputRef && inputRef.current){
+      inputRef.current.focus();
+    }
+
+
+  }, [inputRef, modalType]);
+
 
 
   const handleSetFunding = (e) => {
@@ -181,7 +193,10 @@ function BalanceModal() {
         onSubmit={(e)=>fundTable(e)}
         
         >
+<label className='balancemodal-funding-label'>$</label>
+          
           <input
+            ref={inputRef}
             className='balancemodal-funding-input'
             type="number"
             value={amount} 
@@ -244,6 +259,8 @@ function BalanceModal() {
         
         >
           <input
+            ref={inputRef}
+
             className='balancemodal-funding-input'
             type="number"
             value={amount} 

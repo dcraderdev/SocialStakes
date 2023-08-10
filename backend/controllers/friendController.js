@@ -120,15 +120,27 @@ const friendController = {
   async startConversation(friendRequestObj) {
     const {userId, username, recipientId, recipientUsername} = friendRequestObj;
     let usernames = [username, recipientUsername]
+    let userIds = [userId, recipientId]
 
     // If not, create a new one and add both users
     chatName = getChatName(usernames)
     const conversation = await Conversation.create({chatName, isDirectMessage: true, hasDefaultChatName:true});
     if(conversation){
-      await conversation.addUsers([userId, recipientId]);
+
+      for (let id of userIds) {
+        try {
+          await UserConversation.create({
+            userId: id,
+            conversationId: newConversation.id
+          });
+        } catch (err) {
+          console.error('Error adding user to conversation:', err);
+        }
+      } 
+
 
       let members = {}
-      members[userId] = {            
+      members[userId] = {             
         id:userId,
         username:username
       } 

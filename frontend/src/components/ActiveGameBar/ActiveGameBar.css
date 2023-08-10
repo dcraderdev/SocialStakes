@@ -1,115 +1,21 @@
 
 .gamebar-container{
-  /* border: solid 1px rgba(0, 0, 0);
-  border-bottom: 2px solid rgb(0, 0, 0);
-  border-bottom: 2px solid rgb(0, 0, 0);
-  border-bottom: #07070728 solid 1px; */
-
-width: 100vw;
-top: 0px;
-
-display: flex;
-width: 100%;
-top: 0px;
-z-index: 1;
-justify-content: center;
-background-color: #1d1e1c;
-/* transition: all .5s ease; */
+  top: 0px;
+  display: flex;
+  width: 100%;
+  z-index: 1;
+  justify-content: center;
+  background-color: #1d1e1c;
 }
 
 
 
-.gamebar-table-tab{
+.gamebar-tab-container{
   width: 25%;
   max-width: 170px;
   height: 98%;
   position: relative;
-  cursor: pointer;
   color: white;
-  background-color: #28292b;
-  border: solid 1px rgba(0, 0, 0);
-  border-right: #40404052 solid 1px;
-  border-top: #40404052 solid 1px;
-  border-left: #40404052 solid 1px;
-
   margin-left: 1px;
-
-  background-color: #1b1c1bfa;
-  border-radius: 15px;
-
-
-
-  box-shadow: rgba(0, 0, 0, 0.17) 0px -23px 25px 0px inset, 
-            rgba(0, 0, 0, 0.15) 0px -36px 30px 0px inset, 
-            rgba(0, 0, 0, 0.1) 0px -79px 40px 0px inset, 
-            rgba(0, 0, 0, 0.06) 0px 2px 1px, 
-            rgba(0, 0, 0, 0.09) 0px 4px 2px, 
-            rgba(0, 0, 0, 0.09) 0px 8px 4px, 
-            rgba(0, 0, 0, 0.09) 0px 16px 8px, 
-            rgba(0, 0, 0, 0.09) 0px 32px 16px;
-
-            border-top: #57575752 solid 2px;
-
-
-  box-shadow: rgba(0, 0, 0, 0.17) 0px -23px 25px 0px inset, 
-  rgba(62, 62, 62, 0.15) 0px -36px 30px 0px inset, 
-  rgba(0, 0, 0, 0.1) 0px -79px 40px 0px inset, 
-  rgba(62, 62, 62, 0.15) 0px 2px 1px, 
-  rgba(62, 62, 62, 0.15) 0px 1px 2px, 
-  rgba(62, 62, 62, 0.15) 0px 1px 4px, 
-  rgba(62, 62, 62, 0.15) 0px 4px 1px, 
-  rgba(62, 62, 62, 0.15) 0px 2px 8px;
-
 }
 
-
-.gamebar-table-tab:hover{
-  /* background: linear-gradient(90deg, rgba(68,71,66,1) 8%, rgb(61, 62, 60) 48%, rgba(68,71,66,1) 82%); */
-  /* background-color: #3b3c3f99; */
-  background-color: #242524fa;
-  background-color: #2d2e2dfa;
-
-  /* border: solid 1px rgb(89, 89, 89); */
-
-}
-
-.active-tab{
-  border: solid 1px rgb(200, 57, 13);
-  border-top: solid 2px rgb(200, 57, 13);
-}
-
-
-.gamebar-close-button{
-  position: absolute;
-  top: -2px;
-  right: 2px;
-}
-
-.gamebar-close-button:hover{
-  color: white;
-  color: rgb(200, 57, 13);
-}
-.gamebar-close-button:active{
-transform: scale(.9);
-}
-
-
-.card-container{
-  height: 44px;
-}
-.gamebar-card{
-  width: 30px;
-  height: 40px;
-
-}
-
-.wager-container{
-  flex-direction: column;
-  position: absolute;
-  left: 5px;
-}
-
-.min-wager{
-
-  border-bottom: solid 1px rgb(255, 255, 255);
-}

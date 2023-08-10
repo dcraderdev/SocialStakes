@@ -21,6 +21,11 @@ import { ModalContext } from '../../context/ModalContext';
     const {openModal, closeModal, setUpdateObj} = useContext(ModalContext)
 
     const dispatch = useDispatch();
+
+    const currentTables = useSelector((state) => state.games.currentTables);
+    const activeTable = useSelector((state) => state.games.activeTable);
+    const showMessages = useSelector((state) => state.games.showMessages);
+    const user = useSelector((state) => state.users.user);
     
     const [sitOutSelected, setSitOutSelected] = useState(false);
     const [sitOutNextHandSelected, setSitOutNextHandSelected] = useState(false);
@@ -31,7 +36,7 @@ import { ModalContext } from '../../context/ModalContext';
     const [tableBalance, setTableBalance] = useState(0);
 
     const [isHandInProgress, setIsHandInProgress] = useState(false);
-    const [isActiveSeat, setIsActiveSeat] = useState(false);
+    const [isActionSeat, setIsActionSeat] = useState(false);
     const [actionHand, setActionHand] = useState(null);
 
     const [isInsuranceOffered, setIsInsuranceOffered] = useState(null);
@@ -43,13 +48,13 @@ import { ModalContext } from '../../context/ModalContext';
     const [hasBet, setHasBet] = useState(false);
 
 
+console.log(isHandInProgress);
+console.log(isActionSeat);
+console.log(actionHand);
+console.log(currentTables?.[activeTable.id]?.actionHand);
 
 
 
-    const currentTables = useSelector((state) => state.games.currentTables);
-    const activeTable = useSelector((state) => state.games.activeTable);
-    const showMessages = useSelector((state) => state.games.showMessages);
-    const user = useSelector((state) => state.users.user);
 
 
   useEffect(()=>{
@@ -69,44 +74,29 @@ import { ModalContext } from '../../context/ModalContext';
 
 
   useEffect(() => {
-
-    if(!currentTables || activeTable || currentTables[activeTable.id]) return
-
-
     if(currentTables && activeTable){
 
-      let userInActiveSeat = currentTables[activeTable.id]?.actionSeat === currentSeat && currentSeat !== null;
-      let handInProgress = currentTables[activeTable.id]?.handInProgress;
-      let currActionHand = currentTables[activeTable.id]?.actionHand;
-      let insuranceOffered = currentTables[activeTable.id]?.insuranceOffered;
-      let minBet = currentTables[activeTable.id].Game.minBet
-      let maxBet = currentTables[activeTable.id].Game.maxBet
+      let currTable = currentTables?.[activeTable.id]
+      if(!currTable) return
 
-      let chip1, chip2, chip3, chip4
+      let userInActiveSeat = currTable.actionSeat === currentSeat && currentSeat !== null;
+      let handInProgress = currTable.handInProgress;
+      let currActionHand = currTable.actionHand;
+      let insuranceOffered = currTable.insuranceOffered;
+      let minBet = currTable.Game.minBet
+      let maxBet = currTable.Game.maxBet
 
+      const chipValues = {
+        1: [1, 5, 25, 100],
+        25: [25, 50, 100, 500],
+        100: [100, 500, 1000, 5000]
+      };
       
-      chip1 = minBet
-      chip2 = minBet * 2
-      chip3 = minBet * 4
-      chip4 = minBet * 20
-      
-      if(minBet === 1){
-        chip1 = minBet
-        chip2 = minBet * 5
-        chip3 = minBet * 25
-        chip4 = minBet * 100
-      }
-
-      if(minBet === 100){
-        chip1 = minBet
-        chip2 = minBet * 5
-        chip3 = minBet * 10
-        chip4 = minBet * 50
-      }
-  
+      let [chip1, chip2, chip3, chip4] = chipValues[minBet] || [1, 5, 25, 100];
+    
       setChipSizes([chip1,chip2,chip3,chip4])
       setActionHand(currActionHand)
-      setIsActiveSeat(userInActiveSeat)
+      setIsActionSeat(userInActiveSeat)
       setIsHandInProgress(handInProgress)
       setIsInsuranceOffered(insuranceOffered);
 
@@ -325,7 +315,7 @@ const rebet = (multiplier) => {
   const handleAction = (action) => {
     if(!user) return
     if(!isSitting) return
-    if(!isActiveSeat) return
+    if(!isActionSeat) return
 
     let actionObj = {
       action,
@@ -362,52 +352,15 @@ const rebet = (multiplier) => {
 
   return (
     <>
-      <div className="bet-wrapper">
+      <div className="bet-wrapper flex center">
         <div className="bet-container">
-          <div className="bet-content">
 
 
-            <div className="section left">
-              <div className="bet-user-settings">
-                <div className="bet-setting-button" onClick={addBalance}>
-                 <i className="fa-solid fa-dollar-sign"></i>+
-                </div>
-                <div className="bet-setting-button" onClick={(e)=>leaveTable(e,activeTable?.id)}>
-                  <i className="fa-solid fa-right-to-bracket"></i>
-                </div>
-
-                <div className="bet-setting-button" onClick={openSettings}>
-                  {/* <i className="fa-solid fa-right-to-bracket"></i> */}
-                  <i className="fa-solid fa-gears"></i>
-                </div>
-                <div
-                  className="bet-setting-button"
-                  onClick={() => dispatch(toggleShowMessages())}
-                >
-                  {showMessages ? (
-                    <i className="fa-solid fa-comment-slash"></i>
-                  ) : (
-                    <i className="fa-solid fa-comment"></i>
-                  )}
-                </div>
-
-
-
-
-              </div>
-
-              {/* <div
-                className={`chatbox-wrapper ${showMessages ? '' : 'minimize'}`}
-                onClick={showMessages ? null : () => dispatch(toggleShowMessages())}
-              >
-                <Chatbox showMessages={showMessages} />
-              </div> */}
-            </div>
 
 
 {isSitting && (
 
-            <div className="flex center">
+            <div className="betoptions-container flex center">
 
               {!isHandInProgress && (
                 <div className="section right flex center">
@@ -434,7 +387,7 @@ const rebet = (multiplier) => {
                 </div>
               )}
 
-              {isActiveSeat && !isInsuranceOffered &&(
+              {isActionSeat && !isInsuranceOffered &&(
                 <div className="section right flex center">
                   <div className="action-option-container flex center">
                     <div className="action" onClick={()=>handleAction('hit')}>Hit</div>
@@ -460,9 +413,14 @@ const rebet = (multiplier) => {
 
             </div>
 )}
+
+
+
+
+
+
             
 
-          </div>
         </div>
       </div>
     </>

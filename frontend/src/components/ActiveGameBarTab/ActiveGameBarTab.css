@@ -1,0 +1,76 @@
+
+.gamebartab-container{
+  width: 100%;
+  height: 100%;
+  position: relative;
+  cursor: pointer;
+  color: white;
+
+  border-right: #40404052 solid 1px;
+  border-left: #40404052 solid 1px;
+  border-top: #57575752 solid 2px;
+
+
+  background-color: #1b1c1bfa;
+  border-radius: 15px;
+
+
+
+  box-shadow: rgba(0, 0, 0, 0.17) 0px -23px 25px 0px inset, 
+  rgba(62, 62, 62, 0.15) 0px -36px 30px 0px inset, 
+  rgba(0, 0, 0, 0.1) 0px -79px 40px 0px inset, 
+  rgba(62, 62, 62, 0.15) 0px 2px 1px, 
+  rgba(62, 62, 62, 0.15) 0px 1px 2px, 
+  rgba(62, 62, 62, 0.15) 0px 1px 4px, 
+  rgba(62, 62, 62, 0.15) 0px 4px 1px, 
+  rgba(62, 62, 62, 0.15) 0px 2px 8px;
+
+}
+
+
+.gamebartab-container:hover{
+  background-color: #2d2e2dfa;
+}
+
+
+
+.active-tab{
+  border: solid 1px rgb(200, 57, 13);
+  border-top: solid 2px rgb(200, 57, 13);
+}
+
+
+.gamebar-close-button{
+  position: absolute;
+  top: -2px;
+  right: 2px;
+}
+
+.gamebar-close-button:hover{
+  color: white;
+  color: rgb(200, 57, 13);
+}
+.gamebar-close-button:active{
+transform: scale(.9);
+}
+
+
+.card-container{
+  height: 44px;
+}
+.gamebar-card{
+  width: 30px;
+  height: 40px;
+
+}
+
+.wager-container{
+  flex-direction: column;
+  position: absolute;
+  left: 5px;
+}
+
+.min-wager{
+
+  border-bottom: solid 1px rgb(255, 255, 255);
+}

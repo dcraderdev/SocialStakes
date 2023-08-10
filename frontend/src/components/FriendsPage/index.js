@@ -144,7 +144,7 @@ const FriendsPage = () => {
             </div>
 
 
-            {currentFriendViewTab === currentFriendViewConversations && currentFriendView && (
+            {currentFriendViewTab === currentFriendViewConversations && currentFriendView && conversations[currentFriendView?.conversationId] && (
               <div className={`friendspage-chatbox-container ${getViewHeight()}`}>
                 <Chatbox conversation={conversations[currentFriendView.conversationId]}/>
               </div>

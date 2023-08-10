@@ -14,10 +14,19 @@ module.exports = (sequelize, DataTypes) => {
         as: 'messages',
       });
 
-      Conversation.belongsToMany(models.User, { 
-        through: models.UserConversation, 
-        foreignKey: 'conversationId', 
-        as: 'users' });
+      // Conversation.belongsToMany(models.User, { 
+      //   through: models.UserConversation, 
+      //   foreignKey: 'conversationId', 
+      //   as: 'users' });
+
+        Conversation.belongsToMany(models.User, {
+          through: 'UserConversations',
+          foreignKey: 'conversationId',
+          otherKey: 'userId',
+          as: 'users'
+        });
+
+
 
       Conversation.belongsTo(models.Table, {
         foreignKey: 'tableId',

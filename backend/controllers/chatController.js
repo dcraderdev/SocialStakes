@@ -166,16 +166,31 @@ const chatController = {
     },{})
     members[userId] = {userId, username}
 
-
-    const newConversation = await Conversation.create({
+    let newConversation
+try {
+  newConversation = await Conversation.create({
       chatName,
       hasDefaultChatName: false,
       isDirectMessage: false,
     });
+  
+} catch (error) {
+  console.error('Error starting a conversation:', err);
+
+}
+
 
     if (newConversation) {
       for (let id of friendListIds) {
-        await newConversation.addUser(id);
+        try {
+    
+          await newConversation.addUser(id);
+        } catch (error) {
+            console.error('Error adding user to a conversation:', err);
+         
+        }
+
+
       }
 
       const formattedConversation = {

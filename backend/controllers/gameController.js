@@ -268,7 +268,7 @@ try{
     
     try {
       await UserConversation.create({
-        userId,
+        userId: userId,
         conversationId: conversation.id
       });
     } catch (err) {

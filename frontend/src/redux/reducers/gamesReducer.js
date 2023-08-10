@@ -47,7 +47,7 @@ const gamesReducer = (state = initialState, action) => {
     }
 
     case GET_TABLES_BY_TYPE:{
-      return {...newState, openTablesByGameType: action.payload, showGames: false, showTables: true, showActiveTable: false}
+      return {...newState, openTablesByGameType: action.payload, showGames: false, showTables: true}
     }
 
 
@@ -107,7 +107,7 @@ const gamesReducer = (state = initialState, action) => {
     //   updatedCurrentTables[table.id].messages = []
 
 
-    //   return {...newState, currentTables:updatedCurrentTables, showCreatingGame:false, showGames: false, showTables: false, showActiveTable: true}
+    //   return {...newState, currentTables:updatedCurrentTables, showCreatingGame:false, showGames: false, showTables: false}
     // }
 
     case UPDATE_TABLE_NAME:{
@@ -187,7 +187,7 @@ const gamesReducer = (state = initialState, action) => {
     
 
     case VIEW_TABLE:{
-      return {...newState, activeTable:action.payload, showGames: false, showTables: false, showActiveTable: true, showCreatingGame:false}
+      return {...newState, activeTable:action.payload, showGames: false, showTables: false, showCreatingGame:false}
     }
 
     case JOIN_TABLE:{
@@ -229,33 +229,30 @@ const gamesReducer = (state = initialState, action) => {
 
 
     case LEAVE_TABLE: {
-      console.log('hey');
-      console.log(newState);
-      console.log(newState);
-
       let newCurrentTables = { ...newState.currentTables };
       delete newCurrentTables[action.payload];
-      console.log('hey');
+
+      if(newState.showCreatingGame){
+        return { ...newState, currentTables: newCurrentTables, activeTable:null, showGames: false, showTables: false, showCreatingGame: true };
+      }
+      if(newState.showTables){
+        return { ...newState, currentTables: newCurrentTables, activeTable:null, showGames: false, showTables: true, showCreatingGame: false };
+      }
     
-      if (newState.showTables) {
+      if (Object.keys(newCurrentTables).length) {
           const tableIds = Object.keys(newCurrentTables);
           let activeTable = null;
-      console.log('hey');
           
           if (tableIds.length > 0) {
-      console.log('hey');
 
               activeTable = newCurrentTables[tableIds[0]];
               return { ...newState, currentTables: newCurrentTables, activeTable };
           }
+        }
           
-          console.log('returning to games');
           // If no tables left, return to "home".
-          return { ...newState, currentTables: newCurrentTables, showGames: true, showTables: false, showCreatingGame: false };
-      }
+          return { ...newState, currentTables: newCurrentTables, activeTable:null, showGames: true, showTables: false, showCreatingGame: false };
       
-      // If not in showTables mode, just delete the table and proceed.
-      return { ...newState, currentTables: newCurrentTables };
   }
   
 

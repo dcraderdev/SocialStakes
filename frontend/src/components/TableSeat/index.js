@@ -112,7 +112,6 @@ const TableSeat = ({seatNumber}) => {
     let userHands = currUser?.hands;
     let userForfeited = currUser?.forfeit;
   
-    console.log(userHands);
     setPendingBet(userPendingBet)
     setCurrentBet(userCurrentBet)
     setCurrentBalance(userCurrentBalance)
@@ -225,11 +224,6 @@ const TableSeat = ({seatNumber}) => {
       // top: `${cardIndex * -offsetValueA}px`,
     };
   
-    console.log(cardIndex);
-    console.log(seatNumber);
-    console.log(isSeatOnLeftSide);
-    
-console.log(isActionHand);
 
     if(!isActionHand){
     }

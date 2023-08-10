@@ -69,7 +69,7 @@ module.exports = (sequelize, DataTypes) => {
       
       User.hasMany(models.Message, { foreignKey: 'userId'});
       User.belongsToMany(models.Conversation, { through: 'UserConversation', foreignKey: 'userId', as: 'conversations' });
-      User.hasMany(models.UserConversation, {foreignKey:'userId'})
+      // User.hasMany(models.UserConversation, {foreignKey:'userId'})
     
     
     }

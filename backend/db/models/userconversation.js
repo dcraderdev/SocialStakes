@@ -5,6 +5,9 @@ const uuid = require('uuid');
 module.exports = (sequelize, DataTypes) => {
   class UserConversation extends Model {
 
+
+    
+
     
     static associate(models) {
       // UserConversation.belongsTo(models.User, {foreignKey:'userId'})

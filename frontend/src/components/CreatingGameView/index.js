@@ -418,8 +418,8 @@ const toggleFocus = (newFocus) =>{
               Object.values(allGames).map((game, index) => (
                 
                 
-                <div className={`creatinggameview-gametile-wrapper ${animateTiles ? 'animate' : ''}`} style={{animationDelay: `${index * 0.15}s`}} >
-                  <GameTile key={index} game={game} cbFunc={gameSelect}  />
+                <div key={index} className={`creatinggameview-gametile-wrapper ${animateTiles ? 'animate' : ''}`} style={{animationDelay: `${index * 0.15}s`}} >
+                  <GameTile game={game} cbFunc={gameSelect}  />
                 </div>
 
               ))}

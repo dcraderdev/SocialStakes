@@ -68,9 +68,18 @@ module.exports = (sequelize, DataTypes) => {
       User.hasMany(models.Table, {foreignKey:'userId'})
       
       User.hasMany(models.Message, { foreignKey: 'userId'});
-      User.belongsToMany(models.Conversation, { through: 'UserConversation', foreignKey: 'userId', as: 'conversations' });
+
+
+
+      // User.belongsToMany(models.Conversation, { through: 'UserConversation', foreignKey: 'userId', as: 'conversations' });
       // User.hasMany(models.UserConversation, {foreignKey:'userId'})
     
+      User.belongsToMany(models.Conversation, {
+        through: 'UserConversations',
+        foreignKey: 'userId',
+        otherKey: 'conversationId', 
+        as: 'conversations'
+      });
     
     }
 

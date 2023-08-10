@@ -175,7 +175,7 @@ try {
     });
   
 } catch (error) {
-  console.error('Error starting a conversation:', err);
+  console.error('Error starting a conversation:', error);
 
 }
 
@@ -183,12 +183,20 @@ try {
     if (newConversation) {
       for (let id of friendListIds) {
         try {
-    
-          await newConversation.addUser(id);
-        } catch (error) {
-            console.error('Error adding user to a conversation:', err);
-         
+          await UserConversation.create({
+            userId: id,
+            conversationId: newConversation.id
+          });
+        } catch (err) {
+          console.error('Error adding user to conversation:', err);
         }
+        // try {
+    
+        //   await newConversation.addUser(id);
+        // } catch (error) {
+        //     console.error('Error adding user to a conversation:', error);
+         
+        // }
 
 
       }

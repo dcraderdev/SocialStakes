@@ -2,13 +2,11 @@
   position: relative;
   top: -10px;
   width: 100vw;
-  height: 50vh;
+  height: 70vh;
+  /* min-height: 400px; */
 
 }
 
-.table-container{
-  border: white solid 1px;
-}
 
 
 
@@ -68,30 +66,26 @@
 
 
 
-.table-button-container:hover,
-.table-button-container:hover,
+
 .table-button-container:hover {
   background-color: #2728258b;
 }
 
 
-.table-button-container:hover i ,
-.table-button-container:hover i ,
+
 .table-button-container:hover i {
   transform: scale(1.1);
 }
 
 
 
-.table-button-container:active i,
-.table-button-container:active i,
+
 .table-button-container:active i {
   transform: scale(1);
 }
 
 
-.table-menu-button-container i,
-.table-chat-button-container i,
+
 .table-button-subcontainer i{
   width: 100%;
   height: 100%;
@@ -152,8 +146,8 @@
 .table-image-container{
   top: 0px;
   position: absolute;
-  width: 1200px;
-  height: 1000px;
+  width: 100vw;
+  height: 100vh;
   
 }
 

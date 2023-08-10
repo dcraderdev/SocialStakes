@@ -351,79 +351,82 @@ const rebet = (multiplier) => {
 
 
   return (
-    <>
+  
       <div className="bet-wrapper flex center">
-        <div className="bet-container">
+        <div className="bet-container flex center">
 
 
-
-
-{isSitting && (
-
-            <div className="betoptions-container flex center">
-
-              {!isHandInProgress && (
-                <div className="section right flex center">
-
-                  {!hasBet &&(
-                    <div className="rebet-option-container flex between">
-                      <div className="rebet regular" onClick={()=>rebet(false)}>Rebet</div>
-                      <div className="rebet double" onClick={()=>rebet(true)}>Rebet x2</div>
-                    </div>
-                  )}
-                  {hasBet &&(
-                  <div className="undo-bet-container flex">
-                    <div className="undo one flex center" onClick={()=>undoBet(false)}>Undo</div>
-                    <div className="undo all flex center" onClick={()=>undoBet(true)}>Undo all</div>
-                  </div>
-                  )}
-
-                  <div className="chips-option-container">
-                    <div className="chip one" onClick={()=>addBet(chipSizes[0])}>{chipSizes[0]}</div>
-                    <div className="chip two" onClick={()=>addBet(chipSizes[1])}>{chipSizes[1]}</div>
-                    <div className="chip three" onClick={()=>addBet(chipSizes[2])}>{chipSizes[2]}</div>
-                    <div className="chip four" onClick={()=>addBet(chipSizes[3])}>{chipSizes[3]}</div>
-                  </div>
-                </div>
-              )}
+<>
 
               {isActionSeat && !isInsuranceOffered &&(
-                <div className="section right flex center">
-                  <div className="action-option-container flex center">
-                    <div className="action" onClick={()=>handleAction('hit')}>Hit</div>
-                    <div className="action" onClick={()=>handleAction('stay')}>Stay</div>
-                    {canDouble && <div className="action" onClick={()=>handleAction('double')}>Double</div>}
-                    {canSplit && <div className="action" onClick={()=>handleAction('split')}>Split</div>}
-                  </div>
-
+                <div className="actions-container flex center">
+                  <div className="action-button" onClick={()=>handleAction('hit')}>Hit</div>
+                  <div className="action-button" onClick={()=>handleAction('stay')}>Stay</div>
+                  {canDouble && <div className="action-button" onClick={()=>handleAction('double')}>Double</div>}
+                  {canSplit && <div className="action-button" onClick={()=>handleAction('split')}>Split</div>}
                 </div>
               )}
 
 
-              {isInsuranceOffered &&(
-                <div className="section right flex center">
-                  <div className="decision-option-container">
-                    <div className="action" onClick={acceptInsurance}>Accept</div>
-                    <div className="action" onClick={declineInsurance}>Decline</div>
-                  </div>
-
+{isInsuranceOffered &&(
+                <div className="actions-container insurance flex center">
+                  <div className='insurance-option'>Insurance?</div>
+                  <div className="action-button" onClick={acceptInsurance}>Accept</div>
+                  <div className="action-button" onClick={declineInsurance}>Decline</div>
                 </div>
               )}
 
 
-            </div>
+
+{!isHandInProgress && (
+
+
+<div className="actions-container flex center">
+
+   {!hasBet &&(
+     <div className="rebet-option-container flex center">
+       <div className="action-button" onClick={()=>rebet(false)}>Rebet</div>
+       <div className="action-button" onClick={()=>rebet(true)}>Rebet x2</div>
+     </div>
+   )}
+
+    {hasBet &&(
+    <div className="rebet-option-container flex center">
+      <div className="action-button" onClick={()=>undoBet(false)}>Undo</div>
+      <div className="action-button" onClick={()=>undoBet(true)}>Undo all</div>
+    </div>
+    )}
+
+
+
+
+    <div className="chips-option-container flex center">
+      <div className="chip" onClick={()=>addBet(chipSizes[0])}>{chipSizes[0]}</div>
+      <div className="chip" onClick={()=>addBet(chipSizes[1])}>{chipSizes[1]}</div>
+      <div className="chip" onClick={()=>addBet(chipSizes[2])}>{chipSizes[2]}</div>
+      <div className="chip" onClick={()=>addBet(chipSizes[3])}>{chipSizes[3]}</div>
+    </div>
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
 )}
 
 
-
-
-
-
-            
+</>
 
         </div>
       </div>
-    </>
   );
 };
 export default PlayerBetOptions;

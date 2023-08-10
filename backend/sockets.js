@@ -538,7 +538,7 @@ module.exports = function (io) {
 
     });
 
-    
+     
 
 
     socket.on('place_bet', async (betObj) => {

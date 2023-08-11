@@ -97,6 +97,7 @@ const Table = () => {
   const handleProfileButtonClick = () => {
     if(modal === 'profileModal'){
       closeModal()
+      return
     } else {
       openModal('profileModal')
     }

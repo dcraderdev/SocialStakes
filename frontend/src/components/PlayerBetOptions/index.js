@@ -27,8 +27,7 @@ import { ModalContext } from '../../context/ModalContext';
     const showMessages = useSelector((state) => state.games.showMessages);
     const user = useSelector((state) => state.users.user);
     
-    const [sitOutSelected, setSitOutSelected] = useState(false);
-    const [sitOutNextHandSelected, setSitOutNextHandSelected] = useState(false);
+
     const [lastBets, setLastBets] = useState([]);
     const [lastTotalBet, setLastTotalBet] = useState(0);
     const [isSitting, setIsSitting] = useState(false);
@@ -128,7 +127,7 @@ console.log(currentTables?.[activeTable.id]?.actionHand);
         }
 
         setCanDouble(true)
-        if(convertedCardOne.value === convertedCardTwo.value){
+        if(convertedCardOne?.value === convertedCardTwo?.value){
         }
       }
     }
@@ -378,7 +377,7 @@ const rebet = (multiplier) => {
 
 
 
-{!isHandInProgress && (
+{!isHandInProgress && isSitting && (
 
 
 <div className="actions-container flex center">

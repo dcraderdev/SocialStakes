@@ -178,7 +178,7 @@
 .seats-container{
   width: 100vw;
   position: absolute;
-  bottom: -30px;
+  bottom: -10px;
   justify-content: space-around;
   border: #000000 solid 1px;
 }

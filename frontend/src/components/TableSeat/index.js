@@ -11,6 +11,7 @@ import cardConverter from '../../utils/cardConverter';
 import Searching from '../../images/Searching.svg'
 import pokerChip from '../../images/poker-chip.svg'
 import pokerChipWithDollarSign from '../../images/poker-chip-with-dollar-sign.svg'
+import PokerChip from '../PokerChip';
 
 
 const TableSeat = ({seatNumber}) => {
@@ -30,6 +31,7 @@ const TableSeat = ({seatNumber}) => {
   const [actionTimer, setActionTimer] = useState(0)
   const [pendingBet, setPendingBet] = useState(0)
   const [currentBet, setCurrentBet] = useState(0)
+  const [allCurrentBets, setAllCurrentBets] = useState(0)
   const [insuranceBet, setInsuranceBet] = useState(0)
   const [currentBalance, setCurrentBalance] = useState(0)
 
@@ -47,8 +49,15 @@ const TableSeat = ({seatNumber}) => {
   const [actionHand, setActionHand] = useState(null);
   const [isHandInProgress, setIsHandInProgress] = useState(false);
   const [isForfeited, setIsForfeited] = useState(false);
+  const [testBets, aaaaaa] = useState([1]);
 
-  const [scale, setScale] = useState(1);
+  const [testCards, bbbbb] = useState({1:{cards:[1,1,1,1]},2:{cards:[1,1]},3:{cards:[1,1]},4:{cards:[1,1]}});
+  // const [testCards, bbbbb] = useState({});
+  // const [testCards, bbbbb] = useState({1:{cards:[1,1,1,1]},2:{cards:[1,1]}});
+  
+  // const [testCards, bbbbb] = useState({1:{cards:[1,1,1,1]}});
+
+
 
   useEffect(() => {
     if(currentTables && activeTable && currentTables?.[activeTable.id]?.tableUsers){
@@ -64,30 +73,10 @@ const TableSeat = ({seatNumber}) => {
 
 
 
-  useEffect(() => {
-    // console.log(windowHeight);
-    // console.log(windowWidth);
-
-    let measurement = Math.max(windowHeight, windowWidth)
-
-    // console.log(measurement);
-
-    let newScale = measurement / 1100
-
-    if(newScale > 1){
-      newScale = 1
-    } else if(newScale< 0.5){
-      newScale = 0.5
-    }
-
-    setScale(newScale)
-
-    
-
-  }, [windowWidth, windowHeight]);
 
 
 
+  // Object.entries(hands).map
 
 
 
@@ -111,13 +100,17 @@ const TableSeat = ({seatNumber}) => {
     let userCards = currUser?.cards;
     let userHands = currUser?.hands;
     let userForfeited = currUser?.forfeit;
-  
+
+
+
     setPendingBet(userPendingBet)
     setCurrentBet(userCurrentBet)
     setCurrentBalance(userCurrentBalance)
     setCards(userCards)
     setHands(userHands)
     setIsForfeited(userForfeited)
+
+
 
     if (userInsuranceBet && userInsuranceBet.bet) {
       setInsuranceBet(userInsuranceBet.bet)
@@ -148,6 +141,9 @@ const TableSeat = ({seatNumber}) => {
 
 
 
+
+
+
   useEffect(() => {
 
     let userInAnySeat = Object.values(currentTables[activeTable.id]?.tableUsers || {}).some(seat => seat.username === user.username);
@@ -167,6 +163,53 @@ const TableSeat = ({seatNumber}) => {
     setIsHandInProgress(handInProgress)
     setActionHand(currActionHand)
   }, [currentTables, activeTable.id, seatNumber, user]);
+
+
+
+
+  useEffect(() => {
+
+    setAllCurrentBets(null)
+
+
+    if(hands){
+
+      console.log(hands);
+
+      let allBets = []
+      Object.entries(hands).map(([key,value],index)=>{
+
+        console.log(value.cards);
+
+        
+        
+        allBets.push(value.bet)
+          console.log(value);
+      })
+
+      
+      setAllCurrentBets(allBets)
+
+
+
+    }
+
+
+
+  }, [hands]);
+
+
+  console.log(allCurrentBets);
+  console.log(hands);
+
+
+
+
+
+
+
+
+
 
 
 
@@ -212,9 +255,9 @@ const TableSeat = ({seatNumber}) => {
     const isActionHand = handId === actionHand
 
     const offsetValueA = 5;
-    const offsetValueB = 10;
+    const offsetValueB = 25;
 
-    const isSeatOnLeftSide = seatNumber <= 3 
+
   
     // Base Style
     let baseStyle = {
@@ -225,7 +268,9 @@ const TableSeat = ({seatNumber}) => {
     };
   
 
-    if(!isActionHand){
+
+    if(isActionHand){
+
     }
     
     
@@ -238,55 +283,118 @@ const TableSeat = ({seatNumber}) => {
   
   
 
-  const getSplitOffsetStyle = () => {
-    // Change this value to adjust the offset per split
-    const offsetPerSplit = 0;
-    if(!hands) return
-    let numSplits = Object.entries(hands).length  
-
-    if(seatNumber === 1 || seatNumber === 6){    
-      return {
-      flexDirection: 'column',
-      flexDirection: 'row',
-      
-      }
-    } else {
-      return {
-        flexDirection: 'row',
-        // right: `${numSplits * (offsetPerSplit)}px`,
-      };
-    }
-  }
-
+  
+  
 
 
 return(
 
-    <div style={{ transform: `scale(${scale})` }} onClick={takeSeat} className={`seat-wrapper flex center seat seat${seatNumber} ${!player ? ' border' : ''}`}>
+    <div onClick={takeSeat} className={`seat-wrapper seat${seatNumber} flex center`}>
 
-      {disconnectTimer > 0 && (<div className='disconnect-timer flex center'>{disconnectTimer}s</div>)}
-      {actionTimer > 0 && isActiveSeat && (<div className='turn-timer flex center'>{actionTimer}s</div>)}
+
+
+      <div onClick={takeSeat} className={`seat-container flex center ${!player ? ' border' : ''}`}>
+
+
+
+
+<div className='tableseat-bet-area flex center'>
+
+
+        {pendingBet > 0 &&             
+          <div className='pokerchip-wrapper'>
+            <PokerChip amount={pendingBet}/>
+          </div>
+        }
+
+{allCurrentBets?.length > 0 && allCurrentBets.map((bet, index) => (
+        <div className='pokerchip-wrapper'>
+          <PokerChip amount={bet}/>
+        </div>
+      ))}
+
+
+      {/* {testBets.length > 0 && testBets.map((bet, index) => (
+        <div className='pokerchip-wrapper'>
+          <PokerChip amount={bet}/>
+        </div>
+      ))} */}
+
+</div>
+
+
+
+
+
+
+
+        {insuranceBet > 0 && (       
+          <div className='insurance-bet-area flex center'>
+            <div className='pokerchip-wrapper'>
+              <PokerChip amount={insuranceBet}/>
+            </div>
+          </div>
+        )}
+
+
+
+
+        {player && (
+
+          <div 
+          className={`tableseat-hands-container flex`}
+          // style={getSplitOffsetStyle()} 
+          >
+            
+            {hands && Object.entries(hands).map(([handId, handData],index) => (
+              
+              <div className={`tableseat-hand-container flex center `} key={handId}>
+                <div className='tableseat-hand-value'>19, 1</div>
+
+                  
+
+                <div className={`tableseat-hand-cards flex center ${handId === actionHand ? ' bigger' : ''}`} key={handId}>
+
+                  {handData.cards.map((card, index) => (
+                        <div 
+                        className={`cardarea-card-container`} 
+                        style={getCardOffsetStyle(index, handId)} 
+                        key={index}
+                      >
+                      <Card card={card} />
+                    </div>
+                  ))}
+                </div>
+
+
+              </div>
+              
+            ))}
+
+            
+          </div>
+        )}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      </div>
+
 
       {player && (
-                
-        <div className={`seat-container flex center`}>
-
-{       pendingBet > 0 &&             <div className='pending-bet-area flex center'>
-                      <div className='currentbet-chip-container flex center'>
-                        <img className='currentbet-chip' src={pokerChipWithDollarSign} alt='searching'></img>
-                      </div>
-                      {pendingBet}
-                    </div>}
-
-                    {insuranceBet > 0 && (       
-                    <div className='insurance-bet-area flex center'>
-                      <div className='currentbet-chip-container flex center'>
-                        <img className='currentbet-chip' src={pokerChipWithDollarSign} alt='poker chip'></img>
-                      </div>
-                      {insuranceBet}
-                    </div>
-                  )}
-
+        <div className={`profile-container flex center`}>
           <div className='profileimage-wrapper flex center'>
             <div onClick={leaveSeat} className={`profileimage-container flex center ${isActiveSeat ? ' gold' : ''}`}>
               <div className='profileimage-sub-container flex center'>
@@ -294,86 +402,49 @@ return(
               </div>
             </div>
           </div>
-
-        <div className='seat-namebalance-container flex center'>
-          {/* <div className={`${neonTheme}-text name-space flex center`}>{player.username}</div> */}
-          <div className={`${neonTheme}-text name-space flex center`}>{player.username}</div>
-          <div className={`seat-tablebalance flex center ${neonTheme}-text`}>${currentBalance}</div>
+          <div className='seat-namebalance-container flex center'>
+            {/* <div className={`${neonTheme}-text name-space flex center`}>{player.username}</div> */}
+            <div className={`${neonTheme}-text name-space flex center`}>{player.username}</div>
+            <div className={`seat-tablebalance flex center ${neonTheme}-text`}>${currentBalance}</div>
+          </div>
         </div>
-          {/* {isForfeited && <div className='table-balance flex center'>Forfeited</div>} */}
-
-        </div>
-
       )}
 
-{player && (
 
-            <div 
-            className={`tableseat-hands-container flex`}
-            // style={getSplitOffsetStyle()} 
-            >
-              
-              {hands && Object.entries(hands).map(([handId, handData],index) => (
-                
-                <div className={`tableseat-hand-container flex center `} key={handId}>
-
-                    <div className='tableseat-hand-bet flex center'>
-                      <div className='currentbet-chip-container flex center'>
-                        <img className='currentbet-chip' src={pokerChipWithDollarSign} alt='poker chip'></img>
-                      </div>
-                      {handData.bet}
-                    </div>
-
-                  <div className={`tableseat-hand-cards flex center`} key={handId}>
-
-                    {handData.cards.map((card, index) => (
-                          <div 
-                          className={`cardarea-card-container`} 
-                          style={getCardOffsetStyle(index, handId)} 
-                          key={index}
-                        >
-                        <Card card={card} />
-                      </div>
-                    ))}
-                  </div>
-
-
-                </div>
-                
-              ))}
-
-              
-            </div>
-            )}
-
-
-      {!player && (
+{!player && (
        
-                <div className={`seat-container flex`}>
-        
-      
-                  <div className='profileimage-wrapper flex center'>
-                    <div className='profileimage-container flex center emptyseat-border'>
-                      <div className='profileimage-sub-container emptyseat-background flex center'>
-
-                          <div className={`profileimage-takeseat flex center`}>
-                            <i className={`fa-solid fa-arrow-down emptyseat-arrow ${neonTheme}-text`}></i>
-                          </div>
+       <div className={`profile-container flex center`}>
 
 
-                      </div>
-                    </div>
-                  </div>
-        
-                <div className='seat-namebalance-container flex center'>
-                  <div className={`seat-tablebalance flex center ${neonTheme}-text`}>-</div>
-                </div>
-                  <div className={` ${neonTheme}-text name-space flex center`}></div>
-                  {isForfeited && <div className='table-balance flex center'>Forfeited</div>}
-        
-                </div>
-        
-              )}
+         <div className='profileimage-wrapper flex center'>
+           <div className='profileimage-container flex center emptyseat-border'>
+             <div className='profileimage-sub-container emptyseat-background flex center'>
+
+                 <div className={`profileimage-takeseat flex center`}>
+                   <i className={`fa-solid fa-arrow-down emptyseat-arrow ${neonTheme}-text`}></i>
+                 </div>
+
+
+             </div>
+           </div>
+         </div>
+
+       <div className='seat-namebalance-container flex center'>
+         <div className={`seat-tablebalance flex center ${neonTheme}-text`}>-</div>
+       </div>
+         <div className={` ${neonTheme}-text name-space flex center`}></div>
+         {isForfeited && <div className='table-balance flex center'>Forfeited</div>}
+
+       </div>
+
+     )}
+
+
+
+
+
+
+
 
     </div>
 )
@@ -382,6 +453,117 @@ return(
   export default TableSeat
 
 
+// {       pendingBet > 0 &&             <div className='pending-bet-area flex center'>
+//                       <div className='currentbet-chip-container flex center'>
+//                         <img className='currentbet-chip' src={pokerChipWithDollarSign} alt='searching'></img>
+//                       </div>
+//                       {pendingBet}
+//                     </div>}
+
+                  //   {insuranceBet > 0 && (       
+                  //   <div className='insurance-bet-area flex center'>
+                  //     <div className='currentbet-chip-container flex center'>
+                  //       <img className='currentbet-chip' src={pokerChipWithDollarSign} alt='poker chip'></img>
+                  //     </div>
+                  //     {insuranceBet}
+                  //   </div>
+                  // )}
 
 
 
+//       {disconnectTimer > 0 && (<div className='disconnect-timer flex center'>{disconnectTimer}s</div>)}
+//       {actionTimer > 0 && isActiveSeat && (<div className='turn-timer flex center'>{actionTimer}s</div>)}
+
+      // {player && (
+                
+      //   <div className={`seat-container flex center`}>
+
+
+
+      //     <div className='profileimage-wrapper flex center'>
+      //       <div onClick={leaveSeat} className={`profileimage-container flex center ${isActiveSeat ? ' gold' : ''}`}>
+      //         <div className='profileimage-sub-container flex center'>
+      //               <div className='profileimage-image flex center'><i className="fa-regular fa-user"></i></div>
+      //         </div>
+      //       </div>
+      //     </div>
+
+      //   <div className='seat-namebalance-container flex center'>
+      //     {/* <div className={`${neonTheme}-text name-space flex center`}>{player.username}</div> */}
+      //     <div className={`${neonTheme}-text name-space flex center`}>{player.username}</div>
+      //     <div className={`seat-tablebalance flex center ${neonTheme}-text`}>${currentBalance}</div>
+      //   </div>
+      //     {/* {isForfeited && <div className='table-balance flex center'>Forfeited</div>} */}
+
+      //   </div>
+
+      // )}
+
+// {player && (
+
+//             <div 
+//             className={`tableseat-hands-container flex`}
+//             // style={getSplitOffsetStyle()} 
+//             >
+              
+//               {hands && Object.entries(hands).map(([handId, handData],index) => (
+                
+//                 <div className={`tableseat-hand-container flex center `} key={handId}>
+
+//                     <div className='tableseat-hand-bet flex center'>
+//                       <div className='currentbet-chip-container flex center'>
+//                         <img className='currentbet-chip' src={pokerChipWithDollarSign} alt='poker chip'></img>
+//                       </div>
+//                       {handData.bet}
+//                     </div>
+
+//                   <div className={`tableseat-hand-cards flex center`} key={handId}>
+
+//                     {handData.cards.map((card, index) => (
+//                           <div 
+//                           className={`cardarea-card-container`} 
+//                           style={getCardOffsetStyle(index, handId)} 
+//                           key={index}
+//                         >
+//                         <Card card={card} />
+//                       </div>
+//                     ))}
+//                   </div>
+
+
+//                 </div>
+                
+//               ))}
+
+              
+//             </div>
+//             )}
+
+
+      // {!player && (
+       
+      //           <div className={`seat-container flex`}>
+        
+      
+      //             <div className='profileimage-wrapper flex center'>
+      //               <div className='profileimage-container flex center emptyseat-border'>
+      //                 <div className='profileimage-sub-container emptyseat-background flex center'>
+
+      //                     <div className={`profileimage-takeseat flex center`}>
+      //                       <i className={`fa-solid fa-arrow-down emptyseat-arrow ${neonTheme}-text`}></i>
+      //                     </div>
+
+
+      //                 </div>
+      //               </div>
+      //             </div>
+        
+      //           <div className='seat-namebalance-container flex center'>
+      //             <div className={`seat-tablebalance flex center ${neonTheme}-text`}>-</div>
+      //           </div>
+      //             <div className={` ${neonTheme}-text name-space flex center`}></div>
+      //             {isForfeited && <div className='table-balance flex center'>Forfeited</div>}
+        
+      //           </div>
+        
+      //         )}

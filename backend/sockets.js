@@ -539,8 +539,8 @@ module.exports = function (io) {
     });
 
      
-
-
+   
+  
     socket.on('place_bet', async (betObj) => {
       const { bet, tableId, seat } = betObj;
       let room = tableId;

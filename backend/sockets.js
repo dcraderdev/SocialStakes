@@ -378,12 +378,12 @@ module.exports = function (io) {
 
 
     socket.on('view_room', async (tableId) => {
-      let conversationId = rooms[tableId].conversationId
+      let conversationId = rooms?.[tableId]?.conversationId
       let table = { id: tableId, conversationId };
       socket.emit('view_table', table);
     });
 
-    
+
     socket.on('close_table', async (tableId) => {
       let room = tableId;
       let allSeats;

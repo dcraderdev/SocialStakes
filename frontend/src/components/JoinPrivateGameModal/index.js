@@ -95,8 +95,9 @@ function JoinPrivateGameModal() {
             placeholder="Enter table id"
           />
           }
+          <div className='jointable-text flex center'>or</div>
+          
           {!hasId &&  <input
-
             className="jointable-funding-input"
             type="text"
             value={tableName}
@@ -104,6 +105,8 @@ function JoinPrivateGameModal() {
             placeholder="Enter table name"
             />
           }
+          <div className='jointable-text flex center'>and</div>
+
 
           <input
             className="jointable-funding-input"

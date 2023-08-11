@@ -54,6 +54,7 @@ const Table = () => {
   const [tableName, setTableName] = useState('');
   const [tableConversationId, setTableConversationId] = useState(false);
 
+  const [showSettings, setShowSettings] = useState(false);
 
 
   

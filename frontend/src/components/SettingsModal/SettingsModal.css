@@ -17,6 +17,20 @@
 }
 
 
+.table-name-input{
+  outline: none;
+  border: none;
+  box-shadow: none;
+  background-color: transparent;
+  font-size: min(25px, 5vw);
+  color: white;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  text-align: center;
+  border-bottom: #000000 solid 1px;
+}
+
 .table-name-header{
   font-size: 25px;
   position: relative;
@@ -24,14 +38,19 @@
 }
 
 
-.table-edit-input,
 .table-edit-button {
   position: relative;
-  font-size: 15px;
+  font-size: 18px;
   align-items: center;
   top: 5px;
   left: 5px;
   cursor: pointer;
+  width: 25px;
+  height: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  justify-items: center;
 }
 
 

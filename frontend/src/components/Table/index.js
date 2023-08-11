@@ -56,7 +56,7 @@ const Table = () => {
 
   const [showSettings, setShowSettings] = useState(false);
 
-
+console.log(tableTheme);
   
   const profileBtnRef = useRef()
   const chatBoxRef = useRef()
@@ -168,7 +168,7 @@ const Table = () => {
 // }, [showMessages]);
 
 
-
+console.log(themes?.[tableTheme]?.url);
 
   return (
     <div className='table-wrapper'>
@@ -259,7 +259,7 @@ const Table = () => {
         </div>
 
 
-        <div onClick={()=>dispatch(showGamesAction())} className='table-button-container theme flex center'>
+        <div onClick={()=>openModal('themeSettings')} className='table-button-container theme flex center'>
           <div className='table-button-subcontainer flex center'>
             <i className="fa-solid fa-brush"></i>
           </div>
@@ -272,7 +272,7 @@ const Table = () => {
       <div className={`table-content ${neonTheme}`}>
         {themes[tableTheme] && 
         <div className='table-image-container'>
-          <img src={themes[tableTheme].url} alt='table'></img>
+         {tableTheme !== 'None' && <img src={themes[tableTheme].url} alt='table'></img>}
         </div>
         
         }

@@ -30,6 +30,7 @@ import ProfileButtonModal from './components/ProfileButtonModal';
 import StartConversationModal from './components/StartConversationModal';
 import LeaveConversationModal from './components/LeaveConversationModal';
 import AddFriendsModal from './components/AddFriendsModal';
+import ThemesModal from './components/ThemesModal';
 
 function App() {
 
@@ -107,6 +108,12 @@ console.log(modal);
       {modal  === 'tableSettings' && (
         <div className='modal-container'>
           {modal === 'tableSettings' && <SettingsModal />}
+        </div>
+      )}
+
+{modal  === 'themeSettings' && (
+        <div className='modal-container'>
+          {modal === 'themeSettings' && <ThemesModal />}
         </div>
       )}
 

@@ -26,11 +26,35 @@ const SettingsModal = () => {
   const neonTheme = useSelector(state => state.users.neonTheme || '');
 
 
+  const themes = useSelector(state => state.users.themes || '');
+
+  console.log(themes)
+
+
   const [tableName, setTableName] = useState('')
   const [isEditingTableName, setIsEditingTableName] = useState(false)
   const [tableCreator, setTableCreator] = useState(false)
   const [isInvitingFriends, setIsInvitingFriends] = useState(false)
   const [isHandInProgress, setIsHandInProgress] = useState(false);
+
+
+  
+  useEffect(() => {
+    if(themes && Object.values(themes).length){
+      let currThemes = Object.entries(themes)
+
+      
+
+      currThemes.forEach(([key,src]) => {
+        const img = new Image();
+        img.src = src.url;
+      });
+
+
+    }
+
+
+  }, [themes]);
 
 
 
@@ -63,7 +87,10 @@ const SettingsModal = () => {
 
   const handleNeonThemeChange = (event) => {
     const neonTheme = event.target.value;
+    console.log(neonTheme);
     dispatch(changeNeonThemeAction(neonTheme));
+
+
   };
 
 
@@ -176,12 +203,12 @@ const SettingsModal = () => {
             value={tableTheme} 
             >
 
-              <option value="none">None</option>
-              <option value="black">Black</option>
-              <option value="darkgreen">Dark Green</option>
-              <option value="lightgreen">Light Green</option>
-              <option value="red">Red</option>
-              <option value="realfelt">Real</option>
+              <option value="None">None</option>
+              <option value="Midnight Black">Midnight Black</option>
+              <option value="Spring Green">Spring Green</option>
+              <option value="Fairway Green">Fairway Green</option>
+              <option value="Royal Ruby">Royal Ruby</option>
+              <option value="Authentic">Authentic</option>
             </select>
           </div>
         </div>

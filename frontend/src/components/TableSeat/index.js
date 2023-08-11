@@ -195,6 +195,11 @@ const TableSeat = ({seatNumber}) => {
 
 
   const leaveSeat = () => {
+
+    console.log(seatNumber);
+    console.log(isCurrentUser);
+    if(!isCurrentUser) return
+
     setUpdateObj({seat:seatNumber, tableId:activeTable.id})
     openModal('leaveModal')
     return
@@ -233,16 +238,18 @@ const TableSeat = ({seatNumber}) => {
     };
 
   };
+
+  console.log(neonTheme);
   
 
 
 return(
 
-    <div onClick={takeSeat} className={`seat-wrapper seat${seatNumber} flex center`}>
+    <div className={`seat-wrapper seat${seatNumber} flex center`}>
 
 
 
-      <div onClick={takeSeat} className={`seat-container flex center ${!player ? ' border' : ''}`}>
+      <div className={`seat-container flex center ${!player ? ' border' : ''}`}>
 
 
 
@@ -341,7 +348,7 @@ return(
 
 {!player && (
        
-       <div className={`profile-container flex center`}>
+       <div  onClick={takeSeat} className={`profile-container flex center`}>
 
 
          <div className='profileimage-wrapper flex center'>

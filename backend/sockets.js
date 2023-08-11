@@ -366,9 +366,10 @@ module.exports = function (io) {
 
     });
 
-
+ 
     socket.on('update_table_name', async (updateObj) => {
       const { tableId, tableName } = updateObj;
+      if(!tableId || !tableName) return
       let content = `${username} has updated the table name to ${tableName}.`
       let conversationId = rooms?.[tableId]?.conversationId
 
@@ -382,7 +383,7 @@ module.exports = function (io) {
       let table = { id: tableId, conversationId };
       socket.emit('view_table', table);
     });
-
+ 
 
     socket.on('close_table', async (tableId) => {
       let room = tableId;
@@ -2093,7 +2094,7 @@ module.exports = function (io) {
       })
 
 
-
+ 
       // Edit message in specific room
       socket.on('leave_conversation', async (leaveObj) => {
         const { conversationId } = leaveObj;

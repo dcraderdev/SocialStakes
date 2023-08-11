@@ -1,27 +1,16 @@
 import React, { useEffect, useRef, useState, useContext } from 'react';
-import * as sessionActions from '../../redux/middleware/users';
-import * as gameActions from '../../redux/middleware/games';
-
 import { useDispatch, useSelector } from 'react-redux';
-import { Redirect, useHistory } from 'react-router-dom';
 import { ModalContext } from '../../context/ModalContext';
-import { SocketContext } from '../../context/SocketContext';
 import { changeTableThemeAction, changeNeonThemeAction } from '../../redux/actions/userActions';
 
 import './ThemesModal.css'
 
 const ThemesModal = () => {
 
-  const { modal, openModal, closeModal, updateObj, setUpdateObj } = useContext(ModalContext);
-  const { socket } = useContext(SocketContext);
+  const { closeModal } = useContext(ModalContext);
   const dispatch = useDispatch();
-  const history = useHistory()
   const formRef = useRef()
 
-
-  const activeTable = useSelector(state=>state.games.activeTable)
-  const currentTables = useSelector(state=>state.games.currentTables)
-  const user = useSelector(state => state.users.user)
 
   const tableTheme = useSelector(state => state.users.tableTheme || 'None');
   const neonTheme = useSelector(state => state.users.neonTheme || 'None');
@@ -47,11 +36,6 @@ const ThemesModal = () => {
 
 
   useEffect(() => {
-
-    console.log(tableTheme);
-
-
-
     if(neonTheme){
       setCurrentNeonTheme(neonList[neonTheme])
     }
@@ -128,15 +112,9 @@ return
     const feltKeys = Object.keys(themes);
     let currentIndex = feltKeys.indexOf(currentTableTheme);
  
-
-    console.log(currentTableTheme);
-    console.log(feltKeys);
-    console.log(currentIndex);
- 
     if (currentIndex === -1) {
       currentIndex = 0;
     }
-
     if (direction) {
       currentIndex = (currentIndex + 1) % feltKeys.length;
     } else{
@@ -145,9 +123,6 @@ return
     
     // Get the key for the new theme
     const newTableTheme = feltKeys[currentIndex];
-    console.log(newTableTheme);
-    console.log(themes[newTableTheme]);
-
     setCurrentTableTheme(themes[newTableTheme].name)
 
 

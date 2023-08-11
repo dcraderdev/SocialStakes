@@ -252,7 +252,12 @@ function ProfileButtonModal() {
               </div>
             </div>
 
-            <div className="profilemenu-section">
+            <div
+              onClick={()=>{
+                closeModal();
+                openModal('themeSettings')
+              }}
+              className="profilemenu-section">
               <div className="profilemenu-option">
                 <div className="profilemenu-option-text">Settings</div>
                 <div className="profilemenu-option-icon">
@@ -261,7 +266,12 @@ function ProfileButtonModal() {
                 </div>
               </div>
 
-              <div className="profilemenu-option">
+              <div
+              onClick={()=>{
+                closeModal();
+                openModal('themeSettings')
+              }}
+              className="profilemenu-option">
                 <div className="profilemenu-option-text">Themes</div>
                 <div className="profilemenu-option-icon">
                   {/* <img src={tableIcon} alt='table icon' ></img> */}

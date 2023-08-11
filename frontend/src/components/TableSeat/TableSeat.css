@@ -67,6 +67,7 @@
   max-width: 100px;
   aspect-ratio: 1/1;
   position: relative;
+  cursor: pointer;
 
 }
 
@@ -178,6 +179,8 @@
   font-weight: 900;
 }
 
+
+.None-text,
 .null-text,
 .none-text{
   color: #01fdca;

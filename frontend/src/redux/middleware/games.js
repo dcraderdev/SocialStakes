@@ -177,7 +177,9 @@ export const getAllGames = () => async (dispatch) => {
 
 
   export const editTableName = (tableObj, socket) => async (dispatch) => {
-    const {tableId } = tableObj
+    const {tableId, tableName } = tableObj
+    if(!tableId || !tableName) return
+
     try{
       const response = await csrfFetch(`/api/tables/${tableId}/edit`, {
         method: 'PUT',
@@ -203,7 +205,7 @@ export const getAllGames = () => async (dispatch) => {
     } 
   };
 
-
+ 
   export const joinPrivateTable = (tableId, tableName, password, socket) => async (dispatch) => {
     try{
       const response = await csrfFetch(`/api/tables/private`, {

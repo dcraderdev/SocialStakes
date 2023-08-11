@@ -37,29 +37,59 @@ const Table = () => {
   const conversations = useSelector((state) => state.chats.conversations);
 
 
-
-
-  console.log(conversations);
-
   
   const [countdown, setCountdown] = useState(null);
   const [cards, setCards] = useState([]);
   const [isHandInProgress, setIsHandInProgress] = useState(false);
-  const [isActionSeat, setIsActionSeat] = useState(false);
   const [isSitting, setIsSitting] = useState(false);
   const [currentSeat, setCurrentSeat] = useState(false);
 
 
   const [tableConversation, setTableConversation] = useState(false);
   const [tableName, setTableName] = useState('');
-  const [tableConversationId, setTableConversationId] = useState(false);
 
-  const [showSettings, setShowSettings] = useState(false);
 
-console.log(tableTheme);
+  const [isTableCreator, setIsTableCreator] = useState(false)
+
+
   
   const profileBtnRef = useRef()
   const chatBoxRef = useRef()
+
+
+
+  
+  useEffect(() => {
+    if(themes && Object.values(themes).length){
+      let currThemes = Object.entries(themes)
+
+      
+
+      currThemes.forEach(([key,src]) => {
+        const img = new Image();
+        img.src = src.url;
+      });
+
+
+    }
+
+
+  }, [themes]);
+
+
+
+  useEffect(() => {
+    setIsTableCreator(false)
+    if(activeTable && currentTables && currentTables[activeTable.id] && user){
+
+      if(user.id === currentTables[activeTable.id].userId){
+        setIsTableCreator(true)
+      }
+
+    }
+  }, [currentTables, activeTable]);
+
+
  
   useEffect(()=>{
 
@@ -238,18 +268,18 @@ console.log(themes?.[tableTheme]?.url);
 
 
 
-        <div onClick={()=>openModal('tableSettings')} className='table-button-container settings flex center'>
+{isTableCreator &&        <div onClick={()=>openModal('tableSettings')} className='table-button-container settings flex center'>
           <div className='table-button-subcontainer flex center'>
-            <i className="fa-solid fa-gears"></i>
+            <i className="fa-solid fa-key"></i>
           </div>
-        </div>
+        </div>}
 
 
-        <div onClick={addBalance} className='table-button-container money flex center'>
+{isSitting &&        <div onClick={addBalance} className='table-button-container money flex center'>
           <div className='table-button-subcontainer flex center'>
             <i className="fa-solid fa-dollar-sign"></i>
           </div>
-        </div>
+        </div>}
 
 
         <div onClick={()=>dispatch(showGamesAction())} className='table-button-container leave flex center'>

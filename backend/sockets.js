@@ -340,19 +340,7 @@ module.exports = function (io) {
       
       await emitCustomMessage({ conversationId, content, tableId })
 
-      console.log('updatedTable');
-      console.log('updatedTable');
-      console.log('updatedTable');
-      console.log('updatedTable');
-      console.log('updatedTable');
-      console.log('updatedTable');
-      console.log();
-      console.log('updatedTable');
-      console.log('updatedTable');
-      console.log('updatedTable');
-      console.log('updatedTable');
-      console.log('updatedTable');
-      console.log('updatedTable');
+
 
       let tableConvoId = updatedTable?.Conversation?.id
 
@@ -1134,7 +1122,7 @@ module.exports = function (io) {
         clearInterval(rooms[tableId].timerId);
         rooms[tableId].actionEnd = 0;
       }
-
+ 
       let updateObj = {
         tableId,
         table: {

@@ -14,6 +14,12 @@ const PokerChip = ({amount}) => {
 let testAmount = 50000
 const [displayAmount, setDisplayAmount] = useState(null)
 
+
+useEffect(() => {
+  const image = new Image();
+  image.src = bluePokerChip;
+}, []);
+
 useEffect(() => {
   let newAmount;
   if (amount > 1000) {

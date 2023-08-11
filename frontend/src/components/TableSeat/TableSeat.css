@@ -208,10 +208,11 @@
 
 .tableseat-hand-value{
 
-  height: 10px;
+  height: 20px;
   width: 100%;
+  min-width: 60px;
   position: absolute;
-  top: -40px;
+  top: -30px;
 
   border: rgb(64, 69, 170) solid 1px;
   justify-content: center;

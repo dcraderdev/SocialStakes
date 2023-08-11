@@ -13,6 +13,9 @@ import pokerChip from '../../images/poker-chip.svg'
 import pokerChipWithDollarSign from '../../images/poker-chip-with-dollar-sign.svg'
 import PokerChip from '../PokerChip';
 
+import bluePokerChip from '../../images/blue-poker-chip.svg'
+
+
 
 const TableSeat = ({seatNumber}) => {
   const {socket} = useContext(SocketContext)
@@ -56,6 +59,13 @@ const TableSeat = ({seatNumber}) => {
   // const [testCards, bbbbb] = useState({1:{cards:[1,1,1,1]},2:{cards:[1,1]}});
   
   // const [testCards, bbbbb] = useState({1:{cards:[1,1,1,1]}});
+
+
+  useEffect(() => {
+    const image = new Image();
+    image.src = bluePokerChip;
+  }, []);
+
 
 
   useEffect(() => {
@@ -239,7 +249,6 @@ const TableSeat = ({seatNumber}) => {
 
   };
 
-  console.log(neonTheme);
   
 
 
@@ -298,7 +307,16 @@ return(
             {hands && Object.entries(hands).map(([handId, handData],index) => (
               
               <div className={`tableseat-hand-container flex center `} key={handId}>
-                <div className='tableseat-hand-value'>19, 1</div>
+
+
+        {  handId === actionHand &&      <div className={`tableseat-hand-value flex center ${neonTheme}-text`}>
+          
+          
+          {handValues}
+          
+          
+          
+        </div>}
 
                   
 

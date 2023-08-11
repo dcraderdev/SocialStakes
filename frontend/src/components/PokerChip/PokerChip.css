@@ -3,6 +3,8 @@
 
 .pokerchip-container{
   width: 100%;
+  width: 25px;
+  height: 25px;
   aspect-ratio: 1/1;
   border-radius: 50%;
 }
@@ -10,8 +12,8 @@
 
 
 .pokerchip-chip{
-  width: 100%;
-  height: 100%;
+  width: 25px;
+  height: 25px;
   color: blue;
   rotate: 25deg;
 }

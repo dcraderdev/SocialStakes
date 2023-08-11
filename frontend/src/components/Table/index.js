@@ -2,6 +2,9 @@ import React, { useState, useRef, useEffect, useContext } from 'react';
 import { Route, Router, Switch, NavLink, Link,useHistory, useParams} from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import './Table.css'
+import cardConverter from '../../utils/cardConverter';
+import handSummary from '../../utils/handSummary';
+
 
 import {changeNeonThemeAction, changeTableThemeAction} from '../../redux/actions/userActions';
 
@@ -55,6 +58,14 @@ const Table = () => {
   
   const profileBtnRef = useRef()
   const chatBoxRef = useRef()
+
+
+
+
+
+  const [handValues, setHandValues] = useState(null);
+
+
 
 
 
@@ -142,6 +153,22 @@ const Table = () => {
     if(tableConvoId && conversations && conversations[tableConvoId]){
       console.log(conversations[tableConvoId]);
       setTableConversation(conversations[tableConvoId])
+    }
+
+
+    if(currTable.dealerCards){
+
+      console.log(currTable.dealerCards);
+      
+      console.log(cardConverter);
+
+       let summary = handSummary(currTable.dealerCards)
+
+       console.log(summary);
+
+
+
+      setHandValues(summary.values.join(','))
     }
 
 
@@ -309,7 +336,11 @@ console.log(themes?.[tableTheme]?.url);
       </div>
       <div className='table-countdown'>{countdown > 0 ? `Dealing in: ${countdown}`: ''}</div>
 
+
+
+        <div> 1, 19</div>
       <div className='dealer-cards flex center'>
+
         {cards && cards.map((card, index) => 
 
         <div className={`cardarea-card-container`} key={index}>

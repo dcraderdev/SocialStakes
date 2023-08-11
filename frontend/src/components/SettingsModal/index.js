@@ -22,15 +22,19 @@ const SettingsModal = () => {
   const activeTable = useSelector(state=>state.games.activeTable)
   const currentTables = useSelector(state=>state.games.currentTables)
   const user = useSelector(state => state.users.user)
-  const tableTheme = useSelector(state => state.users.tableTheme || '');
-  const neonTheme = useSelector(state => state.users.neonTheme || '');
 
 
+  
+  
+  
   const [tableName, setTableName] = useState('')
   const [isEditingTableName, setIsEditingTableName] = useState(false)
   const [tableCreator, setTableCreator] = useState(false)
   const [isInvitingFriends, setIsInvitingFriends] = useState(false)
   const [isHandInProgress, setIsHandInProgress] = useState(false);
+  
+  
+
 
 
 
@@ -63,7 +67,10 @@ const SettingsModal = () => {
 
   const handleNeonThemeChange = (event) => {
     const neonTheme = event.target.value;
+    console.log(neonTheme);
     dispatch(changeNeonThemeAction(neonTheme));
+
+
   };
 
 
@@ -93,6 +100,23 @@ const SettingsModal = () => {
 
   return (
     <div className='settingsmodal-wrapper' ref={formRef}>
+
+
+        <div className='settingsmodal-header flex center'>
+          Table Owner Settings  
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
 
       {!isInvitingFriends && (
 
@@ -155,7 +179,10 @@ const SettingsModal = () => {
         </div>
       </div>
 
-      <div className='flex tableid-container'>
+      <div className='settings-tableinfo-container'>
+
+
+        <div className='flex tableid-container'>
           <div className='flex'>Table Id: </div>
           <div className='flex marginleft'>{activeTable?.id || ''} </div>
         </div>
@@ -165,49 +192,17 @@ const SettingsModal = () => {
           <div className='flex marginleft'>{currentTables?.[activeTable?.id]?.tableName || ''} </div>
         </div>
 
-
-        <div className='settingsmodal-table-felt-container flex'>
-        <div>Table Themes:</div>
-
-          <div>
-            <select 
-            className='theme-button' 
-            onChange={handleTableThemeChange}
-            value={tableTheme} 
-            >
-
-              <option value="none">None</option>
-              <option value="black">Black</option>
-              <option value="darkgreen">Dark Green</option>
-              <option value="lightgreen">Light Green</option>
-              <option value="red">Red</option>
-              <option value="realfelt">Real</option>
-            </select>
-          </div>
-        </div>
-
-        <div className='settingsmodal-table-neon-container flex'>
-            <div>Neon Themes:</div>
-            <div>
-              <select 
-              className='theme-button' 
-              onChange={handleNeonThemeChange}
-              value={neonTheme} 
-              >
-                <option value="none">None</option>
-                <option value="neon-pink">Pink</option>
-                <option value="neon-blue">Blue</option>
-                <option value="neon-yellow">Yellow</option>
-                <option value="neon-green">Green</option>
-                <option value="neon-white">White</option>
-              </select>
-            </div>
-        </div>
+      </div>
 
 
-        <div className='settingsmodal-invite-container flex center'>
+
+
+    
+
+
+        {/* <div className='settingsmodal-invite-container flex center'>
             <div className='invite-friends-button flex center' onClick={()=>setIsInvitingFriends(true)}>Invite Friends</div>
-        </div>
+        </div> */}
         </div>
         
       )}

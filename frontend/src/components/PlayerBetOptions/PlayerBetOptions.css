@@ -1,99 +1,115 @@
 .bet-wrapper {
   width: 100%;
-  height: 40%;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  bottom: -25px;
+  height: 15vh;
+  position: absolute;
+  bottom: 0px;
+
 }
 
 .bet-container {
-  height: 60%;
+  position: relative;
+  top: 7%;
+  height: 93%;
   width: 100%;
   display: flex;
 }
 
 
 
-.minimize {
-  width: 0px;
-  transition: width 1s ease;
-  cursor: pointer;
-}
 
-.minimize:hover {
-  box-shadow: 2px 0px 5px rgba(218, 165, 32, 0.335);
-
-}
-
-.bet-user-settings{
-
-  width: 60px;
-  height: fit-content;
+.actions-container{
   position: relative;
-  top: -35px;
-  left: 10px;
+  width: 95%;
+  max-width: 1000px;
+  height: 90%;
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  color: rgba(218, 165, 32, 0.394);
-}
+  justify-content: center;
 
-.bet-setting-button{
-  cursor: pointer;
-  width: fit-content;
+  justify-content: space-around;
+
 }
 
 
-.bet-content{
-  display: flex;
-  flex-direction: row;
+.actions-container.insurance{
+  width: 50%;
+
 }
 
 
-
-
-
-
-
-
-
-.section.right{
-  position: relative;
-  display: flex;
-  flex-direction: row;
-  width: 500px;
-  height: 100%;
-  top: 40px;
-}
-
-
-
-
-.undo:hover,
-.chip:hover,
-.rebet:hover,
-.action:hover{
+.insurance-option{
+  font-size: min(20px, 3.5vw);
   color: white;
-  border-bottom: rgba(255, 217, 0, 0.8) solid .5px;
-  border-top: rgba(255, 217, 0, 0.8) solid .5px;
+  margin-right: 10px;
 }
+
+
+
+
+.action-button{
+  cursor: pointer;
+  border-radius: 20px;
+  border: #131413 solid 1px;
+  color: white;
+
+  height: 60%;
+  width: 35%;
+  max-width: 200px;
+  min-width: 100px;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  font-size: min(18px, 2.2vw);
+  box-shadow: rgba(0, 0, 0, 0.3) 0px 3px 6px, rgba(0, 0, 0, 0.5) 0px 3px 6px;
+}
+
+
+
+
+div.action-button:active::after,
+div.action-button:active,
+div.chip:active::after {
+  animation: none;
+  border: black solid 1px;
+
+}
+
+
+
+
+
+
+.rebet-option-container,
+.undo-bet-container{
+  width: 40%;
+  max-width: 400px;
+  height: 100%;
+  position: relative;
+  justify-content: space-around;
+
+}
+
 
 
 
 .chips-option-container{
   position: relative;
-  width: 360px;
-  height: 200px;
+  height: 100%;
+  width: 55%;
+  justify-content: space-around;
 
   
 }
+
+
 
 .chip{
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 70px;
+  width: 30%;
+  max-width: 70px;
+  min-width: 50px;
   height: 70px;
   border-radius: 50%;
   color: white;
@@ -101,83 +117,84 @@
   box-shadow: rgba(0, 0, 0, 0.5) 0px 3px 6px, rgba(0, 0, 0, 0.5) 0px 3px 6px;
   cursor: pointer;
   position: relative;
-}
-
-.chip.one{
-  left: 5px;
-  top: 30px;
-
-}
-
-.chip.two{
-  left: 5px;
-  top: 45px;
-}
-
-.chip.three{
-  left: 85px;
-  top: -135px;
-}
-
-.chip.four{
-  left: 85px;
-  top: -120px;
+  animation: none;
 }
 
 
-.rebet-option-container,
-.undo-bet-container{
-  width: 400px;
-  height: 150px;
-  flex-direction: column;
+
+
+
+.action-button:hover {
+  color: goldenrod;
+  --border-width: 2px;
   position: relative;
-  left: 50px;
-  justify-content: space-between;
-}
-
-
-.decision-option-container{
-  width: 350px;
-  height: 200px;
-  margin-left: 50px;
-  margin-top: 50px;
-  justify-content: space-around;
-}
-
-
-
-
-
-
-.action-option-container{
-  width: 400px;
-  height: 200px;
-  margin-left: 50px;
-  margin-top: 50px;
-  justify-content: space-around;
-}
-
-
-
-
-.action,
-.rebet,
-.undo{
-  border: black solid 1px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 50%;
-  height: 70px;
-  color: white;
-  border-bottom: rgba(255, 217, 0, 0.466) solid .5px;
-  border-top: rgba(255, 217, 0, 0.466) solid .5px;
-  box-shadow: rgba(0, 0, 0, 0.5) 0px 3px 6px, rgba(0, 0, 0, 0.5) 0px 3px 6px;
-  cursor: pointer;
+  background: #222;
+  &::after {
+    position: absolute;
+    border-radius: 20px;
+    content: "";
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    border: var(--border-width) solid transparent;
+    background: linear-gradient(
+      60deg,
+      gold,
+      goldenrod,
+      gold,
+      goldenrod,
+      gold,
+      goldenrod,
+      gold,
+      goldenrod
+    );
+    background-size: 200% 100%;
+    animation: moveGradient 1s infinite linear;
+  }
 }
 
 
 
-.action{
-  margin-left: 10px;
+.chip:hover {
+  color: goldenrod;
+  --border-width: 1px;
+  position: relative;
+  background: #222;
+  
+  &::after {
+    position: absolute;
+    border-radius: 50%;
+    content: "";
+
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    border: var(--border-width) solid transparent;
+    background: linear-gradient(
+      60deg,
+      gold,
+      goldenrod,
+      gold,
+      goldenrod,
+      gold,
+      goldenrod,
+      gold,
+      goldenrod
+    );
+    background-size: 200% 100%;
+    animation: moveGradient 1s infinite linear;
+  }
 }
+
+
+
+
+
+
+@keyframes moveGradient {
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+

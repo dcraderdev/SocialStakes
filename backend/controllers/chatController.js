@@ -190,15 +190,6 @@ try {
         } catch (err) {
           console.error('Error adding user to conversation:', err);
         }
-        // try {
-    
-        //   await newConversation.addUser(id);
-        // } catch (error) {
-        //     console.error('Error adding user to a conversation:', error);
-         
-        // }
-
-
       }
 
       const formattedConversation = {

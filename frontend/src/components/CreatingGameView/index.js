@@ -374,6 +374,7 @@ const toggleFocus = (newFocus) =>{
       )}
       
 {/* TableName form */}
+
         <form 
         onSubmit={(e)=>{
           e.preventDefault()
@@ -381,7 +382,6 @@ const toggleFocus = (newFocus) =>{
         }} 
         className={`creatinggameview-name flex center`}
         >
-
 
         <input
           ref={tableNameInputRef}
@@ -604,7 +604,7 @@ const toggleFocus = (newFocus) =>{
             {friends &&
               Object.entries(friends.friends).map(([key, friend], index) => {
                 return (
-                  <div className='creatinggameview-friendtile-wrapper'>
+                  <div  key={index} className='creatinggameview-friendtile-wrapper'>
                     <FriendTile key={index} friend={friend} type={'invite-to-conversation'} cb={handleList} isInvited={friendList[friend?.id]} />
                   </div>
                 );
@@ -669,7 +669,7 @@ const toggleFocus = (newFocus) =>{
 
               <div className='creatinggameview-review-option flex center'>
                 <div className='creatinggameview-settings-option-header flex center'>
-                  Number of decks - {deckSize}
+                  Number of Decks - {deckSize}
                 </div>
               </div>
 

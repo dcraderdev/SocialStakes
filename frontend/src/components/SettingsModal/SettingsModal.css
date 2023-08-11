@@ -1,14 +1,41 @@
 .settingsmodal-wrapper{
   border: solid white 1px;
-  width: 450px;
-  height: 270px;
+  width: 490px;
+  height: 300px;
   background-color: #1d1e1c;
   background-color: #2d2e2c;
   border: 1px solid rgb(0, 0, 0);
   border-radius: 5px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  padding: 20px;
+  flex-direction: column;
 }
+
+
+
+.settingsmodal-header{
+  width: 490px;
+  height: 60px;
+
+  font-size: min(25px, 5vw);
+  color: white;
+
+
+  z-index: 10;
+  top: -20px;
+  background-color: #2d2e2cda;
+  border-bottom: #0000007f solid 2px;
+}
+
+
+
+.settings-tableinfo-container{
+  position: relative;
+  bottom: 50px;
+  left: 15px;
+}
+
+
+
 
 
 .settingsmodal-table-name-container{
@@ -17,6 +44,20 @@
 }
 
 
+.table-name-input{
+  outline: none;
+  border: none;
+  box-shadow: none;
+  background-color: transparent;
+  font-size: min(25px, 5vw);
+  color: white;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  text-align: center;
+  border-bottom: #000000 solid 1px;
+}
+
 .table-name-header{
   font-size: 25px;
   position: relative;
@@ -24,14 +65,19 @@
 }
 
 
-.table-edit-input,
 .table-edit-button {
   position: relative;
-  font-size: 15px;
+  font-size: 18px;
   align-items: center;
   top: 5px;
   left: 5px;
   cursor: pointer;
+  width: 25px;
+  height: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  justify-items: center;
 }
 
 

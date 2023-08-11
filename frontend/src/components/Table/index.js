@@ -2,17 +2,27 @@ import React, { useState, useRef, useEffect, useContext } from 'react';
 import { Route, Router, Switch, NavLink, Link,useHistory, useParams} from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import './Table.css'
+import cardConverter from '../../utils/cardConverter';
+import handSummary from '../../utils/handSummary';
+
 
 import {changeNeonThemeAction, changeTableThemeAction} from '../../redux/actions/userActions';
 
 import TableSeat from '../TableSeat';
-import PlayerBetOptions from '../PlayerBetOptions';
 import Card from '../Card';
-import cardConverter from '../../utils/cardConverter'
 
 import { ModalContext } from '../../context/ModalContext';
 import { SocketContext } from '../../context/SocketContext';
-import { showGamesAction } from '../../redux/actions/gameActions';
+
+import {
+  showGamesAction,
+  leaveTableAction,
+  toggleShowMessages,
+  addBetAction,
+  changeActiveTablesAction
+ } from '../../redux/actions/gameActions';
+import Chatbox from '../Chatbox';
+import ChatInputArea from '../ChatInputArea';
 
 
 
@@ -26,27 +36,87 @@ const Table = () => {
   const tableTheme = useSelector(state=>state.users.tableTheme)
   const activeTable = useSelector(state=>state.games.activeTable)
   const currentTables = useSelector(state=>state.games.currentTables)
+  const showMessages = useSelector((state) => state.games.showMessages);
+  const conversations = useSelector((state) => state.chats.conversations);
+
+
   
   const [countdown, setCountdown] = useState(null);
   const [cards, setCards] = useState([]);
   const [isHandInProgress, setIsHandInProgress] = useState(false);
+  const [isSitting, setIsSitting] = useState(false);
+  const [currentSeat, setCurrentSeat] = useState(false);
 
+
+  const [tableConversation, setTableConversation] = useState(false);
+  const [tableName, setTableName] = useState('');
+
+
+  const [isTableCreator, setIsTableCreator] = useState(false)
+
+
+  
   const profileBtnRef = useRef()
+  const chatBoxRef = useRef()
+
+
+
+
+
+  const [handValues, setHandValues] = useState(null);
+
+
+
+
+
+  
+  useEffect(() => {
+    if(themes && Object.values(themes).length){
+      let currThemes = Object.entries(themes)
+
+      
+
+      currThemes.forEach(([key,src]) => {
+        const img = new Image();
+        img.src = src.url;
+      });
+
+
+    }
+
+
+  }, [themes]);
+
+
+
+  useEffect(() => {
+    setIsTableCreator(false)
+    if(activeTable && currentTables && currentTables[activeTable.id] && user){
+
+      if(user.id === currentTables[activeTable.id].userId){
+        setIsTableCreator(true)
+      }
+
+    }
+  }, [currentTables, activeTable]);
+
+
  
   useEffect(()=>{
 
-    if (!activeTable || !currentTables || !currentTables[activeTable.id]) {
-      return;
-    }
-
     let countdownInterval = null;
-    let countdownRemaining = Math.ceil((currentTables[activeTable.id].countdownEnd - Date.now()) / 1000);
-    let currentTable = currentTables[activeTable.id]
-    let dealerCards = currentTable.dealerCards
+    let currTable = currentTables?.[activeTable?.id]
+    if(!currTable) return
 
-    if(currentTable.handInProgress){
-      setIsHandInProgress(true)
+
+    let countdownRemaining = Math.ceil((currTable.countdownEnd - Date.now()) / 1000);
+    let dealerCards = currTable.dealerCards
+
+    if(currTable.handInProgress){
+      setIsHandInProgress(currTable.handInProgress)
     }
+
+
 
     setCards(dealerCards)
 
@@ -58,7 +128,50 @@ const Table = () => {
     } else {
       setCountdown(null);
     }
-  
+
+    if(currTable.tableUsers){
+      Object.values(currTable.tableUsers).map(seat=>{
+        if(seat.userId === user.id){
+          setIsSitting(true)
+          setCurrentSeat(seat.seat)
+        }
+      })
+    }
+
+    console.log(currTable);
+    setTableName(currTable.tableName)
+    console.log(currTable.Conversation.id);
+
+    console.log();
+    let tableConvoId = currTable?.Conversation?.id
+
+    console.log(tableConvoId);
+
+    console.log(conversations);
+    console.log(conversations[tableConvoId]);
+
+    if(tableConvoId && conversations && conversations[tableConvoId]){
+      console.log(conversations[tableConvoId]);
+      setTableConversation(conversations[tableConvoId])
+    }
+
+
+    if(currTable.dealerCards){
+
+      console.log(currTable.dealerCards);
+      
+      console.log(cardConverter);
+
+       let summary = handSummary(currTable.dealerCards)
+
+       console.log(summary);
+
+
+
+      setHandValues(summary.values.join(','))
+    }
+
+
     return () => {
       if (countdownInterval) clearInterval(countdownInterval);
     };
@@ -67,48 +180,167 @@ const Table = () => {
   },[currentTables, activeTable]);
 
 
+
   const handleProfileButtonClick = () => {
     if(modal === 'profileModal'){
       closeModal()
+      return
     } else {
       openModal('profileModal')
     }
   };
 
+  const addBalance = () => {
+    if(!user) return
+    if(!isSitting || !currentSeat) return
 
+    if(currentTables && activeTable){
+      let currMinBet = currentTables[activeTable.id].Game.minBet
+      setUpdateObj({minBet:currMinBet, seatNumber:currentSeat, type:'addDeposit'})
+      openModal('balanceModal')
+    }
+    // setUpdateObj({minBet:activeTable.Game.minBet, seatNumber:currentSeat, type:'addDeposit'})
+    // openModal('balanceModal')
+};
+
+
+
+// useEffect(() => {
+
+//   if(showMessages){
+//     const handleClickOutside = (event) => {
+    
+  
+//       if (chatBoxRef.current && !chatBoxRef.current.contains(event.target)) {
+//         dispatch(toggleShowMessages())
+//       }
+//     };
+//     document.addEventListener('mousedown', handleClickOutside);
+//     return () => {
+//       document.removeEventListener('mousedown', handleClickOutside);
+//     };
+//   }
+
+
+// }, [showMessages]);
+
+
+console.log(themes?.[tableTheme]?.url);
 
   return (
     <div className='table-wrapper'>
 
 
 
-        <div onClick={()=>dispatch(showGamesAction())} className='table-home-button-container flex center'>
-          <div className='table-home-button-subcontainer flex center'>
+      <div ref={chatBoxRef} className={`table-chatbox-wrapper ${showMessages ? ' visible' : ' hidden'}`}>
+
+        <div className='table-chatbox-header-container flex'>
+
+
+        
+          
+
+          <div className='table-chatbox-header'>
+            {tableName}
+          </div >
+          
+
+
+        </div>
+
+        <div className={`table-chatbox-container styled-scrollbar`}>
+          <Chatbox conversation={tableConversation}/>
+        </div>
+
+        <div className="table-chatinput-container">
+          <ChatInputArea />
+        </div>
+
+
+      </div>
+
+
+
+
+
+
+
+
+
+        <div  ref={profileBtnRef} onClick={handleProfileButtonClick} className='table-button-container menu flex center'>
+          <div className='table-button-subcontainer flex center'>
+            {modal !== 'profileModal' && <i className="fa-solid fa-bars"></i>}
+            {modal === 'profileModal' && <i className="fa-solid fa-x"></i>}
+          </div>
+        </div>
+
+
+{/* home button */}
+        <div onClick={()=>dispatch(showGamesAction())} className='table-button-container home flex center'>
+          <div className='table-button-subcontainer flex center'>
             <i className="fa-solid fa-house"></i>
           </div>
         </div>
 
 
-        <div  ref={profileBtnRef} onClick={handleProfileButtonClick} className='table-menu-button-container flex center'>
-            {modal !== 'profileModal' && <i className="fa-solid fa-bars"></i>}
-            {modal === 'profileModal' && <i className="fa-solid fa-x"></i>}
+        <div onClick={() => dispatch(toggleShowMessages())} className='table-button-container chat flex center'>
+          <div className='table-button-subcontainer flex center'>
+              {showMessages ? (
+                <i className="fa-solid fa-comment-slash"></i>
+                ) : (
+                  <i className="fa-solid fa-comment"></i>
+              )}
+          </div>
         </div>
 
-<div></div>
+
+
+{isTableCreator &&        <div onClick={()=>openModal('tableSettings')} className='table-button-container settings flex center'>
+          <div className='table-button-subcontainer flex center'>
+            <i className="fa-solid fa-key"></i>
+          </div>
+        </div>}
+
+
+{isSitting &&        <div onClick={addBalance} className='table-button-container money flex center'>
+          <div className='table-button-subcontainer flex center'>
+            <i className="fa-solid fa-dollar-sign"></i>
+          </div>
+        </div>}
+
+
+        <div onClick={()=>dispatch(showGamesAction())} className='table-button-container leave flex center'>
+          <div className='table-button-subcontainer flex center'>
+            <i className="fa-solid fa-right-to-bracket"></i>
+          </div>
+        </div>
+
+
+        <div onClick={()=>openModal('themeSettings')} className='table-button-container theme flex center'>
+          <div className='table-button-subcontainer flex center'>
+            <i className="fa-solid fa-brush"></i>
+          </div>
+        </div>
+
+
 
 
 
       <div className={`table-content ${neonTheme}`}>
         {themes[tableTheme] && 
         <div className='table-image-container'>
-          <img src={themes[tableTheme].url} alt='table'></img>
+         {tableTheme !== 'None' && <img src={themes[tableTheme].url} alt='table'></img>}
         </div>
         
         }
       </div>
       <div className='table-countdown'>{countdown > 0 ? `Dealing in: ${countdown}`: ''}</div>
 
+
+
+        <div> 1, 19</div>
       <div className='dealer-cards flex center'>
+
         {cards && cards.map((card, index) => 
 
         <div className={`cardarea-card-container`} key={index}>

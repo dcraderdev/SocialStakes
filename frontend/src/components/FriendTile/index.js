@@ -58,7 +58,6 @@ const FriendTile = ({ friend, type, cb, isInvited }) => {
   }
 
 
-  console.log(friend);
 
   const cancelRequest = () =>{
     if(!user || !friend) return

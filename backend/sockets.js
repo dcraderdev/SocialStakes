@@ -339,9 +339,14 @@ module.exports = function (io) {
       handleJoin(tableId)
       
       await emitCustomMessage({ conversationId, content, tableId })
+
+
+
+      let tableConvoId = updatedTable?.Conversation?.id
+
       
       handleEmit('join_table', updatedTable)
-      socket.emit('view_table', { id: tableId })
+      socket.emit('view_table', { id: tableId, conversationId: tableConvoId })
       handleEmit('get_updated_table', updateObj)
       
       // socket.emit('join_table', updatedTable);
@@ -349,9 +354,10 @@ module.exports = function (io) {
 
     });
 
-
+ 
     socket.on('update_table_name', async (updateObj) => {
       const { tableId, tableName } = updateObj;
+      if(!tableId || !tableName) return
       let content = `${username} has updated the table name to ${tableName}.`
       let conversationId = rooms?.[tableId]?.conversationId
 
@@ -361,9 +367,11 @@ module.exports = function (io) {
 
 
     socket.on('view_room', async (tableId) => {
-      let table = { id: tableId };
+      let conversationId = rooms?.[tableId]?.conversationId
+      let table = { id: tableId, conversationId };
       socket.emit('view_table', table);
     });
+ 
 
     socket.on('close_table', async (tableId) => {
       let room = tableId;
@@ -456,7 +464,7 @@ module.exports = function (io) {
         rooms[tableId] = roomInit();
         rooms[tableId].gameSessionId = updatedTable.gameSessions[0].id;
         rooms[tableId].decksUsed = updatedTable.Game.decksUsed;
-      }
+      } 
 
       // Add the player to the room
       rooms[tableId].seats[seat] = takeSeatObj;
@@ -538,9 +546,9 @@ module.exports = function (io) {
 
     });
 
-    
-
-
+     
+   
+  
     socket.on('place_bet', async (betObj) => {
       const { bet, tableId, seat } = betObj;
       let room = tableId;
@@ -567,7 +575,7 @@ module.exports = function (io) {
       if(!rooms[tableId].countdownEnd){
         setDealCountdownEndTime(tableId, io)
       }
-
+  
     
       io.in(room).emit('new_bet', betObj);
     });
@@ -1114,7 +1122,7 @@ module.exports = function (io) {
         clearInterval(rooms[tableId].timerId);
         rooms[tableId].actionEnd = 0;
       }
-
+ 
       let updateObj = {
         tableId,
         table: {
@@ -2074,7 +2082,7 @@ module.exports = function (io) {
       })
 
 
-
+ 
       // Edit message in specific room
       socket.on('leave_conversation', async (leaveObj) => {
         const { conversationId } = leaveObj;

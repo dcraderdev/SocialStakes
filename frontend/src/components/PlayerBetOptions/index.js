@@ -21,9 +21,13 @@ import { ModalContext } from '../../context/ModalContext';
     const {openModal, closeModal, setUpdateObj} = useContext(ModalContext)
 
     const dispatch = useDispatch();
+
+    const currentTables = useSelector((state) => state.games.currentTables);
+    const activeTable = useSelector((state) => state.games.activeTable);
+    const showMessages = useSelector((state) => state.games.showMessages);
+    const user = useSelector((state) => state.users.user);
     
-    const [sitOutSelected, setSitOutSelected] = useState(false);
-    const [sitOutNextHandSelected, setSitOutNextHandSelected] = useState(false);
+
     const [lastBets, setLastBets] = useState([]);
     const [lastTotalBet, setLastTotalBet] = useState(0);
     const [isSitting, setIsSitting] = useState(false);
@@ -31,7 +35,7 @@ import { ModalContext } from '../../context/ModalContext';
     const [tableBalance, setTableBalance] = useState(0);
 
     const [isHandInProgress, setIsHandInProgress] = useState(false);
-    const [isActiveSeat, setIsActiveSeat] = useState(false);
+    const [isActionSeat, setIsActionSeat] = useState(false);
     const [actionHand, setActionHand] = useState(null);
 
     const [isInsuranceOffered, setIsInsuranceOffered] = useState(null);
@@ -41,15 +45,6 @@ import { ModalContext } from '../../context/ModalContext';
     const [chipSizes, setChipSizes] = useState([1,5,25,100])
     
     const [hasBet, setHasBet] = useState(false);
-
-
-
-
-
-    const currentTables = useSelector((state) => state.games.currentTables);
-    const activeTable = useSelector((state) => state.games.activeTable);
-    const showMessages = useSelector((state) => state.games.showMessages);
-    const user = useSelector((state) => state.users.user);
 
 
   useEffect(()=>{
@@ -69,44 +64,29 @@ import { ModalContext } from '../../context/ModalContext';
 
 
   useEffect(() => {
-
-    if(!currentTables || activeTable || currentTables[activeTable.id]) return
-
-
     if(currentTables && activeTable){
 
-      let userInActiveSeat = currentTables[activeTable.id]?.actionSeat === currentSeat && currentSeat !== null;
-      let handInProgress = currentTables[activeTable.id]?.handInProgress;
-      let currActionHand = currentTables[activeTable.id]?.actionHand;
-      let insuranceOffered = currentTables[activeTable.id]?.insuranceOffered;
-      let minBet = currentTables[activeTable.id].Game.minBet
-      let maxBet = currentTables[activeTable.id].Game.maxBet
+      let currTable = currentTables?.[activeTable.id]
+      if(!currTable) return
 
-      let chip1, chip2, chip3, chip4
+      let userInActiveSeat = currTable.actionSeat === currentSeat && currentSeat !== null;
+      let handInProgress = currTable.handInProgress;
+      let currActionHand = currTable.actionHand;
+      let insuranceOffered = currTable.insuranceOffered;
+      let minBet = currTable.Game.minBet
+      let maxBet = currTable.Game.maxBet
 
+      const chipValues = {
+        1: [1, 5, 25, 100],
+        25: [25, 50, 100, 500],
+        100: [100, 500, 1000, 5000]
+      };
       
-      chip1 = minBet
-      chip2 = minBet * 2
-      chip3 = minBet * 4
-      chip4 = minBet * 20
-      
-      if(minBet === 1){
-        chip1 = minBet
-        chip2 = minBet * 5
-        chip3 = minBet * 25
-        chip4 = minBet * 100
-      }
-
-      if(minBet === 100){
-        chip1 = minBet
-        chip2 = minBet * 5
-        chip3 = minBet * 10
-        chip4 = minBet * 50
-      }
-  
+      let [chip1, chip2, chip3, chip4] = chipValues[minBet] || [1, 5, 25, 100];
+    
       setChipSizes([chip1,chip2,chip3,chip4])
       setActionHand(currActionHand)
-      setIsActiveSeat(userInActiveSeat)
+      setIsActionSeat(userInActiveSeat)
       setIsHandInProgress(handInProgress)
       setIsInsuranceOffered(insuranceOffered);
 
@@ -124,7 +104,6 @@ import { ModalContext } from '../../context/ModalContext';
     let hasHand = currentTables?.[activeTable.id]?.tableUsers?.[currentSeat]?.hands?.[actionHand]
     let numUserHands = Object.entries(currentTables[activeTable.id]?.tableUsers?.[currentSeat]?.hands).length
 
-    console.log(numUserHands);
 
     if(hasHand){
       let cards = hasHand.cards
@@ -138,7 +117,7 @@ import { ModalContext } from '../../context/ModalContext';
         }
 
         setCanDouble(true)
-        if(convertedCardOne.value === convertedCardTwo.value){
+        if(convertedCardOne?.value === convertedCardTwo?.value){
         }
       }
     }
@@ -325,7 +304,7 @@ const rebet = (multiplier) => {
   const handleAction = (action) => {
     if(!user) return
     if(!isSitting) return
-    if(!isActiveSeat) return
+    if(!isActionSeat) return
 
     let actionObj = {
       action,
@@ -361,111 +340,82 @@ const rebet = (multiplier) => {
 
 
   return (
-    <>
-      <div className="bet-wrapper">
-        <div className="bet-container">
-          <div className="bet-content">
+  
+      <div className="bet-wrapper flex center">
+        <div className="bet-container flex center">
 
 
-            <div className="section left">
-              <div className="bet-user-settings">
-                <div className="bet-setting-button" onClick={addBalance}>
-                 <i className="fa-solid fa-dollar-sign"></i>+
-                </div>
-                <div className="bet-setting-button" onClick={(e)=>leaveTable(e,activeTable?.id)}>
-                  <i className="fa-solid fa-right-to-bracket"></i>
-                </div>
+<>
 
-                <div className="bet-setting-button" onClick={openSettings}>
-                  {/* <i className="fa-solid fa-right-to-bracket"></i> */}
-                  <i className="fa-solid fa-gears"></i>
-                </div>
-                <div
-                  className="bet-setting-button"
-                  onClick={() => dispatch(toggleShowMessages())}
-                >
-                  {showMessages ? (
-                    <i className="fa-solid fa-comment-slash"></i>
-                  ) : (
-                    <i className="fa-solid fa-comment"></i>
-                  )}
-                </div>
-
-
-
-
-              </div>
-
-              {/* <div
-                className={`chatbox-wrapper ${showMessages ? '' : 'minimize'}`}
-                onClick={showMessages ? null : () => dispatch(toggleShowMessages())}
-              >
-                <Chatbox showMessages={showMessages} />
-              </div> */}
-            </div>
-
-
-{isSitting && (
-
-            <div className="flex center">
-
-              {!isHandInProgress && (
-                <div className="section right flex center">
-
-                  {!hasBet &&(
-                    <div className="rebet-option-container flex between">
-                      <div className="rebet regular" onClick={()=>rebet(false)}>Rebet</div>
-                      <div className="rebet double" onClick={()=>rebet(true)}>Rebet x2</div>
-                    </div>
-                  )}
-                  {hasBet &&(
-                  <div className="undo-bet-container flex">
-                    <div className="undo one flex center" onClick={()=>undoBet(false)}>Undo</div>
-                    <div className="undo all flex center" onClick={()=>undoBet(true)}>Undo all</div>
-                  </div>
-                  )}
-
-                  <div className="chips-option-container">
-                    <div className="chip one" onClick={()=>addBet(chipSizes[0])}>{chipSizes[0]}</div>
-                    <div className="chip two" onClick={()=>addBet(chipSizes[1])}>{chipSizes[1]}</div>
-                    <div className="chip three" onClick={()=>addBet(chipSizes[2])}>{chipSizes[2]}</div>
-                    <div className="chip four" onClick={()=>addBet(chipSizes[3])}>{chipSizes[3]}</div>
-                  </div>
-                </div>
-              )}
-
-              {isActiveSeat && !isInsuranceOffered &&(
-                <div className="section right flex center">
-                  <div className="action-option-container flex center">
-                    <div className="action" onClick={()=>handleAction('hit')}>Hit</div>
-                    <div className="action" onClick={()=>handleAction('stay')}>Stay</div>
-                    {canDouble && <div className="action" onClick={()=>handleAction('double')}>Double</div>}
-                    {canSplit && <div className="action" onClick={()=>handleAction('split')}>Split</div>}
-                  </div>
-
+              {isActionSeat && !isInsuranceOffered &&(
+                <div className="actions-container flex center">
+                  <div className="action-button" onClick={()=>handleAction('hit')}>Hit</div>
+                  <div className="action-button" onClick={()=>handleAction('stay')}>Stay</div>
+                  {canDouble && <div className="action-button" onClick={()=>handleAction('double')}>Double</div>}
+                  {canSplit && <div className="action-button" onClick={()=>handleAction('split')}>Split</div>}
                 </div>
               )}
 
 
-              {isInsuranceOffered &&(
-                <div className="section right flex center">
-                  <div className="decision-option-container">
-                    <div className="action" onClick={acceptInsurance}>Accept</div>
-                    <div className="action" onClick={declineInsurance}>Decline</div>
-                  </div>
-
+{isInsuranceOffered &&(
+                <div className="actions-container insurance flex center">
+                  <div className='insurance-option'>Insurance?</div>
+                  <div className="action-button" onClick={acceptInsurance}>Accept</div>
+                  <div className="action-button" onClick={declineInsurance}>Decline</div>
                 </div>
               )}
 
 
-            </div>
+
+{!isHandInProgress && isSitting && (
+
+
+<div className="actions-container flex center">
+
+   {!hasBet &&(
+     <div className="rebet-option-container flex center">
+       <div className="action-button" onClick={()=>rebet(false)}>Rebet</div>
+       <div className="action-button" onClick={()=>rebet(true)}>Rebet x2</div>
+     </div>
+   )}
+
+    {hasBet &&(
+    <div className="rebet-option-container flex center">
+      <div className="action-button" onClick={()=>undoBet(false)}>Undo</div>
+      <div className="action-button" onClick={()=>undoBet(true)}>Undo all</div>
+    </div>
+    )}
+
+
+
+
+    <div className="chips-option-container flex center">
+      <div className="chip" onClick={()=>addBet(chipSizes[0])}>{chipSizes[0]}</div>
+      <div className="chip" onClick={()=>addBet(chipSizes[1])}>{chipSizes[1]}</div>
+      <div className="chip" onClick={()=>addBet(chipSizes[2])}>{chipSizes[2]}</div>
+      <div className="chip" onClick={()=>addBet(chipSizes[3])}>{chipSizes[3]}</div>
+    </div>
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
 )}
-            
 
-          </div>
+
+</>
+
         </div>
       </div>
-    </>
   );
 };
 export default PlayerBetOptions;

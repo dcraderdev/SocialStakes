@@ -29,27 +29,15 @@ const initialState = {
 
 const userReducer = (state = initialState, action) => {
   const newState = { ...state };
-  console.log('-=-=-=-=-=');
-  console.log('-=-=-=-=-=');
-  console.log(newState);
-  console.log('-=-=-=-=-=');
-  console.log('-=-=-=-=-=');
-
 
   switch (action.type) {
 
     case ADD_INCOMING_FRIEND_REQUEST: {
       const { friend, requestInfo} = action.payload;
       let id = requestInfo.id
-
-      console.log(action.payload);
-      console.log(friend);
-      console.log(requestInfo);
-    
+  
       // add the new request
       newState.incomingRequests[friend.id] = { id, friend };
-
-      console.log(newState);
     
       return {...newState};
     }
@@ -89,11 +77,6 @@ const userReducer = (state = initialState, action) => {
     
     case DENY_FRIEND_REQUEST: {
       const { friend, requestInfo } = action.payload;
-    
-      console.log(action.payload);
-      console.log(friend);
-      console.log(requestInfo);
-
 
       // Remove from incomingRequests
       if (newState.incomingRequests[friend.id]) {
@@ -108,28 +91,18 @@ const userReducer = (state = initialState, action) => {
     }
 
     case REMOVE_FRIEND: {
-      console.log(action.payload);
       let friendId = action.payload.friendId
-
-      console.log(newState.friends);
-      console.log(friendId);
-      console.log(newState.friends[friendId]);
 
       if(newState.friends[friendId]){
         delete newState.friends[friendId]
       }
 
       let otherFriends = Object.values(newState.friends)
-      console.log(otherFriends);
       if(otherFriends.length){
-        console.log(otherFriends[0]);
         newState.currentFriendView = otherFriends[0]
       } else{
         newState.currentFriendView = null
       }
-
-
-
       return{ 
         ...newState,
       }
@@ -137,10 +110,7 @@ const userReducer = (state = initialState, action) => {
 
 
 
-
-
     case GET_USER_FRIENDS: {
-      console.log(action.payload);
       return{ 
         ...newState,
         incomingRequests: action.payload.incomingRequests, 
@@ -149,12 +119,6 @@ const userReducer = (state = initialState, action) => {
         friends: action.payload.friends
       }
     }
-
-
-
-
-
-
 
 
     case SHOW_FRIEND_INVITES: {
@@ -185,7 +149,6 @@ const userReducer = (state = initialState, action) => {
 
     case SHOW_FRIENDS: {
       const friend = action.payload
-      console.log(friend);
       return {
         ...newState,
         showFriends:true,
@@ -199,7 +162,6 @@ const userReducer = (state = initialState, action) => {
 
     case SHOW_CONVERSATION_BY_ID: {
       const conversation = action.payload
-      console.log(conversation);
       return {
         ...newState,
         showConversation: true,

@@ -10,24 +10,28 @@ module.exports = {
     options.tableName = 'Themes';
     return queryInterface.bulkInsert(options, [
       {
+        url: '',
+        name: 'None',
+      },
+      {
         url: 'image_adobe_express (2) (1).jpeg',
-        name: 'black',
+        name: 'Midnight Black',
       },
       {
         url: 'Social Stakes (4).jpg',
-        name: 'darkgreen',
+        name: 'Spring Green',
       },
       {
         url: 'Social Stakes (1).jpg',
-        name: 'lightgreen',
+        name: 'Fairway Green',
       },
       {
         url: 'image_adobe_express (1) (1).jpeg',
-        name: 'red',
+        name: 'Royal Ruby',
       },
       {
         url: 'felt-green4 (1).jpeg',
-        name: 'realfelt',
+        name: 'Authentic',
       },
 
       

@@ -18,6 +18,8 @@ import {
   addBetAction,
   changeActiveTablesAction
  } from '../../redux/actions/gameActions';
+import Chatbox from '../Chatbox';
+import ChatInputArea from '../ChatInputArea';
 
 
 
@@ -32,6 +34,12 @@ const Table = () => {
   const activeTable = useSelector(state=>state.games.activeTable)
   const currentTables = useSelector(state=>state.games.currentTables)
   const showMessages = useSelector((state) => state.games.showMessages);
+  const conversations = useSelector((state) => state.chats.conversations);
+
+
+
+
+  console.log(conversations);
 
   
   const [countdown, setCountdown] = useState(null);
@@ -41,8 +49,16 @@ const Table = () => {
   const [isSitting, setIsSitting] = useState(false);
   const [currentSeat, setCurrentSeat] = useState(false);
 
+
+  const [tableConversation, setTableConversation] = useState(false);
+  const [tableName, setTableName] = useState('');
+  const [tableConversationId, setTableConversationId] = useState(false);
+
+
+
   
   const profileBtnRef = useRef()
+  const chatBoxRef = useRef()
  
   useEffect(()=>{
 
@@ -53,10 +69,6 @@ const Table = () => {
 
     let countdownRemaining = Math.ceil((currTable.countdownEnd - Date.now()) / 1000);
     let dealerCards = currTable.dealerCards
-
-    if(currTable.handInProgress){
-      setIsHandInProgress(currTable.handInProgress)
-    }
 
     if(currTable.handInProgress){
       setIsHandInProgress(currTable.handInProgress)
@@ -82,6 +94,23 @@ const Table = () => {
           setCurrentSeat(seat.seat)
         }
       })
+    }
+
+    console.log(currTable);
+    setTableName(currTable.tableName)
+    console.log(currTable.Conversation.id);
+
+    console.log();
+    let tableConvoId = currTable?.Conversation?.id
+
+    console.log(tableConvoId);
+
+    console.log(conversations);
+    console.log(conversations[tableConvoId]);
+
+    if(tableConvoId && conversations && conversations[tableConvoId]){
+      console.log(conversations[tableConvoId]);
+      setTableConversation(conversations[tableConvoId])
     }
 
 
@@ -118,8 +147,65 @@ const Table = () => {
 
 
 
+// useEffect(() => {
+
+//   if(showMessages){
+//     const handleClickOutside = (event) => {
+    
+  
+//       if (chatBoxRef.current && !chatBoxRef.current.contains(event.target)) {
+//         dispatch(toggleShowMessages())
+//       }
+//     };
+//     document.addEventListener('mousedown', handleClickOutside);
+//     return () => {
+//       document.removeEventListener('mousedown', handleClickOutside);
+//     };
+//   }
+
+
+// }, [showMessages]);
+
+
+
+
   return (
     <div className='table-wrapper'>
+
+
+
+      <div ref={chatBoxRef} className={`table-chatbox-wrapper ${showMessages ? ' visible' : ' hidden'}`}>
+
+        <div className='table-chatbox-header-container flex'>
+
+
+        
+          
+
+          <div className='table-chatbox-header'>
+            {tableName}
+          </div >
+          
+
+
+        </div>
+
+        <div className={`table-chatbox-container styled-scrollbar`}>
+          <Chatbox conversation={tableConversation}/>
+        </div>
+
+        <div className="table-chatinput-container">
+          <ChatInputArea />
+        </div>
+
+
+      </div>
+
+
+
+
+
+
 
 
 
@@ -143,8 +229,8 @@ const Table = () => {
           <div className='table-button-subcontainer flex center'>
               {showMessages ? (
                 <i className="fa-solid fa-comment-slash"></i>
-              ) : (
-                <i className="fa-solid fa-comment"></i>
+                ) : (
+                  <i className="fa-solid fa-comment"></i>
               )}
           </div>
         </div>

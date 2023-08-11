@@ -47,15 +47,6 @@ import { ModalContext } from '../../context/ModalContext';
     const [hasBet, setHasBet] = useState(false);
 
 
-console.log(isHandInProgress);
-console.log(isActionSeat);
-console.log(actionHand);
-console.log(currentTables?.[activeTable.id]?.actionHand);
-
-
-
-
-
   useEffect(()=>{
       setCurrentSeat(null)
       setIsSitting(false)
@@ -113,7 +104,6 @@ console.log(currentTables?.[activeTable.id]?.actionHand);
     let hasHand = currentTables?.[activeTable.id]?.tableUsers?.[currentSeat]?.hands?.[actionHand]
     let numUserHands = Object.entries(currentTables[activeTable.id]?.tableUsers?.[currentSeat]?.hands).length
 
-    console.log(numUserHands);
 
     if(hasHand){
       let cards = hasHand.cards

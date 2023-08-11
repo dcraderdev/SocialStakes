@@ -42,7 +42,7 @@ const Chatbox = () => {
 
 
 
-
+console.log(messages);
 
 
 

@@ -88,8 +88,10 @@ const SocketProvider = ({ children }) => {
       }); 
 
 
-      socket.on('view_table', (tableId) => {
-        dispatch(viewTableAction(tableId));
+      socket.on('view_table', (tableObj) => {
+        dispatch(viewTableAction(tableObj));
+        dispatch(showConversationAction(tableObj));
+
       }); 
 
       socket.on('join_table', (table) => {

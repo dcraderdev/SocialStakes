@@ -58,7 +58,6 @@ const TableSeat = ({seatNumber}) => {
   // const [testCards, bbbbb] = useState({1:{cards:[1,1,1,1]}});
 
 
-
   useEffect(() => {
     if(currentTables && activeTable && currentTables?.[activeTable.id]?.tableUsers){
       if( currentTables[activeTable.id].tableUsers[seatNumber]){
@@ -69,16 +68,6 @@ const TableSeat = ({seatNumber}) => {
     }
 
   }, [currentTables, activeTable, seatNumber]);
-
-
-
-
-
-
-
-  // Object.entries(hands).map
-
-
 
 
   useEffect(() => {
@@ -141,9 +130,6 @@ const TableSeat = ({seatNumber}) => {
 
 
 
-
-
-
   useEffect(() => {
 
     let userInAnySeat = Object.values(currentTables[activeTable.id]?.tableUsers || {}).some(seat => seat.username === user.username);
@@ -165,51 +151,16 @@ const TableSeat = ({seatNumber}) => {
   }, [currentTables, activeTable.id, seatNumber, user]);
 
 
-
-
   useEffect(() => {
-
     setAllCurrentBets(null)
-
-
     if(hands){
-
-      console.log(hands);
-
       let allBets = []
       Object.entries(hands).map(([key,value],index)=>{
-
-        console.log(value.cards);
-
-        
-        
         allBets.push(value.bet)
-          console.log(value);
       })
-
-      
       setAllCurrentBets(allBets)
-
-
-
     }
-
-
-
   }, [hands]);
-
-
-  console.log(allCurrentBets);
-  console.log(hands);
-
-
-
-
-
-
-
-
-
 
 
 
@@ -277,13 +228,11 @@ const TableSeat = ({seatNumber}) => {
     return {
       ...baseStyle,
       top: `${cardIndex * offsetValueB}px`,
+      left: `${cardIndex * (offsetValueA)}px`,
+
     };
 
   };
-  
-  
-
-  
   
 
 
@@ -323,11 +272,6 @@ return(
 </div>
 
 
-
-
-
-
-
         {insuranceBet > 0 && (       
           <div className='insurance-bet-area flex center'>
             <div className='pokerchip-wrapper'>
@@ -335,8 +279,6 @@ return(
             </div>
           </div>
         )}
-
-
 
 
         {player && (
@@ -374,20 +316,6 @@ return(
             
           </div>
         )}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
       </div>

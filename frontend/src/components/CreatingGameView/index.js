@@ -604,7 +604,7 @@ const toggleFocus = (newFocus) =>{
             {friends &&
               Object.entries(friends.friends).map(([key, friend], index) => {
                 return (
-                  <div className='creatinggameview-friendtile-wrapper'>
+                  <div  key={index} className='creatinggameview-friendtile-wrapper'>
                     <FriendTile key={index} friend={friend} type={'invite-to-conversation'} cb={handleList} isInvited={friendList[friend?.id]} />
                   </div>
                 );

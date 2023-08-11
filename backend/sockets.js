@@ -339,9 +339,26 @@ module.exports = function (io) {
       handleJoin(tableId)
       
       await emitCustomMessage({ conversationId, content, tableId })
+
+      console.log('updatedTable');
+      console.log('updatedTable');
+      console.log('updatedTable');
+      console.log('updatedTable');
+      console.log('updatedTable');
+      console.log('updatedTable');
+      console.log();
+      console.log('updatedTable');
+      console.log('updatedTable');
+      console.log('updatedTable');
+      console.log('updatedTable');
+      console.log('updatedTable');
+      console.log('updatedTable');
+
+      let tableConvoId = updatedTable?.Conversation?.id
+
       
       handleEmit('join_table', updatedTable)
-      socket.emit('view_table', { id: tableId })
+      socket.emit('view_table', { id: tableId, conversationId: tableConvoId })
       handleEmit('get_updated_table', updateObj)
       
       // socket.emit('join_table', updatedTable);
@@ -361,10 +378,12 @@ module.exports = function (io) {
 
 
     socket.on('view_room', async (tableId) => {
-      let table = { id: tableId };
+      let conversationId = rooms[tableId].conversationId
+      let table = { id: tableId, conversationId };
       socket.emit('view_table', table);
     });
 
+    
     socket.on('close_table', async (tableId) => {
       let room = tableId;
       let allSeats;
@@ -456,7 +475,7 @@ module.exports = function (io) {
         rooms[tableId] = roomInit();
         rooms[tableId].gameSessionId = updatedTable.gameSessions[0].id;
         rooms[tableId].decksUsed = updatedTable.Game.decksUsed;
-      }
+      } 
 
       // Add the player to the room
       rooms[tableId].seats[seat] = takeSeatObj;

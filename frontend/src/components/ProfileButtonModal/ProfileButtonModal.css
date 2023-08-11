@@ -5,7 +5,7 @@
   z-index: 100;
   position: fixed;
   height: calc(100vh - 45px);
-  top: 47px;
+  top: 46px;
   right: 0px;
   transition: right ease 1s;
   width: 230px;

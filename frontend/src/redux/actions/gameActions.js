@@ -256,6 +256,7 @@ export const collectBetsAction = (countdownObj) => {
 
 
 export const offerInsuranceAction = (tableId) => {
+
   return {
     type: OFFER_INSURANCE,
     payload: tableId

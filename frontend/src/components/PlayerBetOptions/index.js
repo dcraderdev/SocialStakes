@@ -39,6 +39,7 @@ import { ModalContext } from '../../context/ModalContext';
     const [actionHand, setActionHand] = useState(null);
 
     const [isInsuranceOffered, setIsInsuranceOffered] = useState(null);
+    const [hasMadeInsuranceDecision, setHasMadeInsuranceDecision] = useState(false);
 
     const [canSplit, setCanSplit] = useState(null);
     const [canDouble, setCanDouble] = useState(null);
@@ -71,6 +72,8 @@ import { ModalContext } from '../../context/ModalContext';
 
       let currTable = currentTables?.[activeTable.id]
       if(!currTable) return
+
+
 
       let userInActiveSeat = currTable.actionSeat === currentSeat && currentSeat !== null;
       let handInProgress = currTable.handInProgress;
@@ -141,6 +144,7 @@ import { ModalContext } from '../../context/ModalContext';
     }
 
     if(!isHandInProgress){
+      setHasMadeInsuranceDecision(false)
       setHasBet(false)
     }
 
@@ -289,6 +293,9 @@ const rebet = (multiplier) => {
   const acceptInsurance = () => {
     if(!user) return
     if(!isSitting) return
+    setHasMadeInsuranceDecision(true)
+
+
 
     let bet = lastTotalBet
     let insuranceCost = Math.ceil(bet/2)
@@ -314,6 +321,8 @@ const rebet = (multiplier) => {
   const declineInsurance = () => {
     if(!user) return
     if(!isSitting) return
+    setHasMadeInsuranceDecision(true)
+
 
     setIsInsuranceOffered(false)
 
@@ -335,6 +344,9 @@ const rebet = (multiplier) => {
 
 
 
+
+
+
   return (
   
       <div className="bet-wrapper flex center">
@@ -351,7 +363,7 @@ const rebet = (multiplier) => {
               )}
 
 
-{isInsuranceOffered &&(
+{isInsuranceOffered && !hasMadeInsuranceDecision && (
                 <div className="actions-container insurance flex center">
                   <div className='insurance-option'>Insurance?</div>
                   <div className="action-button" onClick={acceptInsurance}>Accept</div>

@@ -8,6 +8,7 @@
   z-index: 1000000;
   border-bottom: 1px solid black;
   background-color: #1d1e1c;
+  background-color: #272727;
 
 }
 
@@ -21,10 +22,9 @@
   left: 0px;
   top: 50px;
   z-index: 10;
-  border-bottom: 1px solid black;
+  border-bottom: .5px solid rgba(0, 0, 0, 0.315);
   justify-content: center;
-  background-color: #2d2e2c;
-  background-color: #1d1e1c;
+
 }
 
 

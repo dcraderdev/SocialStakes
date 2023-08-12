@@ -321,7 +321,7 @@ const toggleFocus = (newFocus) =>{
 
 
 
-    <div className={`creatinggameview-settings-container flex ${hasCurrentTables ? '' : ' extended'}`}>
+    <div className={`creatinggameview-settings-container flex ${hasCurrentTables ? ' shrunk' : ' extended'}`}>
 
       <div onClick={()=>setFocus(pickingGameType)} className='creatinggameview-nav-option flex center'>
         <div className={`creatinggameview-option-header ${focus === pickingGameType ? ' creatinggameview-active-nav' : ''} flex center`}>

@@ -24,6 +24,7 @@
 
 
 .friendspage-friendsnavbar-wrapper.shrunk {
+  
   transition: .5s top;
   top: 101px;
 }
@@ -76,9 +77,9 @@
   height: 60px;
   border-bottom: #000000 solid 1px;
   z-index: 1;
-  background-color: #1f201f;
   font-size: 30px;
   color: white; 
+
 }
 
 
@@ -185,7 +186,6 @@
   border-top: 1px solid black;
   border-left: 1px solid black;
 
-  background-color: #1f201f;
 }
 
 

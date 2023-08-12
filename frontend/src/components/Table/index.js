@@ -138,17 +138,8 @@ const Table = () => {
       })
     }
 
-    console.log(currTable);
     setTableName(currTable.tableName)
-    console.log(currTable.Conversation.id);
-
-    console.log();
     let tableConvoId = currTable?.Conversation?.id
-
-    console.log(tableConvoId);
-
-    console.log(conversations);
-    console.log(conversations[tableConvoId]);
 
     if(tableConvoId && conversations && conversations[tableConvoId]){
       console.log(conversations[tableConvoId]);
@@ -157,17 +148,7 @@ const Table = () => {
 
 
     if(currTable.dealerCards){
-
-      console.log(currTable.dealerCards);
-      
-      console.log(cardConverter);
-
        let summary = handSummary(currTable.dealerCards)
-
-       console.log(summary);
-
-
-
       setHandValues(summary.values.join(','))
     }
 
@@ -338,7 +319,9 @@ console.log(themes?.[tableTheme]?.url);
 
 
 
-        <div> 1, 19</div>
+      {handValues && handValues > 0 && <div className={`dealer-card-values ${neonTheme}-text`}> {handValues}</div>}
+
+
       <div className='dealer-cards flex center'>
 
         {cards && cards.map((card, index) => 

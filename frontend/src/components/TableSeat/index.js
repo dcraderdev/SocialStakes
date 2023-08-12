@@ -8,6 +8,8 @@ import { WindowContext } from '../../context/WindowContext';
 
 import Card from '../Card'
 import cardConverter from '../../utils/cardConverter';
+import handSummary from '../../utils/handSummary';
+
 import Searching from '../../images/Searching.svg'
 import pokerChip from '../../images/poker-chip.svg'
 import pokerChipWithDollarSign from '../../images/poker-chip-with-dollar-sign.svg'
@@ -65,6 +67,9 @@ const TableSeat = ({seatNumber}) => {
     const image = new Image();
     image.src = bluePokerChip;
   }, []);
+
+
+
 
 
 
@@ -149,9 +154,16 @@ const TableSeat = ({seatNumber}) => {
     let currActionHand = currentTables[activeTable.id]?.actionHand;
 
 
-    if(hands && actionHand && hands[actionHand]){
+    if(hands && actionHand && hands[actionHand] && hands[actionHand].cards){
+
+
+      let summary = handSummary(hands[actionHand].cards)
+      setHandValues(summary.values.join(','))
+
+
       setHandValues(hands[actionHand].summary.values.join(','))
     }
+
 
     setIsCurrentUser(userInSeat);
     setIsUserInAnySeat(userInAnySeat);
@@ -264,6 +276,8 @@ return(
 
 
 <div className='tableseat-bet-area flex center'>
+      {disconnectTimer > 0 && (<div className='disconnect-timer flex center'>{disconnectTimer}s</div>)}
+      {actionTimer > 0 && isActiveSeat && (<div className='turn-timer flex center'>{actionTimer}s</div>)}
 
 
         {pendingBet > 0 &&             

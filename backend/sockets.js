@@ -633,7 +633,7 @@ module.exports = function (io) {
 
       let room = tableId
       // Set countdown end time
-      const countdownDuration = 1000; // 5 seconds
+      const countdownDuration = 10000; // 5 seconds
       const endTime = Math.ceil((Date.now() + countdownDuration));
       rooms[tableId].countdownEnd = endTime;
 
@@ -1049,7 +1049,7 @@ module.exports = function (io) {
         }  
 
         // Create action end timestamp
-        const actionDuration = 50000000; // 5 seconds
+        const actionDuration = 15000; // 5 seconds
         rooms[tableId].actionEnd = Math.ceil(Date.now() + actionDuration);
 
         // Set action seat
@@ -1116,6 +1116,7 @@ module.exports = function (io) {
       //     id: 0,
       //   },
       // }; 
+      if(!rooms[tableId]) return
 
       // Reset the timer whenever a player takes an action
       if (rooms[tableId] && rooms[tableId].timerId) {
@@ -1950,7 +1951,7 @@ module.exports = function (io) {
       console.log('-----remove_friend------');
       console.log('----------------------');
       console.log(friendObj);
-
+ 
 
       let friendshipId = friendObj.id
       let friendId = friendObj.friendId
@@ -1958,7 +1959,7 @@ module.exports = function (io) {
 
       // console.log('friendshipId | ', friendshipId);
       // console.log('friendId | ', friendId);
-
+ 
  
 
       await friendController.removeFriend(userId, friendObj);

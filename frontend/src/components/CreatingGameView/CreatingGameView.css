@@ -5,21 +5,30 @@
   top: -10px;
   left: 0px;
   display: flex;
-  border-right: rgba(0, 0, 0, 0.466) solid .5px;
-  border-right: rgba(0, 0, 0, 0.466) solid 1px;
   flex-direction: column;
+
+  border-right: rgba(0, 0, 0, 0.466) solid 1px;
+
 }
 
 .creatinggameview-settings-container.extended {
   width: 200px;
-  height: 100%;
+  height: calc(100%);
   position: absolute;
   top: 0px;
   left: 0px;
   display: flex;
-  border-right: rgba(0, 0, 0, 0.466) solid .5px;
   border-right: rgba(0, 0, 0, 0.466) solid 1px;
   flex-direction: column;
+}
+
+.creatinggameview-settings-container.shrunk {
+  height: calc(100% + 7px);
+  position: absolute;
+  top: -7px;
+  left: 0px;
+  display: flex;
+  border-right: rgba(0, 0, 0, 0.466) solid 1px;
 }
 
 

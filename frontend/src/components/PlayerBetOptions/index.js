@@ -45,6 +45,8 @@ import { ModalContext } from '../../context/ModalContext';
     const [chipSizes, setChipSizes] = useState([1,5,25,100])
     
     const [hasBet, setHasBet] = useState(false);
+    const [maxBet, setMaxBet] = useState(false);
+    const [minBet, setMinBet] = useState(false);
 
 
   useEffect(()=>{
@@ -89,6 +91,8 @@ import { ModalContext } from '../../context/ModalContext';
       setIsActionSeat(userInActiveSeat)
       setIsHandInProgress(handInProgress)
       setIsInsuranceOffered(insuranceOffered);
+      setMaxBet(maxBet)
+      setMinBet(minBet)
 
     }
   }, [currentTables, activeTable, currentSeat]);
@@ -109,16 +113,16 @@ import { ModalContext } from '../../context/ModalContext';
       let cards = hasHand.cards
       let bet = hasHand.bet
 
-      if(cards.length === 2 && tableBalance >= bet){
+      if(cards?.length === 2 && tableBalance >= bet){
         let convertedCardOne = cardConverter[cards[0]]
         let convertedCardTwo = cardConverter[cards[1]]
-        if(numUserHands < 4){
-          setCanSplit(true)
-        }
 
-        setCanDouble(true)
-        if(convertedCardOne?.value === convertedCardTwo?.value){
+        if(numUserHands < 4){
+          if(convertedCardOne && convertedCardTwo && convertedCardOne?.value === convertedCardTwo?.value){
+            setCanSplit(true)
+          }
         }
+        setCanDouble(true)
       }
     }
 
@@ -248,9 +252,22 @@ const rebet = (multiplier) => {
   const addBet = (bet) => {
     if(!user) return
     if(!isSitting) return
+
+    const totalBets = lastBets.reduce((acc,num)=> acc + num , 0)
+
+
     if(bet >= tableBalance){
       bet = parseInt(tableBalance)
     }
+
+    if(totalBets + bet > maxBet){
+      bet = maxBet - totalBets  
+    }
+    
+    if(bet <= 0){
+      return
+    }
+
     const betObj={
       bet,
       tableId: activeTable.id,
@@ -317,24 +334,9 @@ const rebet = (multiplier) => {
 
 
 
-  const addBalance = () => {
-      if(!user) return
-      if(!currentSeat) return
 
-      if(currentTables && activeTable){
-        let currMinBet = currentTables[activeTable.id].Game.minBet
-        setUpdateObj({minBet:currMinBet, seatNumber:currentSeat, type:'addDeposit'})
-        openModal('balanceModal')
-      }
-      // setUpdateObj({minBet:activeTable.Game.minBet, seatNumber:currentSeat, type:'addDeposit'})
-      // openModal('balanceModal')
-  };
 
-  const openSettings = () => {
-    
-    openModal('tableSettings')
 
-  }
 
 
 

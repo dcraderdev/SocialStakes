@@ -65,15 +65,15 @@ module.exports = function (io) {
     const userFriends = await friendController.getUserFriends(userId);
     const userConversations = await chatController.getUserConversations(userId);
 
-    console.log('-=-=-=-=-=-=-=-=-=');
-    console.log('--- CONNECTING ---');
-    console.log('SOCKET ID', socketId);
-    console.log('A user connected', socket.id, 'Username:', username);
-    console.log('User Room:', userId);
-    console.log('userConversations:');
-    console.log(userConversations);
+    // console.log('-=-=-=-=-=-=-=-=-=');
+    // console.log('--- CONNECTING ---');
+    // console.log('SOCKET ID', socketId);
+    // console.log('A user connected', socket.id, 'Username:', username);
+    // console.log('User Room:', userId);
+    // console.log('userConversations:');
+    // console.log(userConversations);
  
-    console.log('-=-=-=-=-=-=-=-=-=');
+    // console.log('-=-=-=-=-=-=-=-=-=');
 
 
     if(!connections[userId]){
@@ -633,7 +633,7 @@ module.exports = function (io) {
 
       let room = tableId
       // Set countdown end time
-      const countdownDuration = 1000; // 5 seconds
+      const countdownDuration = 10000; // 5 seconds
       const endTime = Math.ceil((Date.now() + countdownDuration));
       rooms[tableId].countdownEnd = endTime;
 
@@ -1049,7 +1049,7 @@ module.exports = function (io) {
         }  
 
         // Create action end timestamp
-        const actionDuration = 50000000; // 5 seconds
+        const actionDuration = 15000; // 5 seconds
         rooms[tableId].actionEnd = Math.ceil(Date.now() + actionDuration);
 
         // Set action seat
@@ -1116,6 +1116,7 @@ module.exports = function (io) {
       //     id: 0,
       //   },
       // }; 
+      if(!rooms[tableId]) return
 
       // Reset the timer whenever a player takes an action
       if (rooms[tableId] && rooms[tableId].timerId) {
@@ -1947,10 +1948,10 @@ module.exports = function (io) {
 
 
     socket.on('remove_friend', async (friendObj) => {
-      console.log('-----remove_friend------');
-      console.log('----------------------');
-      console.log(friendObj);
-
+      // console.log('-----remove_friend------');
+      // console.log('----------------------');
+      // console.log(friendObj);
+ 
 
       let friendshipId = friendObj.id
       let friendId = friendObj.friendId
@@ -1958,7 +1959,7 @@ module.exports = function (io) {
 
       // console.log('friendshipId | ', friendshipId);
       // console.log('friendId | ', friendId);
-
+ 
  
 
       await friendController.removeFriend(userId, friendObj);
@@ -2166,7 +2167,7 @@ module.exports = function (io) {
   
         const newMessage = await chatController.createMessage(messageObj, roomUserId);
 
-        if (!newMessage) console.log('no message');;
+        // if (!newMessage) console.log('no message');;
 
         if (!newMessage) return false;
   
@@ -2185,8 +2186,6 @@ module.exports = function (io) {
           newMessageObj.chatName = rooms?.[tableId]?.chatName
         }
         
-        console.log(newMessageObj);
-
         io.in(room).emit('new_message', newMessageObj);
 
       }

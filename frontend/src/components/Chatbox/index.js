@@ -42,10 +42,6 @@ const Chatbox = () => {
 
 
 
-console.log(messages);
-
-
-
 
   useEffect(() => {
     if (bottomRef.current) {

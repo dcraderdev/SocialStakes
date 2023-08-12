@@ -8,6 +8,8 @@ import { WindowContext } from '../../context/WindowContext';
 
 import Card from '../Card'
 import cardConverter from '../../utils/cardConverter';
+import handSummary from '../../utils/handSummary';
+
 import Searching from '../../images/Searching.svg'
 import pokerChip from '../../images/poker-chip.svg'
 import pokerChipWithDollarSign from '../../images/poker-chip-with-dollar-sign.svg'
@@ -61,10 +63,62 @@ const TableSeat = ({seatNumber}) => {
   // const [testCards, bbbbb] = useState({1:{cards:[1,1,1,1]}});
 
 
+  const [tableBalance, setTableBalance] = useState(0)
+  const [beforeHandBalance, setBeforeHandBalance] = useState(0)
+  const [winnings, setWinnings] = useState(0)
+
+
+
   useEffect(() => {
     const image = new Image();
     image.src = bluePokerChip;
   }, []);
+
+
+
+
+
+
+
+useEffect(()=>{
+  setTableBalance(0)
+  if(activeTable && user && currentTables && currentTables?.[activeTable.id]?.tableUsers){
+  Object.values(currentTables?.[activeTable.id]?.tableUsers).map(seat=>{
+    if(seat.userId === user.id){
+      setTableBalance(seat.tableBalance)
+    }
+  })
+}
+}, [currentTables, activeTable])
+
+
+
+
+
+
+
+useEffect(()=>{
+
+  if(isHandInProgress){
+    setBeforeHandBalance(tableBalance)
+  }
+
+  if(!isHandInProgress){
+    if(tableBalance > beforeHandBalance){
+      setWinnings(tableBalance - beforeHandBalance)
+    }
+  }
+
+
+
+
+
+}, [tableBalance, isHandInProgress])
+
+
+
+
+
 
 
 
@@ -104,12 +158,14 @@ const TableSeat = ({seatNumber}) => {
 
     setPendingBet(userPendingBet)
     setCurrentBet(userCurrentBet)
-    setCurrentBalance(userCurrentBalance)
     setCards(userCards)
     setHands(userHands)
     setIsForfeited(userForfeited)
-
-
+    
+    
+    if (userCurrentBalance) {
+      setCurrentBalance(userCurrentBalance)
+    }
 
     if (userInsuranceBet && userInsuranceBet.bet) {
       setInsuranceBet(userInsuranceBet.bet)
@@ -149,9 +205,16 @@ const TableSeat = ({seatNumber}) => {
     let currActionHand = currentTables[activeTable.id]?.actionHand;
 
 
-    if(hands && actionHand && hands[actionHand]){
+    if(hands && actionHand && hands[actionHand] && hands[actionHand].cards){
+
+
+      let summary = handSummary(hands[actionHand].cards)
+      setHandValues(summary.values.join(','))
+
+
       setHandValues(hands[actionHand].summary.values.join(','))
     }
+
 
     setIsCurrentUser(userInSeat);
     setIsUserInAnySeat(userInAnySeat);
@@ -159,6 +222,8 @@ const TableSeat = ({seatNumber}) => {
     setIsHandInProgress(handInProgress)
     setActionHand(currActionHand)
   }, [currentTables, activeTable.id, seatNumber, user]);
+
+
 
 
   useEffect(() => {
@@ -176,7 +241,6 @@ const TableSeat = ({seatNumber}) => {
 
   useEffect(() => {
     let disconnectTimerId = null;
-
   
     if (disconnectTimer > 0) {
       disconnectTimerId = setInterval(() => {
@@ -202,12 +266,8 @@ const TableSeat = ({seatNumber}) => {
     }
   }
 
-
-
   const leaveSeat = () => {
 
-    console.log(seatNumber);
-    console.log(isCurrentUser);
     if(!isCurrentUser) return
 
     setUpdateObj({seat:seatNumber, tableId:activeTable.id})
@@ -219,12 +279,9 @@ const TableSeat = ({seatNumber}) => {
   const getCardOffsetStyle = (cardIndex, handId) => {
 
     const isActionHand = handId === actionHand
-
     const offsetValueA = 5;
     const offsetValueB = 25;
 
-
-  
     // Base Style
     let baseStyle = {
       position: 'absolute',
@@ -232,13 +289,8 @@ const TableSeat = ({seatNumber}) => {
       // left: `${cardIndex * (offsetValueB)}px`,
       // top: `${cardIndex * -offsetValueA}px`,
     };
-  
-
-
     if(isActionHand){
-
     }
-    
     
     return {
       ...baseStyle,
@@ -249,21 +301,16 @@ const TableSeat = ({seatNumber}) => {
 
   };
 
-  
-
 
 return(
 
     <div className={`seat-wrapper seat${seatNumber} flex center`}>
-
-
-
       <div className={`seat-container flex center ${!player ? ' border' : ''}`}>
 
 
-
-
 <div className='tableseat-bet-area flex center'>
+      {disconnectTimer > 0 && (<div className='disconnect-timer flex center'>{disconnectTimer}s</div>)}
+      {actionTimer > 0 && isActiveSeat && (<div className='turn-timer flex center'>{actionTimer}s</div>)}
 
 
         {pendingBet > 0 &&             
@@ -273,7 +320,7 @@ return(
         }
 
 {allCurrentBets?.length > 0 && allCurrentBets.map((bet, index) => (
-        <div className='pokerchip-wrapper'>
+        <div key={index} className={`pokerchip-wrapper`}>
           <PokerChip amount={bet}/>
         </div>
       ))}
@@ -310,18 +357,11 @@ return(
 
 
         {  handId === actionHand &&      <div className={`tableseat-hand-value flex center ${neonTheme}-text`}>
-          
-          
           {handValues}
-          
-          
-          
-        </div>}
-
-                  
+        </div>
+        }
 
                 <div className={`tableseat-hand-cards flex center ${handId === actionHand ? ' bigger' : ''}`} key={handId}>
-
                   {handData.cards.map((card, index) => (
                         <div 
                         className={`cardarea-card-container`} 
@@ -332,17 +372,10 @@ return(
                     </div>
                   ))}
                 </div>
-
-
               </div>
-              
             ))}
-
-            
           </div>
         )}
-
-
       </div>
 
 
@@ -365,19 +398,13 @@ return(
 
 
 {!player && (
-       
        <div  onClick={takeSeat} className={`profile-container flex center`}>
-
-
          <div className='profileimage-wrapper flex center'>
            <div className='profileimage-container flex center emptyseat-border'>
              <div className='profileimage-sub-container emptyseat-background flex center'>
-
                  <div className={`profileimage-takeseat flex center`}>
                    <i className={`fa-solid fa-arrow-down emptyseat-arrow ${neonTheme}-text`}></i>
                  </div>
-
-
              </div>
            </div>
          </div>

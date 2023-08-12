@@ -105,7 +105,6 @@ router.get('/friends', requireAuth, async (req, res, next) => {
   const { user } = req;
   const allFriends = await friendController.getUserFriends(user.id)
 
-  console.log(allFriends);
   if(!allFriends){
     const err = new Error("No friend data found") 
     err.statusCode = 404
@@ -121,7 +120,6 @@ router.get('/conversations', requireAuth, async (req, res, next) => {
   const { user } = req;
   const conversations = await chatController.getConversations(user.id)
 
-  console.log(conversations);
   if(!conversations){
     const err = new Error("No conversation data found") 
     err.statusCode = 404

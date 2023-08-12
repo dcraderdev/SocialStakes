@@ -87,6 +87,8 @@
   align-items: center;
   cursor: pointer;
   font-size: max(20px, 2vh);
+  background-color: #28282872;
+
 }
 
 
@@ -124,7 +126,8 @@
 
 .friendspage-friendmenu-icon{
   cursor: pointer;
-  background-color: #212220;
+  background-color: #28282872;
+
   width: 40px;
   height: 40px;
   border-radius: 50%;

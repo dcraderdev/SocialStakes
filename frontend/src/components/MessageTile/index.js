@@ -197,10 +197,6 @@ const MessageTile = ({message}) => {
       };
 
 
-      console.log(editMessageObj);
-
-
-
 
       socket.emit('edit_message', editMessageObj);
       setIsEditingMessage(false)

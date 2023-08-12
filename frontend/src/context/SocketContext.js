@@ -132,7 +132,6 @@ const SocketProvider = ({ children }) => {
       
 
       socket.on('new_message', (messageObj) => {
-        console.log(messageObj);
         dispatch(addMessageAction(messageObj));
       });
 

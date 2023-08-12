@@ -14,7 +14,6 @@ const SearchBar = () => {
 
 
   const newSearch = async () => {
-    console.log(search);
     setSearch('');
     // dispatch(sessionActions.search(search));
   };

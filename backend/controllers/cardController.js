@@ -93,7 +93,7 @@ async function fetchSpecificBlockHash(blockHeight) {
   try {
     const response = await fetch(url, options);
     const data = await response.json();
-    console.log(data.blocks[0].hash);
+    // console.log(data.blocks[0].hash);
   } catch (error) {
     console.error('Error:', error);
   }
@@ -311,7 +311,7 @@ function drawCards(drawObj) {
     }
 
     // Check for soft 17 and if busted
-    handSummary.busted = !handSummary.values.some(value => value <= 221);
+    handSummary.busted = !handSummary.values.some(value => value <= 21);
     handSummary.softSeventeen = handSummary.values.includes(7) && handSummary.values.includes(17) && aceCount > 0;
 
     // Check for blackjack

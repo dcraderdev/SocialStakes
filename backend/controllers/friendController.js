@@ -75,7 +75,7 @@ const friendController = {
               newConversation
           };
         } catch (err) {
-            console.error('There was an error saving the friendship: ', err);
+            // console.error('There was an error saving the friendship: ', err);
             throw err;
         }
         }
@@ -84,7 +84,7 @@ const friendController = {
           existingFriendship.status === 'pending' &&
           existingFriendship.actionUserId === userId
         ) {
-          console.log('Cannot send friend request - prior request pending');
+          // console.log('Cannot send friend request - prior request pending');
           return {
             friendship: existingFriendship,
             newConversation: null

@@ -205,7 +205,6 @@ const CreatingGameView = () => {
   };
 
   useEffect(() => {
-    console.log(tableName);
     const errors = {};
     if (!tableName.length) errors['tableName'] = 'Please enter at least one character';
     if (!tableName.trim().length) errors['trimmed-error'] = 'Please enter at least one character';
@@ -213,7 +212,6 @@ const CreatingGameView = () => {
     setValidationErrors(errors);
   }, [tableName]);
 
-  console.log(validationErrors);
 
   return (
     <div className="creatinggameview-container flex center">

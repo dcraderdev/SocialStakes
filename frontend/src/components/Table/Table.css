@@ -182,7 +182,6 @@
   position: absolute;
   bottom: -10px;
   justify-content: space-around;
-  border: #000000 solid 1px;
 }
 
 
@@ -195,6 +194,14 @@
   width: 200px;
   height: 70px;
   border: solid 1px white;
+}
+.dealer-card-values{
+  left: 50%;
+  top: 5%;
+  transform: translate(-50%, 0);
+  position: absolute;
+  width: 200px;
+  height: 70px;
 }
 
 

@@ -125,7 +125,7 @@ module.exports = function (io) {
             },
           };
 
-          io.in(tableId).emit('new_message', messageObj);
+          // io.in(tableId).emit('new_message', messageObj);
           io.in(tableId).emit('player_reconnected', { seat, tableId, timer });
         }
       }
@@ -298,7 +298,7 @@ module.exports = function (io) {
               },
             };
      
-            io.in(tableId).emit('new_message', messageObj);
+            // io.in(tableId).emit('new_message', messageObj);
             handleDisconnect(table);
             socket.leave(tableId)
           }
@@ -778,7 +778,7 @@ module.exports = function (io) {
         deck = rooms[tableId].deck;
         roundId = await gameController.newRound(dealObj);
         rooms[tableId].roundId = roundId;
-      }
+      } 
 
       // Calculate number of cards to draw
       // numSeats with currentBets + cards for dealer

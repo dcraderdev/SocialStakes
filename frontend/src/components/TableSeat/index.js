@@ -42,6 +42,8 @@ const TableSeat = ({seatNumber}) => {
 
   const [cards, setCards] = useState([]);
   const [hands, setHands] = useState([]);
+
+
   const [handValues, setHandValues] = useState(null);
 
 
@@ -119,6 +121,10 @@ useEffect(()=>{
 
 
 
+    // if(currTable.dealerCards){
+    //    let summary = handSummary(currTable.dealerCards)
+    //   setHandValues(summary.values.join(','))
+    // }
 
 
 
@@ -222,7 +228,7 @@ useEffect(()=>{
     setIsActiveSeat(userInActiveSeat)
     setIsHandInProgress(handInProgress)
     setActionHand(currActionHand)
-  }, [currentTables, activeTable.id, seatNumber, user]);
+  }, [currentTables, activeTable.id, seatNumber, user, hands]);
 
 
 

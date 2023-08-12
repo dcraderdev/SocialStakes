@@ -267,7 +267,7 @@ module.exports = function (io) {
 
     socket.on('disconnect', async () => {
 
-      let timer = 5000; // 15 seconds
+      let timer = 10000; // 15 seconds
 
       disconnectTimes[userId] = Date.now();
 
@@ -468,7 +468,7 @@ module.exports = function (io) {
 
       // Add the player to the room
       rooms[tableId].seats[seat] = takeSeatObj;
-
+ 
 
       let content = `${username} has taken seat ${seat}.`
       let conversationId = rooms?.[tableId]?.conversationId
@@ -482,7 +482,7 @@ module.exports = function (io) {
       // console.log(`${username} taking seat${seat} in ${room}`);
       // console.log('--------------');
     });
-
+ 
     socket.on('leave_seat', async (seatObj) => {
       // console.log('--------------');
       // console.log(`leave_seat`);
@@ -722,7 +722,7 @@ module.exports = function (io) {
         accepted: true,
         bet: bet,
       }; 
-
+  
       // Add player to insured players array
       rooms[tableId].insuredPlayers[seat] = insuranceCost;
 
@@ -904,9 +904,16 @@ module.exports = function (io) {
       let isAce = cardConverter[dealerVisibleCard].value === 11;
  
       if (isAce) {
-        socket.emit('offer_insurance', tableId);
+
+        // socket.emit('offer_insurance', tableId);
+
+        io.in(room).emit('offer_insurance', tableId);
+
         await new Promise((resolve) => setTimeout(resolve, 5000)); // Wait for 10 seconds
-        socket.emit('remove_insurance_offer', tableId);
+        // socket.emit('remove_insurance_offer', tableId);
+
+        io.in(room).emit('remove_insurance_offer', tableId);
+
       }
 
       // if dealer has blackjack, skip to end of round

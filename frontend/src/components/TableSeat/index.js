@@ -104,6 +104,7 @@ useEffect(()=>{
   }
 
   if(!isHandInProgress){
+    setInsuranceBet(null)
     if(tableBalance > beforeHandBalance){
       setWinnings(tableBalance - beforeHandBalance)
     }

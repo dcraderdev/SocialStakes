@@ -447,8 +447,12 @@ const gamesReducer = (state = initialState, action) => {
       const tableId = action.payload;
       const newCurrentTables = { ...newState.currentTables };
       const newCurrentTable = { ...newCurrentTables[tableId] };
+ 
+   
       newCurrentTable.insuranceOffered = true
       newCurrentTables[tableId] = newCurrentTable;
+
+
       return { ...newState, currentTables: newCurrentTables };
     }
 

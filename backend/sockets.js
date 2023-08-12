@@ -65,15 +65,15 @@ module.exports = function (io) {
     const userFriends = await friendController.getUserFriends(userId);
     const userConversations = await chatController.getUserConversations(userId);
 
-    console.log('-=-=-=-=-=-=-=-=-=');
-    console.log('--- CONNECTING ---');
-    console.log('SOCKET ID', socketId);
-    console.log('A user connected', socket.id, 'Username:', username);
-    console.log('User Room:', userId);
-    console.log('userConversations:');
-    console.log(userConversations);
+    // console.log('-=-=-=-=-=-=-=-=-=');
+    // console.log('--- CONNECTING ---');
+    // console.log('SOCKET ID', socketId);
+    // console.log('A user connected', socket.id, 'Username:', username);
+    // console.log('User Room:', userId);
+    // console.log('userConversations:');
+    // console.log(userConversations);
  
-    console.log('-=-=-=-=-=-=-=-=-=');
+    // console.log('-=-=-=-=-=-=-=-=-=');
 
 
     if(!connections[userId]){
@@ -1948,9 +1948,9 @@ module.exports = function (io) {
 
 
     socket.on('remove_friend', async (friendObj) => {
-      console.log('-----remove_friend------');
-      console.log('----------------------');
-      console.log(friendObj);
+      // console.log('-----remove_friend------');
+      // console.log('----------------------');
+      // console.log(friendObj);
  
 
       let friendshipId = friendObj.id
@@ -2167,7 +2167,7 @@ module.exports = function (io) {
   
         const newMessage = await chatController.createMessage(messageObj, roomUserId);
 
-        if (!newMessage) console.log('no message');;
+        // if (!newMessage) console.log('no message');;
 
         if (!newMessage) return false;
   
@@ -2186,8 +2186,6 @@ module.exports = function (io) {
           newMessageObj.chatName = rooms?.[tableId]?.chatName
         }
         
-        console.log(newMessageObj);
-
         io.in(room).emit('new_message', newMessageObj);
 
       }

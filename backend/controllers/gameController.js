@@ -140,8 +140,8 @@ const gameController = {
 
 
 
-    console.log(tableObj);
-    console.log(userId);
+    // console.log(tableObj);
+    // console.log(userId);
 
     let private = isPrivate && privateKey.trim().length > 0 ? isPrivate : false 
     let nickname = tableName.length ? tableName : null
@@ -149,12 +149,12 @@ const gameController = {
     let decksUsed = deckSize
 
 
-    console.log({
-      gameType,
-      decksUsed,
-      minBet: betSizing.minBet,
-      maxBet: betSizing.maxBet
-    });
+    // console.log({
+    //   gameType,
+    //   decksUsed,
+    //   minBet: betSizing.minBet,
+    //   maxBet: betSizing.maxBet
+    // });
     
     const game = await Game.findOne({
       where: {
@@ -167,11 +167,7 @@ const gameController = {
     if(!game){
       return false
     }
-    console.log('<><><><><><><><><><><><><><>');
-    console.log('<><><><><><><><><><><><><><>');
-    console.log('here 1');
-    console.log('<><><><><><><><><><><><><><>');
-    console.log('<><><><><><><><><><><><><><>');
+
 
     if(decksUsed === 1) shufflePoint = 25
     if(decksUsed === 4) shufflePoint = 136
@@ -190,11 +186,7 @@ const gameController = {
       return false;
     }
 
-    console.log('<><><><><><><><><><><><><><>');
-    console.log('<><><><><><><><><><><><><><>');
-    console.log('here 2');
-    console.log('<><><><><><><><><><><><><><>');
-    console.log('<><><><><><><><><><><><><><>');
+
     let blockHash = await fetchLatestBlock()
 
     const gameSession = await GameSession.create({
@@ -207,11 +199,6 @@ const gameController = {
       return false;
     }
 
-    console.log('<><><><><><><><><><><><><><>');
-    console.log('<><><><><><><><><><><><><><>');
-    console.log('here 3');
-    console.log('<><><><><><><><><><><><><><>');
-    console.log('<><><><><><><><><><><><><><>');
     let serverSeed = generateSeed()
 
     const newServerSeed = await ServerSeed.create({
@@ -223,11 +210,6 @@ const gameController = {
       return false
     }
 
-    console.log('<><><><><><><><><><><><><><>');
-    console.log('<><><><><><><><><><><><><><>');
-    console.log('here 4');
-    console.log('<><><><><><><><><><><><><><>');
-    console.log('<><><><><><><><><><><><><><>');
 
     let conversation
 try{
@@ -238,8 +220,8 @@ try{
     hasDefaultChatName: false
   });
 }catch(err){
-  console.log(err);
-  console.log(err.status);
+  // console.log(err);
+  // console.log(err.status);
 
 }
 
@@ -248,22 +230,11 @@ try{
     }
 
 
-    console.log('<><><><><><><><><><><><><><>');
-    console.log('<><><><><><><><><><><><><><>');
-    console.log('here 5');
-    console.log('<><><><><><><><><><><><><><>');
-    console.log('<><><><><><><><><><><><><><>');
 
-    
-    console.log('<><><><><><><><><><><><><><>');
-    console.log('<><><><><><><><><><><><><><>');
-    console.log({
-      userId,
-      conversationId: conversation.id
-    });
-    console.log('<><><><><><><><><><><><><><>');
-    console.log('<><><><><><><><><><><><><><>');
-
+    // console.log({
+    //   userId,
+    //   conversationId: conversation.id
+    // });
 
     
     try {
@@ -274,13 +245,6 @@ try{
     } catch (err) {
       console.error('Error adding user to conversation:', err);
     }
-
-
-    console.log('<><><><><><><><><><><><><><>');
-    console.log('<><><><><><><><><><><><><><>');
-    console.log('here 6');
-    console.log('<><><><><><><><><><><><><><>');
-    console.log('<><><><><><><><><><><><><><>');
 
 
 

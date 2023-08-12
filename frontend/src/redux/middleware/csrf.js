@@ -12,7 +12,7 @@ export const setCsrfTokenThunk = () => async (dispatch, getState) => {
 
     dispatch(setCsrfTokenAction(csrfToken));
   } catch (error) {
-    console.error(error);
+    // console.error(error);
   }
 };
 // frontend/src/store/csrf.js

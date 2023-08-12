@@ -20,9 +20,9 @@ export const getUserFriends = () => async (dispatch) => {
  
     const data = await response.json();
 
-    console.log('-=-=-=-=');
-    console.log(data); 
-    console.log('-=-=-=-=');
+    // console.log('-=-=-=-=');
+    // console.log(data); 
+    // console.log('-=-=-=-=');
  
     dispatch(getUserFriendsAction(data));
 

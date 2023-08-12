@@ -35,9 +35,6 @@ function RemoveFriendModal() {
     if(!updateObj) return
     const {friendInfo} = updateObj
 
-
-    console.log(friendInfo);
-
     let friendObj = {
       friendshipId: friendInfo.id,
       friendId: friendInfo.friend.id,

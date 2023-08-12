@@ -16,15 +16,11 @@ export const getUserConversations = () => async (dispatch) => {
  
     const data = await response.json();
 
-    console.log('-=-=-=-=');
-    console.log(data); 
-    console.log('-=-=-=-=');
- 
     dispatch(getUserConversationsAction(data)); 
 
     return {data, response};
 
   }catch(error){
-    console.log(error);
+    // console.log(error);
   } 
 };  

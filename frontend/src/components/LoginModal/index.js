@@ -78,7 +78,6 @@ function LoginModal() {
         closeModal()
       };
     } catch (error) {
-      console.error(error);
       setDisabledButton(true);
       setButtonClass('signinDiv-button disabled disabled2');
       setButtonText('The provided credentials were invalid');

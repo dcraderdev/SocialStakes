@@ -70,7 +70,7 @@ function Navigation(){
     dispatch(sessionActions.login({ credential:'bigtree', password:'password' }));
   };
   const demoUserTwo = async (e) => {
-    dispatch(sessionActions.login({ credential:'admin', password:'password' }));
+    dispatch(sessionActions.login({ credential:'Pine', password:'password2' }));
   };
   const demoUserThree = async (e) => {
     dispatch(sessionActions.login({ credential:'Spruce', password:'password' }));

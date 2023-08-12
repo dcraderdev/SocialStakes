@@ -93,7 +93,7 @@ async function fetchSpecificBlockHash(blockHeight) {
   try {
     const response = await fetch(url, options);
     const data = await response.json();
-    console.log(data.blocks[0].hash);
+    // console.log(data.blocks[0].hash);
   } catch (error) {
     console.error('Error:', error);
   }

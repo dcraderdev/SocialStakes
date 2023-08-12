@@ -142,7 +142,6 @@ const Table = () => {
     let tableConvoId = currTable?.Conversation?.id
 
     if(tableConvoId && conversations && conversations[tableConvoId]){
-      console.log(conversations[tableConvoId]);
       setTableConversation(conversations[tableConvoId])
     }
 
@@ -205,8 +204,6 @@ const Table = () => {
 
 // }, [showMessages]);
 
-
-console.log(themes?.[tableTheme]?.url);
 
   return (
     <div className='table-wrapper'>

@@ -64,7 +64,6 @@ function App() {
   }, [dispatch]);
 
 
-console.log(modal);
 
   return (
     <>

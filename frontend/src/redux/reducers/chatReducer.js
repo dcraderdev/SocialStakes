@@ -26,11 +26,9 @@ const gamesReducer = (state = initialState, action) => {
   switch (action.type) {
 
     case ADD_MESSAGE: {
-      console.log('adding message');
       const { id, conversationId, userId, username, content, tableId, chatName } = action.payload;
 
  
-      console.log({ id, conversationId, userId, username, content, tableId });
 
       const newConversations = { ...newState.conversations };
 
@@ -134,19 +132,33 @@ const gamesReducer = (state = initialState, action) => {
 
 
     case REMOVE_CONVERSATION: {
-      let {conversationId} = action.payload
+      const { conversationId } = action.payload;
+      const { conversations, currentConversation } = newState;
     
-      let newConversations = {...newState.conversations}
-      delete newConversations[conversationId]
+      const newConversations = { ...conversations };
     
-      let firstConversationId = Object.keys(newConversations)[0];
+      delete newConversations[conversationId];
     
-      if (!firstConversationId) {
-        firstConversationId = null;
+      const isDeletingCurrentConversation = currentConversation === conversationId;
+
+      // default to the current conversation
+      let nextCurrentConversation = currentConversation; 
+    
+      if (isDeletingCurrentConversation) {
+        const remainingConversationIds = Object.keys(newConversations);
+        nextCurrentConversation = remainingConversationIds.length > 0 ? remainingConversationIds[0] : null;
       }
     
-      return {...newState, conversations: newConversations, currentConversation: firstConversationId}
+      return {
+        ...newState,
+        conversations: newConversations,
+        currentConversation: nextCurrentConversation
+      };
     }
+
+    
+
+
 
     case REMOVE_USER_FROM_CONVERSATION: {
       let {conversationId, userId} = action.payload
@@ -158,15 +170,9 @@ const gamesReducer = (state = initialState, action) => {
     case ADD_USER_TO_CONVERSATION: {
       let {friendList, conversationId} = action.payload
 
-      console.log(action.payload);
-
       let newConversations = {...newState.conversations}
 
       let newConversation = {...newState.conversations[conversationId]}
-
-
-      console.log(newConversation);
-      console.log(friendList);
 
       // newConversation.members = {...newConversation.members, ...friendList};
 
@@ -175,9 +181,6 @@ const gamesReducer = (state = initialState, action) => {
       })
 
       newConversations[conversationId] = newConversation;
-
-
-      console.log(newConversation);
 
       return { ...newState, conversations: newConversations }
     }
@@ -199,7 +202,6 @@ const gamesReducer = (state = initialState, action) => {
       let newConversations = {...newState.conversations}
 
       if(newConversations[conversationId]){
-        console.log(newConversations[conversationId]);
         newConversations[conversationId].chatName = newChatName
       }
 

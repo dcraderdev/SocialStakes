@@ -60,18 +60,7 @@ const SettingsModal = () => {
     };
   }, []);
 
-  const handleTableThemeChange = (event) => {
-    const tableTheme = event.target.value;
-    dispatch(changeTableThemeAction(tableTheme));
-  };
 
-  const handleNeonThemeChange = (event) => {
-    const neonTheme = event.target.value;
-    console.log(neonTheme);
-    dispatch(changeNeonThemeAction(neonTheme));
-
-
-  };
 
 
   const editTableName = () => {

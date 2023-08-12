@@ -49,6 +49,7 @@ import { ModalContext } from '../../context/ModalContext';
     const [minBet, setMinBet] = useState(false);
 
 
+
   useEffect(()=>{
       setCurrentSeat(null)
       setIsSitting(false)
@@ -334,21 +335,12 @@ const rebet = (multiplier) => {
 
 
 
-
-
-
-
-
-
-
   return (
   
       <div className="bet-wrapper flex center">
         <div className="bet-container flex center">
 
-
 <>
-
               {isActionSeat && !isInsuranceOffered &&(
                 <div className="actions-container flex center">
                   <div className="action-button" onClick={()=>handleAction('hit')}>Hit</div>

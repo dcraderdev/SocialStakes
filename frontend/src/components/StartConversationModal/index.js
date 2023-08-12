@@ -108,7 +108,6 @@ const StartConversationModal = () => {
     let friendListNames = Object.values(friendList).map(friend=>friend.friend.username)
     let friendListIds = Object.values(friendList).map(friend=>friend.friend.id)
 
-    console.log(friendListNames);
 
     let convoObj = {
       chatName,

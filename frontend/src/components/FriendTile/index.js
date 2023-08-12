@@ -36,7 +36,6 @@ const FriendTile = ({ friend, type, cb, isInvited }) => {
 
   const acceptRequest = () =>{
     if(!user || !friend) return
-    console.log(friend);
     let friendObj = {
       recipientId:friend.friend.id,
       recipientUsername:friend.friend.username
@@ -67,8 +66,6 @@ const FriendTile = ({ friend, type, cb, isInvited }) => {
       friendshipId: friend.id,
       recipientId:friend.friend.id,
     }
-
-    console.log(friendObj);
 
 
     socket.emit('cancel_friend_request', friendObj);

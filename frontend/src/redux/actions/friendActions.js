@@ -14,7 +14,6 @@ import {
 
 export const addOutGoingFriendRequest = (friendRequestObj) => {
   
-  console.log(friendRequestObj);
   
   return {
     type: ADD_OUTGOING_FRIEND_REQUEST,
@@ -23,7 +22,6 @@ export const addOutGoingFriendRequest = (friendRequestObj) => {
 };
 
 export const addIncomingFriendRequest = (friendRequestObj) => {
-  console.log(friendRequestObj);
 
   return {
     type: ADD_INCOMING_FRIEND_REQUEST,
@@ -33,7 +31,6 @@ export const addIncomingFriendRequest = (friendRequestObj) => {
 
 export const acceptFriendRequest = (friendRequestObj) => {
   
-  console.log(friendRequestObj);
   return {
     type: ACCEPT_FRIEND_REQUEST,
     payload: friendRequestObj,
@@ -41,7 +38,6 @@ export const acceptFriendRequest = (friendRequestObj) => {
 };
 
 export const denyFriendRequest = (friendRequestObj) => {
-  console.log(friendRequestObj);
 
   return {
     type: DENY_FRIEND_REQUEST,
@@ -50,7 +46,6 @@ export const denyFriendRequest = (friendRequestObj) => {
 };
 
 export const getUserFriendsAction = (data) => {
-  console.log(data);
 
   return {
     type: GET_USER_FRIENDS,
@@ -59,7 +54,6 @@ export const getUserFriendsAction = (data) => {
 };
 
 export const removeFriendAction = (friendObj) => {
-  console.log(friendObj);
   return {
     type: REMOVE_FRIEND,
     payload: friendObj,
@@ -85,7 +79,6 @@ export const showTableInvitesAction = () => {
 };
 
 export const showFriendsAction = (friend) => {
-  console.log(friend);
   return {
     type: SHOW_FRIENDS,
     payload: friend,

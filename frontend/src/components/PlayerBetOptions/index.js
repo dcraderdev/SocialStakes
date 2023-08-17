@@ -363,7 +363,7 @@ const rebet = (multiplier) => {
               )}
 
 
-{isInsuranceOffered && !hasMadeInsuranceDecision && (
+{isInsuranceOffered && !hasMadeInsuranceDecision && isSitting && (
                 <div className="actions-container insurance flex center">
                   <div className='insurance-option'>Insurance?</div>
                   <div className="action-button" onClick={acceptInsurance}>Accept</div>

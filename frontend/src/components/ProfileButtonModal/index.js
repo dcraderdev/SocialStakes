@@ -68,6 +68,17 @@ function ProfileButtonModal() {
   }, [modal]);
 
 
+  const demoUserOne = async (e) => {
+    dispatch(sessionActions.login({ credential:'bigtree', password:'password' }));
+  };
+  const demoUserTwo = async (e) => {
+    dispatch(sessionActions.login({ credential:'Pine', password:'password2' }));
+  };
+  const demoUserThree = async (e) => {
+    dispatch(sessionActions.login({ credential:'Spruce', password:'password' }));
+  };
+
+
   return (
     <>
       <div className={`profilemenu`} ref={formRef}>
@@ -110,6 +121,20 @@ function ProfileButtonModal() {
             </div>
 
             <div className="profilemenu-section first">
+
+
+            <div
+              onClick={() => {
+                closeModal();
+                openModal('AboutMeModal')
+              }}
+              className={`profilemenu-option`}
+            >
+              <div className={`profilemenu-option-text`}>About Me</div>
+              <div className="profilemenu-option-icon">
+                <i className="fa-solid fa-info"></i>
+              </div>
+            </div>
 
             <div
                 onClick={() => {
@@ -280,6 +305,9 @@ function ProfileButtonModal() {
               </div>
             </div>
 
+
+
+
             <div className="profilemenu-logout-container flex center">
               <div
                 className="profilemenu-logout-button flex center"
@@ -302,6 +330,34 @@ function ProfileButtonModal() {
               onClick={() => navModal('signup')}
             >
               <div className="profilemenu-option-text">Sign Up</div>
+            </div>
+            <div
+              className="profilemenu-option"
+              onClick={demoUserOne}
+            >
+              <div className="profilemenu-option-text">Demo User 1</div>
+            </div>
+            <div
+              className="profilemenu-option"
+              onClick={demoUserTwo}
+            >
+              <div className="profilemenu-option-text">Demo User 2</div>
+            </div>
+            <div
+              className="profilemenu-option"
+              onClick={demoUserThree}
+            >
+              <div className="profilemenu-option-text">Demo User 3</div>
+            </div>
+
+            <div
+              className="profilemenu-option"
+              onClick={()=>{
+                closeModal()
+                openModal('AboutMeModal')
+              }}
+            >
+              <div className="profilemenu-option-text">About Me</div>
             </div>
           </div>
         )}

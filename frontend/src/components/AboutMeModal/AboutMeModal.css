@@ -1,0 +1,157 @@
+.aboutmemodal-wrapper{
+  border: solid white 1px;
+  width: 490px;
+  height: 300px;
+  background-color: #1d1e1c;
+  background-color: #2d2e2c;
+  border: 1px solid rgb(0, 0, 0);
+  border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  flex-direction: column;
+}
+
+
+.aboutmemodal-header{
+  width: 490px;
+  height: 150px;
+  color: white;
+  z-index: 10;
+  position: relative;
+  top: 5px;
+  background-color: #2d2e2cda;
+  border-bottom: #1d1e1c 1px solid;
+}
+
+
+.aboutmemodal-content{
+  width: 100%;
+  height: 240px;
+  flex-direction: column;
+}
+
+
+
+
+
+.aboutmemodal-welcome{
+  color: white;
+  font-size: 16px;
+  text-align: center;
+  width: 70%;
+  height: 100%;
+  left: 5%;
+  position: relative;
+
+  flex-direction: column;
+}
+
+
+.welcome-content{
+  margin-top: 5px;
+  width: 80%;
+}
+
+
+
+.aboutmemodal-photo-container{
+  height: 100%;
+  aspect-ratio: 1/1;
+  overflow: hidden;
+  position: relative;
+  left: 5%;
+
+}
+
+
+
+
+.aboutmemodal-photo{
+  height: 100px;
+  aspect-ratio: 1/1;
+  border-radius: 50%;
+  overflow: hidden;
+  z-index: 100;
+  transition: left 1s ease;
+  position: relative;
+
+}
+
+
+.aboutmemodal-photo img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: relative;
+  z-index: 100;
+
+}
+
+
+.aboutmemodal-photo.skeleton{
+  position: absolute;
+  background-color: #c7c7c7;
+  background-image: linear-gradient(135deg, #c7c7c7 0%, #72b5cb 20%, #8BC6EC 46%, #acccdf 80%, #d3d5f0 100%);
+  z-index: -1;
+  
+}
+
+
+.content-container{
+  width: 100%;
+  height: 60px;
+}
+
+.content-icon{
+  width: 80px;
+  height: 100%;
+  margin-left: 30px;
+}
+
+.content-message{
+  width: 70%;
+  height: 100%;
+  text-align: center;
+  color: white;
+  flex-direction: column;
+  font-size: 15px;
+  
+}
+
+.aboutmemodal-icon{
+  width: 40px;
+  height: 100%;
+  cursor: pointer;
+}
+
+.aboutmemodal-icon i{
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 40px;
+  color: white;
+}
+
+.aboutmemodal-icon img{
+  height: 80%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 25px;
+  color: white;
+  position: relative;
+}
+
+.content-link:hover{
+  text-decoration: underline;
+}
+
+.content-link{
+  text-decoration: none;
+  cursor: pointer;
+}
+
+
+.content-link:active{
+  color: rgb(217, 217, 217)
+}

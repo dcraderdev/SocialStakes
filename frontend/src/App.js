@@ -31,6 +31,7 @@ import StartConversationModal from './components/StartConversationModal';
 import LeaveConversationModal from './components/LeaveConversationModal';
 import AddFriendsModal from './components/AddFriendsModal';
 import ThemesModal from './components/ThemesModal';
+import AboutMeModal from './components/AboutMeModal';
 
 function App() {
 
@@ -152,6 +153,12 @@ function App() {
 {modal  === 'AddFriendsModal' && (
         <div className='modal-container'>
           {modal === 'AddFriendsModal' && <AddFriendsModal />}
+        </div>
+      )}
+
+{modal  === 'AboutMeModal' && (
+        <div className='modal-container'>
+          {modal === 'AboutMeModal' && <AboutMeModal />}
         </div>
       )}
 

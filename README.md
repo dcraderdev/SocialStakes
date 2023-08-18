@@ -49,7 +49,8 @@ Social Stakes boasts many exciting features, including:
 <br>
 <br>
 
-**Start Private Conversation**: Engage in one-on-one discussions or create group chats tailored for more intimate conversations. Whether it's strategizing or sharing a laugh, maintain your privacy with secure messaging.
+**Start Private Conversation**: 
+- Engage in one-on-one discussions or create group chats tailored for more intimate conversations. Whether it's strategizing or sharing a laugh, maintain your privacy with secure messaging.
 <img width="1166" alt="Screenshot 2023-08-17 at 5 29 11 PM" src="https://github.com/dcraderdev/SocialStakes/assets/90993510/4974c0a6-73aa-48b8-a539-9fb931aa396a">
 <br>
 <br>
@@ -63,9 +64,10 @@ Social Stakes boasts many exciting features, including:
 
 <br>
  
-- **User History**: Access to a player's past game actions for insightful strategy analysis. Coming soon!
+**User History**:
+- Access to a player's past game actions for insightful strategy analysis. Coming soon!
+<img width="805" alt="Screenshot 2023-08-17 at 5 55 58 PM" src="https://github.com/dcraderdev/SocialStakes/assets/90993510/bba6cde6-69ed-4940-9bad-112ec5d8e420">
 
-<img width="1162" alt="Screenshot 2023-08-17 at 5 31 38 PM" src="https://github.com/dcraderdev/SocialStakes/assets/90993510/ff053d12-9cd7-4f75-b11a-14e9d9945fd1">
 
 
 
@@ -78,6 +80,60 @@ Social Stakes boasts many exciting features, including:
 - Blockchain
 - Socket.io
 - AWS
+- 
+
+
+
+
+## Challenges and Solutions
+Building Social Stakes was an ambitious endeavor, blending traditional web development with the intricacies of live interaction and the transparency of blockchain technology. Below are the significant challenges faced during the development process and the corresponding solutions:
+
+### Live Sockets & Instantaneous User Interactions
+**Challenge:** 
+Facilitating real-time interactions was paramount. Every user action, from adding a friend, starting a private conversation, making a bet, to joining a table, needed to be seen instantly by other users.
+
+**Solution:** 
+We integrated Socket.io with our React and Redux frontend, allowing for real-time bi-directional communication between the server and the web client. By doing so, any user's actions were seamlessly and immediately reflected across the platform for all relevant users.
+
+### Game Integrity Using Blockchain
+ **Challenge:** 
+ Maintaining trust and ensuring game results weren't tampered with was crucial.
+
+ **Solution:** 
+ We employed a blockchain-based mechanism to guarantee the authenticity of our game results:
+
+### Server Seed Generation:
+The backend system pre-generated a series of server seeds. Each new seed is the SHA-256 hash of the prior seed, ensuring a connected chain of trust.
+
+Announcing the Bitcoin Block: Before any gameplay, the system declared which future Bitcoin block hash would be the client seed. This transparent mechanism ensured that the seed was unpredictable.
+
+Game Play: During the game, the predetermined server seed and the eventual Bitcoin block hash were used to generate game results. This combination ensured both unpredictability and verifiability.
+
+Verification: Post-gameplay, players had the tools to verify the game's fairness by comparing seeds and verifying the client seed with the declared Bitcoin block.
+
+### Real-time Data Management
+**Challenge:**
+Synchronizing game states, user actions, and platform interactions in real-time for all users, while ensuring performance wasn’t compromised.
+
+**Solution:**
+Leveraging the power of Redux for state management and Socket.io for real-time data synchronization, we created a system where any state change was instantly pushed to relevant users. This gave users a seamless gaming experience without any perceivable lag.
+
+Scalable and Secure Backend
+**Challenge:** 
+With the influx of user data, bet actions, and real-time interactions, our backend had to be both scalable and secure.
+
+**Solution:** 
+By using Express with PostgreSQL as the database and deploying on AWS, we ensured scalability. Express managed routes and middleware efficiently, while PostgreSQL provided a robust system for data storage. Furthermore, AWS's cloud infrastructure allowed for on-demand scaling based on user loads.
+
+User Authentication and Safety
+**Challenge:** 
+Establishing a system that securely managed user data, provided authentication, and kept user interactions confidential.
+
+**Solution:** 
+We used a combination of hashed passwords, Socket.io secure transmissions, and Express session management to ensure users' data was secure and their interactions remained private.
+
+### Conclusion
+Building Social Stakes was a culmination of multiple cutting-edge technologies: JavaScript, Express, PostgreSQL, Redux, React, Blockchain, Socket.io, and AWS. Each played a pivotal role in addressing the challenges of real-time gaming, user interactivity, and game integrity. The result is a platform that not only entertains but does so with transparency and trustworthiness.
 
 
 

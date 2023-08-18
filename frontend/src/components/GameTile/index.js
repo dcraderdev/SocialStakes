@@ -78,7 +78,8 @@ const GameTile = ({game, cbFunc, delay}) => {
   };
 
   useEffect(()=>{
-    let nonActiveGames = ['single_blackjack', 'poker', 'acey_duecey', 'coin_flip', 'hi_lo']
+    // let nonActiveGames = ['single_blackjack', 'poker', 'acey_duecey', 'coin_flip', 'hi_lo']
+    let nonActiveGames = []
     if(game){
       if(nonActiveGames.includes(game.gameType)){
         setIsActive(false)

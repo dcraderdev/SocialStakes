@@ -79,7 +79,7 @@ Social Stakes boasts many exciting features, including:
 - Blockchain
 - Socket.io
 - AWS
-- 
+
 
 
 

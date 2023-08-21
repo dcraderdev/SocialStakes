@@ -35,7 +35,7 @@ Social Stakes boasts many exciting features, including:
 <br>
 
 **Private Tables**:
-- The ability for users to create and invite friends to private tables, turning every game into a private event.
+- At our platform, we understand the joy of playing games with close friends. That's why we've made it seamless for users to set up their own private tables. Whether you're organizing a casual evening game or a more competitive showdown, our user-friendly interface ensures you can effortlessly invite your friends to join.
 <br>
 <br>
 <img width="1159" alt="Screenshot 2023-08-17 at 5 35 53 PM" src="https://github.com/dcraderdev/SocialStakes/assets/90993510/c33c42f4-b4a9-4a3a-8a85-9c205c720719">
@@ -43,14 +43,14 @@ Social Stakes boasts many exciting features, including:
 <br>
 
 **Live Chat**:
-- An in-built chat feature for users to interact and engage in conversation while at the table.
+- A built-in chat feature allows users to interact and engage in lively conversations while at the table. Additionally, users have the flexibility to edit or delete their messages for added convenience. Plus, it's never been easier to connect – you can send friend requests to anyone directly through the chat..
 <img width="1166" alt="Screenshot 2023-08-17 at 4 48 27 PM" src="https://github.com/dcraderdev/SocialStakes/assets/90993510/4265a80e-3b2e-4b36-8af1-cc6dfd917b1f">
 <br>
 <br>
 
 **Start Private Conversation**: 
 
-- Engage in one-on-one discussions or create group chats tailored for more intimate conversations. Whether it's strategizing or sharing a laugh, maintain your privacy with secure messaging.
+- Stay connected with our user-friendly chat features. Choose between one-on-one discussions for more private chats or jump into group conversations when you're in the mood for a communal vibe. Setting up group chats is simple, and direct messaging ensures your private talks stay that way. Whatever way you prefer to communicate, know that we prioritize your privacy and security in every conversation.
 <img width="1166" alt="Screenshot 2023-08-17 at 5 29 11 PM" src="https://github.com/dcraderdev/SocialStakes/assets/90993510/4974c0a6-73aa-48b8-a539-9fb931aa396a">
 <br>
 <br>

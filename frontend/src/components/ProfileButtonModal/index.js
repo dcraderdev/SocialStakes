@@ -130,7 +130,7 @@ function ProfileButtonModal() {
               }}
               className={`profilemenu-option`}
             >
-              <div className={`profilemenu-option-text`}>About Me</div>
+              <div className={`profilemenu-option-text`}>About</div>
               <div className="profilemenu-option-icon">
                 <i className="fa-solid fa-info"></i>
               </div>

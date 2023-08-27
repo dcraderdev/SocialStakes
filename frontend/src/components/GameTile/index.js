@@ -2,7 +2,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Route, Router, Switch, NavLink, useHistory } from 'react-router-dom';
 import './GameTile.css';
-import gameTileBackground from '../../images/game-tile-background.jpeg'
+import gameTileBackground from '../../images/game-tile-background2.jpeg'
 import Searching from '../../images/Searching.svg'
 
 
@@ -20,6 +20,7 @@ const GameTile = ({game, cbFunc, delay}) => {
         </div>
       )
     }
+
 
     if(gameType === 'multi_blackjack'){
       return (
@@ -78,8 +79,8 @@ const GameTile = ({game, cbFunc, delay}) => {
   };
 
   useEffect(()=>{
-    // let nonActiveGames = ['single_blackjack', 'poker', 'acey_duecey', 'coin_flip', 'hi_lo']
-    let nonActiveGames = []
+    let nonActiveGames = ['single_blackjack', 'poker', 'acey_duecey', 'coin_flip', 'hi_lo']
+    // let nonActiveGames = []
     if(game){
       if(nonActiveGames.includes(game.gameType)){
         setIsActive(false)
@@ -88,7 +89,6 @@ const GameTile = ({game, cbFunc, delay}) => {
 
 
   },[game])
-
 
 
 

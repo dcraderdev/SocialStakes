@@ -33,6 +33,11 @@ import AddFriendsModal from './components/AddFriendsModal';
 import ThemesModal from './components/ThemesModal';
 import AboutMeModal from './components/AboutMeModal';
 
+
+
+import gameTileBackground from './images/game-tile-background2.jpeg'
+
+
 function App() {
 
   const location = useLocation();
@@ -49,6 +54,8 @@ function App() {
   // if no user than we force open login modal
   useEffect(() => {
     isLoaded(false);
+    const img = new Image();
+    img.src = gameTileBackground;
     dispatch(sessionActions.loadThemes())
     dispatch(sessionActions.restoreUser())
       .then(() => {
@@ -63,6 +70,10 @@ function App() {
         setUpdateObj('noUser');
       });
   }, [dispatch]);
+
+
+
+
 
 
 

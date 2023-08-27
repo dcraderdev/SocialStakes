@@ -84,7 +84,7 @@ const AboutMeModal = () => {
           </div>
         </div>
 
-        <div className="content-container flex  center">
+        <div className="content-container flex center">
           <div className="content-icon">
             <div className="aboutmemodal-icon flex center"  onClick={() => navTo('portfolio')}>
               <img

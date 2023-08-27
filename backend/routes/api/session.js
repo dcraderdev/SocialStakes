@@ -100,6 +100,24 @@ router.get('/stats', requireAuth, async (req, res, next) => {
 });
 
 
+// Get user's tables
+router.get('/tables', requireAuth, async (req, res, next) => {
+  const { user } = req;
+  const stats = await gameController.getUserTables(user.id)
+  if(!stats){
+    const err = new Error("No tables found") 
+    err.statusCode = 404
+    err.status = 404;
+    next(err)
+  }
+  return res.json(stats);
+});
+
+
+
+
+
+
 // Get user's friends/requests/outgoing
 router.get('/friends', requireAuth, async (req, res, next) => {
   const { user } = req;

@@ -4,12 +4,14 @@ import userReducer from '../reducers/userReducer';
 import gamesReducer from '../reducers/gamesReducer';
 import chatReducer from '../reducers/chatReducer';
 import friendsReducer from '../reducers/friendsReducer';
+import statsReducer from '../reducers/statsReducer';
 
 const rootReducer = combineReducers({
   users: userReducer,
   games: gamesReducer,
   chats: chatReducer,
   friends: friendsReducer,
+  stats: statsReducer,
 });
 
 // const logger = require('redux-logger').default;

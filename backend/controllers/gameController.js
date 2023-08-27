@@ -572,8 +572,15 @@ async saveDealerHand(handObj) {
 
 
 
-// Save hand at end of blackjack round
+
 async getUserStats(userId) {
+
+  console.log('-=-=-=-=-=-=-=-=-=-=-=-');
+  console.log('-=-=-=-=-=-=-=-=-=-=-=-');
+  console.log('-=-=-=-=-=-=-=-=-=-=-=-');
+  console.log('-=-=-=-=-=-=-=-=-=-=-=-');
+  console.log('-=-=-=-=-=-=-=-=-=-=-=-');
+
 
   
   const userStats = await User.findByPk(userId, {
@@ -607,6 +614,53 @@ async getUserStats(userId) {
 
   return userStats
 },
+
+async getUserTables(userId) {
+
+  console.log('**^***^**^**^**^**^**^**^**^**^*^*^*');
+  console.log('**^***^**^**^**^**^**^**^**^**^*^*^*');
+  console.log('**^***^**^**^**^**^**^**^**^**^*^*^*');
+  console.log('**^***^**^**^**^**^**^**^**^**^*^*^*');
+  console.log('**^***^**^**^**^**^**^**^**^**^*^*^*');
+
+
+  
+  const userStats = await User.findByPk(userId, {
+    include: [
+      {
+        model: UserTable,
+        as: 'tables',
+        include: [
+          {
+            model: Hand,
+            attributes: ['id', 'cards', 'result', 'profitLoss', 'insuranceBet', ],
+            include: [
+              {
+                model: Round,
+                attributes: ['id', 'cards' ]
+              },
+            ],
+          },
+        ],
+        attributes: ['id', 'tableId', 'userId', 'active'],
+      },
+    ],
+    attributes: ['id', 'username', 'balance', 'rank'],
+  });
+
+  if(!userStats){
+    return false
+  } 
+
+
+
+  return userStats
+},
+
+
+
+
+
 
 
 

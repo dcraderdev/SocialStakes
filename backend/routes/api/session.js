@@ -9,6 +9,10 @@ const {themeController} = require('../../controllers/themeController')
 const {friendController} = require('../../controllers/friendController')
 const { gameController } = require('../../controllers/gameController');
 const { chatController } = require('../../controllers/chatController');
+const { statController } = require('../../controllers/statController');
+
+
+
 const {
   singleFileUpload,
   singleMulterUpload,
@@ -89,7 +93,7 @@ router.get('/themes', async (_req, res, next) => {
 // Get user's stats
 router.get('/stats', requireAuth, async (req, res, next) => {
   const { user } = req;
-  const stats = await gameController.getUserStats(user.id)
+  const stats = await statController.getUserStats(user.id)
   if(!stats){
     const err = new Error("No stats found") 
     err.statusCode = 404
@@ -103,7 +107,7 @@ router.get('/stats', requireAuth, async (req, res, next) => {
 // Get user's tables
 router.get('/tables', requireAuth, async (req, res, next) => {
   const { user } = req;
-  const stats = await gameController.getUserTables(user.id)
+  const stats = await statController.getUserTables(user.id)
   if(!stats){
     const err = new Error("No tables found") 
     err.statusCode = 404

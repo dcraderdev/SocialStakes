@@ -7,10 +7,9 @@ import { ModalContext } from '../../context/ModalContext';
 import { getUserStats } from '../../redux/middleware/users';
 
 import socialstakesCards2 from '../../images/socialstakes-logo-cards2.svg'
-import './StatPage.css'
-import ComingSoonImage from '../ComingSoonImage';
+import './ComingSoonImage.css'
 
-const StatPage = () => {
+const ComingSoonImage = () => {
 
   const {socket} = useContext(SocketContext)
   const { modal, openModal, closeModal, updateObj, setUpdateObj} = useContext(ModalContext);
@@ -30,12 +29,22 @@ const StatPage = () => {
   if (!user) return;
 
   return (
+    <div className='comingsoon-container flex'>
 
-    <div className='statpage-comingsoon-wrapper flex center'>
-      <ComingSoonImage />
+
+      <div className='comingsoon-image-wrapper flex center'>
+
+      <div className='comingsoon-image-container flex center'>
+        <img src={socialstakesCards2} alt="cards"></img>
+      </div>
+
+        <div className='comingsoon-name flex center'>SOCIAL STAKES</div> 
+      <div className='comingsoon-banner flex center'>Stats coming soon</div>
+      </div>
             
+      
     </div>
     
   )
 }
-export default StatPage
+export default ComingSoonImage

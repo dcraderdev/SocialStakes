@@ -43,6 +43,10 @@ module.exports = {
         type: Sequelize.INTEGER,
         defaultValue: 0
       },
+      initialBet:{
+        type: Sequelize.INTEGER,
+        defaultValue: 0
+      },
       insuranceBet:{
         type: Sequelize.BOOLEAN,
         defaultValue: false

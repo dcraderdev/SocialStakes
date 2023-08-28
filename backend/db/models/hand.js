@@ -27,6 +27,7 @@ module.exports = (sequelize, DataTypes) => {
     result: DataTypes.STRING,
     profitLoss: DataTypes.INTEGER,
     insuranceBet: DataTypes.BOOLEAN,
+    initialBet: DataTypes.INTEGER,
   }, {
     sequelize,
     modelName: 'Hand',

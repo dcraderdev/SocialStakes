@@ -54,6 +54,8 @@ export async function csrfFetch(url, options = {}) {
     const error = new Error('Request failed');
     error.status = res.status;
     error.data = errorData; 
+    // console.log(error.status);
+    // console.log(error.data);
     throw error;
   }
   // if the response status code is under 400, then return the response to the

@@ -21,6 +21,7 @@ const statsReducer = (state = initialState, action) => {
       return { ...newState, history:newStats};
     }
 
+    
 
     case GET_USER_TABLES: {
       console.log(action.payload);

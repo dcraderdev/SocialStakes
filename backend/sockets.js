@@ -633,7 +633,7 @@ module.exports = function (io) {
 
       let room = tableId
       // Set countdown end time
-      const countdownDuration = 10000; // 5 seconds
+      const countdownDuration = 1000; // 5 seconds
       const endTime = Math.ceil((Date.now() + countdownDuration));
       rooms[tableId].countdownEnd = endTime;
 
@@ -791,19 +791,20 @@ module.exports = function (io) {
       // Set sorted seats for gameLoop
       rooms[tableId].sortedActivePlayers = sortedSeats;
 
-      // console.log('------- sortedSeats -------');
-      // console.log(sortedSeats);
-      // console.log('------------------------');
 
-      let userTableIds = sortedSeats.map((seat) => seat.id);
+      console.log('------- sortedSeats -------');
+      console.log(sortedSeats);
+      console.log('------------------------');
 
-      // console.log('------- ROUND ID -------');
-      // console.log(userTableIds);
-      // console.log(roundId);
-      // console.log('------------------------');
+      let sortedSeatsObj = sortedSeats.map((seat) => ({id: seat.id, currentBet:seat.currentBet}));
+
+      console.log('------- ROUND ID -------');
+      console.log(sortedSeatsObj);
+      console.log(roundId);
+      console.log('------------------------');
 
       // Create hand for each active player
-      const handIds = await gameController.createHands(userTableIds, roundId);
+      const handIds = await gameController.createHands(sortedSeatsObj, roundId);
       let numSeatsWithBets = sortedSeats.length + 1;
       let cardsToDraw = numSeatsWithBets * 2;
       let cursor = rooms[tableId].cursor;
@@ -1056,7 +1057,7 @@ module.exports = function (io) {
         }  
 
         // Create action end timestamp
-        const actionDuration = 15000; // 5 seconds
+        const actionDuration = 1000; // 5 seconds
         rooms[tableId].actionEnd = Math.ceil(Date.now() + actionDuration);
 
         // Set action seat

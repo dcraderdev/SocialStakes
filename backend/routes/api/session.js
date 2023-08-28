@@ -106,6 +106,10 @@ router.get('/stats', requireAuth, async (req, res, next) => {
 
 // Get user's tables
 router.get('/tables', requireAuth, async (req, res, next) => {
+  console.log('here');
+  console.log('here');
+  console.log('here');
+  console.log('here');
   const { user } = req;
   const stats = await statController.getUserTables(user.id)
   if(!stats){

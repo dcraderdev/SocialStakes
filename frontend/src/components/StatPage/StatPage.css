@@ -10,9 +10,66 @@
 
 
 
+.statpage-top-container{
+  width: 100%;
+  height: 150px;
+  border: rgb(143, 82, 67) solid 2px;
+  align-items: center;
+}
+
+.statpage-bottom-container{
+  width: 100%;
+  height: calc(100% - 150px);
+  border: rgb(248, 62, 16) solid 2px;
+  flex-direction: column;
+}
+
+
+
+.statpage-date-wrapper{
+  border: green solid 1px;
+  width: 200px;
+  height: 70px;
+}
+
+.statpage-gametype-wrapper{
+  border: green solid 1px;
+  width: 200px;
+  height: 70px;
+}
+
+
+
+
+
+
+
 .statpage-table-history-container{
   width: 100%;
-  height: 200px;
+  height: 100%;
 
-  border: rgb(72, 124, 68) solid 2px;
+  border: rgb(152, 14, 147) solid 2px;
+}
+
+
+.statpage-table-history-header{
+  width: 100%;
+  height: 50px;
+
+  border: rgb(152, 14, 147) solid 2px;
+  font-size: min(25px,3vw);
+}
+
+.statpage-header.start{
+  width: 35%;
+  margin-left: 5px;
+}
+.statpage-header.table{
+  width: 30%;
+}
+.statpage-header.hands{
+  width: 15%;
+}
+.statpage-header.result{
+  width: 20%;
 }

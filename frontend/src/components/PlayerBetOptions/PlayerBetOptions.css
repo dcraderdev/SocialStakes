@@ -3,12 +3,13 @@
   height: 15vh;
   position: absolute;
   bottom: 0px;
+  z-index: 10;
 
 }
 
 .bet-container {
   position: relative;
-  top: 7%;
+  top: 0%;
   height: 100%;
   width: 100%;
   display: flex;
@@ -18,18 +19,21 @@
 
 
 .actions-container {
-  position: absolute;  /* Changed from relative */
-  right: 0%;          /* This will keep it 5% from the right edge */
+  position: absolute;  
+  right: 0%; 
   width: 100%;
   height: 100%;
   display: flex;
   justify-content: space-around;
-  border: yellow solid 1px;
   transition: all 1s ease;
-
   flex-direction: column;
-
 }
+
+.row{
+  flex-direction: row;
+}
+
+
 
 
 
@@ -38,26 +42,20 @@
   height: 90%;
   display: flex;
   justify-content: space-around;
-  border: rgb(226, 46, 14) solid 1px;
   transition: all 1s ease;
-
-
-  flex-direction: column;
 }
 
 
 
 
-.actions-container.insurance{
-  width: 50%;
-
-}
 
 
 .insurance-option{
-  font-size: min(20px, 3.5vw);
+  font-size: min(25px, 4vw);
   color: white;
   margin-right: 10px;
+  background-color: #4b4b4b;
+
 }
 
 
@@ -70,6 +68,7 @@
   color: white;
 
   height: 60%;
+  min-height: 30px;
   width: 35%;
   max-width: 200px;
   min-width: 100px;
@@ -79,6 +78,9 @@
   justify-content: center;
   font-size: min(18px, 2.2vw);
   box-shadow: rgba(0, 0, 0, 0.3) 0px 3px 6px, rgba(0, 0, 0, 0.5) 0px 3px 6px;
+
+  background-color: #4b4b4b;
+
 }
 
 
@@ -113,8 +115,9 @@ div.chip:active::after {
 .chips-option-container{
   position: relative;
   height: 100%;
-  width: 55%;
+  width: 60%;
   justify-content: space-around;
+  margin-top: 5px;
 
   
 }
@@ -128,6 +131,7 @@ div.chip:active::after {
   width: 100%;
   min-width: 50px;
   max-width: 70px;
+  background-color: #4b4b4b;
 
 
   /* 

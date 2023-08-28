@@ -60,6 +60,7 @@
   font-size: min(25px,3vw);
 }
 
+
 .statpage-header.start{
   width: 35%;
   margin-left: 5px;
@@ -72,4 +73,14 @@
 }
 .statpage-header.result{
   width: 20%;
+}
+
+.statspage-table-wrapper{
+  justify-content: space-around;
+  width: 99%;
+  border-bottom: rgb(150, 200, 12) solid 1px;
+  height: 40px;
+  text-align: center;
+  align-items: center;
+
 }

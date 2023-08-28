@@ -27,7 +27,7 @@ const StatPage = () => {
   const [selectedDate, setSelectedDate] = useState(null);
 
   console.log(stats);
-  console.log(history);
+  console.log(stats.tables);
 
   useEffect(() => {
     setHasCurrentTables(Object.entries(currentTables).length > 0);
@@ -62,6 +62,22 @@ const StatPage = () => {
               <div className='statpage-header hands'>Hands</div>
               <div className='statpage-header result'>Result</div>
             </div>
+
+
+          {stats && stats.sessionStats && Object.entries(stats.sessionStats).map(([key,table], index) => {
+            console.log(key);
+            console.log(table);
+            return(
+              <div className='statspage-table-wrapper flex' key={index}>
+                  <div className='statpage-data start'>{table.startTime}</div>
+                  <div className='statpage-data table'>{table.tableName}</div>
+                  <div className='statpage-data table'>{table.minBet}/{table.maxBet}</div>
+                  <div className='statpage-data hands'>{table.totalHandsPlayed}</div>
+                  <div className='statpage-data result'>{table.timeAtTable}</div>
+                  <div className='statpage-data result'>{table.totalProfitLoss}</div>
+              </div>
+            );
+          })}
 
 
 

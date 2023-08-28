@@ -6,7 +6,8 @@ import {
 
 const initialState = {
   history: {},
-  tables: {}
+  tables: {},
+  sessionStats: {}
 };
 
 const statsReducer = (state = initialState, action) => {
@@ -21,13 +22,13 @@ const statsReducer = (state = initialState, action) => {
       return { ...newState, history:newStats};
     }
 
-    
+
 
     case GET_USER_TABLES: {
       console.log(action.payload);
 
-      let newTables = action.payload
-      return { ...newState, tables:newTables};
+      let newSessionStats = action.payload.sessionStats
+      return { ...newState, sessionStats:newSessionStats };
     }
 
 

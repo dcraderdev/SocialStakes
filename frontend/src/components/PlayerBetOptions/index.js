@@ -380,7 +380,7 @@ const rebet = (multiplier) => {
 
 <>
           {isActionSeat && !isInsuranceOffered &&(
-            <div className={`actions-container flex center ${showMessages ? 'shrunk' : ''} ${isWideView ? 'row' : ''}`}>
+            <div className={`actions-container flex center ${showMessages ? 'shrunk' : ''} ${isWideView || !showMessages ? 'row' : ''}`}>
               <div className="action-button" onClick={()=>handleAction('hit')}>Hit</div>
               <div className="action-button" onClick={()=>handleAction('stay')}>Stay</div>
               {canDouble && <div className="action-button" onClick={()=>handleAction('double')}>Double</div>}

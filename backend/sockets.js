@@ -1116,14 +1116,6 @@ module.exports = function (io) {
       const { tableId, action, seat, handId } = actionObj;
       let room = tableId;
 
-      // let messageObj = {
-      //   tableId,
-      //   user: { username: 'Room', id: 1, rank: 0 },
-      //   message: {
-      //     content: `${username} has ${action}.`,
-      //     id: 0,
-      //   },
-      // }; 
       if(!rooms[tableId]) return
 
       // Reset the timer whenever a player takes an action
@@ -1132,23 +1124,24 @@ module.exports = function (io) {
         rooms[tableId].actionEnd = 0;
       }
  
-      let updateObj = {
-        tableId,
-        table: {
-          actionEnd: rooms?.[tableId]?.actionEnd,
-          seats: rooms[tableId].seats,
-          dealerCards: {
-            visibleCards: rooms[tableId].dealerCards.visibleCards,
-          },
-        }, 
-      };  
+      // let updateObj = {
+      //   tableId,
+      //   table: {
+      //     actionEnd: rooms?.[tableId]?.actionEnd,
+      //     seats: rooms[tableId].seats,
+      //     dealerCards: {
+      //       visibleCards: rooms[tableId].dealerCards.visibleCards,
+      //     },
+      //   }, 
+      // };  
 
-      io.in(room).emit('get_updated_table', updateObj);
+      // io.in(room).emit('get_updated_table', updateObj);
       // io.in(room).emit('new_message', messageObj);
 
       // console.log('--------------');
       // console.log(`Handling action(${action}) for ${username} @room ${room}`);
       // console.log('--------------');
+      
 
       if (action === 'hit') {
         await playerHit(actionObj, io);

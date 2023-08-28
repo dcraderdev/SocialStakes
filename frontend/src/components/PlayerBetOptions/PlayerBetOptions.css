@@ -9,7 +9,7 @@
 .bet-container {
   position: relative;
   top: 7%;
-  height: 93%;
+  height: 100%;
   width: 100%;
   display: flex;
 }
@@ -17,17 +17,35 @@
 
 
 
-.actions-container{
-  position: relative;
-  width: 95%;
-  max-width: 1000px;
-  height: 90%;
+.actions-container {
+  position: absolute;  /* Changed from relative */
+  right: 0%;          /* This will keep it 5% from the right edge */
+  width: 100%;
+  height: 100%;
   display: flex;
-  justify-content: center;
-
   justify-content: space-around;
+  border: yellow solid 1px;
+  transition: all 1s ease;
+
+  flex-direction: column;
 
 }
+
+
+
+.actions-container.shrunk {
+  width: calc(95% - 300px);
+  height: 90%;
+  display: flex;
+  justify-content: space-around;
+  border: rgb(226, 46, 14) solid 1px;
+  transition: all 1s ease;
+
+
+  flex-direction: column;
+}
+
+
 
 
 .actions-container.insurance{
@@ -107,11 +125,23 @@ div.chip:active::after {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 30%;
-  max-width: 70px;
+  width: 100%;
   min-width: 50px;
-  height: 70px;
+  max-width: 70px;
+
+
+  /* 
+  min-width: 50px;
+  height: 70px; */
+
+
   border-radius: 50%;
+
+  aspect-ratio: 1/1;
+
+
+
+
   color: white;
   border-top: rgba(255, 217, 0, 0.466) solid .5px;
   box-shadow: rgba(0, 0, 0, 0.5) 0px 3px 6px, rgba(0, 0, 0, 0.5) 0px 3px 6px;

@@ -3,6 +3,7 @@ import {Route,Router,Switch,NavLink,Link,useHistory,useParams,} from 'react-rout
 import { useDispatch, useSelector } from 'react-redux';
 import { SocketContext } from '../../context/SocketContext';
 import { ModalContext } from '../../context/ModalContext';
+import { WindowContext } from '../../context/WindowContext';
  
  import './PlayerBetOptions.css';
  import Chatbox from '../Chatbox';
@@ -19,6 +20,7 @@ import { ModalContext } from '../../context/ModalContext';
   const PlayerBetOptions = () => {
     const {socket} = useContext(SocketContext)
     const {openModal, closeModal, setUpdateObj} = useContext(ModalContext)
+    const {windowWidth, windowHeight} = useContext(WindowContext)
 
     const dispatch = useDispatch();
 
@@ -48,6 +50,19 @@ import { ModalContext } from '../../context/ModalContext';
     const [hasBet, setHasBet] = useState(false);
     const [maxBet, setMaxBet] = useState(false);
     const [minBet, setMinBet] = useState(false);
+
+
+    const [isNarrowView, setIsNarrowView] = useState(false);
+
+
+  // check window height for player action button layout
+  useEffect(()=>{
+    if(windowWidth <= 650){
+      setIsNarrowView(true)
+    } else {
+      setIsNarrowView(false)
+    }
+  }, [windowWidth])
 
 
 
@@ -376,7 +391,10 @@ const rebet = (multiplier) => {
 {!isHandInProgress && isSitting && (
 
 
-<div className="actions-container flex center">
+<div className={`actions-container flex center ${showMessages ? 'shrunk' : ''}`}>
+
+
+
 
    {!hasBet &&(
      <div className="rebet-option-container flex center">
@@ -407,8 +425,10 @@ const rebet = (multiplier) => {
 
 
 
-
 </div>
+
+
+
 
 
 

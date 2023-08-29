@@ -1,9 +1,10 @@
 .bet-wrapper {
   width: 100%;
   height: 15vh;
+  min-height: 60px;
   position: absolute;
   bottom: 0px;
-  z-index: 10;
+
 
 }
 
@@ -105,6 +106,8 @@ div.chip:active::after {
   height: 100%;
   position: relative;
   justify-content: space-around;
+  z-index: 10;
+
 
 }
 
@@ -117,9 +120,20 @@ div.chip:active::after {
   width: 60%;
   justify-content: space-around;
   margin-top: 5px;
+  z-index: 10;
 
-  
+
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -131,19 +145,9 @@ div.chip:active::after {
   min-width: 50px;
   max-width: 70px;
   background-color: #4b4b4b;
-
-
-  /* 
-  min-width: 50px;
-  height: 70px; */
-
-
   border-radius: 50%;
 
   aspect-ratio: 1/1;
-
-
-
 
   color: white;
   border-top: rgba(255, 217, 0, 0.466) solid .5px;
@@ -159,7 +163,7 @@ div.chip:active::after {
 
 .action-button:hover {
   color: goldenrod;
-  --border-width: 2px;
+  --border-width: 3px;
   position: relative;
   background: #222;
   &::after {
@@ -190,7 +194,7 @@ div.chip:active::after {
 
 .chip:hover {
   color: goldenrod;
-  --border-width: 1px;
+  --border-width: 3px;
   position: relative;
   background: #222;
   

@@ -8,6 +8,7 @@
 }
 .chatinput-controls-container{
   justify-content: space-around;
+  z-index: 10000000000000;
 }
 
 .chatinput-controls {
@@ -24,6 +25,7 @@
   height: 95%;
   outline: none;
   border: none;
+  z-index: 1000000;
 
 
 }

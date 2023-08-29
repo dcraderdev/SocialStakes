@@ -904,9 +904,31 @@ module.exports = function (io) {
 
       let isAce = cardConverter[dealerVisibleCard].value === 11;
  
+
+      let messageObj = { 
+        conversationId: rooms[tableId].conversationId, 
+        content: 'Dealer shows: ', 
+        tableId, 
+        cards: dealerCards.visibleCards }
+
+
+ 
+    console.log('_*_*_*_*_*_*_*_*_*_*_*_**_');
+    console.log('_*_*_*_*_*_*_*_*_*_*_*_**_');
+    console.log('dealerHand:', dealerHand);
+    console.log('bestDealerValue:', bestDealerValue);
+    console.log('dealerCards:', dealerCards.visibleCards);
+    console.log('_*_*_*_*_*_*_*_*_*_*_*_**_');
+    console.log('_*_*_*_*_*_*_*_*_*_*_*_**_');
+
+
+      await emitCustomMessage(messageObj)
+
+
       if (isAce) {
 
         // socket.emit('offer_insurance', tableId);
+
 
         io.in(room).emit('offer_insurance', tableId);
 
@@ -1045,6 +1067,32 @@ module.exports = function (io) {
         let playerBestValue = await bestValue(playerHand.values);
         // Assign handSummary to hand
         handData.summary = playerHand; 
+
+        let valuesStr = playerHand.values.join(',')
+
+
+
+        let messageObj = { 
+          conversationId: rooms[tableId].conversationId, 
+          content: `${player.username} shows: ${valuesStr}`, 
+          tableId, 
+          cards 
+        }
+
+
+        if ( playerHand.blackjack ) {
+          messageObj.content = `${player.username} has Blackjack!` 
+        }
+        if ( playerHand.busted ) {
+          messageObj.content = `${player.username} has busted!` 
+
+        }
+        if ( playerBestValue === 21 ) {
+          messageObj.content = `${player.username} has 21! `
+        }
+  
+  
+        await emitCustomMessage(messageObj)
  
         if ( 
           playerHand.blackjack ||
@@ -1057,7 +1105,7 @@ module.exports = function (io) {
         }  
 
         // Create action end timestamp
-        const actionDuration = 1000; // 5 seconds
+        const actionDuration = 5000; // 5 seconds
         rooms[tableId].actionEnd = Math.ceil(Date.now() + actionDuration);
 
         // Set action seat
@@ -1100,6 +1148,15 @@ module.exports = function (io) {
             if (remainingTime <= 0) {
               clearInterval(rooms[tableId].timerId);
 
+              let messageObj = { 
+                conversationId: rooms[tableId].conversationId, 
+                content: `${player.username} has run out of time and stays with ${valuesStr}.`, 
+                tableId, 
+                cards 
+
+              }
+              await emitCustomMessage(messageObj)
+
               // Set turnEnded to true for this hand
               handData.turnEnded = true;
               resolve(); // Resolve the promise to let the game loop continue
@@ -1141,20 +1198,40 @@ module.exports = function (io) {
       // console.log('--------------');
       // console.log(`Handling action(${action}) for ${username} @room ${room}`);
       // console.log('--------------');
+
+      let player = rooms[tableId].seats[seat]
+      let currentHand = player.hands[handId]
+      let playerBestValue = await bestValue(currentHand.summary.values);
       
+      let messageObj = { 
+        conversationId: rooms[tableId].conversationId, 
+        content: `${player.username} shows: `, 
+        tableId
+      }
 
       if (action === 'hit') {
         await playerHit(actionObj, io);
+        messageObj.content= `${player.username} hits!`
+
       }
       if (action === 'stay') {
         await playerStay(actionObj, io);
+        messageObj.content= `${player.username} stays. ${playerBestValue}.`
+
       }
       if (action === 'double') {
         await playerDouble(actionObj, io);
+        messageObj.content= `${player.username} doubles! `
+
       }
       if (action === 'split') {
         await playerSplit(actionObj, io);
+        messageObj.content= `${player.username} splits! `
+
       }
+
+      await emitCustomMessage(messageObj)
+
 
       await gameLoop(tableId, io);
     });
@@ -1258,6 +1335,8 @@ module.exports = function (io) {
         cursor: rooms[tableId].cursor,
       };
 
+
+      
       // Double the current bet, remove chips from table balance
       // currentBet *= 2;
       currentSeat.tableBalance -= currentBet;
@@ -1278,6 +1357,29 @@ module.exports = function (io) {
       // const newCard = await drawCards(drawObj)
       rooms[tableId].cursor += cardsToDraw;
       currentHand.cards.push(...drawnCards);
+
+
+
+
+
+      let playerHand = await handSummary(currentHand.cards);
+      let valuesStr = playerHand.values.join(',')
+      
+
+      let messageObj = { 
+        conversationId: rooms[tableId].conversationId, 
+        content: `${username} shows: ${valuesStr}`, 
+        tableId, 
+        cards 
+      }
+      await emitCustomMessage(messageObj)
+
+
+
+
+
+
+
 
       // Update hand to show no more decisions need to be made for the gameLoop
       let playersHand = rooms[tableId].seats[seat].hands[handId];
@@ -1318,6 +1420,8 @@ module.exports = function (io) {
       await new Promise((resolve) => setTimeout(resolve, 1500));
 
 
+
+
       // Check if there's at least one player who hasn't busted
       let anyPlayersLeft = rooms[tableId].sortedFinishedPlayers.some((player) =>
         Object.values(player.hands).some(
@@ -1327,6 +1431,18 @@ module.exports = function (io) {
 
       // If all players have busted, end the round without drawing cards
       if (!anyPlayersLeft) {
+
+        let dealerHand = await handSummary(newCards);
+        let valuesStr = dealerHand.values.join(',')
+  
+        let messageObj = { 
+          conversationId: rooms[tableId].conversationId, 
+          content: `Dealer shows: ${valuesStr}`, 
+          tableId, 
+          cards: dealerCards.visibleCards 
+        }
+        await emitCustomMessage(messageObj)
+
 
         await endRound(tableId, io);
         return;
@@ -1338,6 +1454,20 @@ module.exports = function (io) {
         // Calculate hand summary and best value
         let dealerHand = await handSummary(newCards);
         let bestDealerValue = await bestValue(dealerHand.values);
+
+
+        let valuesStr = dealerHand.values.join(',')
+  
+        let messageObj = { 
+          conversationId: rooms[tableId].conversationId, 
+          content: `Dealer shows: ${valuesStr}`, 
+          tableId, 
+          cards: dealerCards.visibleCards 
+        }
+        await emitCustomMessage(messageObj)
+        await new Promise((resolve) => setTimeout(resolve, 1500));
+
+
 
         // console.log('--------------');
         // console.log(dealerCards.visibleCards);
@@ -1378,6 +1508,10 @@ module.exports = function (io) {
         rooms[tableId].deck = newDeck;
         newCards.push(...drawnCards);
         dealerCards.visibleCards = newCards; // Update the visible cards
+
+        
+        messageObj.content = `Dealer hits.`
+        await emitCustomMessage(messageObj)
 
         // Set new cursor point
         rooms[tableId].cursor++;
@@ -2163,7 +2297,7 @@ module.exports = function (io) {
 
         let roomUserId = 'e10d8de4-f4c7-0000-0000-000000000000'
 
-        const { conversationId, content, tableId } = messageObj;
+        const { conversationId, content, tableId, cards } = messageObj;
         let room = conversationId;
   
         const newMessage = await chatController.createMessage(messageObj, roomUserId);
@@ -2177,6 +2311,7 @@ module.exports = function (io) {
           createdAt: Date.now(),
           conversationId,
           content,
+          cards,
           id: newMessage.id,
           userId: roomUserId,
           username: 'Room'

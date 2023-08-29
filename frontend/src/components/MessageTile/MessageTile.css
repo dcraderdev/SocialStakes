@@ -111,6 +111,8 @@
   font-weight: 300;
   line-height: 1.2;
 
+  flex-direction: column;
+  word-wrap:break-word;
 }
 
 
@@ -207,3 +209,6 @@
 
 
 
+.chat-card-container{
+  height: 50px;
+}

@@ -28,6 +28,9 @@ const gamesReducer = (state = initialState, action) => {
     case ADD_MESSAGE: {
       const { id, conversationId, userId, username, content, tableId, chatName } = action.payload;
 
+
+      console.log(action.payload);
+
  
 
       const newConversations = { ...newState.conversations };

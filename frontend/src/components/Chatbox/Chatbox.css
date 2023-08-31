@@ -19,9 +19,9 @@
 
 }
 
-.chatbox-message-container > :last-child {
+/* .chatbox-message-container > :last-child {
   margin-bottom: 10px;
-}
+} */
 
 
 /* Styling the scrollbar */
@@ -44,10 +44,11 @@
 
 .chat-bottom-ref{
   position: relative;
-  height: 5px;
-  width: 5px;
-  top: -20px;
+  width: 15px;
+  top: 20px;
 }
+
+
 
 
 

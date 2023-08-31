@@ -332,26 +332,41 @@ const MessageTile = ({ message }) => {
           </form>
         )}
 
-        {message.id !== editedMessageId && (
+{/* MESSAGE CONTENT WITHOUT CARDS */}
+{message.id !== editedMessageId && !cards && (
           <div className="chat-message-content flex">
-
-
             {message?.content}
-
-          {cards &&( 
-            <div className='chat-card-container flex center'>
-              {cards.map((card,i)=>{
-              return card !== undefined && 
-              <div key={i} className='gamebar-card'>
-                < GameBarCard card={card}/>
+            <div className='chat-faux-card-container flex center'>
               </div>
-
-              })}
-            </div>
-          )}
-          
           </div>
         )}
+
+
+
+
+{/* MESSAGE CONTENT WITH CARDS */}
+{message.id !== editedMessageId && cards && (
+          <div className="chat-message-content flex">
+            {message?.content}
+
+              <div className='chat-card-container flex center'>
+                {cards.map((card,i)=>{
+                return card !== undefined && 
+                <div key={i} className='gamebar-card'>
+                  < GameBarCard card={card}/>
+                </div>
+                })}
+              </div>
+          </div>
+        )}
+
+
+
+
+
+
+
+
 
 
         {message.id === editedMessageId && isDeletingMessage && (

@@ -6,6 +6,8 @@
   border-radius: 20px;
   margin-left: 20px;
   margin-right: 20px;
+  height: fit-content;
+
 }
 
 .chatmessage-wrapper:hover{
@@ -20,7 +22,7 @@
 
 
 .chatmessage-container{
-  padding: 7px;
+  /* padding: 7px; */
   margin-bottom: 2px;
   margin-top: 2px;
   border-radius: 5px;
@@ -210,5 +212,8 @@
 
 
 .chat-card-container{
-  height: 50px;
+  height: 45px;
+}
+
+.chat-faux-card-container{
 }

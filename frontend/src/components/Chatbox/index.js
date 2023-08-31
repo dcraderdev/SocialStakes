@@ -43,33 +43,12 @@ const Chatbox = () => {
 
 
 
-  // useEffect(() => {
-  //   if (bottomRef.current) {
-  //     bottomRef.current.scrollIntoView({ behavior: 'smooth' });
-  //   }
-  // }, [currentConversationId, conversations, messages]);
-
-
-
-
   useEffect(() => {
-    const container = document.querySelector(".chatbox-message-container");
-  
-    if (container) {
-      // Initialize a mutation observer
-      const observer = new MutationObserver(() => {
-        if (bottomRef.current) {
-          bottomRef.current.scrollIntoView({ behavior: 'smooth' });
-        }
-      });
-  
-      // Start observing the target node for configured mutations
-      observer.observe(container, { attributes: false, childList: true, subtree: true });
-  
-      // Cleanup the observer when component unmounts
-      return () => observer.disconnect();
+    if (bottomRef.current) {
+      bottomRef.current.scrollIntoView({ behavior: 'smooth' });
     }
-  }, []);
+  }, [currentConversationId, conversations, messages]);
+
 
 
   return (
@@ -82,6 +61,8 @@ const Chatbox = () => {
           ))}
 
           <div className="chat-bottom-ref" ref={bottomRef}></div>
+
+          
         </div>
 
     </div>

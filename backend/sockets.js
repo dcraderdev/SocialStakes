@@ -1370,7 +1370,7 @@ module.exports = function (io) {
         conversationId: rooms[tableId].conversationId, 
         content: `${username} shows: ${valuesStr}`, 
         tableId, 
-        cards 
+        cards: currentHand.cards 
       }
       await emitCustomMessage(messageObj)
 

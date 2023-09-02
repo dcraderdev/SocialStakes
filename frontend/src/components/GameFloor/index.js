@@ -21,6 +21,7 @@ import Navigation from '../Navigation';
 import gameTileBackground from '../../images/game-tile-background.jpeg';
 import TableSortBar from '../TableSortBar';
 import ChatInputArea from '../ChatInputArea';
+import WinnerChatbox from '../WinnerChatbox';
 
 function GameFloor() {
   const { socket } = useContext(SocketContext);
@@ -211,13 +212,31 @@ function GameFloor() {
 
             {/* SHOW GAMES AND PRIVATE TABLE BUTTONS */}
             {isLoaded && showGames && (
+
+<div className='showgames-wrapper flex center'>
+
+
               <div className="games-grid">
                 {allGames &&
                   Object.values(allGames).map((game, index) => (
                     <GameTile key={index} game={game} cbFunc={checkTables} delay={index} style={{animationDelay: `${index * 3}s`}} />
                   ))}
               </div>
+
+
+              <div className="winnerchatbox-wrapper">
+                  <WinnerChatbox />
+              </div>
+
+</div>
+
+
+
+
+
             )}
+
+
 
 
 

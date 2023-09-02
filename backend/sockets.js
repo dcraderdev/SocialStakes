@@ -1679,6 +1679,22 @@ module.exports = function (io) {
         // Save the results
         await gameController.savePlayerHand(handObj);
 
+
+        // display the winners to the room
+        if(totalProfitLoss > 0){
+          let messageObj = { 
+            conversationId: rooms[tableId].conversationId, 
+            content: `${username} has won $${totalProfitLoss}!`, 
+            tableId, 
+            cards 
+          }
+          await emitCustomMessage(messageObj)
+          await emitMainPageWinnerMessage(messageObj)
+
+        }
+
+
+
         //Update the hands bet to show profit/loss
         if (rooms[tableId]?.seats?.[player.seat]?.hands?.[key]?.bet) {
           rooms[tableId].seats[player.seat].hands[key].bet += profitLoss;
@@ -2326,6 +2342,40 @@ module.exports = function (io) {
 
       }
 
+      
+      async function emitMainPageWinnerMessage(messageObj){
+        // Broadcast message to specific room
+
+        let roomUserId = 'e10d8de4-f4c7-0000-0000-000000000000'
+
+        const { conversationId, content, tableId, cards } = messageObj;
+        let room = conversationId;
+  
+        const newMessage = await chatController.createMessage(messageObj, roomUserId);
+
+        // if (!newMessage) console.log('no message');;
+
+        if (!newMessage) return false;
+  
+  
+        newMessageObj = {
+          createdAt: Date.now(),
+          conversationId,
+          content,
+          cards,
+          id: newMessage.id,
+          userId: roomUserId,
+          username: 'Room'
+        }; 
+
+        if(tableId){
+          newMessageObj.tableId = tableId
+          newMessageObj.chatName = rooms?.[tableId]?.chatName
+        }
+        
+        io.in(room).emit('new_message', newMessageObj);
+
+      }
 
 
 

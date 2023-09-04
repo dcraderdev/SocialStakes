@@ -5,9 +5,18 @@
   width: 100%;
   z-index: 1;
   justify-content: center;
+  background-color: #282828;
+  overflow-y: hidden;
+  overflow-x: scroll;
+
+
 
 }
 
+/* for webkit browsers (like Chrome, Safari) */
+.gamebar-container::-webkit-scrollbar {
+  display: none;  /* hide the scrollbar */
+}
 
 
 .gamebar-tab-container{

@@ -15,7 +15,7 @@ module.exports = function (io) {
   const rooms = {};
   const disconnectTimeouts = {};
   let disconnectTimes = {};
-  let lastWinners = [{createdAt: 1693856698676, gameType: 'Blackjack', username: 'bigtree', bet: 1, payout: 0},{createdAt: 1693856698676, gameType: 'Blackjack', username: 'bigtree', bet: 1, payout: 0},{createdAt: 1693856698676, gameType: 'Blackjack', username: 'bigtree', bet: 1, payout: 0},{createdAt: 1693856698676, gameType: 'Blackjack', username: 'bigtree', bet: 1, payout: 0},{createdAt: 1693856698676, gameType: 'Blackjack', username: 'bigtree', bet: 1, payout: 0},{createdAt: 1693856698676, gameType: 'Blackjack', username: 'bigtree', bet: 1, payout: 0},{createdAt: 1693856698676, gameType: 'Blackjack', username: 'bigtree', bet: 1, payout: 0}]
+  let lastWinners = [{createdAt: 1693856698676, gameType: 'Blackjack', username: 'Pine', bet: 1, payout: 2},{createdAt: 1693856698676, gameType: 'Blackjack', username: 'bigtree', bet: 1, payout: 0},{createdAt: 1693856698676, gameType: 'Blackjack', username: 'Pine', bet: 10, payout: 20},{createdAt: 1693856698676, gameType: 'Blackjack', username: 'bigtree', bet: 1, payout: 0},{createdAt: 1693856698676, gameType: 'Blackjack', username: 'bigtree', bet: 1, payout: 0},{createdAt: 1693856698676, gameType: 'Blackjack', username: 'bigtree', bet: 1, payout: 0},{createdAt: 1693856698676, gameType: 'Blackjack', username: 'bigtree', bet: 1, payout: 0}]
 
 
   // {createdAt: 1693856698676, gameType: 'Blackjack', username: 'bigtree', bet: 1, payout: 0}

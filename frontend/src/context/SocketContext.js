@@ -86,6 +86,12 @@ const SocketProvider = ({ children }) => {
       socket.on('initialize_user', (initObj) => {
         dispatch(getUserFriendsAction(initObj.userFriends));
         dispatch(getUserConversationsAction(initObj.userConversations));
+
+        if(initObj.lastWinners.length > 0){
+          initObj.lastWinners.forEach(message=>{
+            dispatch(addWinnerMessageAction(message));
+          })
+        }
       }); 
 
 

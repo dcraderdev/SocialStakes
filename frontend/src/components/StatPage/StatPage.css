@@ -1,13 +1,26 @@
+
+
+
 .statpage-container{
   width: 100%;
   height: calc(100vh - 60px);
   position: absolute;
   left: 0px;
   top: 55px;
-  border: yellow solid 1px;
   flex-direction: column;
 }
 
+
+.comingsoon-wrapper{
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%,-50%);
+  z-index: 10000;
+
+}
 
 
 .statpage-top-container{
@@ -15,6 +28,8 @@
   height: 150px;
   border: rgb(143, 82, 67) solid 2px;
   align-items: center;
+  filter: blur(5px);
+
 }
 
 .statpage-bottom-container{
@@ -22,6 +37,8 @@
   height: calc(100% - 150px);
   border: rgb(248, 62, 16) solid 2px;
   flex-direction: column;
+  filter: blur(5px);
+
 }
 
 

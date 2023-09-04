@@ -15,6 +15,10 @@ module.exports = function (io) {
   const rooms = {};
   const disconnectTimeouts = {};
   let disconnectTimes = {};
+  let lastWinners = [{createdAt: 1693856698676, gameType: 'Blackjack', username: 'bigtree', bet: 1, payout: 0},{createdAt: 1693856698676, gameType: 'Blackjack', username: 'bigtree', bet: 1, payout: 0},{createdAt: 1693856698676, gameType: 'Blackjack', username: 'bigtree', bet: 1, payout: 0},{createdAt: 1693856698676, gameType: 'Blackjack', username: 'bigtree', bet: 1, payout: 0},{createdAt: 1693856698676, gameType: 'Blackjack', username: 'bigtree', bet: 1, payout: 0},{createdAt: 1693856698676, gameType: 'Blackjack', username: 'bigtree', bet: 1, payout: 0},{createdAt: 1693856698676, gameType: 'Blackjack', username: 'bigtree', bet: 1, payout: 0}]
+
+
+  // {createdAt: 1693856698676, gameType: 'Blackjack', username: 'bigtree', bet: 1, payout: 0}
 
   const roomInit = () => {
     return {
@@ -99,7 +103,8 @@ module.exports = function (io) {
 
     let initObj = {
       userFriends,
-      userConversations
+      userConversations,
+      lastWinners
     } 
 
     socket.emit('initialize_user', initObj);
@@ -251,16 +256,6 @@ module.exports = function (io) {
 
       let updatedTable = await gameController.getTableById(tableId);
       if(!updatedTable) return
-
-      console.log('-=-=-=-=-=-=-=-');
-      console.log('-=-=-=-=-=-=-=-');
-      console.log('-=-=-=-=-=-=-=-');
-      console.log(updatedTable);
-      console.log('-=-=-=-=-=-=-=-');
-      console.log('-=-=-=-=-=-=-=-');
-      console.log('-=-=-=-=-=-=-=-');
-      console.log('-=-=-=-=-=-=-=-');
-
 
       if (!rooms[tableId]) {
         rooms[tableId] = roomInit();
@@ -2362,17 +2357,11 @@ module.exports = function (io) {
         // Broadcast message to specific room
 
 
-        console.log('_*_*_*_*_*_*_**_*_*_**_*_*_*_*_**_');
-        console.log('_*_*_*_*_*_*_**_*_*_**_*_*_*_*_**_');
-        console.log('tableId',tableId);
-        console.log('rooms[tableId]',rooms[tableId]);
-        console.log('player',player);
-        console.log('handData',handData);
-        console.log('totalWinnings',totalWinnings);
-        console.log('_*_*_*_*_*_*_**_*_*_**_*_*_*_*_**_');
-        console.log('_*_*_*_*_*_*_**_*_*_**_*_*_*_*_**_');
-        console.log('_*_*_*_*_*_*_**_*_*_**_*_*_*_*_**_');
-        console.log('_*_*_*_*_*_*_**_*_*_**_*_*_*_*_**_');
+
+
+
+
+
 
 
         let room = 'winners';
@@ -2386,6 +2375,27 @@ module.exports = function (io) {
           bet: handData.bet,
           payout: totalWinnings,
         }; 
+
+
+
+        console.log('_*_*_*_*_*_*_**_*_*_**_*_*_*_*_**_');
+        console.log('lastWinners',lastWinners);
+        console.log('_*_*_*_*_*_*_**_*_*_**_*_*_*_*_**_');
+
+
+
+        if(lastWinners.length >=10){
+          lastWinners.shift()
+          lastWinners.push(newMessageObj)
+        } else{
+          lastWinners.push(newMessageObj)
+        }
+
+        console.log('@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@');
+        console.log('@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@');
+        console.log('lastWinners',lastWinners);
+        console.log('@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@');
+        console.log('@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@');
 
         
         io.in(room).emit('new_winner', newMessageObj);

@@ -89,6 +89,10 @@ const StatPage = () => {
           </div>
         )}
       </div>
+
+      <div className='comingsoon-wrapper'>
+        <ComingSoonImage/>
+      </div>
     </div>
   );
 };

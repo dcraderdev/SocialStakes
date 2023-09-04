@@ -37,7 +37,7 @@ const WinnerChatbox = () => {
 
 
   return (
-    <div className="winnerchatbox-container">
+    <div className="winnerchatbox-container flex">
         <div className={`winnerchatbox-item-container header flex`}>
               <div className={`winnerchatbox-item flex`}>Game</div>
               <div className={`winnerchatbox-item flex`}>User</div>
@@ -53,8 +53,8 @@ const WinnerChatbox = () => {
               <div className={`winnerchatbox-item flex`}>{message.gameType}</div>
               <div className={`winnerchatbox-item flex`}>{message.username}</div>
 { windowWidth > 1000 &&             <div className={`winnerchatbox-item flex`}>{convertToReadableFormatShort(message.createdAt)}</div>}
-              <div className={`winnerchatbox-item flex`}>$ {message.bet}</div>
-              <div className={`winnerchatbox-item flex`}>$ {message.payout}</div>
+              <div className={`winnerchatbox-item flex`}>${message.bet}</div>
+              <div className={`winnerchatbox-item flex`}>${message.payout}</div>
 
             </div>
           ))}

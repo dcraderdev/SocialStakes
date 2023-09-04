@@ -38,7 +38,6 @@ const MessageTile = ({ message }) => {
 
   const [cards, setCards] = useState(false);
 
-  console.log(message);
 
   useEffect(() => {
     const shouldShowFriendInviteButton = () => {
@@ -94,7 +93,6 @@ const MessageTile = ({ message }) => {
 
   }, [message]);
 
-  console.log(cards);
 
   // date handler
   useEffect(() => {

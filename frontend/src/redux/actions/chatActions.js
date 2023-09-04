@@ -1,6 +1,7 @@
 
 import {
   ADD_MESSAGE, EDIT_MESSAGE, DELETE_MESSAGE, 
+  ADD_WINNER_MESSAGE,
   GET_USER_CONVERSATIONS, 
   SHOW_CONVERSATION_BY_ID, 
   ADD_CONVERSATION, REMOVE_CONVERSATION,
@@ -15,6 +16,12 @@ import {
 export const addMessageAction = (messageObj) => {
   return {
     type: ADD_MESSAGE,
+    payload: messageObj
+  };
+};
+export const addWinnerMessageAction = (messageObj) => {
+  return {
+    type: ADD_WINNER_MESSAGE,
     payload: messageObj
   };
 };

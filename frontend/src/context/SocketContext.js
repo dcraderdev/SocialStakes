@@ -6,6 +6,7 @@ import * as gameActions from '../redux/middleware/games';
 
 import {
   addMessageAction,
+  addWinnerMessageAction,
   editMessageAction,
   deleteMessageAction,
   getUserConversationsAction,
@@ -129,7 +130,11 @@ const SocketProvider = ({ children }) => {
         }
         dispatch(updateTableAction(updateObject)); 
       }); 
-      
+
+      socket.on('new_winner', (messageObj) => {
+        console.log(messageObj);
+        dispatch(addWinnerMessageAction(messageObj));
+      });
 
       socket.on('new_message', (messageObj) => {
         console.log(messageObj);

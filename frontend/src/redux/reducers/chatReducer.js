@@ -1,10 +1,11 @@
 
 import { 
   ADD_MESSAGE, EDIT_MESSAGE, DELETE_MESSAGE, GET_USER_CONVERSATIONS, SHOW_CONVERSATION_BY_ID, SHOW_FRIENDS, ADD_CONVERSATION, REMOVE_CONVERSATION,
-   REMOVE_FRIEND, 
-   CHANGE_CHAT_NAME, 
-   REMOVE_USER_FROM_CONVERSATION,
-   ADD_USER_TO_CONVERSATION
+  ADD_WINNER_MESSAGE, 
+  REMOVE_FRIEND, 
+  CHANGE_CHAT_NAME, 
+  REMOVE_USER_FROM_CONVERSATION,
+  ADD_USER_TO_CONVERSATION
 
 } from '../actions/actionTypes'
 
@@ -17,13 +18,24 @@ const initialState = {
   chatRoomTabs: [],
   generalChat: null,
   conversationInvites: [],
-  friends: []
+  friends: [],
+  winnerMessages: []
 }
 
 const gamesReducer = (state = initialState, action) => {
   const newState = { ...state };
 
   switch (action.type) {
+
+    case ADD_WINNER_MESSAGE: {
+      console.log(action.payload);
+
+      const newWinnerMessages = [...newState.winnerMessages, action.payload]
+
+      return { ...newState, winnerMessages: newWinnerMessages };
+
+    }
+
 
     case ADD_MESSAGE: {
       const { id, conversationId, userId, username, content, tableId, chatName } = action.payload;

@@ -60,6 +60,7 @@ module.exports = function (io) {
     let socketId = socket.id;
  
     socket.join(userId);
+    socket.join('winners');
 
     const userTables = await gameController.getUserTables(userId);
     const userFriends = await friendController.getUserFriends(userId);
@@ -92,6 +93,8 @@ module.exports = function (io) {
         socket.join(conversation)
       })
     } 
+
+   
 
 
     let initObj = {
@@ -257,6 +260,7 @@ module.exports = function (io) {
         rooms[tableId].shufflePoint = updatedTable.shufflePoint;
         rooms[tableId].conversationId = updatedTable.Conversation.id;
         rooms[tableId].chatName = updatedTable.Conversation.chatName;
+        rooms[tableId].gameType = updatedTable.Game.variant;
       }
 
       return updatedTable
@@ -456,14 +460,16 @@ module.exports = function (io) {
           accepted:false,
           bet: 0
         }
-      };
+      }; 
 
       // If the room doesnt exist create a new room
       if (!rooms[tableId]) {
-        let updatedTable = await gameController.getTableById(tableId);
-        rooms[tableId] = roomInit();
         rooms[tableId].gameSessionId = updatedTable.gameSessions[0].id;
-        rooms[tableId].decksUsed = updatedTable.Game.decksUsed;
+        await fetchUpdatedTable(tableId)
+        // let updatedTable = await gameController.getTableById(tableId);
+        // rooms[tableId] = roomInit();
+        // rooms[tableId].gameSessionId = updatedTable.gameSessions[0].id;
+        // rooms[tableId].decksUsed = updatedTable.Game.decksUsed;
       } 
 
       // Add the player to the room
@@ -1679,19 +1685,19 @@ module.exports = function (io) {
         // Save the results
         await gameController.savePlayerHand(handObj);
 
-
         // display the winners to the room
         if(totalProfitLoss > 0){
           let messageObj = { 
             conversationId: rooms[tableId].conversationId, 
             content: `${username} has won $${totalProfitLoss}!`, 
             tableId, 
-            cards 
+            cards,
+            game: 'Blackjack' 
           }
           await emitCustomMessage(messageObj)
-          await emitMainPageWinnerMessage(messageObj)
-
+          
         }
+        await emitMainPageWinnerMessage(tableId, player, handData, totalWinnings)
 
 
 
@@ -2343,37 +2349,37 @@ module.exports = function (io) {
       }
 
       
-      async function emitMainPageWinnerMessage(messageObj){
+      async function emitMainPageWinnerMessage(tableId, player, handData, totalWinnings){
         // Broadcast message to specific room
 
-        let roomUserId = 'e10d8de4-f4c7-0000-0000-000000000000'
 
-        const { conversationId, content, tableId, cards } = messageObj;
-        let room = conversationId;
+        console.log('_*_*_*_*_*_*_**_*_*_**_*_*_*_*_**_');
+        console.log('_*_*_*_*_*_*_**_*_*_**_*_*_*_*_**_');
+        console.log('tableId',tableId);
+        console.log('rooms[tableId]',rooms[tableId]);
+        console.log('player',player);
+        console.log('handData',handData);
+        console.log('totalWinnings',totalWinnings);
+        console.log('_*_*_*_*_*_*_**_*_*_**_*_*_*_*_**_');
+        console.log('_*_*_*_*_*_*_**_*_*_**_*_*_*_*_**_');
+        console.log('_*_*_*_*_*_*_**_*_*_**_*_*_*_*_**_');
+        console.log('_*_*_*_*_*_*_**_*_*_**_*_*_*_*_**_');
+
+
+        let room = 'winners';
   
-        const newMessage = await chatController.createMessage(messageObj, roomUserId);
-
         // if (!newMessage) console.log('no message');;
 
-        if (!newMessage) return false;
-  
-  
         newMessageObj = {
           createdAt: Date.now(),
-          conversationId,
-          content,
-          cards,
-          id: newMessage.id,
-          userId: roomUserId,
-          username: 'Room'
+          gameType: rooms[tableId].gameType,
+          username: player.username,
+          bet: handData.bet,
+          payout: totalWinnings,
         }; 
 
-        if(tableId){
-          newMessageObj.tableId = tableId
-          newMessageObj.chatName = rooms?.[tableId]?.chatName
-        }
         
-        io.in(room).emit('new_message', newMessageObj);
+        io.in(room).emit('new_winner', newMessageObj);
 
       }
 

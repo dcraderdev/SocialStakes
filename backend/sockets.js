@@ -464,7 +464,6 @@ module.exports = function (io) {
 
       // If the room doesnt exist create a new room
       if (!rooms[tableId]) {
-        rooms[tableId].gameSessionId = updatedTable.gameSessions[0].id;
         await fetchUpdatedTable(tableId)
         // let updatedTable = await gameController.getTableById(tableId);
         // rooms[tableId] = roomInit();

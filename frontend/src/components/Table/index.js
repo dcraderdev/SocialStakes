@@ -51,7 +51,6 @@ const Table = () => {
   const [currentSeat, setCurrentSeat] = useState(false);
 
 
-  const [tableConversation, setTableConversation] = useState(false);
   const [tableName, setTableName] = useState('');
 
 
@@ -142,11 +141,6 @@ const Table = () => {
     }
 
     setTableName(currTable.tableName)
-    let tableConvoId = currTable?.Conversation?.id
-
-    if(tableConvoId && conversations && conversations[tableConvoId]){
-      setTableConversation(conversations[tableConvoId])
-    }
 
 
     if(currTable.dealerCards){
@@ -161,6 +155,13 @@ const Table = () => {
 
 
   },[currentTables, activeTable]);
+
+
+
+
+
+
+
 
 
 
@@ -230,7 +231,7 @@ const Table = () => {
         </div>
 
         <div className={`table-chatbox-container styled-scrollbar`}>
-          <Chatbox conversation={tableConversation}/>
+          <Chatbox />
         </div>
 
         <div className="table-chatinput-container">

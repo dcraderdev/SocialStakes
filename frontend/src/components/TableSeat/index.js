@@ -216,10 +216,14 @@ useEffect(()=>{
 
 
       let summary = handSummary(hands[actionHand].cards)
-      setHandValues(summary.values.join(','))
+
+      if(summary && summary.values){
+        setHandValues(summary.values.join(','))
+      }
+
+      // setHandValues(hands[actionHand].summary.values.join(','))
 
 
-      setHandValues(hands[actionHand].summary.values.join(','))
     }
 
 

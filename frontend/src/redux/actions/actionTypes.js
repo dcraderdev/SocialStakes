@@ -8,7 +8,6 @@ export const CHANGE_TABLE_THEME = 'users/CHANGE_TABLE_THEME';
 export const CHANGE_NEON_THEME = 'users/CHANGE_NEON_THEME';
 
 
-export const GET_USER_STATS = 'users/GET_USER_STATS';
 
 
 
@@ -69,6 +68,7 @@ export const SHOW_CREATING_GAME = 'game/SHOW_CREATING_GAME'
 
 // chat
 export const ADD_MESSAGE = 'chat/ADD_MESSAGE';
+export const ADD_WINNER_MESSAGE = 'chat/ADD_WINNER_MESSAGE';
 export const EDIT_MESSAGE = 'chat/EDIT_MESSAGE';
 export const DELETE_MESSAGE = 'chat/DELETE_MESSAGE';
 export const TOGGLE_SHOW_MESSAGES = 'chat/TOGGLE_SHOW_MESSAGES';
@@ -100,3 +100,7 @@ export const SHOW_TABLE_INVITES = 'friends/SHOW_TABLE_INVITES';
 export const SHOW_FRIENDS = 'friends/SHOW_FRIENDS';
 export const SHOW_CONVERSATION_BY_ID = 'friends/SHOW_CONVERSATION_BY_ID';
 
+
+//stats 
+export const GET_USER_STATS = 'stats/GET_USER_STATS';
+export const GET_USER_TABLES = 'stats/GET_USER_TABLES';

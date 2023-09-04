@@ -3,6 +3,7 @@ import {Route,Router,Switch,NavLink,Link,useHistory,useParams,} from 'react-rout
 import { useDispatch, useSelector } from 'react-redux';
 import { SocketContext } from '../../context/SocketContext';
 import { ModalContext } from '../../context/ModalContext';
+import { WindowContext } from '../../context/WindowContext';
  
  import './PlayerBetOptions.css';
  import Chatbox from '../Chatbox';
@@ -19,6 +20,7 @@ import { ModalContext } from '../../context/ModalContext';
   const PlayerBetOptions = () => {
     const {socket} = useContext(SocketContext)
     const {openModal, closeModal, setUpdateObj} = useContext(ModalContext)
+    const {windowWidth, windowHeight} = useContext(WindowContext)
 
     const dispatch = useDispatch();
 
@@ -48,6 +50,30 @@ import { ModalContext } from '../../context/ModalContext';
     const [hasBet, setHasBet] = useState(false);
     const [maxBet, setMaxBet] = useState(false);
     const [minBet, setMinBet] = useState(false);
+
+
+    const [isNarrowView, setIsNarrowView] = useState(false);
+    const [isWideView, setIsWideView] = useState(false);
+
+
+  // check window height for player action button layout
+  useEffect(()=>{
+    if(windowWidth <= 650){
+      setIsNarrowView(true)
+    } else {
+      setIsNarrowView(false)
+    }
+
+    if(windowWidth >= 950){
+      setIsWideView(true)
+    } else {
+      setIsWideView(false)
+    }
+
+
+
+
+  }, [windowWidth])
 
 
 
@@ -353,21 +379,26 @@ const rebet = (multiplier) => {
         <div className="bet-container flex center">
 
 <>
-              {isActionSeat && !isInsuranceOffered &&(
-                <div className="actions-container flex center">
-                  <div className="action-button" onClick={()=>handleAction('hit')}>Hit</div>
-                  <div className="action-button" onClick={()=>handleAction('stay')}>Stay</div>
-                  {canDouble && <div className="action-button" onClick={()=>handleAction('double')}>Double</div>}
-                  {canSplit && <div className="action-button" onClick={()=>handleAction('split')}>Split</div>}
-                </div>
-              )}
+          {isActionSeat && !isInsuranceOffered &&(
+            <div className={`actions-container flex center ${showMessages ? 'shrunk' : ''} ${isWideView || !showMessages ? 'row' : ''}`}>
+              <div className="action-button" onClick={()=>handleAction('hit')}>Hit</div>
+              <div className="action-button" onClick={()=>handleAction('stay')}>Stay</div>
+              {canDouble && <div className="action-button" onClick={()=>handleAction('double')}>Double</div>}
+              {canSplit && <div className="action-button" onClick={()=>handleAction('split')}>Split</div>}
+            </div>
+          )}
+
+
 
 
 {isInsuranceOffered && !hasMadeInsuranceDecision && isSitting && (
-                <div className="actions-container insurance flex center">
-                  <div className='insurance-option'>Insurance?</div>
+
+<div className={`actions-container flex center ${showMessages ? 'shrunk' : ''}`}>
+                <div className='insurance-option'>Insurance?</div>
+                <div className="chips-option-container flex center">
                   <div className="action-button" onClick={acceptInsurance}>Accept</div>
                   <div className="action-button" onClick={declineInsurance}>Decline</div>
+                </div>
                 </div>
               )}
 
@@ -375,8 +406,7 @@ const rebet = (multiplier) => {
 
 {!isHandInProgress && isSitting && (
 
-
-<div className="actions-container flex center">
+<div className={`actions-container flex center ${showMessages ? 'shrunk' : ''}`}>
 
    {!hasBet &&(
      <div className="rebet-option-container flex center">
@@ -392,9 +422,6 @@ const rebet = (multiplier) => {
     </div>
     )}
 
-
-
-
     <div className="chips-option-container flex center">
       <div className="chip" onClick={()=>addBet(chipSizes[0])}>{chipSizes[0]}</div>
       <div className="chip" onClick={()=>addBet(chipSizes[1])}>{chipSizes[1]}</div>
@@ -402,18 +429,7 @@ const rebet = (multiplier) => {
       <div className="chip" onClick={()=>addBet(chipSizes[3])}>{chipSizes[3]}</div>
     </div>
 
-
-
-
-
-
-
 </div>
-
-
-
-
-
 
 )}
 

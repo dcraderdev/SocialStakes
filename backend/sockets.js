@@ -15,6 +15,10 @@ module.exports = function (io) {
   const rooms = {};
   const disconnectTimeouts = {};
   let disconnectTimes = {};
+  let lastWinners = [{createdAt: 1693856698676, gameType: 'Blackjack', username: 'Pine', bet: 1, payout: 2},{createdAt: 1693856698676, gameType: 'Blackjack', username: 'bigtree', bet: 1, payout: 0},{createdAt: 1693856698676, gameType: 'Blackjack', username: 'Pine', bet: 10, payout: 20},{createdAt: 1693856698676, gameType: 'Blackjack', username: 'bigtree', bet: 1, payout: 0},{createdAt: 1693856698676, gameType: 'Blackjack', username: 'bigtree', bet: 1, payout: 0},{createdAt: 1693856698676, gameType: 'Blackjack', username: 'bigtree', bet: 1, payout: 0},{createdAt: 1693856698676, gameType: 'Blackjack', username: 'bigtree', bet: 1, payout: 0}]
+
+
+  // {createdAt: 1693856698676, gameType: 'Blackjack', username: 'bigtree', bet: 1, payout: 0}
 
   const roomInit = () => {
     return {
@@ -60,6 +64,7 @@ module.exports = function (io) {
     let socketId = socket.id;
  
     socket.join(userId);
+    socket.join('winners');
 
     const userTables = await gameController.getUserTables(userId);
     const userFriends = await friendController.getUserFriends(userId);
@@ -93,10 +98,13 @@ module.exports = function (io) {
       })
     } 
 
+   
+
 
     let initObj = {
       userFriends,
-      userConversations
+      userConversations,
+      lastWinners
     } 
 
     socket.emit('initialize_user', initObj);
@@ -257,6 +265,7 @@ module.exports = function (io) {
         rooms[tableId].shufflePoint = updatedTable.shufflePoint;
         rooms[tableId].conversationId = updatedTable.Conversation.id;
         rooms[tableId].chatName = updatedTable.Conversation.chatName;
+        rooms[tableId].gameType = updatedTable.Game.shortName;
       }
 
       return updatedTable
@@ -456,14 +465,15 @@ module.exports = function (io) {
           accepted:false,
           bet: 0
         }
-      };
+      }; 
 
       // If the room doesnt exist create a new room
       if (!rooms[tableId]) {
-        let updatedTable = await gameController.getTableById(tableId);
-        rooms[tableId] = roomInit();
-        rooms[tableId].gameSessionId = updatedTable.gameSessions[0].id;
-        rooms[tableId].decksUsed = updatedTable.Game.decksUsed;
+        await fetchUpdatedTable(tableId)
+        // let updatedTable = await gameController.getTableById(tableId);
+        // rooms[tableId] = roomInit();
+        // rooms[tableId].gameSessionId = updatedTable.gameSessions[0].id;
+        // rooms[tableId].decksUsed = updatedTable.Game.decksUsed;
       } 
 
       // Add the player to the room
@@ -633,7 +643,7 @@ module.exports = function (io) {
 
       let room = tableId
       // Set countdown end time
-      const countdownDuration = 10000; // 5 seconds
+      const countdownDuration = 1000; // 5 seconds
       const endTime = Math.ceil((Date.now() + countdownDuration));
       rooms[tableId].countdownEnd = endTime;
 
@@ -791,19 +801,20 @@ module.exports = function (io) {
       // Set sorted seats for gameLoop
       rooms[tableId].sortedActivePlayers = sortedSeats;
 
-      // console.log('------- sortedSeats -------');
-      // console.log(sortedSeats);
-      // console.log('------------------------');
 
-      let userTableIds = sortedSeats.map((seat) => seat.id);
+      console.log('------- sortedSeats -------');
+      console.log(sortedSeats);
+      console.log('------------------------');
 
-      // console.log('------- ROUND ID -------');
-      // console.log(userTableIds);
-      // console.log(roundId);
-      // console.log('------------------------');
+      let sortedSeatsObj = sortedSeats.map((seat) => ({id: seat.id, currentBet:seat.currentBet}));
+
+      console.log('------- ROUND ID -------');
+      console.log(sortedSeatsObj);
+      console.log(roundId);
+      console.log('------------------------');
 
       // Create hand for each active player
-      const handIds = await gameController.createHands(userTableIds, roundId);
+      const handIds = await gameController.createHands(sortedSeatsObj, roundId);
       let numSeatsWithBets = sortedSeats.length + 1;
       let cardsToDraw = numSeatsWithBets * 2;
       let cursor = rooms[tableId].cursor;
@@ -903,9 +914,31 @@ module.exports = function (io) {
 
       let isAce = cardConverter[dealerVisibleCard].value === 11;
  
+
+      let messageObj = { 
+        conversationId: rooms[tableId].conversationId, 
+        content: 'Dealer shows: ', 
+        tableId, 
+        cards: dealerCards.visibleCards }
+
+
+ 
+    console.log('_*_*_*_*_*_*_*_*_*_*_*_**_');
+    console.log('_*_*_*_*_*_*_*_*_*_*_*_**_');
+    console.log('dealerHand:', dealerHand);
+    console.log('bestDealerValue:', bestDealerValue);
+    console.log('dealerCards:', dealerCards.visibleCards);
+    console.log('_*_*_*_*_*_*_*_*_*_*_*_**_');
+    console.log('_*_*_*_*_*_*_*_*_*_*_*_**_');
+
+
+      await emitCustomMessage(messageObj)
+
+
       if (isAce) {
 
         // socket.emit('offer_insurance', tableId);
+
 
         io.in(room).emit('offer_insurance', tableId);
 
@@ -1044,6 +1077,32 @@ module.exports = function (io) {
         let playerBestValue = await bestValue(playerHand.values);
         // Assign handSummary to hand
         handData.summary = playerHand; 
+
+        let valuesStr = playerHand.values.join(',')
+
+
+
+        let messageObj = { 
+          conversationId: rooms[tableId].conversationId, 
+          content: `${player.username} shows: ${valuesStr}`, 
+          tableId, 
+          cards 
+        }
+
+
+        if ( playerHand.blackjack ) {
+          messageObj.content = `${player.username} has Blackjack!` 
+        }
+        if ( playerHand.busted ) {
+          messageObj.content = `${player.username} has busted!` 
+
+        }
+        if ( playerBestValue === 21 ) {
+          messageObj.content = `${player.username} has 21! `
+        }
+  
+  
+        await emitCustomMessage(messageObj)
  
         if ( 
           playerHand.blackjack ||
@@ -1056,7 +1115,7 @@ module.exports = function (io) {
         }  
 
         // Create action end timestamp
-        const actionDuration = 15000; // 5 seconds
+        const actionDuration = 5000; // 5 seconds
         rooms[tableId].actionEnd = Math.ceil(Date.now() + actionDuration);
 
         // Set action seat
@@ -1099,6 +1158,15 @@ module.exports = function (io) {
             if (remainingTime <= 0) {
               clearInterval(rooms[tableId].timerId);
 
+              let messageObj = { 
+                conversationId: rooms[tableId].conversationId, 
+                content: `${player.username} has run out of time and stays with ${valuesStr}.`, 
+                tableId, 
+                cards 
+
+              }
+              await emitCustomMessage(messageObj)
+
               // Set turnEnded to true for this hand
               handData.turnEnded = true;
               resolve(); // Resolve the promise to let the game loop continue
@@ -1115,14 +1183,6 @@ module.exports = function (io) {
       const { tableId, action, seat, handId } = actionObj;
       let room = tableId;
 
-      // let messageObj = {
-      //   tableId,
-      //   user: { username: 'Room', id: 1, rank: 0 },
-      //   message: {
-      //     content: `${username} has ${action}.`,
-      //     id: 0,
-      //   },
-      // }; 
       if(!rooms[tableId]) return
 
       // Reset the timer whenever a player takes an action
@@ -1131,36 +1191,57 @@ module.exports = function (io) {
         rooms[tableId].actionEnd = 0;
       }
  
-      let updateObj = {
-        tableId,
-        table: {
-          actionEnd: rooms?.[tableId]?.actionEnd,
-          seats: rooms[tableId].seats,
-          dealerCards: {
-            visibleCards: rooms[tableId].dealerCards.visibleCards,
-          },
-        }, 
-      };  
+      // let updateObj = {
+      //   tableId,
+      //   table: {
+      //     actionEnd: rooms?.[tableId]?.actionEnd,
+      //     seats: rooms[tableId].seats,
+      //     dealerCards: {
+      //       visibleCards: rooms[tableId].dealerCards.visibleCards,
+      //     },
+      //   }, 
+      // };  
 
-      io.in(room).emit('get_updated_table', updateObj);
+      // io.in(room).emit('get_updated_table', updateObj);
       // io.in(room).emit('new_message', messageObj);
 
       // console.log('--------------');
       // console.log(`Handling action(${action}) for ${username} @room ${room}`);
       // console.log('--------------');
 
+      let player = rooms[tableId].seats[seat]
+      let currentHand = player.hands[handId]
+      let playerBestValue = await bestValue(currentHand.summary.values);
+      
+      let messageObj = { 
+        conversationId: rooms[tableId].conversationId, 
+        content: `${player.username} shows: `, 
+        tableId
+      }
+
       if (action === 'hit') {
         await playerHit(actionObj, io);
+        messageObj.content= `${player.username} hits!`
+
       }
       if (action === 'stay') {
         await playerStay(actionObj, io);
+        messageObj.content= `${player.username} stays. ${playerBestValue}.`
+
       }
       if (action === 'double') {
         await playerDouble(actionObj, io);
+        messageObj.content= `${player.username} doubles! `
+
       }
       if (action === 'split') {
         await playerSplit(actionObj, io);
+        messageObj.content= `${player.username} splits! `
+
       }
+
+      await emitCustomMessage(messageObj)
+
 
       await gameLoop(tableId, io);
     });
@@ -1264,6 +1345,8 @@ module.exports = function (io) {
         cursor: rooms[tableId].cursor,
       };
 
+
+      
       // Double the current bet, remove chips from table balance
       // currentBet *= 2;
       currentSeat.tableBalance -= currentBet;
@@ -1284,6 +1367,29 @@ module.exports = function (io) {
       // const newCard = await drawCards(drawObj)
       rooms[tableId].cursor += cardsToDraw;
       currentHand.cards.push(...drawnCards);
+
+
+
+
+
+      let playerHand = await handSummary(currentHand.cards);
+      let valuesStr = playerHand.values.join(',')
+      
+
+      let messageObj = { 
+        conversationId: rooms[tableId].conversationId, 
+        content: `${username} shows: ${valuesStr}`, 
+        tableId, 
+        cards: currentHand.cards 
+      }
+      await emitCustomMessage(messageObj)
+
+
+
+
+
+
+
 
       // Update hand to show no more decisions need to be made for the gameLoop
       let playersHand = rooms[tableId].seats[seat].hands[handId];
@@ -1324,6 +1430,8 @@ module.exports = function (io) {
       await new Promise((resolve) => setTimeout(resolve, 1500));
 
 
+
+
       // Check if there's at least one player who hasn't busted
       let anyPlayersLeft = rooms[tableId].sortedFinishedPlayers.some((player) =>
         Object.values(player.hands).some(
@@ -1333,6 +1441,18 @@ module.exports = function (io) {
 
       // If all players have busted, end the round without drawing cards
       if (!anyPlayersLeft) {
+
+        let dealerHand = await handSummary(newCards);
+        let valuesStr = dealerHand.values.join(',')
+  
+        let messageObj = { 
+          conversationId: rooms[tableId].conversationId, 
+          content: `Dealer shows: ${valuesStr}`, 
+          tableId, 
+          cards: dealerCards.visibleCards 
+        }
+        await emitCustomMessage(messageObj)
+
 
         await endRound(tableId, io);
         return;
@@ -1344,6 +1464,20 @@ module.exports = function (io) {
         // Calculate hand summary and best value
         let dealerHand = await handSummary(newCards);
         let bestDealerValue = await bestValue(dealerHand.values);
+
+
+        let valuesStr = dealerHand.values.join(',')
+  
+        let messageObj = { 
+          conversationId: rooms[tableId].conversationId, 
+          content: `Dealer shows: ${valuesStr}`, 
+          tableId, 
+          cards: dealerCards.visibleCards 
+        }
+        await emitCustomMessage(messageObj)
+        await new Promise((resolve) => setTimeout(resolve, 1500));
+
+
 
         // console.log('--------------');
         // console.log(dealerCards.visibleCards);
@@ -1384,6 +1518,10 @@ module.exports = function (io) {
         rooms[tableId].deck = newDeck;
         newCards.push(...drawnCards);
         dealerCards.visibleCards = newCards; // Update the visible cards
+
+        
+        messageObj.content = `Dealer hits.`
+        await emitCustomMessage(messageObj)
 
         // Set new cursor point
         rooms[tableId].cursor++;
@@ -1550,6 +1688,22 @@ module.exports = function (io) {
 
         // Save the results
         await gameController.savePlayerHand(handObj);
+
+        // display the winners to the room
+        if(totalProfitLoss > 0){
+          let messageObj = { 
+            conversationId: rooms[tableId].conversationId, 
+            content: `${username} has won $${totalProfitLoss}!`, 
+            tableId, 
+            cards,
+            game: 'Blackjack' 
+          }
+          await emitCustomMessage(messageObj)
+          
+        }
+        await emitMainPageWinnerMessage(tableId, player, handData, totalWinnings)
+
+
 
         //Update the hands bet to show profit/loss
         if (rooms[tableId]?.seats?.[player.seat]?.hands?.[key]?.bet) {
@@ -2169,7 +2323,7 @@ module.exports = function (io) {
 
         let roomUserId = 'e10d8de4-f4c7-0000-0000-000000000000'
 
-        const { conversationId, content, tableId } = messageObj;
+        const { conversationId, content, tableId, cards } = messageObj;
         let room = conversationId;
   
         const newMessage = await chatController.createMessage(messageObj, roomUserId);
@@ -2183,6 +2337,7 @@ module.exports = function (io) {
           createdAt: Date.now(),
           conversationId,
           content,
+          cards,
           id: newMessage.id,
           userId: roomUserId,
           username: 'Room'
@@ -2197,6 +2352,55 @@ module.exports = function (io) {
 
       }
 
+      
+      async function emitMainPageWinnerMessage(tableId, player, handData, totalWinnings){
+        // Broadcast message to specific room
+
+
+
+
+
+
+
+
+
+        let room = 'winners';
+  
+        // if (!newMessage) console.log('no message');;
+
+        newMessageObj = {
+          createdAt: Date.now(),
+          gameType: rooms[tableId].gameType,
+          username: player.username,
+          bet: handData.bet,
+          payout: totalWinnings,
+        }; 
+
+
+
+        console.log('_*_*_*_*_*_*_**_*_*_**_*_*_*_*_**_');
+        console.log('lastWinners',lastWinners);
+        console.log('_*_*_*_*_*_*_**_*_*_**_*_*_*_*_**_');
+
+
+
+        if(lastWinners.length >=10){
+          lastWinners.shift()
+          lastWinners.push(newMessageObj)
+        } else{
+          lastWinners.push(newMessageObj)
+        }
+
+        console.log('@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@');
+        console.log('@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@');
+        console.log('lastWinners',lastWinners);
+        console.log('@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@');
+        console.log('@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@');
+
+        
+        io.in(room).emit('new_winner', newMessageObj);
+
+      }
 
 
 

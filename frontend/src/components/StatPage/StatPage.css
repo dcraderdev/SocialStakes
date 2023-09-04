@@ -1,44 +1,103 @@
-.zzz img{
-  height: 200px;
-  width: 200px;
-}
 
-.zzz-container{
-  color: white;
+
+
+.statpage-container{
   width: 100%;
+  height: calc(100vh - 60px);
   position: absolute;
-  left: 70%;
-  top: 40%;
-  transform: translate(-50%,-50%);
-
-
+  left: 0px;
+  top: 55px;
+  flex-direction: column;
 }
 
-.zzz-name{
-  width: 600px;
-  font-size: 70px;
-  position: relative;
-  left: -265px;
-  top: 90px;
-}
 
-.container{
-  border: white solid 1px;
+.comingsoon-wrapper{
   position: absolute;
+  width: 500px;
+  height: 500px;
   left: 50%;
   top: 50%;
   transform: translate(-50%,-50%);
-  width: 500px;
-  height: 500px;
+  z-index: 10000;
+
 }
 
-.stats-banner{
-  color: white;
+
+.statpage-top-container{
   width: 100%;
-  position: absolute;
-  left: 50%;
-  top: 60%;
-  transform: translate(-50%,-50%);
-  font-size: 30px;
-  font-weight: 300;
+  height: 150px;
+  border: rgb(143, 82, 67) solid 2px;
+  align-items: center;
+  filter: blur(5px);
+
+}
+
+.statpage-bottom-container{
+  width: 100%;
+  height: calc(100% - 150px);
+  border: rgb(248, 62, 16) solid 2px;
+  flex-direction: column;
+  filter: blur(5px);
+
+}
+
+
+
+.statpage-date-wrapper{
+  border: green solid 1px;
+  width: 200px;
+  height: 70px;
+}
+
+.statpage-gametype-wrapper{
+  border: green solid 1px;
+  width: 200px;
+  height: 70px;
+}
+
+
+
+
+
+
+
+.statpage-table-history-container{
+  width: 100%;
+  height: 100%;
+
+  border: rgb(152, 14, 147) solid 2px;
+}
+
+
+.statpage-table-history-header{
+  width: 100%;
+  height: 50px;
+
+  border: rgb(152, 14, 147) solid 2px;
+  font-size: min(25px,3vw);
+}
+
+
+.statpage-header.start{
+  width: 35%;
+  margin-left: 5px;
+}
+.statpage-header.table{
+  width: 30%;
+}
+.statpage-header.hands{
+  width: 15%;
+}
+.statpage-header.result{
+  width: 20%;
+}
+
+.statspage-table-wrapper{
+  justify-content: space-around;
+  width: 99%;
+  border-bottom: rgb(150, 200, 12) solid 1px;
+  height: 40px;
+  text-align: center;
+  align-items: center;
+
 }

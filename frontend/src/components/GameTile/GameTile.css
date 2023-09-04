@@ -16,7 +16,6 @@
   cursor: pointer;
   height: 100%;
   width: 100%;
-  opacity: 0;
 
   /* animation: 10s shadowGlow infinite ; */
 
@@ -41,6 +40,7 @@
 .gametile-container img {
   height: 100%;
   width: 100%;
+  object-fit: contain;
   object-fit: cover;
 }
 

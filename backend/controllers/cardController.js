@@ -239,7 +239,7 @@ async function main() {
   cardsDrawn.forEach(draw => {
     const index = deck.indexOf(draw);
     if (index > -1) {
-      deck.splice(index, 1);6
+      deck.splice(index, 1);
     }
   });
 

@@ -1,4 +1,4 @@
-import { setUser, removeUser, setThemes, getUserStatsAction } from '../actions/userActions'
+import { setUser, removeUser, setThemes } from '../actions/userActions'
 import { showGamesAction } from '../actions/gameActions'
 import { csrfFetch } from './csrf';
 
@@ -79,21 +79,3 @@ export const loadThemes = () => async (dispatch) => {
 };
 
 
-export const getUserStats = () => async (dispatch) => {
-  
-  try{
-    const response = await csrfFetch(`/api/session/stats`);
-    const data = await response.json();
-
-    // console.log('-=-=-=-=');
-    // console.log(data); 
-    // console.log('-=-=-=-=');
-  
-    dispatch(getUserStatsAction(data));
-    return response;
-    
-  }catch(error){
-    console.log(error);
-  }
-
-};

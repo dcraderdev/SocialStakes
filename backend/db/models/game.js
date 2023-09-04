@@ -17,6 +17,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     gameType: DataTypes.STRING,
     variant: DataTypes.STRING,
+    shortName: DataTypes.STRING,
     decksUsed: DataTypes.INTEGER,
     active: DataTypes.BOOLEAN,
     minNumPlayers: DataTypes.INTEGER,

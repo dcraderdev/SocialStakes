@@ -316,6 +316,8 @@ try{
     return
   },
 
+
+
   async takeSeat(tableId, seat, user, amount) {
     const userToUpdate = await User.findByPk(user.id);
     
@@ -499,16 +501,16 @@ try{
 
     return roundId
   },
-
+ 
 
 
 
 // Create mulitple hands at start of blackjack round
-  async createHands(userTableIds, roundId) {
+  async createHands(sortedSeatsObj, roundId) {
     let handIds = [];
   
-    const hands = await Promise.all(userTableIds.map(async (id) => {
-      const newHand = await Hand.create({userTableId: id, roundId});
+    const hands = await Promise.all(sortedSeatsObj.map(async (seat) => {
+      const newHand = await Hand.create({userTableId: seat.id, roundId, initialBet: seat.currentBet});
       return newHand;
     }));
   
@@ -521,7 +523,7 @@ try{
     return handIds;
   },
 
-// Create mulitple hands at start of blackjack round
+// Create new hand when user splits hand during blackjack round
 async createHand(userTableId, roundId) {
   const newHand = await Hand.create({userTableId, roundId});
   if(!newHand) return false
@@ -569,46 +571,6 @@ async saveDealerHand(handObj) {
 
   return 
 },
-
-
-
-// Save hand at end of blackjack round
-async getUserStats(userId) {
-
-  
-  const userStats = await User.findByPk(userId, {
-    include: [
-      {
-        model: UserTable,
-        as: 'tables',
-        include: [
-          {
-            model: Hand,
-            attributes: ['id', 'cards', 'result', 'profitLoss', 'insuranceBet', ],
-            include: [
-              {
-                model: Round,
-                attributes: ['id', 'cards' ]
-              },
-            ],
-          },
-        ],
-        attributes: ['id', 'tableId', 'userId', 'active'],
-      },
-    ],
-    attributes: ['id', 'username', 'balance', 'rank'],
-  });
-
-  if(!userStats){
-    return false
-  } 
-
-
-
-  return userStats
-},
-
-
 
 
 };

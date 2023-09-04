@@ -25,14 +25,21 @@
 }
 
 
+.showgames-wrapper{
+  position: relative;
+  top: -5px;
+  left: -10px;
+  height: fit-content;
+  width: 99vw;
+  flex-direction: column;
+
+}
+
+
 
 .games-grid {
-  position: absolute;
-  left: 0px;
-  left: 50%;
-  transform: translate(-51%,0);
+  position: relative;
 
-  top: -50px;
 
   width: 95%;
   max-width: 1200px;
@@ -42,7 +49,24 @@
   grid-gap: 40px;
   grid-row-gap: 30px;
   transition: all 0.3s ease;
+
 }
+
+.winnerchatbox-wrapper{
+  position: relative;
+
+
+  width: 95%;
+  max-width: 1200px;
+  height: 400px;
+  margin-top: 30px;
+
+
+
+}
+
+
+
 
 .available-tables-grid {
   display: flex;

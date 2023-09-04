@@ -1,13 +1,27 @@
 
 
 
-.pokerchip-container{
+/* .pokerchip-container{
   width: 100%;
   width: 25px;
   height: 25px;
   aspect-ratio: 1/1;
   border-radius: 50%;
+} */
+
+
+.pokerchip-container{
+  width: 25px;
+  height: 25px;
+  aspect-ratio: 1/1;
+  border-radius: 50%;
+  background-image: url('../../images/blue-poker-chip.svg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
+
+
 
 
 

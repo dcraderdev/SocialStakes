@@ -3,7 +3,7 @@ import {
   SET_USER, REMOVE_USER, 
   SET_THEMES, CHANGE_NEON_THEME, CHANGE_TABLE_THEME,
   LEAVE_SEAT, TAKE_SEAT, PLAYER_ADD_TABLE_FUNDS,
-  REMOVE_PLAYER, GET_USER_STATS
+  REMOVE_PLAYER
 } from '../actions/actionTypes'
 
 
@@ -118,27 +118,6 @@ const userReducer = (state = initialState, action) => {
 
       return newState;
     }
-
-
-    case GET_USER_STATS: {
-      // console.log('-*_*_*_*_*_*_*_*_*_*_*_*_*_**_');
-      // console.log('-*_*_*_*_*_*_*_*_*_*_*_*_*_**_');
-      // console.log('-*_*_*_*_*_*_*_*_*_*_*_*_*_**_');
-      // console.log('-*_*_*_*_*_*_*_*_*_*_*_*_*_**_');
-      // console.log(action.payload);
-      // console.log('-*_*_*_*_*_*_*_*_*_*_*_*_*_**_');
-      // console.log('-*_*_*_*_*_*_*_*_*_*_*_*_*_**_');
-      // console.log('-*_*_*_*_*_*_*_*_*_*_*_*_*_**_');
-      // console.log('-*_*_*_*_*_*_*_*_*_*_*_*_*_**_');
-
-      let newStats = action.payload
-      return { ...newState, stats:newStats};
-    }
-
-
-
-    
-
 
 
     default:

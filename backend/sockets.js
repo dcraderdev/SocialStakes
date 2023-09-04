@@ -252,6 +252,16 @@ module.exports = function (io) {
       let updatedTable = await gameController.getTableById(tableId);
       if(!updatedTable) return
 
+      console.log('-=-=-=-=-=-=-=-');
+      console.log('-=-=-=-=-=-=-=-');
+      console.log('-=-=-=-=-=-=-=-');
+      console.log(updatedTable);
+      console.log('-=-=-=-=-=-=-=-');
+      console.log('-=-=-=-=-=-=-=-');
+      console.log('-=-=-=-=-=-=-=-');
+      console.log('-=-=-=-=-=-=-=-');
+
+
       if (!rooms[tableId]) {
         rooms[tableId] = roomInit();
         rooms[tableId].gameSessionId = updatedTable.gameSessions[0].id;
@@ -260,7 +270,7 @@ module.exports = function (io) {
         rooms[tableId].shufflePoint = updatedTable.shufflePoint;
         rooms[tableId].conversationId = updatedTable.Conversation.id;
         rooms[tableId].chatName = updatedTable.Conversation.chatName;
-        rooms[tableId].gameType = updatedTable.Game.variant;
+        rooms[tableId].gameType = updatedTable.Game.shortName;
       }
 
       return updatedTable

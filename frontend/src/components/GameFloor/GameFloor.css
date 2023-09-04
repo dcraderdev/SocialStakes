@@ -29,10 +29,8 @@
   position: relative;
   top: -5px;
   left: -10px;
-  height: calc(100vh - 265px);
   height: fit-content;
   width: 99vw;
-  border: rgb(202, 17, 17) solid 1px;
   flex-direction: column;
 
 }
@@ -52,7 +50,6 @@
   grid-row-gap: 30px;
   transition: all 0.3s ease;
 
-  border: yellow solid 1px;
 }
 
 .winnerchatbox-wrapper{
@@ -66,7 +63,6 @@
 
 
 
-  border: yellow solid 1px;
 }
 
 

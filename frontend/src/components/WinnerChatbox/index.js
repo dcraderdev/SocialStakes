@@ -1,11 +1,14 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useContext } from 'react';
 import { useSelector } from 'react-redux';
 import './WinnerChatbox.css';
 import MessageTile from '../MessageTile';
 
+import { WindowContext } from '../../context/WindowContext';
+
 const WinnerChatbox = () => {
   const winnerMessages = useSelector((state) => state.chats.winnerMessages || []);
   const bottomRef = useRef(null);
+  const {windowWidth} = useContext(WindowContext)
 
   useEffect(() => {
     if (bottomRef.current) {
@@ -35,14 +38,23 @@ const WinnerChatbox = () => {
 
   return (
     <div className="winnerchatbox-container">
+        <div className={`winnerchatbox-item-container header flex`}>
+              <div className={`winnerchatbox-item flex`}>Game</div>
+              <div className={`winnerchatbox-item flex`}>User</div>
+{ windowWidth > 1000 &&             <div className={`winnerchatbox-item flex`}>Time</div>}
+              <div className={`winnerchatbox-item flex`}>Bet</div>
+              <div className={`winnerchatbox-item flex`}>Payout</div>
+        </div>
+
+
         <div className={`winnerchatbox-message-container`}>
           {winnerMessages.map((message, index) => (
-            <div className='flex'>
-              <div>{message.gameType}</div>
-              <div>{message.bet}</div>
-              <div>{message.payout}</div>
-              <div>{message.username}</div>
-              <div>{convertToReadableFormatShort(message.createdAt)}</div>
+            <div className={`winnerchatbox-item-container flex ${index % 2 === 0 ? ' darker' : ' lighter'}`}>
+              <div className={`winnerchatbox-item flex`}>{message.gameType}</div>
+              <div className={`winnerchatbox-item flex`}>{message.username}</div>
+{ windowWidth > 1000 &&             <div className={`winnerchatbox-item flex`}>{convertToReadableFormatShort(message.createdAt)}</div>}
+              <div className={`winnerchatbox-item flex`}>$ {message.bet}</div>
+              <div className={`winnerchatbox-item flex`}>$ {message.payout}</div>
 
             </div>
           ))}

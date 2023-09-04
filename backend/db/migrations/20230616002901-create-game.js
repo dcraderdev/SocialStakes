@@ -23,6 +23,10 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING
       },
+      shortName: {
+        allowNull: false,
+        type: Sequelize.STRING
+      },
       decksUsed: {
         allowNull: false,
         type: Sequelize.INTEGER

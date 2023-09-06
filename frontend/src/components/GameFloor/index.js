@@ -21,7 +21,7 @@ import Navigation from '../Navigation';
 import gameTileBackground from '../../images/game-tile-background.jpeg';
 import TableSortBar from '../TableSortBar';
 import ChatInputArea from '../ChatInputArea';
-import WinnerChatbox from '../WinnerChatbox';
+import PayoutChatbox from '../PayoutChatbox';
 
 function GameFloor() {
   const { socket } = useContext(SocketContext);
@@ -225,7 +225,7 @@ function GameFloor() {
 
 
               <div className="winnerchatbox-wrapper">
-                  <WinnerChatbox />
+                  <PayoutChatbox />
               </div>
 
 </div>

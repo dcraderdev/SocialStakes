@@ -1,7 +1,7 @@
 
 import { 
   ADD_MESSAGE, EDIT_MESSAGE, DELETE_MESSAGE, GET_USER_CONVERSATIONS, SHOW_CONVERSATION_BY_ID, SHOW_FRIENDS, ADD_CONVERSATION, REMOVE_CONVERSATION,
-  ADD_WINNER_MESSAGE, 
+  ADD_PAYOUT_MESSAGE, 
   REMOVE_FRIEND, 
   CHANGE_CHAT_NAME, 
   REMOVE_USER_FROM_CONVERSATION,
@@ -19,29 +19,25 @@ const initialState = {
   generalChat: null,
   conversationInvites: [],
   friends: [],
-  winnerMessages: []
+  payoutMessages: []
 }
 
-const gamesReducer = (state = initialState, action) => {
+const chatReducer = (state = initialState, action) => {
   const newState = { ...state };
 
   switch (action.type) {
 
-    case ADD_WINNER_MESSAGE: {
-      console.log(action.payload);
+    case ADD_PAYOUT_MESSAGE: {
 
-      const newWinnerMessages = [...newState.winnerMessages, action.payload]
+      const newPayoutMessages = [...newState.payoutMessages, action.payload]
 
-      return { ...newState, winnerMessages: newWinnerMessages };
+      return { ...newState, payoutMessages: newPayoutMessages };
 
     }
 
 
     case ADD_MESSAGE: {
       const { id, conversationId, userId, username, content, tableId, chatName } = action.payload;
-
-
-      console.log(action.payload);
 
  
 
@@ -237,4 +233,4 @@ const gamesReducer = (state = initialState, action) => {
   }
 };
 
-export default gamesReducer;
+export default chatReducer;

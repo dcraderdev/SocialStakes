@@ -15,7 +15,15 @@ module.exports = function (io) {
   const rooms = {};
   const disconnectTimeouts = {};
   let disconnectTimes = {};
-  let lastWinners = [{createdAt: 1693856698676, gameType: 'Blackjack', username: 'Pine', bet: 1, payout: 2},{createdAt: 1693856698676, gameType: 'Blackjack', username: 'bigtree', bet: 1, payout: 0},{createdAt: 1693856698676, gameType: 'Blackjack', username: 'Pine', bet: 10, payout: 20},{createdAt: 1693856698676, gameType: 'Blackjack', username: 'bigtree', bet: 1, payout: 0},{createdAt: 1693856698676, gameType: 'Blackjack', username: 'bigtree', bet: 1, payout: 0},{createdAt: 1693856698676, gameType: 'Blackjack', username: 'bigtree', bet: 1, payout: 0},{createdAt: 1693856698676, gameType: 'Blackjack', username: 'bigtree', bet: 1, payout: 0}]
+  let lastPayouts = [
+    {createdAt: 1693856698676, gameType: 'Blackjack', username: 'Pine', bet: 1, payout: 2},
+    {createdAt: 1693856698676, gameType: 'Blackjack', username: 'bigtree', bet: 1, payout: 0},
+    {createdAt: 1693856698676, gameType: 'Blackjack', username: 'Pine', bet: 10, payout: 20},
+    {createdAt: 1693856698676, gameType: 'Blackjack', username: 'bigtree', bet: 1, payout: 2},
+    {createdAt: 1693856698676, gameType: 'Blackjack', username: 'Pine', bet: 1, payout: 0},
+    {createdAt: 1693856698676, gameType: 'Blackjack', username: 'bigtree', bet: 1, payout: 0},
+    {createdAt: 1693856698676, gameType: 'Blackjack', username: 'Pine', bet: 1, payout: 2}
+  ]
 
 
   // {createdAt: 1693856698676, gameType: 'Blackjack', username: 'bigtree', bet: 1, payout: 0}
@@ -66,6 +74,20 @@ module.exports = function (io) {
     socket.join(userId);
     socket.join('winners');
 
+    if(username === 'anon'){
+
+      console.log('here');
+      console.log('here');
+      console.log('here');
+      console.log('here');
+      console.log('here');
+      console.log('here');
+
+
+      socket.emit('initialize_anon_user', {lastPayouts});
+      return
+    }
+
     const userTables = await gameController.getUserTables(userId);
     const userFriends = await friendController.getUserFriends(userId);
     const userConversations = await chatController.getUserConversations(userId);
@@ -104,7 +126,7 @@ module.exports = function (io) {
     let initObj = {
       userFriends,
       userConversations,
-      lastWinners
+      lastPayouts
     } 
 
     socket.emit('initialize_user', initObj);
@@ -2379,26 +2401,26 @@ module.exports = function (io) {
 
 
         console.log('_*_*_*_*_*_*_**_*_*_**_*_*_*_*_**_');
-        console.log('lastWinners',lastWinners);
+        console.log('lastPayouts',lastPayouts);
         console.log('_*_*_*_*_*_*_**_*_*_**_*_*_*_*_**_');
 
 
 
-        if(lastWinners.length >=10){
-          lastWinners.shift()
-          lastWinners.push(newMessageObj)
+        if(lastPayouts.length >=10){
+          lastPayouts.shift()
+          lastPayouts.push(newMessageObj)
         } else{
-          lastWinners.push(newMessageObj)
+          lastPayouts.push(newMessageObj)
         }
 
         console.log('@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@');
         console.log('@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@');
-        console.log('lastWinners',lastWinners);
+        console.log('lastPayouts',lastPayouts);
         console.log('@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@');
         console.log('@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@');
 
         
-        io.in(room).emit('new_winner', newMessageObj);
+        io.in(room).emit('new_payout', newMessageObj);
 
       }
 

@@ -6,7 +6,7 @@ import * as gameActions from '../redux/middleware/games';
 
 import {
   addMessageAction,
-  addWinnerMessageAction,
+  addPayoutMessageAction,
   editMessageAction,
   deleteMessageAction,
   getUserConversationsAction,
@@ -59,11 +59,9 @@ const SocketProvider = ({ children }) => {
   const user = useSelector((state) => state.users.user);
 
   useEffect(() => {
-    if(!user){
-      return
-    }
-    let userId = user.id
-    let username = user.username
+
+    let userId = user ? user.id : 'anon'
+    let username = user ? user.username : 'anon'
 
     const backendUrl = process.env.NODE_ENV === 'production' ? process.env.REACT_APP_BACKEND_PROD_URL : 'http://localhost:8000';
     const socketConnection = io(backendUrl, {
@@ -79,20 +77,32 @@ const SocketProvider = ({ children }) => {
 
 
 
-
+ 
   useEffect(() => {
     if(socket){
       
+      socket.on('initialize_anon_user', (initObj) => {
+        if(initObj.lastPayouts.length > 0){
+          initObj.lastPayouts.forEach(payout=>{
+            dispatch(addPayoutMessageAction(payout));
+          })
+        }
+      }); 
+
+
       socket.on('initialize_user', (initObj) => {
         dispatch(getUserFriendsAction(initObj.userFriends));
         dispatch(getUserConversationsAction(initObj.userConversations));
 
-        if(initObj.lastWinners.length > 0){
-          initObj.lastWinners.forEach(message=>{
-            dispatch(addWinnerMessageAction(message));
+
+
+        if(initObj.lastPayouts.length > 0){
+          initObj.lastPayouts.forEach(payout=>{
+            dispatch(addPayoutMessageAction(payout));
           })
         }
       }); 
+
 
 
       socket.on('view_table', (tableObj) => {
@@ -137,9 +147,9 @@ const SocketProvider = ({ children }) => {
         dispatch(updateTableAction(updateObject)); 
       }); 
 
-      socket.on('new_winner', (messageObj) => {
+      socket.on('new_payout', (messageObj) => {
         console.log(messageObj);
-        dispatch(addWinnerMessageAction(messageObj));
+        dispatch(addPayoutMessageAction(messageObj));
       });
 
       socket.on('new_message', (messageObj) => {

@@ -1,22 +1,27 @@
 import React, { useRef, useEffect, useContext } from 'react';
 import { useSelector } from 'react-redux';
-import './WinnerChatbox.css';
+import './PayoutChatbox.css';
 import MessageTile from '../MessageTile';
 
 import { WindowContext } from '../../context/WindowContext';
 
-const WinnerChatbox = () => {
-  const winnerMessages = useSelector((state) => state.chats.winnerMessages || []);
+const PayoutChatbox = () => {
+  const payoutMessages = useSelector((state) => state.chats.payoutMessages || []);
   const bottomRef = useRef(null);
+  const chatboxRef = useRef(null);
   const {windowWidth} = useContext(WindowContext)
 
+  // useEffect(() => {
+  //   if (bottomRef.current) {
+  //     bottomRef.current.scrollIntoView({ behavior: 'smooth' });
+  //   }
+  // }, [payoutMessages]);
+
   useEffect(() => {
-    if (bottomRef.current) {
-      bottomRef.current.scrollIntoView({ behavior: 'smooth' });
+    if (chatboxRef.current) {
+      chatboxRef.current.scrollTop = chatboxRef.current.scrollHeight;
     }
-  }, [winnerMessages]);
-
-
+}, [payoutMessages]);
 
 
     function convertToReadableFormatShort(timestamp) {
@@ -47,9 +52,9 @@ const WinnerChatbox = () => {
         </div>
 
 
-        <div className={`winnerchatbox-message-container`}>
-          {winnerMessages.map((message, index) => (
-            <div className={`winnerchatbox-item-container flex ${index % 2 === 0 ? ' darker' : ' lighter'}`}>
+        <div className={`winnerchatbox-message-container`} ref={chatboxRef}>
+          {payoutMessages.map((message, index) => (
+            <div key={index} className={`winnerchatbox-item-container flex ${index % 2 === 0 ? ' darker' : ' lighter'}`}>
               <div className={`winnerchatbox-item flex`}>{message.gameType}</div>
               <div className={`winnerchatbox-item flex`}>{message.username}</div>
 { windowWidth > 1000 &&             <div className={`winnerchatbox-item flex`}>{convertToReadableFormatShort(message.createdAt)}</div>}
@@ -58,9 +63,9 @@ const WinnerChatbox = () => {
 
             </div>
           ))}
-          <div className="winnerchatbox-bottom-ref" ref={bottomRef}></div>
+          {/* <div className="winnerchatbox-bottom-ref" ref={bottomRef}></div> */}
         </div>
     </div>
   );
 };
-export default WinnerChatbox;
+export default PayoutChatbox;

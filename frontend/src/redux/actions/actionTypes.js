@@ -68,7 +68,7 @@ export const SHOW_CREATING_GAME = 'game/SHOW_CREATING_GAME'
 
 // chat
 export const ADD_MESSAGE = 'chat/ADD_MESSAGE';
-export const ADD_WINNER_MESSAGE = 'chat/ADD_WINNER_MESSAGE';
+export const ADD_PAYOUT_MESSAGE = 'chat/ADD_PAYOUT_MESSAGE';
 export const EDIT_MESSAGE = 'chat/EDIT_MESSAGE';
 export const DELETE_MESSAGE = 'chat/DELETE_MESSAGE';
 export const TOGGLE_SHOW_MESSAGES = 'chat/TOGGLE_SHOW_MESSAGES';

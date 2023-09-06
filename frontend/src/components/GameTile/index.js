@@ -6,7 +6,7 @@ import gameTileBackground from '../../images/game-tile-background2.jpeg'
 import Searching from '../../images/Searching.svg'
 
 
-const GameTile = ({game, cbFunc, delay}) => {
+const GameTile = ({game, cbFunc, delay, animateTiles}) => {
 
   const [isActive, setIsActive] = useState(true)
 
@@ -99,7 +99,7 @@ const GameTile = ({game, cbFunc, delay}) => {
 
   return (
     <div>
-      <div className='gametile-container rounded' style={tileStyle} onClick={() => cbFunc(game.gameType)}>
+      <div className={`gametile-container rounded ${animateTiles ? 'animate' : ''}`} style={tileStyle} onClick={() => cbFunc(game.gameType)}>
 
         
         <div className='gametile-name'>{getIcon(game.gameType)}</div>
@@ -108,7 +108,7 @@ const GameTile = ({game, cbFunc, delay}) => {
         )}
 
 
-        <img src={gameTileBackground} alt='game tile' ></img>
+        {/* <img src={gameTileBackground} alt='game tile' ></img> */}
 
 
 

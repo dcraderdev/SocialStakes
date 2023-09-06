@@ -1,7 +1,7 @@
 
 import {
   ADD_MESSAGE, EDIT_MESSAGE, DELETE_MESSAGE, 
-  ADD_WINNER_MESSAGE,
+  ADD_PAYOUT_MESSAGE,
   GET_USER_CONVERSATIONS, 
   SHOW_CONVERSATION_BY_ID, 
   ADD_CONVERSATION, REMOVE_CONVERSATION,
@@ -19,10 +19,11 @@ export const addMessageAction = (messageObj) => {
     payload: messageObj
   };
 };
-export const addWinnerMessageAction = (messageObj) => {
+export const addPayoutMessageAction = (payout) => {
+  console.log(payout);
   return {
-    type: ADD_WINNER_MESSAGE,
-    payload: messageObj
+    type: ADD_PAYOUT_MESSAGE,
+    payload: payout
   };
 };
 

@@ -413,17 +413,35 @@ const toggleFocus = (newFocus) =>{
               </div>
             </div>
 
-          <div className={`creatinggameview-isPickingGameType-container styled-scrollbar ${hasCurrentTables ? '' : ' extended'} flex center`}>
+          {/* <div className={`creatinggameview-isPickingGameType-container styled-scrollbar ${hasCurrentTables ? '' : ' extended'}`}>
             {allGames &&
               Object.values(allGames).map((game, index) => (
+                // <GameTile key={index} game={game} cbFunc={gameSelect}  />
                 
-                
-                <div key={index} className={`creatinggameview-gametile-wrapper ${animateTiles ? 'animate' : ''}`} style={{animationDelay: `${index * 0.15}s`}} >
-                  <GameTile game={game} cbFunc={gameSelect}  />
+                // <div key={index} className={`creatinggameview-gametile-wrapper ${animateTiles ? 'animate' : ''}`} style={{animationDelay: `${index * 0.15}s`}} >
+                //   <GameTile game={game} cbFunc={gameSelect}  />
+                // </div>
+
+                <div key={index} 
+                    className={`creatinggameview-gametile-wrapper ${animateTiles ? 'animate' : ''}`} 
+                    style={{animationDelay: `${index * 0.15}s`}}>
+                   <GameTile game={game} cbFunc={gameSelect}  />
+
                 </div>
+       
 
               ))}
-          </div>
+          </div> */}
+
+
+<div className={`creatinggameview-isPickingGameType-container styled-scrollbar ${hasCurrentTables ? '' : ' extended'}`}>
+                {allGames &&
+                  Object.values(allGames).map((game, index) => (
+
+                    <GameTile key={index} game={game} cbFunc={gameSelect} delay={index} style={{animationDelay: `${index * 3}s`}} animateTiles={animateTiles} />
+
+                  ))}
+              </div>
 
   </div>
 

@@ -180,25 +180,24 @@
 }
 
 
-.creatinggameview-isPickingGameType-container{
-  position: relative;
-  height: 100%;
-  width: 99%;
-  transition: all .5s ease;
+
+
+
+.creatinggameview-isPickingGameType-container {
   display: grid;
-  grid-template-rows: auto;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 230px));
-  grid-gap: 20px;
-  grid-row-gap: 10px;
-  overflow-y: scroll;
-  overflow-x: hidden;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 2fr));
+  
+  gap: 20px;  
+  justify-content: center;
+
 }
 
 
-.creatinggameview-isPickingGameType-container > * { 
-  max-width: 400px;
-  max-height: 300px;
-}
+
+
+
+
+
 
 
 .creatinggameview-isPickingGameType-container{
@@ -210,8 +209,9 @@
   position: relative;
   height: calc(100vh - 170px);
   flex-direction: column;
-}
 
+
+}
 
 
 
@@ -222,6 +222,8 @@
     grid-template-rows: auto;
     grid-template-columns: repeat(auto-fit, max(150px, 30%));
     overflow-y: scroll;
+
+
   }
 }
 

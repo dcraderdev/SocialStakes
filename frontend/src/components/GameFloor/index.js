@@ -7,20 +7,18 @@ import {
   showGamesAction,
   showTablesAction,
 } from '../../redux/actions/gameActions';
-import GameTile from '../GameTile';
-import TableTile from '../TableTile';
 
 import { SocketContext } from '../../context/SocketContext';
 import { ModalContext } from '../../context/ModalContext';
 
 import './GameFloor.css';
-import Game from '../Game';
-import CreatingGameView from '../CreatingGameView';
-import Navigation from '../Navigation';
 
-import gameTileBackground from '../../images/game-tile-background.jpeg';
+import GameTile from '../GameTile';
+import Game from '../Game';
+import Navigation from '../Navigation';
+import CreatingGameView from '../CreatingGameView';
+import TableTile from '../TableTile';
 import TableSortBar from '../TableSortBar';
-import ChatInputArea from '../ChatInputArea';
 import PayoutChatbox from '../PayoutChatbox';
 
 function GameFloor() {

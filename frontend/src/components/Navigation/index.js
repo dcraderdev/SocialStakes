@@ -84,7 +84,7 @@ function Navigation(){
         </div>
 
         
-      <nav className="nav-bar style2-color1">
+      <nav className="nav-bar">
         <div className='nav-buttons'>
           <div className='logo-container flex center'>
             <div className='logo-image-container flex center'>

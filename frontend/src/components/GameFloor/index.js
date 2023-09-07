@@ -182,7 +182,7 @@ function GameFloor() {
             {/* private game buttons */}
             {!activeTable && !showCreatingGame && (
               <div>
-                <div className="private-game-buttons fade-in">
+                <div className="private-game-buttons">
                   <div
                     className="private-game-button flex center"
                     onClick={startPrivateGame}

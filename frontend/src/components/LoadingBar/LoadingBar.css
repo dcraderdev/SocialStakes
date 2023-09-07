@@ -1,0 +1,53 @@
+
+
+.progress {
+  --progress: 0%;
+  width: 80vw;        /* Set the width to be 80% of the viewport width */
+  min-width: 300px;   /* Ensure it's at least 300px wide, based on your initial code */
+  max-width: 800px; 
+  height: 50px;
+  margin: 9em auto;
+  border: 1px solid #fff;
+  border: 1px solid rgb(96, 96, 96);
+  border-radius: 40px;
+  padding: 12px 10px;
+
+  /* padding-left: 20px;
+  padding-right: 20px; */
+  box-shadow: 0 0 10px #aaa;
+  top: 20%;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+
+}
+
+.progress .bar {
+  width: var(--progress);
+  border-radius: 40px;
+
+  height: 100%;
+  background: linear-gradient(gold, #c85, gold);
+  background: linear-gradient(rgb(165, 3, 0), rgb(193, 3, 0), rgb(165, 3, 0));
+  background-repeat: repeat;
+  box-shadow: 0 0 10px 0px orange;
+  box-shadow: 0 0 10px 0px red;
+  animation: 
+    shine 4s ease-in infinite,
+    end 1s ease-out 1 2s;
+  transition: width 1s 1s;
+}
+
+
+
+@keyframes shine {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 50px; }
+}
+
+@keyframes end {
+  /* 0%, 100% { box-shadow: 0 0 10px 0px orange; }
+  50% { box-shadow: 0 0 15px 5px orange; } */
+  0%, 100% { box-shadow: 0 0 5px 3px rgba(255, 35, 35, 0.512); }
+  50% { box-shadow: 0 0 5px 5px rgba(255, 35, 35, 0.512) }
+}

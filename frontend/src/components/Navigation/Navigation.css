@@ -15,6 +15,9 @@
 
 
 
+
+
+
 .nav-active-games {
   position: fixed;
   display: flex;
@@ -64,6 +67,8 @@
 .nav-user-button:last-child{
   margin-right: 20px;
 }
+
+
 .nav-user-button{
   cursor: pointer;
   border-left: rgb(142, 147, 160) solid 1px;
@@ -75,9 +80,20 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  text-align: center;
   color: azure;
   font-weight: 300;
+
+
 }
+
+
+
+
+
+
+
+
 
 
 .nav-user-button .fa-user:hover,
@@ -116,7 +132,31 @@
   width: 60px;
 }
 
+.demousers-container {
+  max-height: 50px;
+  overflow: hidden;
+  transition: max-height 1s ease;
+  width: 80px;
 
+
+}
+
+
+
+.demousers-container:hover {
+  max-height: 300px;
+  max-height: 300px;
+  overflow: visible;
+}
+
+
+
+
+.nav-user-button.demo{
+  border-left: none;
+  background-color: #272727;
+
+}
 
 
 
@@ -160,7 +200,33 @@
 }
 
 
+@media screen and (max-width: 450px) {
+  
+  .logo-container{
+    position: relative;
+    left: -10px;
+  }
 
+
+  .mobile{
+    left: -20px;
+  }
+
+  .demousers-container {
+    max-height: 50px;
+    overflow: hidden;
+    transition: max-height 1s ease;
+    width: 60px;
+  
+  
+  }
+
+  .nav-user-button{
+    width: 60px;
+
+  }
+
+}
 
 
 

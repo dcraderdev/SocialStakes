@@ -8,6 +8,8 @@
   border-radius: 5px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   flex-direction: column;
+  max-width: 100vw;
+
 }
 
 
@@ -15,6 +17,7 @@
 .settingsmodal-header{
   width: 490px;
   height: 60px;
+  max-width: 100vw;
 
   font-size: min(25px, 5vw);
   color: white;

@@ -32,7 +32,8 @@ import LeaveConversationModal from './components/LeaveConversationModal';
 import AddFriendsModal from './components/AddFriendsModal';
 import ThemesModal from './components/ThemesModal';
 import AboutMeModal from './components/AboutMeModal';
-
+import LoadingBar from './components/LoadingBar';
+import Logo from './components/Logo';
 
 
 import gameTileBackground from './images/game-tile-background2.jpeg'
@@ -43,7 +44,8 @@ function App() {
 
   const location = useLocation();
   const dispatch = useDispatch();
-  const [loaded, isLoaded] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [fillBar, setFillBar] = useState(false);
   const { modal, openModal, closeModal, setUpdateObj } = useContext(ModalContext);
   // const {  } = useContext(SocketContext);
   const user = useSelector((state) => state.users.user);
@@ -54,7 +56,7 @@ function App() {
 
   // if no user than we force open login modal
   useEffect(() => {
-    isLoaded(false);
+    setIsLoaded(false);
     const img = new Image();
     const img2 = new Image();
     img.src = gameTileBackground;
@@ -62,29 +64,43 @@ function App() {
     dispatch(sessionActions.loadThemes())
     dispatch(sessionActions.restoreUser())
       .then(() => {
-        isLoaded(true);
-        // dispatch(friendActions.getUserFriends())
-        // dispatch(chatActions.getUserConversations())
+        setFillBar(true)
+        setTimeout(() => {
+          console.log('here');
+
+          setIsLoaded(true);
+          
+        }, 2500);
+        // setIsLoaded(false);
+
 
       })
       .catch(() => {
-        isLoaded(true);
-        openModal('login');
-        setUpdateObj('noUser');
+        setFillBar(true)
+
+        setTimeout(() => {
+          setIsLoaded(true);
+          setUpdateObj('noUser');
+        }, 2500);
+        
       });
   }, [dispatch]);
 
 
 
 
+console.log(isLoaded); 
 
 
 
   return (
     <>
 
-      {/* {loaded && <Navigation />} */}
-
+        <div className={`loading-wrapper flex center ${isLoaded ? 'fade-out' : ''}`}>
+          <Logo />
+          <LoadingBar isLoaded={setFillBar} />
+        </div>
+ 
 
       {modal === 'login' && (
         <div className='modal-container'>
@@ -186,26 +202,26 @@ function App() {
         <Switch>
 
           <Route path="/" exact>
-            <GameFloor />
+            {isLoaded && <GameFloor/>}
           </Route>
 
           <Route path="/friends" exact>
-            {!user && <GameFloor/>}
-            {loaded && <Navigation />}
-            <FriendsPage />
+            {isLoaded && !user && <GameFloor/>}
+            {isLoaded && <Navigation />}
+            {isLoaded && <FriendsPage />}
           </Route>
 
 
           <Route path="/stats" exact>
-            {!user && <GameFloor/>}
-            {loaded && <Navigation />}
-            <StatPage />
+            {isLoaded && !user && <GameFloor/>}
+            {isLoaded && <Navigation />}
+            {isLoaded && <StatPage />}
           </Route>
 
           
           <Route>
             <h1>404:Unknown Route</h1>
-            {loaded && <Navigation />}
+            {isLoaded && <Navigation />}
             <UnknownRoutePage/>
           </Route>
         </Switch>

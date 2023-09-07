@@ -248,6 +248,14 @@ body{
   animation: fadeIn .5s forwards ease-in;
 }
 
+.fade-in-long {
+  animation: fadeIn 2s forwards ease-in;
+}
+
+
+
+
+
 @keyframes fadeOut {
   from {
     opacity: 1;
@@ -260,6 +268,7 @@ body{
 
 .fade-out{
   animation: fadeOut .5s forwards;
+  animation-delay: 1s;
 }
 
 

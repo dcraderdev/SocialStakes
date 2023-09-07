@@ -27,7 +27,7 @@
 
 .showgames-wrapper{
   position: relative;
-  top: -5px;
+  top: -65px;
   left: -10px;
   height: fit-content;
   width: 99vw;
@@ -39,6 +39,8 @@
 
 .games-grid {
   position: relative;
+  left: 10px;
+
 
 
   width: 95%;
@@ -60,7 +62,7 @@
 
 .winnerchatbox-wrapper{
   position: relative;
-
+  left: 10px;
 
   width: 95%;
   max-width: 1200px;
@@ -84,7 +86,7 @@
 
   position: absolute;
   left: 0px;
-  left: 50%;
+  left: calc(50% + 10px);
   transform: translate(-51%,0);
 
 }
@@ -252,6 +254,23 @@
 @media screen and (min-width: 700px) {
   .private-game-button{
     font-size: 22px;
+  }
+
+  .gameicon-container{
+    font-size: 15px;
+  }
+
+}
+
+@media screen and (max-width: 700px) {
+  .private-game-buttons{
+    width: 90vw;
+    justify-content: space-around;
+  }
+
+  .private-game-button{
+    font-size: 16px;
+    width: 40vw;
   }
 
   .gameicon-container{

@@ -357,7 +357,7 @@ function ProfileButtonModal() {
                 openModal('AboutMeModal')
               }}
             >
-              <div className="profilemenu-option-text">About Me</div>
+              <div className="profilemenu-option-text">About</div>
             </div>
           </div>
         )}

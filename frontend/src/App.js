@@ -79,13 +79,10 @@ function App() {
         setFillBar(true)
 
         setTimeout(() => {
-          console.log('here');
           setIsLoaded(true);
-          
+          setUpdateObj('noUser');
         }, 2500);
         
-        openModal('login');
-        setUpdateObj('noUser');
       });
   }, [dispatch]);
 

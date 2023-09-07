@@ -66,10 +66,7 @@ function App() {
       .then(() => {
         setFillBar(true)
         setTimeout(() => {
-          console.log('here');
-
           setIsLoaded(true);
-          
         }, 2500);
         // setIsLoaded(false);
 
@@ -89,7 +86,6 @@ function App() {
 
 
 
-console.log(isLoaded); 
 
 
 

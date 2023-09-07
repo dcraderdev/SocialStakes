@@ -5,7 +5,7 @@ import './Logo.css'
 const Logo = () => {
 
   return (
-    <div className='comingsoon-container flex'>
+    <div className='comingsoon-container fade-in-long flex'>
 
 
       <div className='comingsoon-image-container flex center'>

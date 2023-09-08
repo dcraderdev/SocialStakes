@@ -130,12 +130,12 @@ const SocketProvider = ({ children }) => {
 
       socket.on('get_updated_table', (updateObject) => {
 
-        // console.log('_+_+_+_+_+_+_+_+_+_+_+');
-        // console.log('_+_+_+_+_+_+_+_+_+_+_+');
-        // console.log(updateObject);
-        // console.log('_+_+_+_+_+_+_+_+_+_+_+');
-        // console.log('_+_+_+_+_+_+_+_+_+_+_+');
-        // console.log('_+_+_+_+_+_+_+_+_+_+_+');
+        console.log('_+_+_+_+_+_+_+_+_+_+_+');
+        console.log('_+_+_+_+_+_+_+_+_+_+_+');
+        console.log(updateObject);
+        console.log('_+_+_+_+_+_+_+_+_+_+_+');
+        console.log('_+_+_+_+_+_+_+_+_+_+_+');
+        console.log('_+_+_+_+_+_+_+_+_+_+_+');
 
         if(updateObject.resetRoomForNextHand){
           // console.log('resetRoomForNextHand');
@@ -203,7 +203,11 @@ const SocketProvider = ({ children }) => {
         dispatch(playerDisconnectAction({seat, tableId, timer})); 
       });  
 
-      socket.on('player_reconnected', ({seat, tableId, timer}) => {
+      socket.on('player_reconnected', ({seat, tableId, convoId, timer}) => {
+        console.log('here');
+        console.log('here');
+        console.log('here');
+
         dispatch(playerReconnectAction({seat, tableId, timer})); 
       });  
 

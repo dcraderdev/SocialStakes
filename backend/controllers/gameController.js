@@ -284,7 +284,22 @@ try{
 
 
   async getUserTables(userId) {
-    const userTables = await UserTable.findAll({where:{userId,active:true}})
+    const userTables = await UserTable.findAll({
+      where:{
+        userId,
+        active:true
+      },
+      include: [
+        {
+          model: Table,
+          attributes: ['id'],
+          include: [{
+            model: Conversation,
+            attributes: ['id']
+          }]
+        }
+      ]
+    })
     if(!userTables){
       return false
     }

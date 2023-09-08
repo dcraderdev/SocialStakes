@@ -3,6 +3,7 @@ const { chatController } = require('./controllers/chatController');
 const { friendController } = require('./controllers/friendController');
 const { cardConverter } = require('./controllers/cardConverter');
 const { botController } = require('./controllers/botController');
+const { connectionController } = require('./controllers/connectionController');
 
 const {
   drawCards,
@@ -10,207 +11,90 @@ const {
   bestValue,
 } = require('./controllers/cardController');
 
+const {
+  roomInit,
+  connections,
+  rooms,
+  disconnectTimeouts,
+  disconnectTimes,
+  lastPayouts
+} = require('./global');
+
+
 module.exports = function (io) {
-  const connections = {};
+ 
 
-  const rooms = {};
-  const disconnectTimeouts = {};
-  let disconnectTimes = {};
 
-  let lastPayouts = [
-    {
-      createdAt: 1693856698676,
-      gameType: 'Blackjack',
-      username: 'Pine',
-      bet: 1,
-      payout: 2,
-    },
-    {
-      createdAt: 1693856698676,
-      gameType: 'Blackjack',
-      username: 'bigtree',
-      bet: 1,
-      payout: 0,
-    },
-    {
-      createdAt: 1693856698676,
-      gameType: 'Blackjack',
-      username: 'Pine',
-      bet: 10,
-      payout: 20,
-    },
-    {
-      createdAt: 1693856698676,
-      gameType: 'Blackjack',
-      username: 'bigtree',
-      bet: 1,
-      payout: 2,
-    },
-    {
-      createdAt: 1693856698676,
-      gameType: 'Blackjack',
-      username: 'Pine',
-      bet: 1,
-      payout: 0,
-    },
-    {
-      createdAt: 1693856698676,
-      gameType: 'Blackjack',
-      username: 'bigtree',
-      bet: 1,
-      payout: 0,
-    },
-    {
-      createdAt: 1693856698676,
-      gameType: 'Blackjack',
-      username: 'Pine',
-      bet: 1,
-      payout: 2,
-    },
-  ];
 
-  // {createdAt: 1693856698676, gameType: 'Blackjack', username: 'bigtree', bet: 1, payout: 0}
 
-  const roomInit = () => {
-    return {
-      seats: {},
-      roundId: null,
-      actionSeat: null,
-      countdownEnd: null,
-      actionEnd: null,
-      handInProgress: false,
-      gameSessionId: null,
-      serverSeed: null,
-      nonce: 1,
-      deck: null,
-      cursor: 0,
-      dealerCards: {
-        naturalBlackjack: false,
-        hiddenCards: [],
-        visibleCards: [],
-        otherCards: [],
-        handSummary: null,
-        bestValue: null,
-      },
-      messages: [],
-      conversationId: null,
-      sortedActivePlayers: [],
-      sortedFinishedPlayers: [],
-      forfeitedPlayers: [],
-      insuredPlayers: {},
-    };
-  };
+    let countdownInterval = null;
 
-  const bellagioTable = {};
-
-  const handleBotInit = async () => {
-    let bots = [
-      {
-        id: 'e10d8de4-f4c8-4d28-9324-56aa9c924a83',
-        username: 'Jeff Ma',
-      },
-      {
-        id: 'e10d8de4-f4c8-4d28-9324-56aa9c924a84',
-        username: 'John Chang',
-      },
-      {
-        id: 'e10d8de4-f4c8-4d28-9324-56aa9c924a85',
-        username: 'Bill Kaplan',
-      },
-      {
-        id: 'e10d8de4-f4c8-4d28-9324-56aa9c924a86',
-        username: 'Mike Aponte',
-      },
-      {
-        id: 'e10d8de4-f4c8-4d28-9324-56aa9c924a87',
-        username: 'Jane Willis',
-      },
-      {
-        id: 'e10d8de4-f4c8-4d28-9324-56aa9c924a88',
-        username: 'Seymon Dukach'
+    
+    
+    
+    async function initializeBot() {
+      if (!rooms['be11a610-7777-7777-7777-7be11a610777']) {
+        await botController.handleBotInit();
       }
-    ];
-
-    let bellagioTableId = 'be11a610-7777-7777-7777-7be11a610777';
-
-    let updatedTable = await gameController.getTableById(bellagioTableId);
-    if (!updatedTable) return;
-
-    if (!rooms[bellagioTableId]) {
-      rooms[bellagioTableId] = roomInit();
-      rooms[bellagioTableId].gameSessionId = updatedTable.gameSessions[0].id;
-      rooms[bellagioTableId].blockHash = updatedTable.gameSessions[0].blockHash;
-      rooms[bellagioTableId].decksUsed = updatedTable.Game.decksUsed;
-      rooms[bellagioTableId].shufflePoint = updatedTable.shufflePoint;
-      rooms[bellagioTableId].conversationId = updatedTable.Conversation.id;
-      rooms[bellagioTableId].chatName = updatedTable.Conversation.chatName;
-      rooms[bellagioTableId].gameType = updatedTable.Game.shortName;
     }
+    initializeBot();
+    
+    
+    
+    if (!countdownInterval) {
+        countdownInterval = connectionController.startGlobalCountdown(io, rooms); 
+    }
+    
+    // _*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_
+    // _*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_
+    // _*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_
+    // _*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_
 
-    bots.forEach(async (user, index) => {
-
-      let tableId = bellagioTableId;
-      let seat = index + 1;
-      let amount = 50000;
-
-
-      await gameController.removeUserFromTables(user.id);
-
-      const takeSeat = await gameController.takeSeat(
-        tableId,
-        seat,
-        user,
-        amount
-      );
-
-      if (takeSeat) {
-        const takeSeatObj = {
-          id: takeSeat.id,
-          seat: takeSeat.seat,
-          tableBalance: takeSeat.tableBalance,
-          tableId: takeSeat.tableId,
-          userId: takeSeat.userId,
-          disconnectTimer: takeSeat.disconnectTimer,
-          pendingBet: takeSeat.pendingBet,
-          currentBet: takeSeat.currentBet,
-          username: user.username,
-          forfeit: false,
-          hands: {},
-          cards: [],
-          insurance: {
-            accepted: false,
-            bet: 0,
-          },
-        }; 
-
-        rooms[tableId].seats[seat] = takeSeatObj;
-      }
-    });
-  };
 
   io.on('connection', async (socket) => {
     const userId = socket.handshake.query.userId;
     const username = socket.handshake.query.username;
 
-    let socketId = socket.id;
+    // let socketId = socket.id;
 
-    socket.join(userId);
-    socket.join('winners');
+    // socket.join(userId);
+    // socket.join('winners');
 
+    // check current connections
+    // if has current connections 
+    
+    // check if user has recently disconnected
 
-
-    if (!rooms['be11a610-7777-7777-7777-7be11a610777']) {
-      await handleBotInit();
-    }
 
     if (username === 'anon') {
-      socket.emit('initialize_anon_user', { lastPayouts });
+      await connectionController.startConnection(socket, io)
       return;
     }
+ 
 
-    const userTables = await gameController.getUserTables(userId);
-    const userFriends = await friendController.getUserFriends(userId);
-    const userConversations = await chatController.getUserConversations(userId);
+
+    let isReconnecting = connectionController.checkReconnection(socket, io)
+
+    if(isReconnecting){
+      await connectionController.handleReconnection(socket, io)
+    } else {
+      await connectionController.startConnection(socket, io)
+    }
+
+
+
+
+
+
+
+    // if (username === 'anon') {
+    //   socket.emit('initialize_anon_user', { lastPayouts });
+    //   return;
+    // }
+
+    // const userTables = await gameController.getUserTables(userId);
+    // const userFriends = await friendController.getUserFriends(userId);
+    // const userConversations = await chatController.getUserConversations(userId);
 
     // console.log('-=-=-=-=-=-=-=-=-=');
     // console.log('--- CONNECTING ---');
@@ -222,62 +106,87 @@ module.exports = function (io) {
 
     // console.log('-=-=-=-=-=-=-=-=-=');
 
-    if (!connections[userId]) {
-      connections[userId] = {};
-    }
+    // if (!connections[userId]) {
+    //   connections[userId] = {};
+    // }
 
-    connections[userId][socketId] = {
-      socket: socket,
-      status: 'connected',
-      connectedAt: Date.now(),
-      timeOfLastAction: Date.now(),
-    };
+    // connections[userId][socketId] = {
+    //   socket: socket,
+    //   status: 'connected',
+    //   connectedAt: Date.now(),
+    //   timeOfLastAction: Date.now(),
+    // };
 
-    if (userConversations) {
-      Object.keys(userConversations).map((conversation) => {
-        socket.join(conversation);
-      });
-    }
+    // if (userConversations) {
+    //   Object.keys(userConversations).map((conversation) => {
+    //     socket.join(conversation);
+    //   });
+    // }
 
-    let initObj = {
-      userFriends,
-      userConversations,
-      lastPayouts,
-    };
+    // let initObj = {
+    //   userFriends,
+    //   userConversations,
+    //   lastPayouts,
+    // };
 
-    socket.emit('initialize_user', initObj);
+    // socket.emit('initialize_user', initObj);
 
     // dispatch(friendActions.getUserFriends())
     // dispatch(chatActions.getUserConversations())
 
     // Reconnection logic
-    if (disconnectTimeouts[userId]) {
-      clearTimeout(disconnectTimeouts[userId]);
-      // console.log(`User ${username} reconnected, timeout cleared.`);
-      delete disconnectTimeouts[userId];
-      delete disconnectTimes[userId];
 
-      if (userTables) {
-        for (let table of userTables) {
-          let tableId = table.tableId;
-          let seat = table.seat;
-          let timer = 0;
-          let messageObj = {
-            tableId,
-            user: { username: 'Room', id: 1, rank: 0 },
-            message: {
-              content: `${username} has reconnected.`,
-              id: 0,
-            },
-          };
 
-          // io.in(tableId).emit('new_message', messageObj);
-          io.in(tableId).emit('player_reconnected', { seat, tableId, timer });
-        }
-      }
-    }
+    // if (disconnectTimeouts[userId]) {
+    //   clearTimeout(disconnectTimeouts[userId]);
+    //   // console.log(`User ${username} reconnected, timeout cleared.`);
+    //   delete disconnectTimeouts[userId];
+    //   delete disconnectTimes[userId];
+
+    //   if (userTables) {
+    //     for (let table of userTables) {
+    //       let tableId = table.tableId;
+    //       let seat = table.seat;
+    //       let timer = 0;
+    //       let messageObj = {
+    //         tableId,
+    //         user: { username: 'Room', id: 1, rank: 0 },
+    //         message: {
+    //           content: `${username} has reconnected.`,
+    //           id: 0,
+    //         },
+    //       };
+
+    //       // io.in(tableId).emit('new_message', messageObj);
+    //       io.in(tableId).emit('player_reconnected', { seat, tableId, timer });
+    //     }
+    //   }
+    // }
 
     socket.on('disconnect_user', async () => {
+
+      console.log('disconnect_user');
+      console.log('disconnect_user');
+      console.log('disconnect_user');
+      console.log('disconnect_user');
+      console.log('disconnect_user');
+      console.log('disconnect_user');
+      console.log('disconnect_user');
+      console.log('disconnect_user');
+      console.log('disconnect_user');
+      console.log('disconnect_user');
+      console.log('disconnect_user');
+      console.log('disconnect_user');
+      console.log('disconnect_user');
+      console.log('disconnect_user');
+      console.log('disconnect_user');
+      console.log('disconnect_user');
+      console.log('disconnect_user');
+      console.log('disconnect_user');
+      console.log('disconnect_user');
+
+
+
       const userTables = await gameController.getUserTables(userId);
       if (userTables) {
         for (let table of userTables) {
@@ -407,6 +316,27 @@ module.exports = function (io) {
     socket.on('disconnect', async () => {
       let timer = 10000; // 15 seconds
 
+      console.log('disconnect_user');
+      console.log('disconnect_user');
+      console.log('disconnect_user');
+      console.log('disconnect_user');
+      console.log('disconnect_user');
+      console.log('disconnect_user');
+      console.log('disconnect_user');
+      console.log('disconnect_user');
+      console.log('disconnect_user');
+      console.log('disconnect_user');
+      console.log('disconnect_user');
+      console.log('disconnect_user');
+      console.log('disconnect_user');
+      console.log('disconnect_user');
+      console.log('disconnect_user');
+      console.log('disconnect_user');
+      console.log('disconnect_user');
+      console.log('disconnect_user');
+      console.log('disconnect_user');
+      console.log('disconnect_user');
+
       disconnectTimes[userId] = Date.now();
 
       // Clear the existing timeout for this user (if any)
@@ -452,7 +382,7 @@ module.exports = function (io) {
         tableId,
         table: {
           actionSeat: rooms[tableId].actionSeat,
-          countdownEnd: rooms[tableId].countdownEnd,
+          dealCardsTimeStamp: rooms[tableId].dealCardsTimeStamp,
           actionEnd: rooms[tableId].actionEnd,
           handInProgress: rooms[tableId].handInProgress,
           seats: rooms[tableId].seats,
@@ -626,6 +556,8 @@ module.exports = function (io) {
       }
     });
 
+
+
     socket.on('remove_last_bet', async (betObj) => {
       const { tableId, seat, lastBet } = betObj;
       let room = tableId;
@@ -684,94 +616,94 @@ module.exports = function (io) {
         rooms[tableId].seats[seat].tableBalance -= bet;
       }
 
-      if (!rooms[tableId].countdownEnd) {
-        setDealCountdownEndTime(tableId, io);
+      if (!rooms[tableId].dealCardsTimeStamp) {
+        setDealCardsTimeStamp(tableId, io);
       }
 
       io.in(room).emit('new_bet', betObj);
     });
 
-    // Check for expired countdowns every second
-    setInterval(async () => {
-      for (const tableId in rooms) {
-        const room = rooms[tableId];
-        if (room.countdownEnd && Date.now() >= room.countdownEnd) {
-          room.countdownEnd = null;
+    // // Check for expired countdowns every second
+    // setInterval(async () => {
+    //   for (const tableId in rooms) {
+    //     const room = rooms[tableId];
+    //     if (room.countdownEnd && Date.now() >= room.countdownEnd) {
+    //       room.countdownEnd = null;
 
-          // if theres bets, start hand otherwise cancel
-          if (isNoBetsLeft(tableId)) {
-            stopTimer(tableId);
-            continue;
-          }
+    //       // if theres bets, start hand otherwise cancel
+    //       if (isNoBetsLeft(tableId)) {
+    //         stopTimer(tableId);
+    //         continue;
+    //       }
 
-          room.handInProgress = true;
+    //       room.handInProgress = true;
 
-          // Transfer pendingBet to currentBet for each seat
-          for (let seatKey in room.seats) {
-            const seat = room.seats[seatKey];
-            seat.currentBet += seat.pendingBet;
-            seat.pendingBet = 0;
-          }
+    //       // Transfer pendingBet to currentBet for each seat
+    //       for (let seatKey in room.seats) {
+    //         const seat = room.seats[seatKey];
+    //         seat.currentBet += seat.pendingBet;
+    //         seat.pendingBet = 0;
+    //       }
 
-          let updateObj = {
-            tableId,
-            table: {
-              handInProgress: true,
-              seats: room.seats,
-            },
-          };
+    //       let updateObj = {
+    //         tableId,
+    //         table: {
+    //           handInProgress: true,
+    //           seats: room.seats,
+    //         },
+    //       };
 
-          io.in(tableId).emit('get_updated_table', updateObj);
+    //       io.in(tableId).emit('get_updated_table', updateObj);
 
-          // Countdown finished, emit event to collect all bets
-          let countdownObj = {
-            countdownEnd: room.countdownEnd,
-            tableId,
-          };
-          io.in(tableId).emit('collect_bets', countdownObj);
-          dealCards(tableId, io);
-        }
-      }
-    }, 1000);
+    //       // Countdown finished, emit event to collect all bets
+    //       let countdownObj = {
+    //         countdownEnd: room.countdownEnd,
+    //         tableId,
+    //       };
+    //       io.in(tableId).emit('collect_bets', countdownObj);
+    //       dealCards(tableId, io);
+    //     }
+    //   }
+    // }, 1000);
 
-    async function setDealCountdownEndTime(tableId, io) {
+    function setDealCardsTimeStamp(tableId, io) {
       if (!rooms[tableId]) return;
-      if (rooms[tableId].countdownEnd) return;
+      if (rooms[tableId].dealCardsTimeStamp) return;
 
       let room = tableId;
       // Set countdown end time
       const countdownDuration = 1000; // 5 seconds
       const endTime = Math.ceil(Date.now() + countdownDuration);
-      rooms[tableId].countdownEnd = endTime;
+      rooms[tableId].dealCardsTimeStamp = endTime;
 
       let countdownObj = {
-        countdownEnd: endTime,
+        dealCardsTimeStamp: endTime,
         tableId,
       };
 
       io.in(room).emit('countdown_update', countdownObj);
     }
 
-    function isNoBetsLeft(tableId) {
-      if (!rooms[tableId]) return true;
+    // function isNoBetsLeft(tableId) {
+    //   if (!rooms[tableId]) return true;
 
-      // Iterate over all seats in the room to check for any remaining bets
-      for (let seat in rooms[tableId].seats) {
-        if (rooms[tableId].seats[seat].pendingBet > 0) {
-          return false; // If there is a bet, return false
-        }
-      }
-      // If no bets are found, return true
-      return true;
-    }
+    //   // Iterate over all seats in the room to check for any remaining bets
+    //   for (let seat in rooms[tableId].seats) {
+    //     if (rooms[tableId].seats[seat].pendingBet > 0) {
+    //       return false; // If there is a bet, return false
+    //     }
+    //   }
+    //   // If no bets are found, return true
+    //   return true;
+    // }
 
-    function stopTimer(tableId) {
-      let room = tableId;
-      let countdownObj = { countdownEnd: 0, tableId };
+    // function stopTimer(tableId) {
+    //   let room = tableId;
+    //   let countdownObj = { countdownEnd: 0, tableId };
 
-      rooms[tableId].countdownEnd = null;
-      io.in(room).emit('countdown_update', countdownObj);
-    }
+    //   rooms[tableId].countdownEnd = null;
+    //   io.in(room).emit('countdown_update', countdownObj);
+    // }
 
     socket.on('add_funds', async (seatObj) => {
       const { tableId, seat, userId, amount } = seatObj;
@@ -2388,3 +2320,4 @@ module.exports = function (io) {
     }
   });
 };
+

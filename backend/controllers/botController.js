@@ -16,83 +16,109 @@ const {
   UserPot,
 } = require('../db/models');
 
+const {
+  roomInit,
+  connections,
+  rooms,
+  disconnectTimeouts,
+  disconnectTimes,
+  lastPayouts
+} = require('../global');
+
+
 const {gameController} = require('./gameController')
 
 
 
 const botController = {
   
-  async botInit() {
 
-    // get bellagio table
-    // clear any seat with currentMIT player
-    // get MIT players
-    // have them take seats at table
 
-    let botIds = [    
-      "e10d8de4-f4c8-4d28-9324-56aa9c924a83",
-      "e10d8de4-f4c8-4d28-9324-56aa9c924a84",
-      "e10d8de4-f4c8-4d28-9324-56aa9c924a85",
-      "e10d8de4-f4c8-4d28-9324-56aa9c924a86",
-      "e10d8de4-f4c8-4d28-9324-56aa9c924a87",
-    ]
 
-    const table = await Table.findOne({
-      where: {
-        tableName: 'Bellagio'
+  async handleBotInit () {
+    let bots = [
+      {
+        id: 'e10d8de4-f4c8-4d28-9324-56aa9c924a83',
+        username: 'Jeff Ma',
       },
-      include: [
-        {
-          model: Game,
-          attributes: {
-            exclude: ['createdAt', 'updatedAt', 'rake']
-          },
-
-        },
-        {
-          model: GameSession,
-          as: 'gameSessions',
-          attributes: ['id','nonce','blockHash'],
-        },
-        {
-          model: Conversation,
-          attributes: ['id', 'chatName'],
-        },
-
-
-      ],
-      attributes: ['id','private', 'shufflePoint', 'tableName', 'userId'],
-    });
-
-    if (!table) {
-      return false;
-    }
-
-    
-    botIds.forEach( async (userId, index) => {
-      
-      let tableId = table.id
-      let seat = index + 1
-      let amount = 50000
-      let user = {
-        id: userId
+      {
+        id: 'e10d8de4-f4c8-4d28-9324-56aa9c924a84',
+        username: 'John Chang',
+      },
+      {
+        id: 'e10d8de4-f4c8-4d28-9324-56aa9c924a85',
+        username: 'Bill Kaplan',
+      },
+      {
+        id: 'e10d8de4-f4c8-4d28-9324-56aa9c924a86',
+        username: 'Mike Aponte',
+      },
+      {
+        id: 'e10d8de4-f4c8-4d28-9324-56aa9c924a87',
+        username: 'Jane Willis',
+      },
+      {
+        id: 'e10d8de4-f4c8-4d28-9324-56aa9c924a88',
+        username: 'Seymon Dukach'
       }
+    ];
+
+    let bellagioTableId = 'be11a610-7777-7777-7777-7be11a610777';
+
+    let updatedTable = await gameController.getTableById(bellagioTableId);
+    if (!updatedTable) return;
+
+    if (!rooms[bellagioTableId]) {
+      rooms[bellagioTableId] = roomInit();
+      rooms[bellagioTableId].gameSessionId = updatedTable.gameSessions[0].id;
+      rooms[bellagioTableId].blockHash = updatedTable.gameSessions[0].blockHash;
+      rooms[bellagioTableId].decksUsed = updatedTable.Game.decksUsed;
+      rooms[bellagioTableId].shufflePoint = updatedTable.shufflePoint;
+      rooms[bellagioTableId].conversationId = updatedTable.Conversation.id;
+      rooms[bellagioTableId].chatName = updatedTable.Conversation.chatName;
+      rooms[bellagioTableId].gameType = updatedTable.Game.shortName;
+    } 
+
+    bots.forEach(async (user, index) => {
+
+      let tableId = bellagioTableId;
+      let seat = index + 1;
+      let amount = 50000;
 
 
-      await gameController.removeUserFromTables(userId)
-      await gameController.takeSeat(tableId, seat, user, amount)
+      await gameController.removeUserFromTables(user.id);
+
+      const takeSeat = await gameController.takeSeat(
+        tableId,
+        seat,
+        user,
+        amount
+      );
+
+      if (takeSeat) {
+        const takeSeatObj = {
+          id: takeSeat.id,
+          seat: takeSeat.seat,
+          tableBalance: takeSeat.tableBalance,
+          tableId: takeSeat.tableId,
+          userId: takeSeat.userId,
+          disconnectTimer: takeSeat.disconnectTimer,
+          pendingBet: takeSeat.pendingBet,
+          currentBet: takeSeat.currentBet,
+          username: user.username,
+          forfeit: false,
+          hands: {},
+          cards: [],
+          insurance: {
+            accepted: false,
+            bet: 0,
+          },
+        }; 
+
+        rooms[tableId].seats[seat] = takeSeatObj;
+      }
     });
-
-
-
-
-
-
-
-  }
-
-
-
+  },
 
 
 
@@ -102,59 +128,6 @@ const botController = {
 }
 
 module.exports = {botController};
-
-
-
-// class BotController {
-//   constructor(botSocket) {
-//       this.botSocket = botSocket;
-//       this.currentGameState = null;
-//   }
-
-//   listenToGameEvents() {
-//       this.botSocket.on('gameUpdate', (gameState) => {
-//           this.currentGameState = gameState;
-//           this.decideNextAction();
-//       });
-//   }
-
-//   decideNextAction() {
-//       // Decision logic here. For simplicity, let's say the bot hits if below 17 and stands otherwise.
-//       if (this.currentGameState.botHandValue < 17) {
-//           this.botSocket.emit('hit');
-//       } else {
-//           this.botSocket.emit('stand');
-//       }
-//   }
-
-//   adjustStrategy() {
-//       // If you want to implement dynamic strategy adjustments, do it here.
-//   }
-
-
-//   listenToGameOutcomes() {
-//     this.botSocket.on('gameOutcome', (result) => {
-//         if (result === 'lose') {
-//             this.lossStreak++;
-//             this.adjustStrategy();
-//         } else {
-//             this.lossStreak = 0; // Reset the loss streak if the bot wins
-//         }
-//     });
-//   }
-
-
-
-//   adjustStrategy() {
-//     if (this.lossStreak > 3) {
-//         // Change strategy if the bot has lost 3 or more games consecutively.
-//         // Example: Increase aggressiveness, change betting pattern, etc.
-//     }
-//   }
-
-
-
-
 
 
 

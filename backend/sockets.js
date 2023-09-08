@@ -2,6 +2,8 @@ const { gameController } = require('./controllers/gameController');
 const { chatController } = require('./controllers/chatController');
 const { friendController } = require('./controllers/friendController');
 const { cardConverter } = require('./controllers/cardConverter');
+const { botController } = require('./controllers/botController');
+
 const {
   drawCards,
   handSummary,
@@ -9,22 +11,63 @@ const {
 } = require('./controllers/cardController');
 
 module.exports = function (io) {
-
-  const connections = {}
+  const connections = {};
 
   const rooms = {};
   const disconnectTimeouts = {};
   let disconnectTimes = {};
-  let lastPayouts = [
-    {createdAt: 1693856698676, gameType: 'Blackjack', username: 'Pine', bet: 1, payout: 2},
-    {createdAt: 1693856698676, gameType: 'Blackjack', username: 'bigtree', bet: 1, payout: 0},
-    {createdAt: 1693856698676, gameType: 'Blackjack', username: 'Pine', bet: 10, payout: 20},
-    {createdAt: 1693856698676, gameType: 'Blackjack', username: 'bigtree', bet: 1, payout: 2},
-    {createdAt: 1693856698676, gameType: 'Blackjack', username: 'Pine', bet: 1, payout: 0},
-    {createdAt: 1693856698676, gameType: 'Blackjack', username: 'bigtree', bet: 1, payout: 0},
-    {createdAt: 1693856698676, gameType: 'Blackjack', username: 'Pine', bet: 1, payout: 2}
-  ]
 
+  let lastPayouts = [
+    {
+      createdAt: 1693856698676,
+      gameType: 'Blackjack',
+      username: 'Pine',
+      bet: 1,
+      payout: 2,
+    },
+    {
+      createdAt: 1693856698676,
+      gameType: 'Blackjack',
+      username: 'bigtree',
+      bet: 1,
+      payout: 0,
+    },
+    {
+      createdAt: 1693856698676,
+      gameType: 'Blackjack',
+      username: 'Pine',
+      bet: 10,
+      payout: 20,
+    },
+    {
+      createdAt: 1693856698676,
+      gameType: 'Blackjack',
+      username: 'bigtree',
+      bet: 1,
+      payout: 2,
+    },
+    {
+      createdAt: 1693856698676,
+      gameType: 'Blackjack',
+      username: 'Pine',
+      bet: 1,
+      payout: 0,
+    },
+    {
+      createdAt: 1693856698676,
+      gameType: 'Blackjack',
+      username: 'bigtree',
+      bet: 1,
+      payout: 0,
+    },
+    {
+      createdAt: 1693856698676,
+      gameType: 'Blackjack',
+      username: 'Pine',
+      bet: 1,
+      payout: 2,
+    },
+  ];
 
   // {createdAt: 1693856698676, gameType: 'Blackjack', username: 'bigtree', bet: 1, payout: 0}
 
@@ -48,7 +91,7 @@ module.exports = function (io) {
         otherCards: [],
         handSummary: null,
         bestValue: null,
-      }, 
+      },
       messages: [],
       conversationId: null,
       sortedActivePlayers: [],
@@ -56,36 +99,113 @@ module.exports = function (io) {
       forfeitedPlayers: [],
       insuredPlayers: {},
     };
-  }; 
+  };
+
+  const bellagioTable = {};
+
+  const handleBotInit = async () => {
+    let bots = [
+      {
+        id: 'e10d8de4-f4c8-4d28-9324-56aa9c924a83',
+        username: 'Jeff Ma',
+      },
+      {
+        id: 'e10d8de4-f4c8-4d28-9324-56aa9c924a84',
+        username: 'John Chang',
+      },
+      {
+        id: 'e10d8de4-f4c8-4d28-9324-56aa9c924a85',
+        username: 'Bill Kaplan',
+      },
+      {
+        id: 'e10d8de4-f4c8-4d28-9324-56aa9c924a86',
+        username: 'Mike Aponte',
+      },
+      {
+        id: 'e10d8de4-f4c8-4d28-9324-56aa9c924a87',
+        username: 'Jane Willis',
+      },
+      {
+        id: 'e10d8de4-f4c8-4d28-9324-56aa9c924a88',
+        username: 'Seymon Dukach'
+      }
+    ];
+
+    let bellagioTableId = 'be11a610-7777-7777-7777-7be11a610777';
+
+    let updatedTable = await gameController.getTableById(bellagioTableId);
+    if (!updatedTable) return;
+
+    if (!rooms[bellagioTableId]) {
+      rooms[bellagioTableId] = roomInit();
+      rooms[bellagioTableId].gameSessionId = updatedTable.gameSessions[0].id;
+      rooms[bellagioTableId].blockHash = updatedTable.gameSessions[0].blockHash;
+      rooms[bellagioTableId].decksUsed = updatedTable.Game.decksUsed;
+      rooms[bellagioTableId].shufflePoint = updatedTable.shufflePoint;
+      rooms[bellagioTableId].conversationId = updatedTable.Conversation.id;
+      rooms[bellagioTableId].chatName = updatedTable.Conversation.chatName;
+      rooms[bellagioTableId].gameType = updatedTable.Game.shortName;
+    }
+
+    bots.forEach(async (user, index) => {
+
+      let tableId = bellagioTableId;
+      let seat = index + 1;
+      let amount = 50000;
 
 
+      await gameController.removeUserFromTables(user.id);
 
+      const takeSeat = await gameController.takeSeat(
+        tableId,
+        seat,
+        user,
+        amount
+      );
 
+      if (takeSeat) {
+        const takeSeatObj = {
+          id: takeSeat.id,
+          seat: takeSeat.seat,
+          tableBalance: takeSeat.tableBalance,
+          tableId: takeSeat.tableId,
+          userId: takeSeat.userId,
+          disconnectTimer: takeSeat.disconnectTimer,
+          pendingBet: takeSeat.pendingBet,
+          currentBet: takeSeat.currentBet,
+          username: user.username,
+          forfeit: false,
+          hands: {},
+          cards: [],
+          insurance: {
+            accepted: false,
+            bet: 0,
+          },
+        }; 
 
-
-
+        rooms[tableId].seats[seat] = takeSeatObj;
+      }
+    });
+  };
 
   io.on('connection', async (socket) => {
     const userId = socket.handshake.query.userId;
     const username = socket.handshake.query.username;
 
     let socketId = socket.id;
- 
+
     socket.join(userId);
     socket.join('winners');
 
-    if(username === 'anon'){
-
-      console.log('here');
-      console.log('here');
-      console.log('here');
-      console.log('here');
-      console.log('here');
-      console.log('here');
 
 
-      socket.emit('initialize_anon_user', {lastPayouts});
-      return
+    if (!rooms['be11a610-7777-7777-7777-7be11a610777']) {
+      await handleBotInit();
+    }
+
+    if (username === 'anon') {
+      socket.emit('initialize_anon_user', { lastPayouts });
+      return;
     }
 
     const userTables = await gameController.getUserTables(userId);
@@ -99,35 +219,31 @@ module.exports = function (io) {
     // console.log('User Room:', userId);
     // console.log('userConversations:');
     // console.log(userConversations);
- 
+
     // console.log('-=-=-=-=-=-=-=-=-=');
 
-
-    if(!connections[userId]){
-      connections[userId] = {}
+    if (!connections[userId]) {
+      connections[userId] = {};
     }
 
     connections[userId][socketId] = {
       socket: socket,
       status: 'connected',
       connectedAt: Date.now(),
-      timeOfLastAction: Date.now()
+      timeOfLastAction: Date.now(),
+    };
+
+    if (userConversations) {
+      Object.keys(userConversations).map((conversation) => {
+        socket.join(conversation);
+      });
     }
-
-    if(userConversations){
-      Object.keys(userConversations).map(conversation=>{
-        socket.join(conversation)
-      })
-    } 
-
-   
-
 
     let initObj = {
       userFriends,
       userConversations,
-      lastPayouts
-    } 
+      lastPayouts,
+    };
 
     socket.emit('initialize_user', initObj);
 
@@ -139,7 +255,7 @@ module.exports = function (io) {
       clearTimeout(disconnectTimeouts[userId]);
       // console.log(`User ${username} reconnected, timeout cleared.`);
       delete disconnectTimeouts[userId];
-      delete disconnectTimes[userId]
+      delete disconnectTimes[userId];
 
       if (userTables) {
         for (let table of userTables) {
@@ -168,7 +284,7 @@ module.exports = function (io) {
           handleDisconnect(table);
         }
       }
-      await gameController.removeUserFromTables(userId)
+      await gameController.removeUserFromTables(userId);
     });
 
     async function handleDisconnect(playerSeatObj) {
@@ -181,12 +297,15 @@ module.exports = function (io) {
       let seat = playerSeatObj.seat;
       let room = tableId;
 
-
       if (rooms[tableId] && rooms[tableId].seats[seat]) {
         let player = rooms[tableId].seats[seat];
-        let anyPlayersAfter = rooms[tableId].sortedActivePlayers.some(player => player.seat < seat );
-        let anyPlayersBefore = rooms[tableId].sortedActivePlayers.some(player => player.seat > seat );
-        let leaveOnPlayerTurn = rooms[tableId].actionSeat === player.seat
+        let anyPlayersAfter = rooms[tableId].sortedActivePlayers.some(
+          (player) => player.seat < seat
+        );
+        let anyPlayersBefore = rooms[tableId].sortedActivePlayers.some(
+          (player) => player.seat > seat
+        );
+        let leaveOnPlayerTurn = rooms[tableId].actionSeat === player.seat;
         let handInProgress = rooms[tableId].handInProgress;
         let leaveSeatObj = {
           tableId,
@@ -194,40 +313,37 @@ module.exports = function (io) {
           userTableId,
           userId,
           tableBalance: player.tableBalance,
-        }; 
+        };
 
         // If the user disconnects during a hand, add them to the forfeited players and update our hand's status
         if (handInProgress) {
-          
           let playerHands = Object.entries(player.hands);
           for (let [key, handData] of playerHands) {
             handData.turnEnded = true;
           }
-          rooms[tableId].forfeitedPlayers.push( player );
-          player.forfeit = true
-          clearTimeout(disconnectTimeouts[userId])
+          rooms[tableId].forfeitedPlayers.push(player);
+          player.forfeit = true;
+          clearTimeout(disconnectTimeouts[userId]);
           delete disconnectTimeouts[userId];
-          delete disconnectTimes[userId]
-      
-          let currentTimer = rooms[tableId].actionEnd
-          let leaveSeatObj = {tableId, seat, currentTimer}
+          delete disconnectTimes[userId];
 
-          io.to(room).emit('player_forfeit', leaveSeatObj)
+          let currentTimer = rooms[tableId].actionEnd;
+          let leaveSeatObj = { tableId, seat, currentTimer };
+
+          io.to(room).emit('player_forfeit', leaveSeatObj);
 
           //if no players left to act, end the round
           if (!anyPlayersBefore && !anyPlayersAfter) {
             await endRound(tableId, io);
-            return
+            return;
           }
-          
-          if(leaveOnPlayerTurn){
-            clearInterval(rooms[tableId].timerId)
-            await gameLoop(tableId, io);
-            return
-          }
-           
-        } else {
 
+          if (leaveOnPlayerTurn) {
+            clearInterval(rooms[tableId].timerId);
+            await gameLoop(tableId, io);
+            return;
+          }
+        } else {
           // Refund pending bet(if exists) for user
           player.tableBalance += rooms[tableId].seats[seat].pendingBet;
           rooms[tableId].seats[seat].pendingBet = 0;
@@ -252,32 +368,27 @@ module.exports = function (io) {
       }
     }
 
-
-
     //takes in the function we want to emit and the object we will be emitting
     // has optional userId field in case function is not directed at currentUser
     async function handleEmit(cb, updateObj, targetUserId = userId) {
       let currentConnections = connections[targetUserId];
 
-      Object.values(currentConnections).forEach(connection => {
+      Object.values(currentConnections).forEach((connection) => {
         connection.socket.emit(cb, updateObj);
       });
     }
 
-  
-
     async function handleJoin(room, targetUserId = userId) {
       let currentConnections = connections[targetUserId];
 
-      Object.values(currentConnections).forEach(connection => {
+      Object.values(currentConnections).forEach((connection) => {
         connection.socket.join(room);
       });
     }
 
-    async function fetchUpdatedTable(tableId){
-
+    async function fetchUpdatedTable(tableId) {
       let updatedTable = await gameController.getTableById(tableId);
-      if(!updatedTable) return
+      if (!updatedTable) return;
 
       if (!rooms[tableId]) {
         rooms[tableId] = roomInit();
@@ -290,18 +401,13 @@ module.exports = function (io) {
         rooms[tableId].gameType = updatedTable.Game.shortName;
       }
 
-      return updatedTable
-
+      return updatedTable;
     }
- 
-
 
     socket.on('disconnect', async () => {
-
       let timer = 10000; // 15 seconds
 
       disconnectTimes[userId] = Date.now();
-
 
       // Clear the existing timeout for this user (if any)
       if (disconnectTimeouts[userId]) {
@@ -310,16 +416,17 @@ module.exports = function (io) {
 
       // Start a new timeout for this user
       disconnectTimeouts[userId] = setTimeout(async () => {
-
         // Check the elapsed time since disconnect
-        let elapsedSeconds = Math.floor((Date.now() - disconnectTimes[userId]) / 1000);
+        let elapsedSeconds = Math.floor(
+          (Date.now() - disconnectTimes[userId]) / 1000
+        );
         if (elapsedSeconds < timer / 1000) {
           return;
         }
         const userTables = await gameController.getUserTables(userId);
         if (userTables) {
           for (let table of userTables) {
-            let tableId = table.tableId
+            let tableId = table.tableId;
             let messageObj = {
               tableId,
               user: { username: 'Room', id: 1, rank: 0 },
@@ -328,21 +435,18 @@ module.exports = function (io) {
                 id: 0,
               },
             };
-     
+
             // io.in(tableId).emit('new_message', messageObj);
             handleDisconnect(table);
-            socket.leave(tableId)
+            socket.leave(tableId);
           }
         }
       }, timer);
-    }); 
-
-
+    });
 
     socket.on('join_room', async (tableId) => {
-
-      let updatedTable = await fetchUpdatedTable(tableId)
-      if(!updatedTable) return
+      let updatedTable = await fetchUpdatedTable(tableId);
+      if (!updatedTable) return;
 
       let updateObj = {
         tableId,
@@ -360,49 +464,42 @@ module.exports = function (io) {
           chatName: rooms[tableId].chatName,
         },
       };
- 
-      let conversationId = rooms[tableId].conversationId
-      let content = `${username} has joined the room.`
+
+      let conversationId = rooms[tableId].conversationId;
+      let content = `${username} has joined the room.`;
 
       // socket.join(conversationId);
       // socket.join(tableId);
-      handleJoin(conversationId)
-      handleJoin(tableId)
-      
-      await emitCustomMessage({ conversationId, content, tableId })
+      handleJoin(conversationId);
+      handleJoin(tableId);
 
+      await emitCustomMessage({ conversationId, content, tableId });
 
+      let tableConvoId = updatedTable?.Conversation?.id;
 
-      let tableConvoId = updatedTable?.Conversation?.id
+      handleEmit('join_table', updatedTable);
+      socket.emit('view_table', { id: tableId, conversationId: tableConvoId });
+      handleEmit('get_updated_table', updateObj);
 
-      
-      handleEmit('join_table', updatedTable)
-      socket.emit('view_table', { id: tableId, conversationId: tableConvoId })
-      handleEmit('get_updated_table', updateObj)
-      
       // socket.emit('join_table', updatedTable);
       // socket.emit('get_updated_table', updateObj);
-
     });
 
- 
     socket.on('update_table_name', async (updateObj) => {
       const { tableId, tableName } = updateObj;
-      if(!tableId || !tableName) return
-      let content = `${username} has updated the table name to ${tableName}.`
-      let conversationId = rooms?.[tableId]?.conversationId
+      if (!tableId || !tableName) return;
+      let content = `${username} has updated the table name to ${tableName}.`;
+      let conversationId = rooms?.[tableId]?.conversationId;
 
-      await emitCustomMessage({ conversationId, content, tableId })
+      await emitCustomMessage({ conversationId, content, tableId });
       io.in(conversationId).emit('update_table_name', updateObj);
     });
 
-
     socket.on('view_room', async (tableId) => {
-      let conversationId = rooms?.[tableId]?.conversationId
+      let conversationId = rooms?.[tableId]?.conversationId;
       let table = { id: tableId, conversationId };
       socket.emit('view_table', table);
     });
- 
 
     socket.on('close_table', async (tableId) => {
       let room = tableId;
@@ -423,7 +520,7 @@ module.exports = function (io) {
         gameController.leaveSeat(leaveSeatObj);
 
         io.in(userId).emit('player_leave', leaveSeatObj);
-        handleEmit('player_leave',leaveSeatObj, userId)
+        handleEmit('player_leave', leaveSeatObj, userId);
         return;
       });
 
@@ -431,8 +528,7 @@ module.exports = function (io) {
       await gameController.closeTable(tableId);
 
       delete rooms[tableId];
-      io.to(room).emit('close_table', tableId)
-
+      io.to(room).emit('close_table', tableId);
 
       // // Get the connected sockets in the room
       // let sockets = rooms[tableId].connections || {}
@@ -445,12 +541,10 @@ module.exports = function (io) {
       //   // (socketId).disconnect();
       // }
 
-
       // console.log('--- close_table ---');
       // console.log(`${username} close_table ${room}.`);
       // console.log('-=-=-=-=-=-=-=-=-=');
     });
- 
 
     socket.on('take_seat', async (seatObj) => {
       const { room, seat, user, amount } = seatObj;
@@ -462,7 +556,6 @@ module.exports = function (io) {
         user,
         amount
       );
-
 
       if (!takeSeat) {
         return;
@@ -483,29 +576,24 @@ module.exports = function (io) {
         forfeit: false,
         hands: {},
         cards: [],
-        insurance:{
-          accepted:false,
-          bet: 0
-        }
-      }; 
+        insurance: {
+          accepted: false,
+          bet: 0,
+        },
+      };
 
       // If the room doesnt exist create a new room
       if (!rooms[tableId]) {
-        await fetchUpdatedTable(tableId)
-        // let updatedTable = await gameController.getTableById(tableId);
-        // rooms[tableId] = roomInit();
-        // rooms[tableId].gameSessionId = updatedTable.gameSessions[0].id;
-        // rooms[tableId].decksUsed = updatedTable.Game.decksUsed;
-      } 
+        await fetchUpdatedTable(tableId);
+      }
 
       // Add the player to the room
       rooms[tableId].seats[seat] = takeSeatObj;
- 
 
-      let content = `${username} has taken seat ${seat}.`
-      let conversationId = rooms?.[tableId]?.conversationId
+      let content = `${username} has taken seat ${seat}.`;
+      let conversationId = rooms?.[tableId]?.conversationId;
 
-      await emitCustomMessage({ conversationId, content, tableId })
+      await emitCustomMessage({ conversationId, content, tableId });
 
       // io.in(room).emit('new_message', messageObj);
       io.in(room).emit('new_player', takeSeatObj);
@@ -514,7 +602,7 @@ module.exports = function (io) {
       // console.log(`${username} taking seat${seat} in ${room}`);
       // console.log('--------------');
     });
- 
+
     socket.on('leave_seat', async (seatObj) => {
       // console.log('--------------');
       // console.log(`leave_seat`);
@@ -522,10 +610,9 @@ module.exports = function (io) {
       const { tableId, seat } = seatObj;
       if (rooms[tableId] && rooms[tableId].seats[seat]) {
         let player = rooms[tableId].seats[seat];
-        await handleDisconnect(player)
+        await handleDisconnect(player);
       }
     });
-
 
     socket.on('leave_table', async (seatObj) => {
       // console.log('--------------');
@@ -535,10 +622,9 @@ module.exports = function (io) {
       if (rooms[tableId] && rooms[tableId].seats[seat]) {
         let player = rooms[tableId].seats[seat];
         socket.leave(tableId);
-        await handleDisconnect(player)
+        await handleDisconnect(player);
       }
     });
-
 
     socket.on('remove_last_bet', async (betObj) => {
       const { tableId, seat, lastBet } = betObj;
@@ -555,8 +641,6 @@ module.exports = function (io) {
       if (isNoBetsLeft(tableId)) {
         stopTimer(tableId);
       }
-
-
     });
 
     socket.on('remove_all_bet', async (betObj) => {
@@ -575,16 +659,12 @@ module.exports = function (io) {
       if (isNoBetsLeft(tableId)) {
         stopTimer(tableId);
       }
-
     });
 
-     
-   
-  
     socket.on('place_bet', async (betObj) => {
       const { bet, tableId, seat } = betObj;
       let room = tableId;
-    
+
       // If the room doesnt exist create a new room
       if (!rooms[tableId]) {
         let updatedTable = await gameController.getTableById(tableId);
@@ -595,24 +675,21 @@ module.exports = function (io) {
 
       // If handInProgress, dont add the bet
       if (rooms[tableId].handInProgress) {
-        return
+        return;
       }
-    
+
       // Update pendingBet in the rooms object
       if (rooms[tableId] && rooms[tableId].seats[seat]) {
         rooms[tableId].seats[seat].pendingBet += bet;
         rooms[tableId].seats[seat].tableBalance -= bet;
       }
 
-      if(!rooms[tableId].countdownEnd){
-        setDealCountdownEndTime(tableId, io)
+      if (!rooms[tableId].countdownEnd) {
+        setDealCountdownEndTime(tableId, io);
       }
-  
-    
+
       io.in(room).emit('new_bet', betObj);
     });
-    
-
 
     // Check for expired countdowns every second
     setInterval(async () => {
@@ -620,22 +697,22 @@ module.exports = function (io) {
         const room = rooms[tableId];
         if (room.countdownEnd && Date.now() >= room.countdownEnd) {
           room.countdownEnd = null;
-    
+
           // if theres bets, start hand otherwise cancel
           if (isNoBetsLeft(tableId)) {
             stopTimer(tableId);
             continue;
           }
-    
+
           room.handInProgress = true;
-    
+
           // Transfer pendingBet to currentBet for each seat
           for (let seatKey in room.seats) {
             const seat = room.seats[seatKey];
             seat.currentBet += seat.pendingBet;
             seat.pendingBet = 0;
           }
-    
+
           let updateObj = {
             tableId,
             table: {
@@ -643,9 +720,9 @@ module.exports = function (io) {
               seats: room.seats,
             },
           };
-    
+
           io.in(tableId).emit('get_updated_table', updateObj);
-    
+
           // Countdown finished, emit event to collect all bets
           let countdownObj = {
             countdownEnd: room.countdownEnd,
@@ -656,17 +733,15 @@ module.exports = function (io) {
         }
       }
     }, 1000);
-    
 
-    async function setDealCountdownEndTime(tableId, io){
+    async function setDealCountdownEndTime(tableId, io) {
+      if (!rooms[tableId]) return;
+      if (rooms[tableId].countdownEnd) return;
 
-      if(!rooms[tableId]) return
-      if(rooms[tableId].countdownEnd) return
-
-      let room = tableId
+      let room = tableId;
       // Set countdown end time
       const countdownDuration = 1000; // 5 seconds
-      const endTime = Math.ceil((Date.now() + countdownDuration));
+      const endTime = Math.ceil(Date.now() + countdownDuration);
       rooms[tableId].countdownEnd = endTime;
 
       let countdownObj = {
@@ -697,7 +772,6 @@ module.exports = function (io) {
       rooms[tableId].countdownEnd = null;
       io.in(room).emit('countdown_update', countdownObj);
     }
-
 
     socket.on('add_funds', async (seatObj) => {
       const { tableId, seat, userId, amount } = seatObj;
@@ -753,8 +827,8 @@ module.exports = function (io) {
       rooms[tableId].seats[seat]['insurance'] = {
         accepted: true,
         bet: bet,
-      }; 
-  
+      };
+
       // Add player to insured players array
       rooms[tableId].insuredPlayers[seat] = insuranceCost;
 
@@ -765,7 +839,7 @@ module.exports = function (io) {
       //   `Insurance accepted(${insuranceCost}) for ${username} @room ${room}`
       // );
       // console.log('--------------');
-    }); 
+    });
 
     // starts game of blackjack for multiple players
     async function dealCards(tableId, io) {
@@ -810,7 +884,7 @@ module.exports = function (io) {
         deck = rooms[tableId].deck;
         roundId = await gameController.newRound(dealObj);
         rooms[tableId].roundId = roundId;
-      } 
+      }
 
       // Calculate number of cards to draw
       // numSeats with currentBets + cards for dealer
@@ -823,12 +897,14 @@ module.exports = function (io) {
       // Set sorted seats for gameLoop
       rooms[tableId].sortedActivePlayers = sortedSeats;
 
-
       console.log('------- sortedSeats -------');
       console.log(sortedSeats);
       console.log('------------------------');
 
-      let sortedSeatsObj = sortedSeats.map((seat) => ({id: seat.id, currentBet:seat.currentBet}));
+      let sortedSeatsObj = sortedSeats.map((seat) => ({
+        id: seat.id,
+        currentBet: seat.currentBet,
+      }));
 
       console.log('------- ROUND ID -------');
       console.log(sortedSeatsObj);
@@ -924,10 +1000,9 @@ module.exports = function (io) {
       let dealerVisibleCard = rooms[tableId].dealerCards.visibleCards[0];
       let dealerHiddenCard = rooms[tableId].dealerCards.hiddenCards[0];
 
-
-      // Check dealers hand strength 
+      // Check dealers hand strength
       let dealerCards = rooms[tableId].dealerCards;
-      let dealerHand = await handSummary([dealerVisibleCard,dealerHiddenCard]);
+      let dealerHand = await handSummary([dealerVisibleCard, dealerHiddenCard]);
       let bestDealerValue = await bestValue(dealerHand.values);
       rooms[tableId].dealerCards.handSummary = dealerHand;
       rooms[tableId].dealerCards.bestValue = bestDealerValue;
@@ -935,32 +1010,26 @@ module.exports = function (io) {
       // console.log(rooms[tableId].dealerCards);
 
       let isAce = cardConverter[dealerVisibleCard].value === 11;
- 
 
-      let messageObj = { 
-        conversationId: rooms[tableId].conversationId, 
-        content: 'Dealer shows: ', 
-        tableId, 
-        cards: dealerCards.visibleCards }
+      let messageObj = {
+        conversationId: rooms[tableId].conversationId,
+        content: 'Dealer shows: ',
+        tableId,
+        cards: dealerCards.visibleCards,
+      };
 
+      console.log('_*_*_*_*_*_*_*_*_*_*_*_**_');
+      console.log('_*_*_*_*_*_*_*_*_*_*_*_**_');
+      console.log('dealerHand:', dealerHand);
+      console.log('bestDealerValue:', bestDealerValue);
+      console.log('dealerCards:', dealerCards.visibleCards);
+      console.log('_*_*_*_*_*_*_*_*_*_*_*_**_');
+      console.log('_*_*_*_*_*_*_*_*_*_*_*_**_');
 
- 
-    console.log('_*_*_*_*_*_*_*_*_*_*_*_**_');
-    console.log('_*_*_*_*_*_*_*_*_*_*_*_**_');
-    console.log('dealerHand:', dealerHand);
-    console.log('bestDealerValue:', bestDealerValue);
-    console.log('dealerCards:', dealerCards.visibleCards);
-    console.log('_*_*_*_*_*_*_*_*_*_*_*_**_');
-    console.log('_*_*_*_*_*_*_*_*_*_*_*_**_');
-
-
-      await emitCustomMessage(messageObj)
-
+      await emitCustomMessage(messageObj);
 
       if (isAce) {
-
         // socket.emit('offer_insurance', tableId);
-
 
         io.in(room).emit('offer_insurance', tableId);
 
@@ -968,7 +1037,6 @@ module.exports = function (io) {
         // socket.emit('remove_insurance_offer', tableId);
 
         io.in(room).emit('remove_insurance_offer', tableId);
-
       }
 
       // if dealer has blackjack, skip to end of round
@@ -1048,7 +1116,6 @@ module.exports = function (io) {
 
     //returns next player or false if all players have acted
     function getNextPlayer(tableId) {
-
       let sortedActivePlayers = rooms[tableId].sortedActivePlayers;
       let nextPlayer;
       if (rooms[tableId] && sortedActivePlayers.length) {
@@ -1061,7 +1128,6 @@ module.exports = function (io) {
       }
     }
 
- 
     async function handlePlayerTurn(tableId, player, io) {
       let room = tableId;
 
@@ -1074,7 +1140,7 @@ module.exports = function (io) {
           allHandsEnded = false;
           break;
         }
-      } 
+      }
       if (allHandsEnded) {
         let nextPlayer = rooms[tableId].sortedActivePlayers.pop();
         rooms[tableId].sortedFinishedPlayers.push(nextPlayer);
@@ -1091,50 +1157,45 @@ module.exports = function (io) {
         // console.log(player);
         // console.log('');
         // console.log('----------------------');
-        if(cards.length ===1){
-          await playerHit({ tableId, seat:player.seat, handId:key })
-          return
+        if (cards.length === 1) {
+          await playerHit({ tableId, seat: player.seat, handId: key });
+          return;
         }
         let playerHand = await handSummary(cards);
         let playerBestValue = await bestValue(playerHand.values);
         // Assign handSummary to hand
-        handData.summary = playerHand; 
+        handData.summary = playerHand;
 
-        let valuesStr = playerHand.values.join(',')
+        let valuesStr = playerHand.values.join(',');
 
+        let messageObj = {
+          conversationId: rooms[tableId].conversationId,
+          content: `${player.username} shows: ${valuesStr}`,
+          tableId,
+          cards,
+        };
 
-
-        let messageObj = { 
-          conversationId: rooms[tableId].conversationId, 
-          content: `${player.username} shows: ${valuesStr}`, 
-          tableId, 
-          cards 
+        if (playerHand.blackjack) {
+          messageObj.content = `${player.username} has Blackjack!`;
+        }
+        if (playerHand.busted) {
+          messageObj.content = `${player.username} has busted!`;
+        }
+        if (playerBestValue === 21) {
+          messageObj.content = `${player.username} has 21! `;
         }
 
+        await emitCustomMessage(messageObj);
 
-        if ( playerHand.blackjack ) {
-          messageObj.content = `${player.username} has Blackjack!` 
-        }
-        if ( playerHand.busted ) {
-          messageObj.content = `${player.username} has busted!` 
-
-        }
-        if ( playerBestValue === 21 ) {
-          messageObj.content = `${player.username} has 21! `
-        }
-  
-  
-        await emitCustomMessage(messageObj)
- 
-        if ( 
+        if (
           playerHand.blackjack ||
           playerHand.busted ||
           playerBestValue === 21
-        ) { 
+        ) {
           handData.turnEnded = true;
           clearInterval(rooms[tableId].timerId);
           continue;
-        }  
+        }
 
         // Create action end timestamp
         const actionDuration = 5000; // 5 seconds
@@ -1163,12 +1224,13 @@ module.exports = function (io) {
         //   clearInterval(rooms[tableId].timerId)
         // }
 
-
         // Create timer and store its id in the room object
         return new Promise((resolve, reject) => {
           rooms[tableId].timerId = setInterval(async () => {
-            const remainingTime = Math.ceil((rooms[tableId].actionEnd - Date.now()) / 1000);
-      
+            const remainingTime = Math.ceil(
+              (rooms[tableId].actionEnd - Date.now()) / 1000
+            );
+
             // rooms[tableId].actionTimer -= 1000; // Decrement by 1 second
             // console.log('COUNTDOWN: ', rooms[tableId].actionTimer);
             // console.log('COUNTDOWN: ', rooms[tableId].actionTimer);
@@ -1180,14 +1242,13 @@ module.exports = function (io) {
             if (remainingTime <= 0) {
               clearInterval(rooms[tableId].timerId);
 
-              let messageObj = { 
-                conversationId: rooms[tableId].conversationId, 
-                content: `${player.username} has run out of time and stays with ${valuesStr}.`, 
-                tableId, 
-                cards 
-
-              }
-              await emitCustomMessage(messageObj)
+              let messageObj = {
+                conversationId: rooms[tableId].conversationId,
+                content: `${player.username} has run out of time and stays with ${valuesStr}.`,
+                tableId,
+                cards,
+              };
+              await emitCustomMessage(messageObj);
 
               // Set turnEnded to true for this hand
               handData.turnEnded = true;
@@ -1198,21 +1259,19 @@ module.exports = function (io) {
       }
       return;
     }
- 
- 
 
     socket.on('player_action', async (actionObj) => {
       const { tableId, action, seat, handId } = actionObj;
       let room = tableId;
 
-      if(!rooms[tableId]) return
+      if (!rooms[tableId]) return;
 
       // Reset the timer whenever a player takes an action
       if (rooms[tableId] && rooms[tableId].timerId) {
         clearInterval(rooms[tableId].timerId);
         rooms[tableId].actionEnd = 0;
       }
- 
+
       // let updateObj = {
       //   tableId,
       //   table: {
@@ -1221,8 +1280,8 @@ module.exports = function (io) {
       //     dealerCards: {
       //       visibleCards: rooms[tableId].dealerCards.visibleCards,
       //     },
-      //   }, 
-      // };  
+      //   },
+      // };
 
       // io.in(room).emit('get_updated_table', updateObj);
       // io.in(room).emit('new_message', messageObj);
@@ -1231,45 +1290,37 @@ module.exports = function (io) {
       // console.log(`Handling action(${action}) for ${username} @room ${room}`);
       // console.log('--------------');
 
-      let player = rooms[tableId].seats[seat]
-      let currentHand = player.hands[handId]
+      let player = rooms[tableId].seats[seat];
+      let currentHand = player.hands[handId];
       let playerBestValue = await bestValue(currentHand.summary.values);
-      
-      let messageObj = { 
-        conversationId: rooms[tableId].conversationId, 
-        content: `${player.username} shows: `, 
-        tableId
-      }
+
+      let messageObj = {
+        conversationId: rooms[tableId].conversationId,
+        content: `${player.username} shows: `,
+        tableId,
+      };
 
       if (action === 'hit') {
         await playerHit(actionObj, io);
-        messageObj.content= `${player.username} hits!`
-
+        messageObj.content = `${player.username} hits!`;
       }
       if (action === 'stay') {
         await playerStay(actionObj, io);
-        messageObj.content= `${player.username} stays. ${playerBestValue}.`
-
+        messageObj.content = `${player.username} stays. ${playerBestValue}.`;
       }
       if (action === 'double') {
         await playerDouble(actionObj, io);
-        messageObj.content= `${player.username} doubles! `
-
+        messageObj.content = `${player.username} doubles! `;
       }
       if (action === 'split') {
         await playerSplit(actionObj, io);
-        messageObj.content= `${player.username} splits! `
-
+        messageObj.content = `${player.username} splits! `;
       }
 
-      await emitCustomMessage(messageObj)
-
+      await emitCustomMessage(messageObj);
 
       await gameLoop(tableId, io);
     });
-
-
-
 
     async function playerHit(actionObj, io) {
       const { tableId, seat, handId } = actionObj;
@@ -1291,8 +1342,8 @@ module.exports = function (io) {
       rooms[tableId].cursor += cardsToDraw;
       currentHand.cards.push(...drawnCards);
       return;
-    } 
-  
+    }
+
     // Handle player stay action
     async function playerStay(actionObj, io) {
       const { tableId, action, seat, handId } = actionObj;
@@ -1302,7 +1353,7 @@ module.exports = function (io) {
       playersHand.turnEnded = true;
       return;
     }
- 
+
     async function playerSplit(actionObj, io) {
       const { tableId, action, seat, handId } = actionObj;
       let room = tableId;
@@ -1367,8 +1418,6 @@ module.exports = function (io) {
         cursor: rooms[tableId].cursor,
       };
 
-
-      
       // Double the current bet, remove chips from table balance
       // currentBet *= 2;
       currentSeat.tableBalance -= currentBet;
@@ -1390,28 +1439,16 @@ module.exports = function (io) {
       rooms[tableId].cursor += cardsToDraw;
       currentHand.cards.push(...drawnCards);
 
-
-
-
-
       let playerHand = await handSummary(currentHand.cards);
-      let valuesStr = playerHand.values.join(',')
-      
+      let valuesStr = playerHand.values.join(',');
 
-      let messageObj = { 
-        conversationId: rooms[tableId].conversationId, 
-        content: `${username} shows: ${valuesStr}`, 
-        tableId, 
-        cards: currentHand.cards 
-      }
-      await emitCustomMessage(messageObj)
-
-
-
-
-
-
-
+      let messageObj = {
+        conversationId: rooms[tableId].conversationId,
+        content: `${username} shows: ${valuesStr}`,
+        tableId,
+        cards: currentHand.cards,
+      };
+      await emitCustomMessage(messageObj);
 
       // Update hand to show no more decisions need to be made for the gameLoop
       let playersHand = rooms[tableId].seats[seat].hands[handId];
@@ -1424,7 +1461,6 @@ module.exports = function (io) {
     }
 
     async function handleDealerTurn(tableId, io) {
-
       let room = tableId;
       let dealerCards = rooms[tableId].dealerCards;
       let visibleCards = dealerCards.visibleCards;
@@ -1451,9 +1487,6 @@ module.exports = function (io) {
       io.in(room).emit('get_updated_table', updateObj);
       await new Promise((resolve) => setTimeout(resolve, 1500));
 
-
-
-
       // Check if there's at least one player who hasn't busted
       let anyPlayersLeft = rooms[tableId].sortedFinishedPlayers.some((player) =>
         Object.values(player.hands).some(
@@ -1463,18 +1496,16 @@ module.exports = function (io) {
 
       // If all players have busted, end the round without drawing cards
       if (!anyPlayersLeft) {
-
         let dealerHand = await handSummary(newCards);
-        let valuesStr = dealerHand.values.join(',')
-  
-        let messageObj = { 
-          conversationId: rooms[tableId].conversationId, 
-          content: `Dealer shows: ${valuesStr}`, 
-          tableId, 
-          cards: dealerCards.visibleCards 
-        }
-        await emitCustomMessage(messageObj)
+        let valuesStr = dealerHand.values.join(',');
 
+        let messageObj = {
+          conversationId: rooms[tableId].conversationId,
+          content: `Dealer shows: ${valuesStr}`,
+          tableId,
+          cards: dealerCards.visibleCards,
+        };
+        await emitCustomMessage(messageObj);
 
         await endRound(tableId, io);
         return;
@@ -1487,19 +1518,16 @@ module.exports = function (io) {
         let dealerHand = await handSummary(newCards);
         let bestDealerValue = await bestValue(dealerHand.values);
 
+        let valuesStr = dealerHand.values.join(',');
 
-        let valuesStr = dealerHand.values.join(',')
-  
-        let messageObj = { 
-          conversationId: rooms[tableId].conversationId, 
-          content: `Dealer shows: ${valuesStr}`, 
-          tableId, 
-          cards: dealerCards.visibleCards 
-        }
-        await emitCustomMessage(messageObj)
+        let messageObj = {
+          conversationId: rooms[tableId].conversationId,
+          content: `Dealer shows: ${valuesStr}`,
+          tableId,
+          cards: dealerCards.visibleCards,
+        };
+        await emitCustomMessage(messageObj);
         await new Promise((resolve) => setTimeout(resolve, 1500));
-
-
 
         // console.log('--------------');
         // console.log(dealerCards.visibleCards);
@@ -1517,7 +1545,6 @@ module.exports = function (io) {
           continue;
         }
 
-
         // Draw a card if dealer's best value is 16 or less, or the hand is a soft seventeen
         // console.log('dealerHand.softSeventeen', dealerHand.softSeventeen);
         // console.log('bestDealerValue', bestDealerValue);
@@ -1531,8 +1558,6 @@ module.exports = function (io) {
 
         let { drawnCards, newDeck } = drawCards(drawObj);
 
-
-
         // console.log('------- newDeck dealer -------');
         // console.log(newDeck);
         // console.log('------------------------');
@@ -1541,9 +1566,8 @@ module.exports = function (io) {
         newCards.push(...drawnCards);
         dealerCards.visibleCards = newCards; // Update the visible cards
 
-        
-        messageObj.content = `Dealer hits.`
-        await emitCustomMessage(messageObj)
+        messageObj.content = `Dealer hits.`;
+        await emitCustomMessage(messageObj);
 
         // Set new cursor point
         rooms[tableId].cursor++;
@@ -1557,26 +1581,26 @@ module.exports = function (io) {
             dealerCards: {
               visibleCards: dealerCards.visibleCards,
             },
-          }, 
+          },
         };
 
         io.in(room).emit('get_updated_table', updateObj);
         await new Promise((resolve) => setTimeout(resolve, 1500));
-      }  
- 
+      }
+
       // Dealer's turn is finished, end the round
-        await endRound(tableId, io);
-    }    
+      await endRound(tableId, io);
+    }
     async function determineResult(
       bestPlayerValue,
       bestDealerValue,
       bet,
       blackjack
-    ) { 
+    ) {
       let result;
       let profitLoss;
       let winnings = 0;
- 
+
       if (bestPlayerValue > 21) {
         result = 'LOSE';
         profitLoss = -bet;
@@ -1609,14 +1633,12 @@ module.exports = function (io) {
     }
 
     async function processForfeitedPlayers(tableId, io) {
-
       let bestDealerValue = rooms[tableId].dealerCards.bestValue;
       let room = tableId;
 
       if (rooms[tableId] && rooms[tableId].forfeitedPlayers) {
         let forfeitedPlayers = rooms[tableId].forfeitedPlayers;
         for (let player of forfeitedPlayers) {
-
           let { totalWinnings } = await calculateAndSavePlayerHand(
             player,
             bestDealerValue,
@@ -1649,7 +1671,7 @@ module.exports = function (io) {
           io.in(userId).emit('player_leave', leaveSeatObj);
           // socket.leave(room);
         }
-      } 
+      }
     }
 
     function updateAndClearPlayerData(player, totalWinnings, tableId) {
@@ -1658,19 +1680,18 @@ module.exports = function (io) {
       player.cards = [];
       player.pendingBet = 0;
       player.currentBet = 0;
-      player.insurance= {
-        accepted:false,
-        bet: 0
-      }
+      player.insurance = {
+        accepted: false,
+        bet: 0,
+      };
     }
- 
+
     async function calculateAndSavePlayerHand(
       player,
       bestDealerValue,
       tableId,
       io
     ) {
-
       let room = tableId;
       let totalWinnings = 0;
       let totalProfitLoss = 0;
@@ -1692,7 +1713,7 @@ module.exports = function (io) {
           bet,
           playerHand.blackjack
         );
- 
+
         totalWinnings += winnings;
         totalWinnings += insuranceWinnings;
 
@@ -1712,20 +1733,22 @@ module.exports = function (io) {
         await gameController.savePlayerHand(handObj);
 
         // display the winners to the room
-        if(totalProfitLoss > 0){
-          let messageObj = { 
-            conversationId: rooms[tableId].conversationId, 
-            content: `${username} has won $${totalProfitLoss}!`, 
-            tableId, 
+        if (totalProfitLoss > 0) {
+          let messageObj = {
+            conversationId: rooms[tableId].conversationId,
+            content: `${username} has won $${totalProfitLoss}!`,
+            tableId,
             cards,
-            game: 'Blackjack' 
-          }
-          await emitCustomMessage(messageObj)
-          
+            game: 'Blackjack',
+          };
+          await emitCustomMessage(messageObj);
         }
-        await emitMainPageWinnerMessage(tableId, player, handData, totalWinnings)
-
-
+        await emitMainPageWinnerMessage(
+          tableId,
+          player,
+          handData,
+          totalWinnings
+        );
 
         //Update the hands bet to show profit/loss
         if (rooms[tableId]?.seats?.[player.seat]?.hands?.[key]?.bet) {
@@ -1750,7 +1773,6 @@ module.exports = function (io) {
     }
 
     function resetRoomForNextHand(tableId) {
-
       rooms[tableId].dealerCards = {
         naturalBlackjack: false,
         hiddenCards: [],
@@ -1806,8 +1828,6 @@ module.exports = function (io) {
     }
 
     async function endRound(tableId, io) {
-
-
       let room = tableId;
       let bestDealerValue = rooms[tableId].dealerCards.bestValue;
       let finishedPlayers = rooms[tableId].sortedFinishedPlayers;
@@ -1854,11 +1874,11 @@ module.exports = function (io) {
       let hiddenCards = dealerCards.hiddenCards;
       let otherCards = dealerCards.otherCards;
 
-
       // Combine all dealer's cards
-      let dealersCards = [...visibleCards, ...hiddenCards, ...otherCards].flat(5);
+      let dealersCards = [...visibleCards, ...hiddenCards, ...otherCards].flat(
+        5
+      );
       // let dealersCards = rooms[tableId].dealerCards.visibleCards.flat(5);
-
 
       let handObj = {
         id: rooms[tableId]?.roundId,
@@ -1887,544 +1907,484 @@ module.exports = function (io) {
       };
 
       io.in(room).emit('get_updated_table', updateObj);
-
     }
-  
 
     socket.on('send_friend_request', async (friendRequestObj) => {
+      let recipientId = friendRequestObj.recipientId;
+      let recipientUsername = friendRequestObj.recipientUsername;
 
-      let recipientId = friendRequestObj.recipientId
-      let recipientUsername = friendRequestObj.recipientUsername
-      
-      friendRequestObj.username = username
-      friendRequestObj.userId = userId
+      friendRequestObj.username = username;
+      friendRequestObj.userId = userId;
 
-      const request = await friendController.sendFriendRequest(friendRequestObj);
+      const request = await friendController.sendFriendRequest(
+        friendRequestObj
+      );
 
-      
-      if(request){
-
-        const {friendship, newConversation} = request
-
+      if (request) {
+        const { friendship, newConversation } = request;
 
         let senderObj = {
           conversationId: newConversation?.id,
-          friend:{ 
+          friend: {
             id: recipientId,
-            username:recipientUsername,
+            username: recipientUsername,
           },
-          requestInfo: { 
+          requestInfo: {
             id: friendship.id,
-            status: friendship.status
+            status: friendship.status,
           },
-        }
-           
- 
+        };
+
         let recipientObj = {
           conversationId: newConversation?.id,
-          friend:{
+          friend: {
             id: userId,
             username,
           },
           requestInfo: {
             id: friendship.id,
-            status: friendship.status
+            status: friendship.status,
           },
-           
+        };
+
+        if (friendship.status === 'accepted') {
+          handleAcceptFriendRequest(recipientObj, senderObj, request);
         }
 
-
-        if(friendship.status === 'accepted'){
-          handleAcceptFriendRequest(recipientObj, senderObj, request)
-        }
-
-        if(friendship.status === 'rejected'){
-          senderObj.status = 'pending'
+        if (friendship.status === 'rejected') {
+          senderObj.status = 'pending';
           socket.emit('friend_request_sent', senderObj);
         }
 
-        if(friendship.status === 'pending'){
+        if (friendship.status === 'pending') {
           io.in(recipientId).emit('friend_request_received', recipientObj);
           socket.emit('friend_request_sent', senderObj);
         }
-
       }
     });
 
-
-    function handleAcceptFriendRequest(recipientObj, senderObj, request) { 
-      let recipientId = senderObj.friend.id
+    function handleAcceptFriendRequest(recipientObj, senderObj, request) {
+      let recipientId = senderObj.friend.id;
       let senderConnections = connections[userId];
       let recipientConnections = connections[recipientId];
-      const {friendship, newConversation} = request
+      const { friendship, newConversation } = request;
 
       let convoObj = {
         isDirectMessage: newConversation.isDirectMessage,
         hasDefaultChatName: newConversation.hasDefaultChatName,
         chatName: newConversation.chatName,
-        conversationId : newConversation.id,
+        conversationId: newConversation.id,
         members: newConversation.members,
         messages: [],
-        notification: false
-      }
+        notification: false,
+      };
 
       io.in(recipientId).emit('accept_friend_request', recipientObj);
       socket.emit('accept_friend_request', senderObj);
-      
-      Object.values(senderConnections).forEach(connection => {
+
+      Object.values(senderConnections).forEach((connection) => {
         connection.socket.join(newConversation.id);
       });
-      
-      Object.values(recipientConnections).forEach(connection => {
+
+      Object.values(recipientConnections).forEach((connection) => {
         connection.socket.join(newConversation.id);
       });
-      
 
       io.in(recipientId).emit('add_conversation', convoObj);
       socket.emit('add_conversation', convoObj);
-
     }
 
     socket.on('accept_friend_request', async (friendRequestObj) => {
+      let recipientId = friendRequestObj.recipientId;
+      let recipientUsername = friendRequestObj.recipientUsername;
 
-      let recipientId = friendRequestObj.recipientId
-      let recipientUsername = friendRequestObj.recipientUsername
-      
-      friendRequestObj.username = username
-      friendRequestObj.userId = userId
+      friendRequestObj.username = username;
+      friendRequestObj.userId = userId;
 
-
-      const request = await friendController.acceptFriendRequest(friendRequestObj);
-      if(request && request.friendship.status === 'accepted') {
-
-        const {friendship, newConversation} = request
+      const request = await friendController.acceptFriendRequest(
+        friendRequestObj
+      );
+      if (request && request.friendship.status === 'accepted') {
+        const { friendship, newConversation } = request;
 
         let senderObj = {
           conversationId: newConversation?.id,
-          friend:{ 
+          friend: {
             id: recipientId,
-            username:recipientUsername,
+            username: recipientUsername,
           },
-          requestInfo: { 
+          requestInfo: {
             id: friendship.id,
-            status: friendship.status
+            status: friendship.status,
           },
-        }
-           
+        };
 
         let recipientObj = {
           conversationId: newConversation?.id,
-          friend:{
+          friend: {
             id: userId,
             username,
           },
           requestInfo: {
             id: friendship.id,
-            status: friendship.status
+            status: friendship.status,
           },
-          
-        }
+        };
 
-
-        handleAcceptFriendRequest(recipientObj, senderObj, request)
-
+        handleAcceptFriendRequest(recipientObj, senderObj, request);
       }
-    
+
       return request;
     });
-    
+
     socket.on('decline_friend_request', async (friendRequestObj) => {
       // console.log('-----deny_friend_request------');
       // console.log('----------------------');
 
+      let recipientId = friendRequestObj.recipientId;
+      let recipientUsername = friendRequestObj.recipientUsername;
 
-      let recipientId = friendRequestObj.recipientId
-      let recipientUsername = friendRequestObj.recipientUsername
-      
- 
       // console.log('sender | ', username, userId);
       // console.log('recip | ', recipientUsername, recipientId);
 
       // console.log(friendRequestObj);
 
-
-      const request = await friendController.declineFriendRequest({userId, recipientId});
-      if(request && request.status === 'rejected') {
-    
+      const request = await friendController.declineFriendRequest({
+        userId,
+        recipientId,
+      });
+      if (request && request.status === 'rejected') {
         let senderObj = {
-          friend:{
-            id: recipientId, 
-            username:recipientUsername,
+          friend: {
+            id: recipientId,
+            username: recipientUsername,
           },
           requestInfo: {
             id: request.id,
-            status: request.status
-          }
-        }
-        
+            status: request.status,
+          },
+        };
 
         let recipientObj = {
-          friend:{
+          friend: {
             id: userId,
             username,
           },
           requestInfo: {
             id: request.id,
-            status: request.status
-          }
-        }
-    
+            status: request.status,
+          },
+        };
+
         io.in(recipientId).emit('deny_friend_request', recipientObj);
         socket.emit('deny_friend_request', senderObj);
       }
-    
+
       return request;
     });
-
-
 
     socket.on('cancel_friend_request', async (friendRequestObj) => {
       // console.log('-----cancel_friend_request------');
       // console.log('----------------------');
 
+      let recipientId = friendRequestObj.recipientId;
+      let friendshipId = friendRequestObj.friendshipId;
 
-      let recipientId = friendRequestObj.recipientId
-      let friendshipId = friendRequestObj.friendshipId
- 
       // console.log('sender | ', username, userId);
       // console.log('recip | ', recipientId);
 
       // console.log(friendRequestObj);
 
-
-      const request = await friendController.cancelFriendRequest({friendshipId});
-      if(request) {
-
+      const request = await friendController.cancelFriendRequest({
+        friendshipId,
+      });
+      if (request) {
         let senderObj = {
-          friend:{
-            id: recipientId, 
+          friend: {
+            id: recipientId,
           },
           requestInfo: {
             id: request.id,
-            status: request.status
-          }
-        }
-         
+            status: request.status,
+          },
+        };
 
         let recipientObj = {
-          friend:{
+          friend: {
             id: userId,
             username,
           },
           requestInfo: {
             id: request.id,
-            status: request.status
-          }
-        }
-    
+            status: request.status,
+          },
+        };
+
         io.in(recipientId).emit('deny_friend_request', recipientObj);
         socket.emit('deny_friend_request', senderObj);
       }
-    
+
       return request;
     });
-
 
     socket.on('remove_friend', async (friendObj) => {
       // console.log('-----remove_friend------');
       // console.log('----------------------');
       // console.log(friendObj);
- 
 
-      let friendshipId = friendObj.id
-      let friendId = friendObj.friendId
-      let conversationId = friendObj.conversationId
+      let friendshipId = friendObj.id;
+      let friendId = friendObj.friendId;
+      let conversationId = friendObj.conversationId;
 
       // console.log('friendshipId | ', friendshipId);
       // console.log('friendId | ', friendId);
- 
- 
 
       await friendController.removeFriend(userId, friendObj);
-     
-      
+
       socket.emit('friend_removed', friendObj);
-      friendObj.friendId = userId
+      friendObj.friendId = userId;
       io.in(friendId).emit('friend_removed', friendObj);
-    
-     
     });
 
+    // Broadcast message to specific room
+    socket.on('message', async (messageObj) => {
+      const { conversationId, content } = messageObj;
+      let room = conversationId;
 
-      // Broadcast message to specific room
-      socket.on('message', async (messageObj) => {
+      const newMessage = await chatController.createMessage(messageObj, userId);
+      if (!newMessage) return false;
 
+      newMessageObj = {
+        createdAt: Date.now(),
+        conversationId,
+        content: newMessage.content,
+        id: newMessage.id,
+        userId,
+        username,
+      };
 
-        const { conversationId, content } = messageObj;
-        let room = conversationId;
-  
-        const newMessage = await chatController.createMessage(messageObj, userId);
-        if (!newMessage) return false;
-  
-  
-        newMessageObj = {
-          createdAt: Date.now(),
+      // console.log(newMessageObj);
+
+      if (rooms[room]) {
+        rooms[room].messages.push(newMessageObj);
+      }
+
+      io.in(room).emit('new_message', newMessageObj);
+    });
+
+    // Edit message in specific room
+    socket.on('edit_message', async (messageObj) => {
+      const { conversationId, messageId, newContent } = messageObj;
+
+      let room = conversationId;
+      await chatController.editMessage(messageObj, userId);
+
+      io.in(room).emit('edit_message', messageObj);
+    });
+
+    // Edit message in specific room
+    socket.on('delete_message', async (messageObj) => {
+      const { conversationId, messageId } = messageObj;
+      let room = conversationId;
+      await chatController.deleteMessage(messageObj, userId);
+
+      io.in(room).emit('delete_message', messageObj);
+    });
+
+    // Edit message in specific room
+    socket.on('change_chatname', async (changeObj) => {
+      const { conversationId } = changeObj;
+      let room = conversationId;
+      let changeChatNameRequest = await chatController.changeChatName(
+        changeObj
+      );
+      if (changeChatNameRequest) {
+        io.in(room).emit('change_chatname', changeObj);
+      }
+    });
+
+    // Edit message in specific room
+    socket.on('start_conversation', async (convoObj) => {
+      const { friendListIds, friendListNames } = convoObj;
+      let newConversation = await chatController.startConversation(
+        convoObj,
+        userId,
+        username
+      );
+
+      if (newConversation) {
+        friendListIds.map((id) => {
+          let recipientConnections = connections[id];
+
+          if (recipientConnections) {
+            Object.values(recipientConnections).forEach((connection) => {
+              connection.socket.join(newConversation.id);
+              connection.socket.emit('add_conversation', newConversation);
+            });
+          }
+        });
+        socket.emit('add_conversation', newConversation);
+        socket.emit('go_to_conversation', newConversation);
+        socket.join(newConversation.id);
+
+        let content;
+
+        content = `${username} has started a new conversation!`;
+        emitCustomMessage({ conversationId: newConversation.id, content });
+
+        if (friendListNames.length === 1) {
+          content = `${friendListNames[0]} has been added to the conversation!`;
+        } else if (friendListNames.length === 2) {
+          content = `${friendListNames[0]} and ${friendListNames[1]} have been added to the conversation!`;
+        } else {
+          let lastFriend = friendListNames.pop();
+          content = `${friendListNames.join(
+            ', '
+          )}, and ${lastFriend} have been added to the conversation!`;
+        }
+
+        emitCustomMessage({ conversationId: newConversation.id, content });
+      }
+    });
+
+    // Edit message in specific room
+    socket.on('leave_conversation', async (leaveObj) => {
+      const { conversationId } = leaveObj;
+      let leaveConversation = await chatController.leaveConversation(
+        conversationId,
+        userId
+      );
+      if (leaveConversation) {
+        let currentConnections = connections[userId];
+
+        Object.values(currentConnections).forEach((connection) => {
+          connection.socket.leave(conversationId);
+        });
+
+        socket.emit('remove_conversation', leaveObj);
+
+        content = `${username} has left the conversation!`;
+        emitCustomMessage({ conversationId, content });
+
+        io.in(conversationId).emit('user_left_conversation', {
           conversationId,
-          content: newMessage.content,
-          id: newMessage.id,
           userId,
-          username
-        };
+        });
+      }
+    });
 
-        // console.log(newMessageObj);
+    // Edit message in specific room
+    socket.on('add_friends_to_conversation', async (convoObj) => {
+      const { friendListIds, friendListNames } = convoObj;
 
-        if (rooms[room]) {
-          rooms[room].messages.push(newMessageObj);
-        }
-  
-        io.in(room).emit('new_message', newMessageObj);
-      }); 
-  
-      // Edit message in specific room
-      socket.on('edit_message', async (messageObj) => {
-        const { conversationId, messageId, newContent } = messageObj;
-  
-        let room = conversationId;
-        await chatController.editMessage(messageObj, userId);
-  
-        io.in(room).emit('edit_message', messageObj);
-      });
-  
-      // Edit message in specific room
-      socket.on('delete_message', async (messageObj) => {
-        const { conversationId, messageId } = messageObj;
-        let room = conversationId;
-        await chatController.deleteMessage(messageObj, userId);
-  
-        io.in(room).emit('delete_message', messageObj);
-      });
-  
-      // Edit message in specific room
-      socket.on('change_chatname', async (changeObj) => {
-        const { conversationId } = changeObj;
-        let room = conversationId;
-        let changeChatNameRequest = await chatController.changeChatName(changeObj);
-        if(changeChatNameRequest){
-          io.in(room).emit('change_chatname', changeObj);
-        }
-      })
-  
-      // Edit message in specific room
-      socket.on('start_conversation', async (convoObj) => {
-        const { friendListIds, friendListNames } = convoObj;
-        let newConversation = await chatController.startConversation(convoObj, userId, username);
+      let room = convoObj.conversationId;
+      let conversation = await chatController.addFriendsToConversation(
+        convoObj
+      );
 
-
-        if(newConversation){
-          friendListIds.map(id=>{
-            let recipientConnections = connections[id];
-
-            if(recipientConnections){
-              Object.values(recipientConnections).forEach(connection => {
-                connection.socket.join(newConversation.id)
-                connection.socket.emit('add_conversation', newConversation)
-              });
-            }
-          })
-          socket.emit('add_conversation', newConversation)
-          socket.emit('go_to_conversation', newConversation)
-          socket.join(newConversation.id)
-
-
-
-          let content;
-
-
-          content = `${username} has started a new conversation!`
-          emitCustomMessage({conversationId:newConversation.id, content})
-
-
-
-
-          if (friendListNames.length === 1) {
-              content = `${friendListNames[0]} has been added to the conversation!`
-
-
-          } else if(friendListNames.length === 2){
-            content = `${friendListNames[0]} and ${friendListNames[1]} have been added to the conversation!`
-          }
-          
-        
-          else {
-              let lastFriend = friendListNames.pop();
-              content = `${friendListNames.join(', ')}, and ${lastFriend} have been added to the conversation!`
-          }
-
-          emitCustomMessage({conversationId:newConversation.id, content})
-
-        }
-      })
-
-
- 
-      // Edit message in specific room
-      socket.on('leave_conversation', async (leaveObj) => {
-        const { conversationId } = leaveObj;
-        let leaveConversation = await chatController.leaveConversation(conversationId, userId);
-        if(leaveConversation){
-
-          let currentConnections = connections[userId];
-      
-          Object.values(currentConnections).forEach(connection => {
-            connection.socket.leave(conversationId);
-          });
-
-
-
-          socket.emit('remove_conversation', leaveObj)
-
-          content = `${username} has left the conversation!`
-          emitCustomMessage({conversationId, content})
-
-          io.in(conversationId).emit('user_left_conversation', {conversationId, userId});
-
-
-
-
-
-
-        }
-      })
-
- 
-      // Edit message in specific room
-      socket.on('add_friends_to_conversation', async (convoObj) => {
-        const { friendListIds, friendListNames } = convoObj;
-
-        let room = convoObj.conversationId
-        let conversation = await chatController.addFriendsToConversation(convoObj);
-        
-        if(conversation){
-
+      if (conversation) {
         io.in(room).emit('user_joined_conversation', convoObj);
 
+        friendListIds.map((id) => {
+          let recipientConnections = connections[id];
 
-          friendListIds.map(id=>{
-            let recipientConnections = connections[id];
-
-            if(recipientConnections){
-              Object.values(recipientConnections).forEach(connection => {
-                connection.socket.join(conversation.id)
-                connection.socket.emit('add_conversation', conversation)
-              });
-            }
-          })
-
-          let content;
-          if (friendListNames.length === 1) {
-              content = `${username} has added ${friendListNames[0]} to the conversation!`
-
-
-          } else if(friendListNames.length === 2){
-            content = `${username} has added ${friendListNames[0]} and ${friendListNames[1]} to the conversation!`
+          if (recipientConnections) {
+            Object.values(recipientConnections).forEach((connection) => {
+              connection.socket.join(conversation.id);
+              connection.socket.emit('add_conversation', conversation);
+            });
           }
-          
-        
-          else {
-              let lastFriend = friendListNames.pop(); 
-              content = `${username} has added ${friendListNames.join(', ')}, and ${lastFriend} to the conversation!`
-          }
+        });
 
-          emitCustomMessage({conversationId:conversation.id, content})
+        let content;
+        if (friendListNames.length === 1) {
+          content = `${username} has added ${friendListNames[0]} to the conversation!`;
+        } else if (friendListNames.length === 2) {
+          content = `${username} has added ${friendListNames[0]} and ${friendListNames[1]} to the conversation!`;
+        } else {
+          let lastFriend = friendListNames.pop();
+          content = `${username} has added ${friendListNames.join(
+            ', '
+          )}, and ${lastFriend} to the conversation!`;
         }
-      }) 
 
+        emitCustomMessage({ conversationId: conversation.id, content });
+      }
+    });
 
-     async function emitCustomMessage(messageObj){
-        // Broadcast message to specific room
+    async function emitCustomMessage(messageObj) {
+      // Broadcast message to specific room
 
-        let roomUserId = 'e10d8de4-f4c7-0000-0000-000000000000'
+      let roomUserId = 'e10d8de4-f4c7-0000-0000-000000000000';
 
-        const { conversationId, content, tableId, cards } = messageObj;
-        let room = conversationId;
-  
-        const newMessage = await chatController.createMessage(messageObj, roomUserId);
+      const { conversationId, content, tableId, cards } = messageObj;
+      let room = conversationId;
 
-        // if (!newMessage) console.log('no message');;
+      const newMessage = await chatController.createMessage(
+        messageObj,
+        roomUserId
+      );
 
-        if (!newMessage) return false;
-  
-  
-        newMessageObj = {
-          createdAt: Date.now(),
-          conversationId,
-          content,
-          cards,
-          id: newMessage.id,
-          userId: roomUserId,
-          username: 'Room'
-        }; 
+      // if (!newMessage) console.log('no message');;
 
-        if(tableId){
-          newMessageObj.tableId = tableId
-          newMessageObj.chatName = rooms?.[tableId]?.chatName
-        }
-        
-        io.in(room).emit('new_message', newMessageObj);
+      if (!newMessage) return false;
 
+      newMessageObj = {
+        createdAt: Date.now(),
+        conversationId,
+        content,
+        cards,
+        id: newMessage.id,
+        userId: roomUserId,
+        username: 'Room',
+      };
+
+      if (tableId) {
+        newMessageObj.tableId = tableId;
+        newMessageObj.chatName = rooms?.[tableId]?.chatName;
       }
 
-      
-      async function emitMainPageWinnerMessage(tableId, player, handData, totalWinnings){
-        // Broadcast message to specific room
+      io.in(room).emit('new_message', newMessageObj);
+    }
 
+    async function emitMainPageWinnerMessage(
+      tableId,
+      player,
+      handData,
+      totalWinnings
+    ) {
+      // Broadcast message to specific room
 
+      let room = 'winners';
 
+      // if (!newMessage) console.log('no message');;
 
+      newMessageObj = {
+        createdAt: Date.now(),
+        gameType: rooms[tableId].gameType,
+        username: player.username,
+        bet: handData.bet,
+        payout: totalWinnings,
+      };
 
+      console.log('_*_*_*_*_*_*_**_*_*_**_*_*_*_*_**_');
+      console.log('lastPayouts', lastPayouts);
+      console.log('_*_*_*_*_*_*_**_*_*_**_*_*_*_*_**_');
 
-
-
-
-        let room = 'winners';
-  
-        // if (!newMessage) console.log('no message');;
-
-        newMessageObj = {
-          createdAt: Date.now(),
-          gameType: rooms[tableId].gameType,
-          username: player.username,
-          bet: handData.bet,
-          payout: totalWinnings,
-        }; 
-
-
-
-        console.log('_*_*_*_*_*_*_**_*_*_**_*_*_*_*_**_');
-        console.log('lastPayouts',lastPayouts);
-        console.log('_*_*_*_*_*_*_**_*_*_**_*_*_*_*_**_');
-
-
-
-        if(lastPayouts.length >=10){
-          lastPayouts.shift()
-          lastPayouts.push(newMessageObj)
-        } else{
-          lastPayouts.push(newMessageObj)
-        }
-
-        console.log('@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@');
-        console.log('@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@');
-        console.log('lastPayouts',lastPayouts);
-        console.log('@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@');
-        console.log('@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@');
-
-        
-        io.in(room).emit('new_payout', newMessageObj);
-
+      if (lastPayouts.length >= 10) {
+        lastPayouts.shift();
+        lastPayouts.push(newMessageObj);
+      } else {
+        lastPayouts.push(newMessageObj);
       }
 
+      console.log('@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@');
+      console.log('@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@');
+      console.log('lastPayouts', lastPayouts);
+      console.log('@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@');
+      console.log('@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@');
 
-
+      io.in(room).emit('new_payout', newMessageObj);
+    }
   });
 };

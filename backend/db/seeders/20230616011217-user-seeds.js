@@ -112,7 +112,77 @@ module.exports = {
         username: 'Room',
         hashedPassword: await bcrypt.hash('strongpassword', salt),
         balance: 90000
-      }
+      },
+
+      // bots
+      {
+        id:"e10d8de4-f4c8-4d28-9324-56aa9c924a83",
+        firstName: 'Jeffrey',
+        lastName: 'Ma',
+        email: 'jeffrey.ma@user.io',
+        username: 'Jeff Ma',
+        hashedPassword: await bcrypt.hash('password', salt),
+        balance: 300000
+    },
+    {
+        id:"e10d8de4-f4c8-4d28-9324-56aa9c924a84",
+        firstName: 'John',
+        lastName: 'Chang',
+        email: 'john.chang@user.io',
+        username: 'John Chang',
+        hashedPassword: await bcrypt.hash('password', salt),
+        balance: 300000
+    },
+    {
+        id:"e10d8de4-f4c8-4d28-9324-56aa9c924a85",
+        firstName: 'Bill',
+        lastName: 'Kaplan',
+        email: 'bill.kaplan@user.io',
+        username: 'Bill Kaplan',
+        hashedPassword: await bcrypt.hash('password', salt),
+        balance: 300000
+    },
+    {
+        id:"e10d8de4-f4c8-4d28-9324-56aa9c924a86",
+        firstName: 'Mike',
+        lastName: 'Aponte',
+        email: 'mike.aponte@user.io',
+        username: 'Mike Aponte',
+        hashedPassword: await bcrypt.hash('password', salt),
+        balance: 300000
+    },
+    {
+        id:"e10d8de4-f4c8-4d28-9324-56aa9c924a87",
+        firstName: 'Jane',
+        lastName: 'Willis',
+        email: 'jane.willis@user.io',
+        username: 'Jane Willis',
+        hashedPassword: await bcrypt.hash('password', salt),
+        balance: 300000
+    },
+    {
+      id:"e10d8de4-f4c8-4d28-9324-56aa9c924a88",
+      firstName: 'Semyon',
+      lastName: 'Dukach',
+      email: 'semyon.dukach@user.io',
+      username: 'Semyon Dukach',
+      hashedPassword: await bcrypt.hash('password', salt),
+      balance: 300000
+  }
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
     ], {});
   },
 

@@ -14,8 +14,7 @@ const {
   Conversation,
   UserConversation,
 } = require('../db/models');
-const { Op } = require('sequelize');
-const Sequelize = require('sequelize');
+
 
 const chatController = {
   async createMessage(messageObj, userId) {

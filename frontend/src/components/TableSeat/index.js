@@ -399,9 +399,8 @@ return(
               </div>
             </div>
           </div>
-          <div className='seat-namebalance-container flex center'>
-            {/* <div className={`${neonTheme}-text name-space flex center`}>{player.username}</div> */}
-            <div className={`${neonTheme}-text name-space flex center`}>{player.username}</div>
+          <div className='seat-namebalance-container flex'>
+            <div className={`${neonTheme}-text name-space`}>{player.username}</div>
             <div className={`seat-tablebalance flex center ${neonTheme}-text`}>${currentBalance}</div>
           </div>
         </div>
@@ -420,12 +419,10 @@ return(
            </div>
          </div>
 
-       <div className='seat-namebalance-container flex center'>
-         <div className={`seat-tablebalance flex center ${neonTheme}-text`}>-</div>
-       </div>
-         <div className={` ${neonTheme}-text name-space flex center`}></div>
-         {isForfeited && <div className='table-balance flex center'>Forfeited</div>}
-
+        <div className='seat-namebalance-container flex'>
+            <div className={`${neonTheme}-text name-space`}>{'Take'}</div>
+            <div className={`seat-tablebalance take-seat flex center ${neonTheme}-text`}>{'Seat'}</div>
+          </div>
        </div>
 
      )}
@@ -443,118 +440,3 @@ return(
 
   export default TableSeat
 
-
-// {       pendingBet > 0 &&             <div className='pending-bet-area flex center'>
-//                       <div className='currentbet-chip-container flex center'>
-//                         <img className='currentbet-chip' src={pokerChipWithDollarSign} alt='searching'></img>
-//                       </div>
-//                       {pendingBet}
-//                     </div>}
-
-                  //   {insuranceBet > 0 && (       
-                  //   <div className='insurance-bet-area flex center'>
-                  //     <div className='currentbet-chip-container flex center'>
-                  //       <img className='currentbet-chip' src={pokerChipWithDollarSign} alt='poker chip'></img>
-                  //     </div>
-                  //     {insuranceBet}
-                  //   </div>
-                  // )}
-
-
-
-//       {disconnectTimer > 0 && (<div className='disconnect-timer flex center'>{disconnectTimer}s</div>)}
-//       {actionTimer > 0 && isActiveSeat && (<div className='turn-timer flex center'>{actionTimer}s</div>)}
-
-      // {player && (
-                
-      //   <div className={`seat-container flex center`}>
-
-
-
-      //     <div className='profileimage-wrapper flex center'>
-      //       <div onClick={leaveSeat} className={`profileimage-container flex center ${isActiveSeat ? ' gold' : ''}`}>
-      //         <div className='profileimage-sub-container flex center'>
-      //               <div className='profileimage-image flex center'><i className="fa-regular fa-user"></i></div>
-      //         </div>
-      //       </div>
-      //     </div>
-
-      //   <div className='seat-namebalance-container flex center'>
-      //     {/* <div className={`${neonTheme}-text name-space flex center`}>{player.username}</div> */}
-      //     <div className={`${neonTheme}-text name-space flex center`}>{player.username}</div>
-      //     <div className={`seat-tablebalance flex center ${neonTheme}-text`}>${currentBalance}</div>
-      //   </div>
-      //     {/* {isForfeited && <div className='table-balance flex center'>Forfeited</div>} */}
-
-      //   </div>
-
-      // )}
-
-// {player && (
-
-//             <div 
-//             className={`tableseat-hands-container flex`}
-//             // style={getSplitOffsetStyle()} 
-//             >
-              
-//               {hands && Object.entries(hands).map(([handId, handData],index) => (
-                
-//                 <div className={`tableseat-hand-container flex center `} key={handId}>
-
-//                     <div className='tableseat-hand-bet flex center'>
-//                       <div className='currentbet-chip-container flex center'>
-//                         <img className='currentbet-chip' src={pokerChipWithDollarSign} alt='poker chip'></img>
-//                       </div>
-//                       {handData.bet}
-//                     </div>
-
-//                   <div className={`tableseat-hand-cards flex center`} key={handId}>
-
-//                     {handData.cards.map((card, index) => (
-//                           <div 
-//                           className={`cardarea-card-container`} 
-//                           style={getCardOffsetStyle(index, handId)} 
-//                           key={index}
-//                         >
-//                         <Card card={card} />
-//                       </div>
-//                     ))}
-//                   </div>
-
-
-//                 </div>
-                
-//               ))}
-
-              
-//             </div>
-//             )}
-
-
-      // {!player && (
-       
-      //           <div className={`seat-container flex`}>
-        
-      
-      //             <div className='profileimage-wrapper flex center'>
-      //               <div className='profileimage-container flex center emptyseat-border'>
-      //                 <div className='profileimage-sub-container emptyseat-background flex center'>
-
-      //                     <div className={`profileimage-takeseat flex center`}>
-      //                       <i className={`fa-solid fa-arrow-down emptyseat-arrow ${neonTheme}-text`}></i>
-      //                     </div>
-
-
-      //                 </div>
-      //               </div>
-      //             </div>
-        
-      //           <div className='seat-namebalance-container flex center'>
-      //             <div className={`seat-tablebalance flex center ${neonTheme}-text`}>-</div>
-      //           </div>
-      //             <div className={` ${neonTheme}-text name-space flex center`}></div>
-      //             {isForfeited && <div className='table-balance flex center'>Forfeited</div>}
-        
-      //           </div>
-        
-      //         )}

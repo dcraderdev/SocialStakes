@@ -23,7 +23,9 @@ module.exports = {
       'bda7360c-10a2-4ee9-a4d2-3e41f688d641',
       '0bdeed9a-6ce4-4a06-8470-3ddfc0fcdf2b',
       'b2866e5a-bb89-47ea-b30b-6d1a677f0704',
-      '4f6a1d90-17e0-4e97-b3a0-70aeed1b1d48'
+      '4f6a1d90-17e0-4e97-b3a0-70aeed1b1d48',
+
+      'be11a610-7777-7777-7777-7be11a610777'
     ];
 
     const blockHashSeeds = [
@@ -39,7 +41,9 @@ module.exports = {
       'fde2b3e0c8755a1b8944e1c45629087cbe7d014a7aa0d6713f4b285c6af4e8bf',
       '9b933ea9aa2ab2124be2caaa0fb91e8fb11f5a1789eb228887d0be9cdf2e7d8g',
       'fde2b3e0c8755a1b8944e1c45629087cbe7d014a7aa0d6713f4b285c6af4e8bh',
-      '9b933ea9aa2ab2124be2caaa0fb91e8fb11f5a1789eb228887d0be9cdf2e7d8i'
+      '9b933ea9aa2ab2124be2caaa0fb91e8fb11f5a1789eb228887d0be9cdf2e7d8i',
+
+      '9b933ea9aa2ab2124be2caaa0fb91e8fb11f5a1789eb228887d0be9cdf2e7d8f',
     ];
 
 
@@ -49,6 +53,14 @@ module.exports = {
     const blockHash = blockHashSeeds[0]
 
     for(let i = 0; i < tableIds.length; i++){
+
+      if(tableIds[i] === 'be11a610-7777-7777-7777-7be11a610777'){
+        console.log('yes be11a610-7777-7777-7777-7be11a610777');
+        console.log('yes be11a610-7777-7777-7777-7be11a610777');
+        console.log('yes be11a610-7777-7777-7777-7be11a610777');
+        console.log('yes be11a610-7777-7777-7777-7be11a610777');
+        console.log('yes be11a610-7777-7777-7777-7be11a610777');
+      }
 
       gameSessions.push({
         id: uuid.v4(),

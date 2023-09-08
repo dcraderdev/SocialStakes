@@ -1,31 +1,4 @@
 
-
-
-/* .seat1 {
-  left: 0%;
-  bottom: 0px;
-}
-.seat2 {
-  left: 15%;
-  bottom: -5%;
-
-}
-.seat3 {
-  left: 30%;
-  bottom: -5%;
-}
-.seat4 {
-  right: 30%;
-  bottom: -5%;
-}
-.seat5 {
-  right: 15%;
-  bottom: -5%;
-  border: rgb(255, 0, 234) solid 1px;
-
-}
-
-*/
 .seat1,
 .seat6 {
   bottom: 10px;
@@ -33,23 +6,7 @@
 
 
 
-/* @media screen and (min-width: 1300px) {
-  .seat6 {
-    right: -65px;
-  }
-
-  .seat1 {
-    left: -65px;
-  }
-} */
-
-
-
-
 .seat-wrapper {
-  /* position: absolute;
-  bottom: 0%;
-   */
   width: 15%;
   height: 40vh;
   position: relative;
@@ -65,19 +22,15 @@
   aspect-ratio: 1/1;
   position: relative;
   cursor: pointer;
-
+  align-items: flex-start;
 }
 
 
 
 
 .seat-container {
-  /* position: absolute;
-  bottom: 0%;
-   */
   width: 100%;
   height: 80%;
-
   position: relative;
   z-index: 1;
 }
@@ -104,11 +57,10 @@
 
 .profileimage-wrapper {
   width: 80%;
-  height: 100%;
+  top: 10%;
   position: relative;
   overflow: hidden;
   aspect-ratio: 1/1;
-
 }
 
 
@@ -155,7 +107,7 @@
 
 
 .seat-namebalance-container{
-  bottom: -30px;
+  bottom: -40px;
   font-size: 20px;
   border-radius: 10px;
   border: black solid 1px;
@@ -165,6 +117,7 @@
   min-height: 30px;
   flex-direction: column;
   position: absolute;
+
 }
 
 
@@ -173,6 +126,12 @@
   font-size: 2.5vh;
   font-size: 16px;
   font-weight: 900;
+  width: 100%;
+}
+
+
+.seat-tablebalance.take-seat{
+  font-weight: 400;
 }
 
 
@@ -202,13 +161,11 @@
 
 
 .tableseat-hand-value{
-
   height: 20px;
   width: 100%;
   min-width: 60px;
   position: absolute;
   top: -30px;
-
   justify-content: center;
 }
 
@@ -217,19 +174,14 @@
 
 .tableseat-hand-container{
   position: relative;
-
   height: fit-content;
   width: 25%;
-
-
 }
 
 
 
 .tableseat-hand-bet{
   position: relative;
-
-
   z-index: 1;
   width: fit-content;
   padding-left: 5px;
@@ -238,7 +190,6 @@
   border: black solid 1px;
   border-radius: 15px;
   background-color: #01fdca;
-
   color: rgb(0, 0, 0);
 }
 
@@ -328,7 +279,22 @@
 }
 
 
+.name-space{
 
+
+  text-align: center;
+  width: 98%;
+  height: 25px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  font-size: 16px;
+  margin-top: 5px;
+  margin-left: 1%;
+
+  
+}
 
 
 .seat-leave-button{

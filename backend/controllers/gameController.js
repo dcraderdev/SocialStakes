@@ -288,7 +288,6 @@ try{
     if(!userTables){
       return false
     }
-    // const tableIds = userTables.map(userTable=>userTable.tableId)
     return userTables
   },
 
@@ -301,7 +300,6 @@ try{
     if(!userTables || !userToUpdate){
       return false
     }
-
     let sumOfTableBalances = 0;
 
     for(let userTable of userTables){
@@ -310,7 +308,6 @@ try{
       userTable.active = false;
       await userTable.save();
     }
-  
     userToUpdate.balance += sumOfTableBalances;
     await userToUpdate.save();
     return
@@ -319,6 +316,7 @@ try{
 
 
   async takeSeat(tableId, seat, user, amount) {
+
     const userToUpdate = await User.findByPk(user.id);
     
     // Query the UserTable directly with the specific table and seat
@@ -338,6 +336,7 @@ try{
       },
     });
   
+
     // If there's an active user in the seat, return false
     if (activeUserInSeat || userAlreadySitting) {
       return false;
@@ -355,16 +354,19 @@ try{
         {
           model: User,
           as: 'players',
-          through: UserTable,
+          through: {
+            model: UserTable, 
+            where: { active: true }, 
+            attributes: [],
+        },
           attributes: ['id', 'username', 'balance', 'rank'],
         },
       ],
     });
-  
     if (!table) {
       return false;
     }
-  
+
     if (table.players.length < table.Game.maxNumPlayers) {
       const takeSeat = await UserTable.create({
         userId: user.id,
@@ -376,13 +378,15 @@ try{
         disconnectTimer: 0,
         active: true,
       });
-  
       if (!takeSeat) {
         return false;
       }
   
       return takeSeat;
     }
+
+
+
   },
   
 
@@ -420,6 +424,15 @@ try{
   },
 
   async addMessage(tableId, userId, content) {
+    console.log('gameController - addMessage');
+    console.log('gameController - addMessage');
+    console.log('gameController - addMessage');
+    console.log('gameController - addMessage');
+    console.log('gameController - addMessage');
+    console.log('gameController - addMessage');
+    console.log('gameController - addMessage');
+    console.log('gameController - addMessage');
+    console.log('gameController - addMessage');
     const table = await Table.findByPk(tableId)
     if (!table) {
       return false;

@@ -65,6 +65,12 @@ module.exports = {
         chatName: 'San Diego - American 21',
       },
       {
+        id: 'c1e6c24a-036b-43cd-aa53-bf32ee4ac777',
+        tableId: 'be11a610-7777-7777-7777-7be11a610777',
+        hasDefaultChatName: false,
+        chatName: 'Bellagio',
+      },
+      {
         id: 'c1e6c24a-036b-43cd-aa53-bf32ee4ac77e',
         tableId: null,
         hasDefaultChatName: false,

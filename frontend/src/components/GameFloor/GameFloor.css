@@ -19,7 +19,7 @@
 .game-view{
   position: relative;
   top: -5px;
-  left: -10px;
+  left: 0px;
   height: calc(100vh - 65px);
   width: 99vw;
 }

@@ -83,6 +83,14 @@ module.exports = {
           tableBalance: 0,
           userId: "e10d8de4-f4c7-4d28-9324-56aa9c000001"
         },
+        {
+          id: 'be11a610-7777-7777-7777-7be11a610777',
+          gameId: 'blackjack_6_deck_high_stakes_multi',
+          shufflePoint: 180,
+          tableName: 'Bellagio',
+          tableBalance: 0,
+          userId: "e10d8de4-f4c7-4d28-9324-56aa9c000001"
+        },
       ],
       {}
     );

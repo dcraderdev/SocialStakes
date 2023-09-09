@@ -16,9 +16,90 @@ const {
   UserPot,
 } = require('../db/models');
 
-const {generateDeck, shuffle, fetchLatestBlock, generateSeed} = require('./cardController')
+const {
+  generateDeck, 
+  shuffle, 
+  fetchLatestBlock, 
+  generateSeed
+} = require('./cardController')
+
+
+const {
+  roomInit,
+  connections,
+  rooms,
+  disconnectTimeouts,
+  disconnectTimes,
+  lastPayouts,
+} = require('../global');
+
+
+
+
+
 
 const gameController = {
+
+
+
+  async initializeTables(){
+    const allTables = await Table.findAll({
+      where: {
+        active: true
+      },
+      include: [
+        {
+          model: Game,
+          attributes: {
+            exclude: ['createdAt', 'updatedAt', 'rake']
+          },
+
+        },
+        {
+          model: GameSession,
+          as: 'gameSessions',
+          attributes: ['id','nonce','blockHash'],
+        },
+        {
+          model: Conversation,
+          attributes: ['id', 'chatName'],
+        },
+
+
+      ],
+      attributes: ['id','private', 'shufflePoint', 'tableName', 'userId'],
+    });
+
+    if (!allTables) {
+      return false;
+    }
+
+    for(let table of allTables){
+      let tableId = table.id
+      if (!rooms[tableId]) {
+        rooms[tableId] = roomInit();
+        rooms[tableId].tableId = tableId;
+        rooms[tableId].gameSessionId = table.gameSessions[0].id;
+        rooms[tableId].blockHash = table.gameSessions[0].blockHash;
+        rooms[tableId].decksUsed = table.Game.decksUsed;
+        rooms[tableId].shufflePoint = table.shufflePoint;
+        rooms[tableId].conversationId = table.Conversation.id;
+        rooms[tableId].chatName = table.Conversation.chatName;
+        rooms[tableId].gameType = table.Game.shortName;
+      }
+    }
+    return;
+  },
+
+
+
+
+
+
+
+
+
+
   async getGames() {
     const games = await Game.findAll({ where: { active: true } });
 
@@ -328,6 +409,27 @@ try{
     return
   },
 
+  async removeUserFromTable(tableId, userId) {
+
+    const userTable = await UserTable.findByPk(tableId)
+    const userToUpdate = await User.findByPk(userId);
+
+    if(!userTable || !userToUpdate){
+      return false
+    }
+    let sumOfTableBalances = 0;
+
+
+
+    sumOfTableBalances += userTable.tableBalance; 
+    userTable.active = false;
+    await userTable.save();
+
+    userToUpdate.balance += sumOfTableBalances;
+    await userToUpdate.save();
+    return
+  },
+
 
 
   async takeSeat(tableId, seat, user, amount) {
@@ -351,7 +453,7 @@ try{
       },
     });
   
-
+ 
     // If there's an active user in the seat, return false
     if (activeUserInSeat || userAlreadySitting) {
       return false;
@@ -360,7 +462,7 @@ try{
     // update user's unplayed balance
     userToUpdate.balance -= amount;
     await userToUpdate.save();
-  
+   
     const table = await Table.findByPk(tableId, {
       include: [
         {

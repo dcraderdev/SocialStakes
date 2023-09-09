@@ -20,6 +20,7 @@ const { chatController } = require('./chatController');
 const { friendController } = require('./friendController');
 const { cardConverter } = require('./cardConverter');
 const { botController } = require('./botController');
+const { blackjackController } = require('./blackjackController');
 
 const {
   roomInit,
@@ -30,38 +31,23 @@ const {
   lastPayouts,
 } = require('../global');
 
-let countdownInterval = null;
 
-function isNoBetsLeft(rooms, tableId) {
-  if (!rooms[tableId]) return true;
 
-  // Iterate over all seats in the room to check for any remaining bets
-  for (let seat in rooms[tableId].seats) {
-    if (rooms[tableId].seats[seat].pendingBet > 0) {
-      return false; // If there is a bet, return false
-    }
-  }
-  // If no bets are found, return true
-  return true;
-}
+let emitUpdatedTable = require('../utils/emitUpdatedTable') ;
+let { countdownInterval } = require('../global');
 
-function stopTimer(rooms, tableId) {
-  let room = tableId;
-  let countdownObj = { dealCardsTimeStamp: 0, tableId };
 
-  rooms[tableId].dealCardsTimeStamp = null;
-  io.in(room).emit('countdown_update', countdownObj);
-}
+
 
 const connectionController = {
+
+
   startGlobalCountdown(io, rooms) {
     console.log(rooms);
     if (countdownInterval) return;
 
     countdownInterval = setInterval(async () => {
-      console.log('tick');
       for (const tableId in rooms) {
-        console.log(tableId);
 
         const room = rooms[tableId];
 
@@ -73,8 +59,8 @@ const connectionController = {
           }
 
           // if theres bets, start hand otherwise cancel
-          if (isNoBetsLeft(rooms, tableId)) {
-            stopTimer(rooms, tableId);
+          if (blackjackController.isNoBetsLeft(tableId)) {
+            blackjackController.stopCountdownToDeal(tableId, io);
             continue;
           }
 
@@ -114,8 +100,17 @@ const connectionController = {
     const username = socket.handshake.query.username;
     const socketId = socket.id;
 
+
+    console.log('-=-=-=-=-=-=-=-=-=');
+    console.log('--- CONNECTING ---');
+    console.log('SOCKET ID', socketId);
+    console.log('A user connected', socketId, 'Username:', username);
+    console.log('User Room:', userId);
+
+    console.log('-=-=-=-=-=-=-=-=-=');
+
     socket.join(userId);
-    socket.join('winners');
+    socket.join('payoutMessages');
 
     if (username === 'anon') {
       socket.emit('initialize_anon_user', { lastPayouts });
@@ -125,7 +120,9 @@ const connectionController = {
     const userFriends = await friendController.getUserFriends(userId);
     const userConversations = await chatController.getUserConversations(userId);
 
-    connections[userId] = {};
+    if(!connections[userId]){
+      connections[userId] = {};
+    }
 
     connections[userId][socketId] = {
       socket: socket,
@@ -149,8 +146,9 @@ const connectionController = {
     socket.emit('initialize_user', initObj);
   },
 
-  checkReconnection(socket, io) {
+  checkIsReconnecting(socket, io) {
     const userId = socket.handshake.query.userId;
+    const socketId = socket.id;
 
     if (disconnectTimeouts[userId]) {
       return true;
@@ -182,29 +180,155 @@ const connectionController = {
         let tableId = table.tableId;
         let seat = table.seat;
         let timer = 0;
-        let messageObj = {
-          tableId,
-          user: { username: 'Room', id: 1, rank: 0 },
-          message: {
-            content: `${username} has reconnected.`,
-            id: 0,
-          }, 
-        };
-        
-        console.log('!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#');
-        console.log('!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#');
-        console.log('!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#');
-        console.log('!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#');
-        console.log(convoId);
-        console.log('!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#');
-        console.log('!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#');
-        console.log('!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#');
-        console.log('!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#');
-        // io.in(tableId).emit('new_message', messageObj);
         io.in(tableId).emit('player_reconnected', { seat, tableId, convoId, timer });
       }
     }
+
+
   },
+
+
+
+  async handleDisconnection(socket, io) {
+    console.log('-------------');
+    console.log('handleDisconnection');
+    console.log('-------------');
+
+    const userId = socket.handshake.query.userId;
+    const username = socket.handshake.query.username;
+    const socketId = socket.id;
+    let timer = 2000; // 10 seconds
+
+
+    delete connections[userId][socketId]
+
+    disconnectTimes[userId] = Date.now();
+
+    // Clear the existing timeout for this user (if any)
+    if (disconnectTimeouts[userId]) {
+      clearTimeout(disconnectTimeouts[userId]);
+    }
+
+
+    // Start a new timeout for this user
+    disconnectTimeouts[userId] = setTimeout(async () => {
+      // Check the elapsed time since disconnect
+      let elapsedSeconds = Math.floor(
+        (Date.now() - disconnectTimes[userId]) / 1000
+      );
+      if (elapsedSeconds < timer / 1000) {
+        return;
+      }
+
+      // check if user has other sockets open, if not clear data and close tables
+
+      let hasOtherConnection = Object.values(connections[userId]).length
+
+      
+      if(!hasOtherConnection){
+        delete connections[userId]
+        delete disconnectTimeouts[userId];
+        delete disconnectTimes[userId];
+        this.disconnectUsersTables(socket, io)
+      }
+
+    
+    }, timer);
+
+  },
+
+
+
+
+
+  async disconnectUsersTables(socket, io) {
+    console.log('-------disconnectUsersTables-------');
+    console.log('--------------');
+    const userId = socket.handshake.query.userId;
+    const username = socket.handshake.query.username;
+    const socketId = socket.id;
+
+
+    const userTables = await gameController.getUserTables(userId);
+    if (userTables) {
+      console.log('yep');
+      console.log('yep');
+      console.log('yep');
+      console.log('yep');
+
+
+      for (let table of userTables) {
+
+        console.log(table);
+
+        let userTableId = table.id;
+        let convoId = table.Table.Conversation.id
+        let tableId = table.tableId;
+        let seat = table.seat
+        let gameTable = rooms[tableId]
+        let playerSeatObj = rooms[tableId].seats[seat]
+
+
+        await gameController.removeUserFromTable(userTableId, userId)
+        socket.leave(convoId);
+
+
+
+        if(playerSeatObj){
+
+
+          if (gameTable.gameType === 'Blackjack') {
+    
+            this.handleLeaveBlackjackTable(socket, io, gameTable, playerSeatObj)
+      
+          }
+
+
+
+
+        }
+
+
+
+
+
+
+        // console.log(tableId);
+        // console.log(userTableId);
+        // console.log(userId);
+        // console.log(seat);
+        // console.log(convoId);
+        // console.log(playerSeatObj);
+
+
+        // set userTable to active = false
+        // gameController.removeUserFromTables(userId)
+
+
+
+
+      }
+    }
+  
+
+
+return
+
+
+},
+
+
+
+
+
+
+
+  
+
+
+
+
+
 };
 
 module.exports = {

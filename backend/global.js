@@ -32,7 +32,8 @@ const connections = {};
 const rooms = {};
 const disconnectTimeouts = {};
 const disconnectTimes = {};
-
+let countdownInterval = null
+ 
 let lastPayouts = [
   {
     createdAt: 1693856698676,

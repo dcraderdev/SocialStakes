@@ -269,7 +269,7 @@ const connectionController = {
         let playerSeatObj = rooms[tableId].seats[seat]
 
 
-        await gameController.removeUserFromTable(userTableId, userId)
+        // await gameController.removeUserFromTable(userTableId, userId)
         socket.leave(convoId);
 
 
@@ -279,7 +279,7 @@ const connectionController = {
 
           if (gameTable.gameType === 'Blackjack') {
     
-            this.handleLeaveBlackjackTable(socket, io, gameTable, playerSeatObj)
+            await blackjackController.handleLeaveBlackjackTable(socket, io, gameTable, playerSeatObj)
       
           }
 

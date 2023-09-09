@@ -235,6 +235,11 @@ const gamesReducer = (state = initialState, action) => {
       if(newState.showCreatingGame){
         return { ...newState, currentTables: newCurrentTables, activeTable:null, showGames: false, showTables: false, showCreatingGame: true };
       }
+
+      if(newState.showGames){
+        return { ...newState, currentTables: newCurrentTables, activeTable:null, showGames: true, showTables: false, showCreatingGame: false };
+      }
+
       if(newState.showTables){
         return { ...newState, currentTables: newCurrentTables, activeTable:null, showGames: false, showTables: true, showCreatingGame: false };
       }

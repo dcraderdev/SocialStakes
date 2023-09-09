@@ -18,333 +18,76 @@ const {
   rooms,
   disconnectTimeouts,
   disconnectTimes,
-  lastPayouts
+  lastPayouts,
 } = require('./global');
 
 let { countdownInterval } = require('./global');
-let emitUpdatedTable = require('./utils/emitUpdatedTable') ;
+
+let emitUpdatedTable = require('./utils/emitUpdatedTable');
+let fetchUpdatedTable = require('./utils/fetchUpdatedTable');
 
 
 
 module.exports = function (io) {
- 
-
-
-
-
-
-
-
-
-
-    async function initializeRooms() {
-      if(!Object.values(rooms).length){
-        await gameController.initializeTables()
-      }
+  async function initializeRooms() {
+    if (!Object.values(rooms).length) {
+      await gameController.initializeTables();
     }
+  }
 
-    async function initializeBot() {
-      if(!rooms['be11a610-7777-7777-7777-7be11a610777']){
-        await botController.handleBotInit();
-      }
+  async function initializeBot() {
+    if (!rooms['be11a610-7777-7777-7777-7be11a610777']) {
+      await botController.handleBotInit();
     }
+  }
 
-
-    async function initializeCounter() {
-      if(!countdownInterval){
-        countdownInterval = connectionController.startGlobalCountdown(io, rooms); 
-      }
+  async function initializeCounter() {
+    if (!countdownInterval) {
+      countdownInterval = connectionController.startGlobalCountdown(io, rooms);
     }
+  }
 
+  initializeRooms();
+  initializeBot();
+  initializeCounter();
 
-
-    initializeRooms();
-    initializeBot();
-    initializeCounter()
-
-    
-
-    
-    // _*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_
-    // _*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_
-    // _*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_
-    // _*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_
-
+  // _*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_
+  // _*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_
+  // _*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_
+  // _*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_
 
   io.on('connection', async (socket) => {
     const userId = socket.handshake.query.userId;
     const username = socket.handshake.query.username;
 
 
-
-    // let socketId = socket.id;
-
-    // socket.join(userId);
-    // socket.join('winners');
-
-    // check current connections
-    // if has current connections 
-    
-    // check if user has recently disconnected
-
-
     if (username === 'anon') {
-      await connectionController.startConnection(socket, io)
+      await connectionController.startConnection(socket, io);
       return;
     }
- 
 
+    let isReconnecting = connectionController.checkIsReconnecting(socket, io);
 
-    let isReconnecting = connectionController.checkIsReconnecting(socket, io)
-
-    if(isReconnecting){
-      console.log('!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#');
-      console.log('reeeee connection');
-      console.log('reeeee connection');
-      console.log('reeeee connection');
-      console.log('reeeee connection');
-      console.log('reeeee connection');
-      console.log('!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#');
-      await connectionController.handleReconnection(socket, io)
+    if (isReconnecting) {
+      await connectionController.handleReconnection(socket, io);
     } else {
-      console.log('!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#');
-      console.log('starting connection');
-      console.log('starting connection');
-      console.log('starting connection');
-      console.log('starting connection');
-      console.log('starting connection');
-      console.log('!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#');
-      await connectionController.startConnection(socket, io)
+      await connectionController.startConnection(socket, io);
     }
 
 
 
-
-
-
-
-    // if (username === 'anon') {
-    //   socket.emit('initialize_anon_user', { lastPayouts });
-    //   return;
-    // }
-
-    // const userTables = await gameController.getUserTables(userId);
-    // const userFriends = await friendController.getUserFriends(userId);
-    // const userConversations = await chatController.getUserConversations(userId);
-
-    // console.log('-=-=-=-=-=-=-=-=-=');
-    // console.log('--- CONNECTING ---');
-    // console.log('SOCKET ID', socketId);
-    // console.log('A user connected', socket.id, 'Username:', username);
-    // console.log('User Room:', userId);
-    // console.log('userConversations:');
-    // console.log(userConversations);
-
-    // console.log('-=-=-=-=-=-=-=-=-=');
-
-    // if (!connections[userId]) {
-    //   connections[userId] = {};
-    // }
-
-    // connections[userId][socketId] = {
-    //   socket: socket,
-    //   status: 'connected',
-    //   connectedAt: Date.now(),
-    //   timeOfLastAction: Date.now(),
-    // };
-
-    // if (userConversations) {
-    //   Object.keys(userConversations).map((conversation) => {
-    //     socket.join(conversation);
-    //   });
-    // }
-
-    // let initObj = {
-    //   userFriends,
-    //   userConversations,
-    //   lastPayouts,
-    // };
-
-    // socket.emit('initialize_user', initObj);
-
-    // dispatch(friendActions.getUserFriends())
-    // dispatch(chatActions.getUserConversations())
-
-    // Reconnection logic
-
-
-    // if (disconnectTimeouts[userId]) {
-    //   clearTimeout(disconnectTimeouts[userId]);
-    //   // console.log(`User ${username} reconnected, timeout cleared.`);
-    //   delete disconnectTimeouts[userId];
-    //   delete disconnectTimes[userId];
-
-    //   if (userTables) {
-    //     for (let table of userTables) {
-    //       let tableId = table.tableId;
-    //       let seat = table.seat;
-    //       let timer = 0;
-    //       let messageObj = {
-    //         tableId,
-    //         user: { username: 'Room', id: 1, rank: 0 },
-    //         message: {
-    //           content: `${username} has reconnected.`,
-    //           id: 0,
-    //         },
-    //       };
-
-    //       // io.in(tableId).emit('new_message', messageObj);
-    //       io.in(tableId).emit('player_reconnected', { seat, tableId, timer });
-    //     }
-    //   }
-    // }
 
 
     socket.on('disconnect', async () => {
-      connectionController.handleDisconnection(socket, io)
+      connectionController.handleDisconnection(socket, io);
     });
-
 
 
     socket.on('disconnect_user', async () => {
-
-      console.log('disconnect_user');
-      console.log('disconnect_user');
-
-      connectionController.disconnectUsersTables(socket, io)
-  
+      connectionController.disconnectUsersTables(socket, io);
     });
 
-    // async function handleDisconnect(playerSeatObj) {
-    //   // console.log('-------handleDisconnect-------');
-    //   // console.log('--------------');
 
-    //   let tableId = playerSeatObj.tableId;
-    //   let userTableId = playerSeatObj.id;
-    //   let userId = playerSeatObj.userId;
-    //   let seat = playerSeatObj.seat;
-    //   let room = tableId;
-
-    //   if (rooms[tableId] && rooms[tableId].seats[seat]) {
-    //     let player = rooms[tableId].seats[seat];
-    //     let anyPlayersAfter = rooms[tableId].sortedActivePlayers.some(
-    //       (player) => player.seat < seat
-    //     );
-    //     let anyPlayersBefore = rooms[tableId].sortedActivePlayers.some(
-    //       (player) => player.seat > seat
-    //     );
-    //     let leaveOnPlayerTurn = rooms[tableId].actionSeat === player.seat;
-    //     let handInProgress = rooms[tableId].handInProgress;
-    //     let leaveSeatObj = {
-    //       tableId,
-    //       seat,
-    //       userTableId,
-    //       userId,
-    //       tableBalance: player.tableBalance,
-    //     };
-
-    //     // If the user disconnects during a hand, add them to the forfeited players and update our hand's status
-    //     if (handInProgress) {
-    //       let playerHands = Object.entries(player.hands);
-    //       for (let [key, handData] of playerHands) {
-    //         handData.turnEnded = true;
-    //       }
-    //       rooms[tableId].forfeitedPlayers.push(player);
-    //       player.forfeit = true;
-    //       clearTimeout(disconnectTimeouts[userId]);
-    //       delete disconnectTimeouts[userId];
-    //       delete disconnectTimes[userId];
-
-    //       let currentTimer = rooms[tableId].actionEnd;
-    //       let leaveSeatObj = { tableId, seat, currentTimer };
-
-    //       io.to(room).emit('player_forfeit', leaveSeatObj);
-
-    //       //if no players left to act, end the round
-    //       if (!anyPlayersBefore && !anyPlayersAfter) {
-    //         await endRound(tableId, io);
-    //         return;
-    //       }
-
-    //       if (leaveOnPlayerTurn) {
-    //         clearInterval(rooms[tableId].timerId);
-    //         await gameLoop(tableId, io);
-    //         return;
-    //       }
-    //     } else {
-    //       // Refund pending bet(if exists) for user
-    //       player.tableBalance += rooms[tableId].seats[seat].pendingBet;
-    //       rooms[tableId].seats[seat].pendingBet = 0;
-    //       leaveSeatObj.tableBalance = player.tableBalance;
-
-    //       // Remove the player from the room state
-    //       if (rooms[tableId] && rooms[tableId].seats[seat]) {
-    //         delete rooms[tableId].seats[seat];
-    //       }
-
-    //       const leaveSeat = await gameController.leaveSeat(leaveSeatObj);
-    //       // const leaveSeat = await gameController.removeUserFromTables(userId)
-    //       if (!leaveSeat) return;
-    //       emitUpdatedTable(tableId, io);
-    //       io.in(userId).emit('player_leave', leaveSeatObj);
-
-    //       // if theres other bets continue timer, otherwise cancel
-    //       if (isNoBetsLeft(tableId)) {
-    //         stopTimer(tableId);
-    //       }
-    //     }
-    //   }
-    // }
-
-    //takes in the function we want to emit and the object we will be emitting
-    // has optional userId field in case function is not directed at currentUser
-    async function handleEmit(cb, updateObj, targetUserId = userId) {
-      let currentConnections = connections[targetUserId];
-
-      Object.values(currentConnections).forEach((connection) => {
-        connection.socket.emit(cb, updateObj);
-      });
-    }
-
-    async function handleJoin(room, targetUserId = userId) {
-      let currentConnections = connections[targetUserId];
-
-      console.log('<><><><><><><><><><><><><><><><><><><><><>');
-      console.log('<><><><><><><><><><><><><><><><><><><><><>');
-      console.log('<><><><><><><><><><><><><><><><><><><><><>');
-      console.log('<><><><><><><><><><><><><><><><><><><><><>');
-      console.log(currentConnections);
-      console.log('room',room);
-      console.log('userId',userId);
-      console.log('<><><><><><><><><><><><><><><><><><><><><>');
-      console.log('<><><><><><><><><><><><><><><><><><><><><>');
-      console.log('<><><><><><><><><><><><><><><><><><><><><>');
-      console.log('<><><><><><><><><><><><><><><><><><><><><>');
-
-      Object.values(currentConnections).forEach((connection) => {
-        connection.socket.join(room);
-      });
-    }
-
-    async function fetchUpdatedTable(tableId) {
-      let updatedTable = await gameController.getTableById(tableId);
-      if (!updatedTable) return;
-
-      if (!rooms[tableId]) {
-        rooms[tableId] = roomInit();
-        rooms[tableId].gameSessionId = updatedTable.gameSessions[0].id;
-        rooms[tableId].blockHash = updatedTable.gameSessions[0].blockHash;
-        rooms[tableId].decksUsed = updatedTable.Game.decksUsed;
-        rooms[tableId].shufflePoint = updatedTable.shufflePoint;
-        rooms[tableId].conversationId = updatedTable.Conversation.id;
-        rooms[tableId].chatName = updatedTable.Conversation.chatName;
-        rooms[tableId].gameType = updatedTable.Game.shortName;
-      }
-
-      return updatedTable;
-    }
-
- 
 
     socket.on('join_room', async (tableId) => {
       let updatedTable = await fetchUpdatedTable(tableId);
@@ -370,21 +113,18 @@ module.exports = function (io) {
       let conversationId = rooms[tableId].conversationId;
       let content = `${username} has joined the room.`;
 
-      // socket.join(conversationId);
-      // socket.join(tableId);
-      handleJoin(conversationId);
-      handleJoin(tableId);
+      socket.join(conversationId);
+      socket.join(tableId);
+
 
       await emitCustomMessage({ conversationId, content, tableId });
 
       let tableConvoId = updatedTable?.Conversation?.id;
 
-      handleEmit('join_table', updatedTable);
+      io.in(userId).emit('join_table', updatedTable);
       socket.emit('view_table', { id: tableId, conversationId: tableConvoId });
-      handleEmit('get_updated_table', updateObj);
+      io.in(userId).emit('get_updated_table', updateObj);
 
-      // socket.emit('join_table', updatedTable);
-      // socket.emit('get_updated_table', updateObj);
     });
 
     socket.on('update_table_name', async (updateObj) => {
@@ -422,7 +162,7 @@ module.exports = function (io) {
         gameController.leaveSeat(leaveSeatObj);
 
         io.in(userId).emit('player_leave', leaveSeatObj);
-        handleEmit('player_leave', leaveSeatObj, userId);
+        // handleEmit('player_leave', leaveSeatObj, userId);
         return;
       });
 
@@ -432,20 +172,6 @@ module.exports = function (io) {
       delete rooms[tableId];
       io.to(room).emit('close_table', tableId);
 
-      // // Get the connected sockets in the room
-      // let sockets = rooms[tableId].connections || {}
-      // console.log(sockets);
-
-      // // Disconnect all sockets in the room
-      // for (const [userId, socketInfo] in sockets) {
-      //   console.log(userId);
-      //   console.log(socketInfo);
-      //   // (socketId).disconnect();
-      // }
-
-      // console.log('--- close_table ---');
-      // console.log(`${username} close_table ${room}.`);
-      // console.log('-=-=-=-=-=-=-=-=-=');
     });
 
     socket.on('take_seat', async (seatObj) => {
@@ -510,35 +236,44 @@ module.exports = function (io) {
       // console.log(`leave_seat`);
       // console.log('--------------');
       const { tableId, seat } = seatObj;
-      let table = rooms[tableId]
+      let table = rooms[tableId];
 
       if (table && table.seats[seat]) {
         let playerSeatObj = table.seats[seat];
-        
-        if(table.gameType === 'Blackjack'){
-          await blackjackController.handleLeaveBlackjackTable(socket, io, table, playerSeatObj)
+
+        if (table.gameType === 'Blackjack') {
+          await blackjackController.handleLeaveBlackjackTable(
+            socket,
+            io,
+            table,
+            playerSeatObj
+          );
         }
       }
     });
 
-    
     socket.on('leave_table', async (seatObj) => {
       // console.log('--------------');
       // console.log(`leave_table`);
       // console.log('--------------');
       const { tableId, seat } = seatObj;
-      let table = rooms[tableId]
+      let table = rooms[tableId];
 
       if (table && table.seats[seat]) {
         let playerSeatObj = table.seats[seat];
-        
-        if(table.gameType === 'Blackjack'){
-          await blackjackController.handleLeaveBlackjackTable(socket, io, table, playerSeatObj)
+
+        if (table.gameType === 'Blackjack') {
+          await blackjackController.handleLeaveBlackjackTable(
+            socket,
+            io,
+            table,
+            playerSeatObj
+          );
         }
+
+        io.in(userId).emit('leave_table', tableId);
       }
     });
-
-
 
     socket.on('remove_last_bet', async (betObj) => {
       const { tableId, seat, lastBet } = betObj;
@@ -1705,8 +1440,6 @@ module.exports = function (io) {
       rooms[tableId].actionEnd = null;
     }
 
-
-
     function handleInsurancePayout(tableId, seat) {
       let naturalBlackjack = rooms[tableId].dealerCards.naturalBlackjack;
       let bet = rooms[tableId].insuredPlayers[seat];
@@ -2288,4 +2021,3 @@ module.exports = function (io) {
     }
   });
 };
-

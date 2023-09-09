@@ -41,6 +41,7 @@ function LeaveModal() {
 
     
     if(type && type==='leaveTableViaTab'){
+      console.log('yes');
       dispatch(leaveTableAction(tableId))
       socket.emit('leave_table', seatObj)
 

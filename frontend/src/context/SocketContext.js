@@ -170,8 +170,17 @@ const SocketProvider = ({ children }) => {
       });    
 
       socket.on('player_leave', (seatObj) => {
-        console.log('here');
+        console.log('player_leave');
+        console.log('player_leave');
+        console.log('player_leave');
+        console.log('player_leave');
+        console.log('player_leave');
         console.log(seatObj);
+        console.log('player_leave');
+        console.log('player_leave');
+        console.log('player_leave');
+        console.log('player_leave');
+
         dispatch(leaveSeatAction(seatObj)); 
       });   
 

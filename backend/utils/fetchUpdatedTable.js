@@ -7,6 +7,7 @@ async function fetchUpdatedTable(tableId) {
 
   if (!rooms[tableId]) {
     rooms[tableId] = roomInit();
+    rooms[tableId].id = updatedTable.tableId;
     rooms[tableId].gameSessionId = updatedTable.gameSessions[0].id;
     rooms[tableId].blockHash = updatedTable.gameSessions[0].blockHash;
     rooms[tableId].decksUsed = updatedTable.Game.decksUsed;

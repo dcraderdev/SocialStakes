@@ -41,7 +41,7 @@ let { countdownInterval } = require('../global');
 
 const blackjackController = {
 
-  isNoBetsLeft(tableId) {
+  anyBetsLeft(tableId) {
     if (!rooms[tableId]) return true;
   
     // Iterate over all seats in the room to check for any remaining bets
@@ -56,17 +56,10 @@ const blackjackController = {
   
 
 
-  stopCountdownToDeal(tableId, io) {
+  stopCountdownToDeal(io, tableId) {
     let room = tableId;
     let countdownObj = { dealCardsTimeStamp: 0, tableId };
-  
-    console.log('_#_#_#_#_#_#_#_#_#_#_');
-    console.log('_#_#_#_#_#_#_#_#_#_#_');
-    console.log(rooms[tableId]);
-    console.log(rooms[tableId].dealCardsTimeStamp);
-    console.log('_#_#_#_#_#_#_#_#_#_#_');
-    console.log('_#_#_#_#_#_#_#_#_#_#_');
-  
+
     rooms[tableId].dealCardsTimeStamp = null;
     io.in(room).emit('countdown_update', countdownObj);
   },
@@ -75,51 +68,12 @@ const blackjackController = {
 
   async handleLeaveBlackjackTable(socket, io, table, playerSeatObj){
 
-    console.log('handleLeaveBlackjackTable');
-    console.log('handleLeaveBlackjackTable');
-    console.log('handleLeaveBlackjackTable');
-    console.log('handleLeaveBlackjackTable');
-    console.log('handleLeaveBlackjackTable');
-    console.log('handleLeaveBlackjackTable');
-    console.log('handleLeaveBlackjackTable');
-    console.log('handleLeaveBlackjackTable');
-    console.log('handleLeaveBlackjackTable');
-    console.log('handleLeaveBlackjackTable');
-    console.log('handleLeaveBlackjackTable');
-    console.log('handleLeaveBlackjackTable');
-    console.log('handleLeaveBlackjackTable');
-    console.log('handleLeaveBlackjackTable');
-    console.log('handleLeaveBlackjackTable');
-    console.log('handleLeaveBlackjackTable');
-    console.log('handleLeaveBlackjackTable');
-    console.log('handleLeaveBlackjackTable');
-    console.log('handleLeaveBlackjackTable');
-    console.log('handleLeaveBlackjackTable');
-    console.log('handleLeaveBlackjackTable');
-    console.log('handleLeaveBlackjackTable');
-    console.log('handleLeaveBlackjackTable');
-    console.log('handleLeaveBlackjackTable');
-
-
-    console.log(table);
-    console.log(table.tableId);
-
-
       let player = playerSeatObj;
       let tableId = table.tableId;
       let seat = playerSeatObj.seat
 
       let userId = playerSeatObj.userId
       let userTableId = playerSeatObj.id
-
-      console.log('*()*()*()*()*()*()*()*()*()*()*()*()*()');
-      console.log('*()*()*()*()*()*()*()*()*()*()*()*()*()');
-      console.log('playerSeatObj', playerSeatObj);
-      console.log('*()*()*()*()*()*()*()*()*()*()*()*()*()');
-      console.log('*()*()*()*()*()*()*()*()*()*()*()*()*()');
-
-
-
 
 
       let anyPlayersAfter = rooms[tableId].sortedActivePlayers.some(
@@ -154,7 +108,7 @@ const blackjackController = {
         let currentTimer = rooms[tableId].actionEnd;
         let leaveSeatObj = { tableId, seat, currentTimer };
 
-        io.to(convoId).emit('player_forfeit', leaveSeatObj);
+        io.to(tableId).emit('player_forfeit', leaveSeatObj);
 
         //if no players left to act, end the round
         if (!anyPlayersBefore && !anyPlayersAfter) {
@@ -179,27 +133,16 @@ const blackjackController = {
         }
 
         const leaveSeat = await gameController.leaveSeat(leaveSeatObj);
-        // const leaveSeat = await gameController.removeUserFromTables(userId)
         if (!leaveSeat) {
-          console.log('!leaveSeat');
-          console.log('!leaveSeat');
-          console.log('!leaveSeat');
-          console.log('!leaveSeat');
-          console.log('!leaveSeat');
-          console.log('!leaveSeat');
           return;
         }
-        console.log('ye sleave seat');
-        console.log('ye sleave seat');
-        console.log('ye sleave seat');
-        console.log('ye sleave seat');
-        console.log('ye sleave seat');
-        emitUpdatedTable(tableId, io);
+
+        emitUpdatedTable(io, tableId);
         io.in(userId).emit('player_leave', leaveSeatObj);
 
         // if theres other bets continue timer, otherwise cancel
-        if (this.isNoBetsLeft(tableId)) {
-          this.stopCountdownToDeal(tableId, io);
+        if (!this.anyBetsLeft(tableId)) {
+          this.stopCountdownToDeal(io, tableId);
         }
       }
 
@@ -208,6 +151,14 @@ const blackjackController = {
   },
 
 
+  async dealCards( socket, io ){
+
+
+
+
+
+
+  },
 
 
   

@@ -2,13 +2,12 @@ const {
   rooms
 } = require('../global');
 
-function emitUpdatedTable(tableId, io) {
-  console.log('emitUpdatedTable');
-  console.log('emitUpdatedTable');
-  console.log('emitUpdatedTable');
-  console.log('emitUpdatedTable');
-  console.log('emitUpdatedTable');
-  console.log('emitUpdatedTable');
+function emitUpdatedTable(io, tableId) {
+
+  // conversationId 9e4384d0-83f1-4a02-8e29-016736c97211
+  // tableId e10d8de4-f4c2-4d28-9324-56aa9c920801
+
+console.log(rooms[tableId]);
 
   if (!rooms[tableId]) return;
   let room = tableId;
@@ -19,6 +18,14 @@ function emitUpdatedTable(tableId, io) {
       dealerCards: {
         visibleCards: rooms[tableId].dealerCards.visibleCards,
       },
+
+      actionSeat: rooms[tableId].actionSeat,
+      actionEnd: rooms[tableId].actionEnd,
+      dealCardsTimeStamp: rooms[tableId].dealCardsTimeStamp,
+      handInProgress: rooms[tableId].handInProgress,
+      conversationId: rooms[tableId].conversationId,
+      chatName: rooms[tableId].chatName,
+      gameSessionId: rooms[tableId].gameSessionId,
     },
   };
 

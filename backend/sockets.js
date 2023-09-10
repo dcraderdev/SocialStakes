@@ -5,6 +5,7 @@ const { cardConverter } = require('./controllers/cardConverter');
 const { botController } = require('./controllers/botController');
 const { connectionController } = require('./controllers/connectionController');
 const { blackjackController } = require('./controllers/blackjackController');
+const { timerController } = require('./controllers/timerController');
 
 const {
   drawCards,
@@ -25,10 +26,13 @@ let { countdownInterval } = require('./global');
 
 let emitUpdatedTable = require('./utils/emitUpdatedTable');
 let fetchUpdatedTable = require('./utils/fetchUpdatedTable');
+let emitCustomMessage = require('./utils/emitCustomMessage');
+let setDealCardsTimeStamp = require('./utils/setDealCardsTimeStamp');
 
 
 
 module.exports = function (io) {
+
   async function initializeRooms() {
     if (!Object.values(rooms).length) {
       await gameController.initializeTables();
@@ -43,10 +47,10 @@ module.exports = function (io) {
 
   async function initializeCounter() {
     if (!countdownInterval) {
-      countdownInterval = connectionController.startGlobalCountdown(io, rooms);
+      countdownInterval = timerController.startGlobalCountdown(io, rooms);
     }
   }
-
+ 
   initializeRooms();
   initializeBot();
   initializeCounter();
@@ -90,42 +94,17 @@ module.exports = function (io) {
 
 
     socket.on('join_room', async (tableId) => {
-      let updatedTable = await fetchUpdatedTable(tableId);
-      if (!updatedTable) return;
-
-      let updateObj = {
-        tableId,
-        table: {
-          actionSeat: rooms[tableId].actionSeat,
-          dealCardsTimeStamp: rooms[tableId].dealCardsTimeStamp,
-          actionEnd: rooms[tableId].actionEnd,
-          handInProgress: rooms[tableId].handInProgress,
-          seats: rooms[tableId].seats,
-          gameSessionId: rooms[tableId].gameSessionId,
-          dealerCards: {
-            visibleCards: rooms[tableId].dealerCards.visibleCards,
-          },
-          conversationId: rooms[tableId].conversationId,
-          chatName: rooms[tableId].chatName,
-        },
-      };
-
-      let conversationId = rooms[tableId].conversationId;
-      let content = `${username} has joined the room.`;
-
-      socket.join(conversationId);
-      socket.join(tableId);
-
-
-      await emitCustomMessage({ conversationId, content, tableId });
-
-      let tableConvoId = updatedTable?.Conversation?.id;
-
-      io.in(userId).emit('join_table', updatedTable);
-      socket.emit('view_table', { id: tableId, conversationId: tableConvoId });
-      io.in(userId).emit('get_updated_table', updateObj);
-
+      connectionController.joinTable(socket, io, tableId)
     });
+
+
+
+    socket.on('view_room', async (tableId) => {
+      let conversationId = rooms?.[tableId]?.conversationId;
+      let table = { id: tableId, conversationId };
+      socket.emit('view_table', table);
+    });
+
 
     socket.on('update_table_name', async (updateObj) => {
       const { tableId, tableName } = updateObj;
@@ -133,15 +112,11 @@ module.exports = function (io) {
       let content = `${username} has updated the table name to ${tableName}.`;
       let conversationId = rooms?.[tableId]?.conversationId;
 
-      await emitCustomMessage({ conversationId, content, tableId });
+      await emitCustomMessage(socket, io, { conversationId, content, tableId });
       io.in(conversationId).emit('update_table_name', updateObj);
     });
 
-    socket.on('view_room', async (tableId) => {
-      let conversationId = rooms?.[tableId]?.conversationId;
-      let table = { id: tableId, conversationId };
-      socket.emit('view_table', table);
-    });
+
 
     socket.on('close_table', async (tableId) => {
       let room = tableId;
@@ -221,7 +196,7 @@ module.exports = function (io) {
       let content = `${username} has taken seat ${seat}.`;
       let conversationId = rooms?.[tableId]?.conversationId;
 
-      await emitCustomMessage({ conversationId, content, tableId });
+      await emitCustomMessage(socket, io, { conversationId, content, tableId });
 
       // io.in(room).emit('new_message', messageObj);
       io.in(room).emit('new_player', takeSeatObj);
@@ -232,15 +207,11 @@ module.exports = function (io) {
     });
 
     socket.on('leave_seat', async (seatObj) => {
-      // console.log('--------------');
-      // console.log(`leave_seat`);
-      // console.log('--------------');
       const { tableId, seat } = seatObj;
       let table = rooms[tableId];
 
       if (table && table.seats[seat]) {
         let playerSeatObj = table.seats[seat];
-
         if (table.gameType === 'Blackjack') {
           await blackjackController.handleLeaveBlackjackTable(
             socket,
@@ -334,7 +305,7 @@ module.exports = function (io) {
       }
 
       if (!rooms[tableId].dealCardsTimeStamp) {
-        setDealCardsTimeStamp(tableId, io);
+        setDealCardsTimeStamp(io, tableId);
       }
 
       io.in(room).emit('new_bet', betObj);
@@ -383,23 +354,23 @@ module.exports = function (io) {
     //   }
     // }, 1000);
 
-    function setDealCardsTimeStamp(tableId, io) {
-      if (!rooms[tableId]) return;
-      if (rooms[tableId].dealCardsTimeStamp) return;
+    // function setDealCardsTimeStamp(io, tableId) {
+    //   if (!rooms[tableId]) return;
+    //   if (rooms[tableId].dealCardsTimeStamp) return;
 
-      let room = tableId;
-      // Set countdown end time
-      const countdownDuration = 1000; // 5 seconds
-      const endTime = Math.ceil(Date.now() + countdownDuration);
-      rooms[tableId].dealCardsTimeStamp = endTime;
+    //   let room = tableId;
+    //   // Set countdown end time
+    //   const countdownDuration = 1000; // 5 seconds
+    //   const endTime = Math.ceil(Date.now() + countdownDuration);
+    //   rooms[tableId].dealCardsTimeStamp = endTime;
 
-      let countdownObj = {
-        dealCardsTimeStamp: endTime,
-        tableId,
-      };
+    //   let countdownObj = {
+    //     dealCardsTimeStamp: endTime,
+    //     tableId,
+    //   };
 
-      io.in(room).emit('countdown_update', countdownObj);
-    }
+    //   io.in(room).emit('countdown_update', countdownObj);
+    // }
 
     // function isNoBetsLeft(tableId) {
     //   if (!rooms[tableId]) return true;
@@ -481,7 +452,7 @@ module.exports = function (io) {
       // Add player to insured players array
       rooms[tableId].insuredPlayers[seat] = insuranceCost;
 
-      emitUpdatedTable(tableId, io);
+      emitUpdatedTable(io, tableId)
 
       // console.log('--------------');
       // console.log(
@@ -675,7 +646,7 @@ module.exports = function (io) {
       console.log('_*_*_*_*_*_*_*_*_*_*_*_**_');
       console.log('_*_*_*_*_*_*_*_*_*_*_*_**_');
 
-      await emitCustomMessage(messageObj);
+      await emitCustomMessage(socket, io, messageObj);
 
       if (isAce) {
         // socket.emit('offer_insurance', tableId);
@@ -745,7 +716,7 @@ module.exports = function (io) {
       // console.log('----------------------');
 
       // // Emit latest decision to clients
-      emitUpdatedTable(tableId, io);
+      emitUpdatedTable(io, tableId)
 
       // Get next player
       let nextPlayer = getNextPlayer(tableId);
@@ -834,7 +805,7 @@ module.exports = function (io) {
           messageObj.content = `${player.username} has 21! `;
         }
 
-        await emitCustomMessage(messageObj);
+        await emitCustomMessage(socket, io, messageObj);
 
         if (
           playerHand.blackjack ||
@@ -897,7 +868,7 @@ module.exports = function (io) {
                 tableId,
                 cards,
               };
-              await emitCustomMessage(messageObj);
+              await emitCustomMessage(socket, io, messageObj);
 
               // Set turnEnded to true for this hand
               handData.turnEnded = true;
@@ -966,7 +937,7 @@ module.exports = function (io) {
         messageObj.content = `${player.username} splits! `;
       }
 
-      await emitCustomMessage(messageObj);
+      await emitCustomMessage(socket, io, messageObj);
 
       await gameLoop(tableId, io);
     });
@@ -1097,7 +1068,7 @@ module.exports = function (io) {
         tableId,
         cards: currentHand.cards,
       };
-      await emitCustomMessage(messageObj);
+      await emitCustomMessage(socket, io, messageObj);
 
       // Update hand to show no more decisions need to be made for the gameLoop
       let playersHand = rooms[tableId].seats[seat].hands[handId];
@@ -1313,7 +1284,7 @@ module.exports = function (io) {
             userId,
             tableBalance,
           };
-          emitUpdatedTable(tableId, io);
+          emitUpdatedTable(io, tableId)
 
           await gameController.leaveSeat(leaveSeatObj);
           // io.in(room).emit('player_leave', leaveSeatObj);
@@ -1467,7 +1438,7 @@ module.exports = function (io) {
 
       stopTimer(tableId);
       // Update table with latest info before ending the round
-      emitUpdatedTable(tableId, io);
+      emitUpdatedTable(io, tableId)
 
       if (!finishedPlayers.length) {
         // Do something
@@ -1498,7 +1469,7 @@ module.exports = function (io) {
         await new Promise((resolve) => setTimeout(resolve, 3000));
 
         // Display any winnings going to tableBalance
-        emitUpdatedTable(tableId, io);
+        emitUpdatedTable(io, tableId)
       }
 
       // Save dealer's cards to db and reset the room for the next hand
@@ -1945,40 +1916,40 @@ module.exports = function (io) {
       }
     });
 
-    async function emitCustomMessage(messageObj) {
-      // Broadcast message to specific room
+    // async function emitCustomMessage(messageObj) {
+    //   // Broadcast message to specific room
 
-      let roomUserId = 'e10d8de4-f4c7-0000-0000-000000000000';
+    //   let roomUserId = 'e10d8de4-f4c7-0000-0000-000000000000';
 
-      const { conversationId, content, tableId, cards } = messageObj;
-      let room = conversationId;
+    //   const { conversationId, content, tableId, cards } = messageObj;
+    //   let room = conversationId;
 
-      const newMessage = await chatController.createMessage(
-        messageObj,
-        roomUserId
-      );
+    //   const newMessage = await chatController.createMessage(
+    //     messageObj,
+    //     roomUserId
+    //   );
 
-      // if (!newMessage) console.log('no message');;
+    //   // if (!newMessage) console.log('no message');;
 
-      if (!newMessage) return false;
+    //   if (!newMessage) return false;
 
-      newMessageObj = {
-        createdAt: Date.now(),
-        conversationId,
-        content,
-        cards,
-        id: newMessage.id,
-        userId: roomUserId,
-        username: 'Room',
-      };
+    //   newMessageObj = {
+    //     createdAt: Date.now(),
+    //     conversationId,
+    //     content,
+    //     cards,
+    //     id: newMessage.id,
+    //     userId: roomUserId,
+    //     username: 'Room',
+    //   };
 
-      if (tableId) {
-        newMessageObj.tableId = tableId;
-        newMessageObj.chatName = rooms?.[tableId]?.chatName;
-      }
+    //   if (tableId) {
+    //     newMessageObj.tableId = tableId;
+    //     newMessageObj.chatName = rooms?.[tableId]?.chatName;
+    //   }
 
-      io.in(room).emit('new_message', newMessageObj);
-    }
+    //   io.in(room).emit('new_message', newMessageObj);
+    // }
 
     async function emitMainPageWinnerMessage(
       tableId,

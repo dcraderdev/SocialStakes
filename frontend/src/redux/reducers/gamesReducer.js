@@ -191,41 +191,23 @@ const gamesReducer = (state = initialState, action) => {
     }
 
     case JOIN_TABLE:{
+
+      console.log('<><><><><><>');
+      console.log('<><><><><><>');
+      console.log('<><><><><><>');
+      console.log('<><><><><><>');
+      console.log(action.payload);
+      console.log(action.payload.id);
+      console.log('<><><><><><>');
+      console.log('<><><><><><>');
+      console.log('<><><><><><>');
+ 
+
       let newCurrentTables = {...newState.currentTables}
       newCurrentTables[action.payload.id] = action.payload
       newCurrentTables[action.payload.id].messages = []
       return {...newState, currentTables: newCurrentTables}
     }
-
-    // case LEAVE_TABLE: {
-    //   let newCurrentTables = { ...newState.currentTables };
-    //   let activeTable = { ...newState.activeTable}
-
-    //   delete newCurrentTables[action.payload];
-
-    //   if(newState.showCreatingGame){
-    //     return { ...newState, currentTables: newCurrentTables, showGames: false, showTables: false, showCreatingGame:true };
-    //   }
-    //   if(newState.showTables){
-    //     return { ...newState, currentTables: newCurrentTables, activeTable, showGames: false, showTables: true, showCreatingGame:false };
-    //   }
-
-    //   // if active table still exists dont switch
-    //   if(newCurrentTables[activeTable.id]){
-    //     return { ...newState, currentTables: newCurrentTables, activeTable};
-    //   } else {
-    //   //Check if any tables left, if so switch to the first one
-    //   const tableIds = Object.keys(newCurrentTables);
-    //   let activeTable = null;
-    //   if (tableIds.length > 0) {
-    //       activeTable = newCurrentTables[tableIds[0]];
-    //       return { ...newState, currentTables: newCurrentTables, activeTable };
-    //   }
-
-
-    //   return { ...newState, currentTables: newCurrentTables, activeTable, showGames: true, showTables: false, showCreatingGame:false };
-    //   }
-    // }
 
 
     case LEAVE_TABLE: {
@@ -420,16 +402,19 @@ const gamesReducer = (state = initialState, action) => {
 
     case UPDATE_TABLE_COUNTDOWN: {
 
+      
       const {countdownEnd, tableId} = action.payload;
-
+      
       
       const newCurrentTables = { ...newState.currentTables };
       const newCurrentTable = { ...newCurrentTables[tableId] };
-
-
+      
+      
       newCurrentTable.countdownEnd = countdownEnd
       newCurrentTables[tableId] = newCurrentTable;
-
+      
+      console.log(newCurrentTable);
+      console.log(newCurrentTables);
       
       return { ...newState, currentTables: newCurrentTables };
     }

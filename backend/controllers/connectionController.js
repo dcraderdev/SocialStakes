@@ -1,25 +1,6 @@
-const {
-  Card,
-  Deck,
-  User,
-  Friendship,
-  UserFriendship,
-  UserHand,
-  Game,
-  Table,
-  UserGame,
-  UserTable,
-  DeckCard,
-  Message,
-  Conversation,
-  UserConversation,
-} = require('../db/models');
-
 const { gameController } = require('./gameController');
 const { chatController } = require('./chatController');
 const { friendController } = require('./friendController');
-const { cardConverter } = require('./cardConverter');
-const { botController } = require('./botController');
 const { blackjackController } = require('./blackjackController');
 
 const {
@@ -31,83 +12,24 @@ const {
   lastPayouts,
 } = require('../global');
 
-
-
-let emitUpdatedTable = require('../utils/emitUpdatedTable') ;
-let { countdownInterval } = require('../global');
-
-
+let emitCustomMessage = require('../utils/emitCustomMessage');
+let fetchUpdatedTable = require('../utils/fetchUpdatedTable');
 
 
 const connectionController = {
-
-
-  startGlobalCountdown(io, rooms) {
-    console.log(rooms);
-    if (countdownInterval) return;
-
-    countdownInterval = setInterval(async () => {
-      for (const tableId in rooms) {
-
-        const room = rooms[tableId];
-
-        // handle Blackjack time until deal logic
-        if (room.dealCardsTimeStamp && Date.now() >= room.dealCardsTimeStamp) {
-          room.dealCardsTimeStamp = null;
-
-          if (room.gameType === 'Blackjack') {
-          }
-
-          // if theres bets, start hand otherwise cancel
-          if (blackjackController.isNoBetsLeft(tableId)) {
-            blackjackController.stopCountdownToDeal(tableId, io);
-            continue;
-          }
-
-          room.handInProgress = true;
-
-          // Transfer pendingBet to currentBet for each seat
-          for (let seatKey in room.seats) {
-            const seat = room.seats[seatKey];
-            seat.currentBet += seat.pendingBet;
-            seat.pendingBet = 0;
-          }
-
-          let updateObj = {
-            tableId,
-            table: {
-              handInProgress: true,
-              seats: room.seats,
-            },
-          };
-
-          io.in(tableId).emit('get_updated_table', updateObj);
-
-          // Countdown finished, emit event to collect all bets
-          let countdownObj = {
-            dealCardsTimeStamp: room.dealCardsTimeStamp,
-            tableId,
-          };
-          io.in(tableId).emit('collect_bets', countdownObj);
-          // dealCards(tableId, io);
-        }
-      }
-    }, 1000);
-  },
+  
 
   async startConnection(socket, io) {
     const userId = socket.handshake.query.userId;
     const username = socket.handshake.query.username;
     const socketId = socket.id;
 
-
-    console.log('-=-=-=-=-=-=-=-=-=');
-    console.log('--- CONNECTING ---');
-    console.log('SOCKET ID', socketId);
-    console.log('A user connected', socketId, 'Username:', username);
-    console.log('User Room:', userId);
-
-    console.log('-=-=-=-=-=-=-=-=-=');
+    // console.log('-=-=-=-=-=-=-=-=-=');
+    // console.log('--- CONNECTING ---');
+    // console.log('SOCKET ID', socketId);
+    // console.log('A user connected', socketId, 'Username:', username);
+    // console.log('User Room:', userId);
+    // console.log('-=-=-=-=-=-=-=-=-=');
 
     socket.join(userId);
     socket.join('payoutMessages');
@@ -120,7 +42,7 @@ const connectionController = {
     const userFriends = await friendController.getUserFriends(userId);
     const userConversations = await chatController.getUserConversations(userId);
 
-    if(!connections[userId]){
+    if (!connections[userId]) {
       connections[userId] = {};
     }
 
@@ -171,36 +93,30 @@ const connectionController = {
 
     const userTables = await gameController.getUserTables(userId);
 
-    
-    
     if (userTables) {
       for (let table of userTables) {
-        
-        let convoId = table.Table.Conversation.id
+        let convoId = table.Table.Conversation.id;
         let tableId = table.tableId;
         let seat = table.seat;
         let timer = 0;
-        io.in(tableId).emit('player_reconnected', { seat, tableId, convoId, timer });
+        io.in(tableId).emit('player_reconnected', {
+          seat,
+          tableId,
+          convoId,
+          timer,
+        });
       }
     }
-
-
   },
 
-
-
   async handleDisconnection(socket, io) {
-    console.log('-------------');
-    console.log('handleDisconnection');
-    console.log('-------------');
 
     const userId = socket.handshake.query.userId;
     const username = socket.handshake.query.username;
     const socketId = socket.id;
     let timer = 2000; // 10 seconds
 
-
-    delete connections[userId][socketId]
+    delete connections[userId][socketId];
 
     disconnectTimes[userId] = Date.now();
 
@@ -208,7 +124,6 @@ const connectionController = {
     if (disconnectTimeouts[userId]) {
       clearTimeout(disconnectTimeouts[userId]);
     }
-
 
     // Start a new timeout for this user
     disconnectTimeouts[userId] = setTimeout(async () => {
@@ -222,108 +137,113 @@ const connectionController = {
 
       // check if user has other sockets open, if not clear data and close tables
 
-      let hasOtherConnection = Object.values(connections[userId]).length
+      let hasOtherConnection = Object.values(connections[userId]).length;
 
-      
-      if(!hasOtherConnection){
-        delete connections[userId]
+      if (!hasOtherConnection) {
+        delete connections[userId];
         delete disconnectTimeouts[userId];
         delete disconnectTimes[userId];
-        this.disconnectUsersTables(socket, io)
+        this.disconnectUsersTables(socket, io);
       }
+    }, timer);
+  },
+
+  async disconnectUsersTables(socket, io) {
+    const userId = socket.handshake.query.userId;
+    const username = socket.handshake.query.username;
+    const socketId = socket.id;
+
+    const userTables = await gameController.getUserTables(userId);
+    if (userTables) {
+      for (let table of userTables) {
+
+        let userTableId = table.id;
+        let convoId = table.Table.Conversation.id;
+        let tableId = table.tableId;
+        let seat = table.seat;
+        let gameTable = rooms[tableId];
+        let playerSeatObj = rooms[tableId].seats[seat];
+
+        console.log(playerSeatObj);
+
+        socket.leave(convoId);
+        socket.leave(convoId);
+        
+        if (playerSeatObj) {
+          if (gameTable.gameType === 'Blackjack') {
+            await blackjackController.handleLeaveBlackjackTable(
+              socket,
+              io,
+              gameTable,
+              playerSeatObj
+              );
+            }
+          } else {
+          await gameController.removeUserFromTable(userTableId, userId)
+        }
+      }
+    }
+    return;
+  },
+
+
+  async joinTable(socket, io, tableId) {
+    const userId = socket.handshake.query.userId;
+    const username = socket.handshake.query.username;
+    const socketId = socket.id;
 
     
-    }, timer);
+    
+    let updatedTable = await fetchUpdatedTable(tableId);
+    if (!updatedTable) return;
+
+     let updateObj = {
+      tableId,
+      table: {
+        actionSeat: rooms[tableId].actionSeat,
+        dealCardsTimeStamp: rooms[tableId].dealCardsTimeStamp,
+        actionEnd: rooms[tableId].actionEnd,
+        handInProgress: rooms[tableId].handInProgress,
+        seats: rooms[tableId].seats,
+        gameSessionId: rooms[tableId].gameSessionId,
+        dealerCards: {
+          visibleCards: rooms[tableId].dealerCards.visibleCards,
+        },
+        conversationId: rooms[tableId].conversationId,
+        chatName: rooms[tableId].chatName,
+      },
+    };
+
+    
+    let conversationId = rooms[tableId].conversationId;
+    let content = `${username} has joined the room.`;
+
+
+    console.log('--------------');
+    console.log(`joining table`);
+    console.log(`conversationId`,conversationId);
+    console.log(`tableId`,tableId);
+    console.log('--------------');
+
+
+    socket.join(conversationId);
+    socket.join(tableId);
+
+
+ 
+    await emitCustomMessage(socket, io, { conversationId, content, tableId });
+
+
+    io.in(userId).emit('join_table', updatedTable);
+
+    socket.emit('view_table', { id: tableId, conversationId });
+    io.in(userId).emit('get_updated_table', updateObj);
 
   },
 
 
 
 
-
-  async disconnectUsersTables(socket, io) {
-    console.log('-------disconnectUsersTables-------');
-    console.log('--------------');
-    const userId = socket.handshake.query.userId;
-    const username = socket.handshake.query.username;
-    const socketId = socket.id;
-
-
-    const userTables = await gameController.getUserTables(userId);
-    if (userTables) {
-      console.log('yep');
-      console.log('yep');
-      console.log('yep');
-      console.log('yep');
-
-
-      for (let table of userTables) {
-
-        console.log(table);
-
-        let userTableId = table.id;
-        let convoId = table.Table.Conversation.id
-        let tableId = table.tableId;
-        let seat = table.seat
-        let gameTable = rooms[tableId]
-        let playerSeatObj = rooms[tableId].seats[seat]
-
-
-        // await gameController.removeUserFromTable(userTableId, userId)
-        socket.leave(convoId);
-
-
-
-        if(playerSeatObj){
-
-
-          if (gameTable.gameType === 'Blackjack') {
-    
-            await blackjackController.handleLeaveBlackjackTable(socket, io, gameTable, playerSeatObj)
-      
-          }
-
-
-
-
-        }
-
-
-
-
-
-
-        // console.log(tableId);
-        // console.log(userTableId);
-        // console.log(userId);
-        // console.log(seat);
-        // console.log(convoId);
-        // console.log(playerSeatObj);
-
-
-        // set userTable to active = false
-        // gameController.removeUserFromTables(userId)
-
-
-
-
-      }
-    }
-  
-
-
-return
-
-
-},
-
-
-
-
-
-
-
-  
 
 
 

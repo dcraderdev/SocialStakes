@@ -214,6 +214,7 @@ useEffect(()=>{
 
     if(hands && actionHand && hands[actionHand] && hands[actionHand].cards){
 
+      
 
       let summary = handSummary(hands[actionHand].cards)
 
@@ -271,6 +272,10 @@ useEffect(()=>{
 
 
     if(currentTables && activeTable){
+
+
+      console.log(currentTables[activeTable.id]);
+
       let currMinBet = currentTables[activeTable.id].Game.minBet
       setUpdateObj({minBet:currMinBet, seatNumber, type:'initDeposit'})
       openModal('balanceModal')

@@ -38,7 +38,7 @@ function LeaveModal() {
       tableId,
       seat,
     }
-
+ 
     
     if(type && type==='leaveTableViaTab'){
       console.log('yes');
@@ -46,6 +46,7 @@ function LeaveModal() {
       socket.emit('leave_table', seatObj)
 
     } else {
+      console.log('hurr');
       socket.emit('leave_seat', seatObj)
     }
     

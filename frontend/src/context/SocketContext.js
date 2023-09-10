@@ -108,9 +108,9 @@ const SocketProvider = ({ children }) => {
       socket.on('view_table', (tableObj) => {
         dispatch(viewTableAction(tableObj));
         dispatch(showConversationAction(tableObj));
-
       }); 
 
+      
       socket.on('join_table', (table) => {
         dispatch(joinTableAction(table));
       }); 
@@ -137,13 +137,7 @@ const SocketProvider = ({ children }) => {
         console.log('_+_+_+_+_+_+_+_+_+_+_+');
         console.log('_+_+_+_+_+_+_+_+_+_+_+');
 
-        if(updateObject.resetRoomForNextHand){
-          // console.log('resetRoomForNextHand');
-          // console.log('resetRoomForNextHand');
-          // console.log('resetRoomForNextHand');
-          // console.log('resetRoomForNextHand');
-          // console.log('resetRoomForNextHand');
-        }
+
         dispatch(updateTableAction(updateObject)); 
       }); 
 
@@ -231,6 +225,8 @@ const SocketProvider = ({ children }) => {
       });  
 
       socket.on('countdown_update', (countdownObj) => {
+  console.log(countdownObj);
+
         dispatch(updateTableCountdownAction(countdownObj)); 
       });  
 

@@ -86,6 +86,8 @@ const gameController = {
         rooms[tableId].conversationId = table.Conversation.id;
         rooms[tableId].chatName = table.Conversation.chatName;
         rooms[tableId].gameType = table.Game.shortName;
+        rooms[tableId].Game = table.Game;
+
       }
     }
     return;

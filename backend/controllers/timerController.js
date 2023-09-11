@@ -15,6 +15,7 @@ const {
   UserConversation,
 } = require('../db/models');
 
+const { botController } = require('./botController');
 const { gameController } = require('./gameController');
 const { chatController } = require('./chatController');
 const { friendController } = require('./friendController');
@@ -35,37 +36,54 @@ let { countdownInterval } = require('../global');
 
 const timerController = {
 
-  startGlobalCountdown(io, rooms) {
+  startGlobalCountdown(io) {
     if (countdownInterval) return;
 
     countdownInterval = setInterval(async () => {
+      console.log('tick');
       for (const tableId in rooms) {
-        if (this.shouldTakeAction(tableId, rooms)) {
-          await this.handleAction(io, tableId, rooms);
-        }
+        await this.shouldTakeAction(io, tableId)
       }
     }, 1000); 
   },
 
-  shouldTakeAction(tableId, rooms) {
+  async shouldTakeAction(io, tableId) {
     const room = rooms[tableId];
 
+
     if (room.dealCardsTimeStamp && Date.now() >= room.dealCardsTimeStamp) {
-      return true;
+      await this.handleDealAction(io, tableId)
+
     }
+
+    if (rooms[tableId].tableId === 'be11a610-7777-7777-7777-7be11a610777' && !room.handInProgress) {      await botController.startBotRound(io, tableId)
+
+    }
+
+
+
+
     return false;
   },
 
 
 
-  
-  async handleAction(io, tableId, rooms) {
+
+
+
+  async handleDealAction(io, tableId) {
     const room = rooms[tableId];
     console.log('time up');
     room.dealCardsTimeStamp = null;
 
+
+
     if (room.gameType === 'Blackjack') {
       // ... additional logic if needed
+
+
+
+
     }
 
     // if there are no bets, start hand otherwise cancel
@@ -102,9 +120,13 @@ const timerController = {
     await blackjackController.dealCards(io, tableId);
   },
 
-  checkTables(){
-    //... Logic for checkTables (if needed)
-  }
+
+
+
+
+
+
+
 };
 
 module.exports = {

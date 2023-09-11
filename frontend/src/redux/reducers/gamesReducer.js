@@ -285,6 +285,8 @@ const gamesReducer = (state = initialState, action) => {
 
     case ADD_BET: {
       const { bet, tableId, seat } = action.payload;
+
+      console.log(action.payload);
     
       const newCurrentTables = { ...newState.currentTables };
       const newCurrentTable = { ...newCurrentTables[tableId] };

@@ -457,7 +457,7 @@ const blackjackController = {
         }
 
         // Create action end timestamp
-        const actionDuration = 10000; // 5 seconds
+        const actionDuration = 1000; // 5 seconds
         rooms[tableId].actionEndTimeStamp = Math.ceil(Date.now() + actionDuration);
 
         // Set action seat
@@ -1078,6 +1078,7 @@ async endRound(io, tableId) {
   let bestDealerValue = rooms[tableId].dealerCards.bestValue;
   let finishedPlayers = rooms[tableId].sortedFinishedPlayers;
   rooms[tableId].actionSeat = null
+  rooms[tableId].actionHand = null
 
   this.stopActionTimer(io, tableId);
   // Update table with latest info before ending the round

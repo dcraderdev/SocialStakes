@@ -47,7 +47,7 @@ module.exports = function (io) {
 
   async function initializeCounter() {
     if (!countdownInterval) {
-      countdownInterval = timerController.startGlobalCountdown(io, rooms);
+      countdownInterval = timerController.startGlobalCountdown(io);
     }
   }
  

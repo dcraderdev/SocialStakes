@@ -27,6 +27,7 @@ const {
 
 
 const {gameController} = require('./gameController')
+const setDealCardsTimeStamp = require('../utils/setDealCardsTimeStamp')
 
 
 
@@ -70,6 +71,7 @@ const botController = {
 
     if (!rooms[bellagioTableId]) {
       rooms[bellagioTableId] = roomInit();
+      rooms[bellagioTableId].tableId = bellagioTableId;
       rooms[bellagioTableId].gameSessionId = updatedTable.gameSessions[0].id;
       rooms[bellagioTableId].blockHash = updatedTable.gameSessions[0].blockHash;
       rooms[bellagioTableId].decksUsed = updatedTable.Game.decksUsed;
@@ -77,6 +79,8 @@ const botController = {
       rooms[bellagioTableId].conversationId = updatedTable.Conversation.id;
       rooms[bellagioTableId].chatName = updatedTable.Conversation.chatName;
       rooms[bellagioTableId].gameType = updatedTable.Game.shortName;
+      rooms[bellagioTableId].Game = updatedTable.Game;
+
     } 
 
     bots.forEach(async (user, index) => {
@@ -118,6 +122,90 @@ const botController = {
         rooms[tableId].seats[seat] = takeSeatObj;
       }
     });
+  },
+
+
+  async startBotRound(io, tableId){
+
+    const room = rooms[tableId];
+    const seats = room.seats
+    
+    // iterate over bots
+    Object.values(seats).map( async (seat,index)=>{
+      await this.handleBotBetDecision(io, tableId, seat)
+    })
+
+  },
+
+
+  async handleBotBetDecision(io, tableId, seat){
+
+    // check chip stack
+    // check card count
+    // make bet
+
+
+    const room = rooms[tableId];
+
+    let minBet = rooms[tableId].Game.minBet
+    let hasBalance = seat.tableBalance > minBet
+    
+    let bet = minBet
+
+
+    let userId = seat.userId;
+
+    if(!hasBalance){
+
+      let room = tableId;
+      let userId = seat.userId;
+      let userTableId = seat.id
+      let amount
+    
+      const currUser = await User.findByPk(userId);
+      let balanceNotInPlay = currUser.balance
+
+      if(balanceNotInPlay > 50000){
+        amount = 50000
+      } else if (amount === 0) {
+        return
+      } else {
+        amount = balanceNotInPlay
+      }
+
+
+      const seatObj = { tableId, seat, userId, amount, userTableId };
+      const addFunds = await gameController.addFunds(seatObj);
+      if (!addFunds) {
+        return;
+      }
+
+      if (addFunds) {
+        if (rooms[tableId] && rooms[tableId].seats[seat]) {
+          rooms[tableId].seats[seat].tableBalance += amount;
+        }
+        io.in(room).emit('player_add_table_funds', seatObj);
+      }
+    }
+
+
+    // If handInProgress, dont add the bet
+    if (room.handInProgress) {
+      return;
+    }
+
+    // Update pendingBet in the rooms object
+      seat.pendingBet += bet;
+      seat.tableBalance -= bet;
+
+    if (!rooms[tableId].dealCardsTimeStamp) {
+      setDealCardsTimeStamp(io, tableId);
+    }
+     
+    const betObj = { bet, tableId, seat:seat.seat };
+
+    io.in(tableId).emit('new_bet', betObj);
+
   },
 
 

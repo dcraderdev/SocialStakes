@@ -173,6 +173,7 @@ const SocketProvider = ({ children }) => {
 
 
       socket.on('new_bet', (betObj) => {
+        console.log(betObj);
         dispatch(addBetAction(betObj)); 
       });  
 

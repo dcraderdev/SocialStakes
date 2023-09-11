@@ -15,6 +15,7 @@ async function fetchUpdatedTable(tableId) {
     rooms[tableId].conversationId = updatedTable.Conversation.id;
     rooms[tableId].chatName = updatedTable.Conversation.chatName;
     rooms[tableId].gameType = updatedTable.Game.shortName;
+    rooms[tableId].Game = updatedTable.Game;
   }
 
   return updatedTable;

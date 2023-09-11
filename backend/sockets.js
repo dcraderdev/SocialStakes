@@ -375,7 +375,6 @@ module.exports = function (io) {
 
     socket.on('player_action', async (actionObj) => {
       const { tableId, action, seat, handId } = actionObj;
-      let room = tableId;
 
       if (!rooms[tableId]) return;
 
@@ -385,17 +384,34 @@ module.exports = function (io) {
         rooms[tableId].actionEndTimeStamp = 0;
       }
 
-
-
+      
       let player = rooms[tableId].seats[seat];
       let currentHand = player.hands[handId];
-      let playerBestValue = await bestValue(currentHand.summary.values);
 
+
+      console.log('><^><^><^><^><^><^><^><^><^><^><^>^<><^><^>');
+      console.log('><^><^><^><^><^><^><^><^><^><^><^>^<><^><^>');
+      console.log('player', player);
+      console.log('currentHand', currentHand);
+      console.log('handId', handId);
+      console.log('><^><^><^><^><^><^><^><^><^><^><^>^<><^><^>');
+      console.log('><^><^><^><^><^><^><^><^><^><^><^>^<><^><^>');
+
+
+      let playerBestValue = await bestValue(currentHand.summary.values);
+      
       let messageObj = {
         conversationId: rooms[tableId].conversationId,
         content: `${player.username} shows: `,
         tableId,
       };
+      
+
+
+
+
+
+
 
       if (action === 'hit') {
         await blackjackController.playerHit(actionObj);

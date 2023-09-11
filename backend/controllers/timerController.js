@@ -29,10 +29,10 @@ const {
   lastPayouts,
 } = require('../global');
 
-let emitCustomMessage = require('../utils/emitCustomMessage');
-let fetchUpdatedTable = require('../utils/fetchUpdatedTable');
 
 let { countdownInterval } = require('../global');
+
+
 const timerController = {
 
   startGlobalCountdown(io, rooms) {
@@ -56,6 +56,9 @@ const timerController = {
     return false;
   },
 
+
+
+  
   async handleAction(io, tableId, rooms) {
     const room = rooms[tableId];
     console.log('time up');

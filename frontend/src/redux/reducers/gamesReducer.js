@@ -152,15 +152,6 @@ const gamesReducer = (state = initialState, action) => {
 
       if (updatedCurrentTables[tableId]) {
 
-        console.log('<^><^><^><^><^><^><^><^><^><^><^><^><^><^><');
-        console.log('<^><^><^><^><^><^><^><^><^><^><^><^><^><^><');
-        console.log('<^><^><^><^><^><^><^><^><^><^><^><^><^><^><');
-            console.log(action.payload);
-            console.log(action.payload.table.actionEndTimeStamp);
-        console.log('<^><^><^><^><^><^><^><^><^><^><^><^><^><^><');
-        console.log('<^><^><^><^><^><^><^><^><^><^><^><^><^><^><');
-
-
         const currentTable = updatedCurrentTables[tableId];
 
         currentTable.tableUsers = table.seats

@@ -99,6 +99,8 @@ const connectionController = {
         let tableId = table.tableId;
         let seat = table.seat;
         let timer = 0;
+
+        this.joinTable(socket, io, tableId)
         io.in(tableId).emit('player_reconnected', {
           seat,
           tableId,
@@ -199,6 +201,7 @@ const connectionController = {
       tableId,
       table: {
         actionSeat: rooms[tableId].actionSeat,
+        actionHand: rooms[tableId].actionHand,
         dealCardsTimeStamp: rooms[tableId].dealCardsTimeStamp,
         actionEndTimeStamp: rooms[tableId].actionEndTimeStamp,
         handInProgress: rooms[tableId].handInProgress,

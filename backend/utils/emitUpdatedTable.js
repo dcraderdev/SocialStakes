@@ -15,6 +15,7 @@ function emitUpdatedTable(io, tableId) {
       },
 
       actionSeat: rooms[tableId].actionSeat,
+      actionHand: rooms[tableId].actionHand,
       actionEndTimeStamp: rooms[tableId].actionEndTimeStamp,
       dealCardsTimeStamp: rooms[tableId].dealCardsTimeStamp,
       handInProgress: rooms[tableId].handInProgress,

@@ -99,8 +99,6 @@ import { WindowContext } from '../../context/WindowContext';
       let currTable = currentTables?.[activeTable.id]
       if(!currTable) return
 
-      console.log(currTable.actionSeat);
-
       let userInActiveSeat = currTable.actionSeat === currentSeat && currentSeat !== null;
       let handInProgress = currTable.handInProgress;
       let currActionHand = currTable.actionHand;

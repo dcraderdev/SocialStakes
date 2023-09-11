@@ -3,6 +3,7 @@ const roomInit = () => {
     seats: {},
     roundId: null,
     actionSeat: null,
+    actionHand: null,
     dealCardsTimeStamp: null,
     actionEndTimeStamp: null,
     handInProgress: false,

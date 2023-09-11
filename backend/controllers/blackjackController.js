@@ -457,11 +457,12 @@ const blackjackController = {
         }
 
         // Create action end timestamp
-        const actionDuration = 5000; // 5 seconds
+        const actionDuration = 10000; // 5 seconds
         rooms[tableId].actionEndTimeStamp = Math.ceil(Date.now() + actionDuration);
 
         // Set action seat
         rooms[tableId].actionSeat = player.seat;
+        rooms[tableId].actionHand = key;
 
         // Emit update to clients
         let updateObj = {
@@ -1046,6 +1047,7 @@ resetRoomForNextHand(tableId) {
   rooms[tableId].insuredPlayers = {};
   rooms[tableId].handInProgress = false;
   rooms[tableId].actionSeat = null;
+  rooms[tableId].actionHand = null;
   clearInterval(rooms[tableId].timerId);
   rooms[tableId].actionEndTimeStamp = null;
 },

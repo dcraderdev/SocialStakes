@@ -113,13 +113,13 @@ const blackjackController = {
 
       //if no players left to act, end the round
       if (!anyPlayersBefore && !anyPlayersAfter) {
-        await endRound(tableId, io);
+        await this.endRound(io, tableId);
         return;
       }
 
       if (leaveOnPlayerTurn) {
         clearInterval(rooms[tableId].timerId);
-        await gameLoop(tableId, io);
+        await this.gameLoop(io, tableId);
         return;
       }
     } else {
@@ -205,10 +205,6 @@ const blackjackController = {
 
     // Set sorted seats for gameLoop
     rooms[tableId].sortedActivePlayers = sortedSeats;
-
-    // console.log('------- sortedSeats -------');
-    // console.log(sortedSeats);
-    // console.log('------------------------');
 
     let sortedSeatsObj = sortedSeats.map((seat) => ({
       id: seat.id,
@@ -375,8 +371,8 @@ const blackjackController = {
 
 
   getNextPlayer(tableId) {
-      let sortedActivePlayers = rooms[tableId].sortedActivePlayers;
-      let nextPlayer;
+    let sortedActivePlayers = rooms?.[tableId]?.sortedActivePlayers;
+    let nextPlayer;
       if (rooms[tableId] && sortedActivePlayers.length) {
         nextPlayer = sortedActivePlayers[sortedActivePlayers.length - 1];
       }

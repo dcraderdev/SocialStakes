@@ -927,11 +927,11 @@ module.exports = function (io) {
         messageObj.content = `${player.username} stays. ${playerBestValue}.`;
       }
       if (action === 'double') {
-        await blackjackController.playerDouble(actionObj);
+        await blackjackController.playerDouble(io, actionObj);
         messageObj.content = `${player.username} doubles! `;
       }
       if (action === 'split') {
-        await blackjackController.playerSplit(actionObj);
+        await blackjackController.playerSplit(io, actionObj);
         messageObj.content = `${player.username} splits! `;
       }
 

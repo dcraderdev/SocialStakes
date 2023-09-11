@@ -560,7 +560,7 @@ const blackjackController = {
     return;
   },
 
-  async playerSplit(actionObj) {
+  async playerSplit(io, actionObj) {
     const { tableId, action, seat, handId } = actionObj;
     let room = tableId;
     let userTableId = rooms[tableId].seats[seat].id;
@@ -612,7 +612,7 @@ const blackjackController = {
     return;
   },
 
-  async playerDouble(actionObj) {
+  async playerDouble(io, actionObj) {
     const { tableId, action, seat, handId } = actionObj;
     let currentSeat = rooms[tableId].seats[seat];
     let currentHand = rooms[tableId].seats[seat].hands[handId];
@@ -943,7 +943,7 @@ updateAndClearPlayerData(player, totalWinnings) {
 
 
 async calculateAndSavePlayerHand(
-  io,
+  io, 
   player,
   bestDealerValue,
   tableId

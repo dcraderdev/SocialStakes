@@ -137,6 +137,14 @@ const blackjackController = {
       if (!leaveSeat) {
         return;
       }
+      console.log('<><><><><><><>test 1  <><><><><><><><');
+      console.log('<><><><><><><><><><><><><><><');
+      console.log('<><><><><><><><><><><><><><><');
+      // console.log(rooms[tableId]);
+      console.log(rooms[tableId].actionSeat);
+      console.log('<><><><><><><><><><><><><><><');
+      console.log('<><><><><><><><><><><><><><><');
+      console.log('<><><><><><><><><><><><><><><');
 
       emitUpdatedTable(io, tableId);
       io.in(userId).emit('player_leave', leaveSeatObj);
@@ -350,6 +358,14 @@ const blackjackController = {
   async gameLoop(io, tableId) {
     // console.log('------- GAME LOOP -------');
 
+    console.log('<><><><><><><>test 2  <><><><><><><><');
+    console.log('<><><><><><><><><><><><><><><');
+    console.log('<><><><><><><><><><><><><><><');
+    // console.log(rooms[tableId]);
+    console.log(rooms[tableId].actionSeat);
+    console.log('<><><><><><><><><><><><><><><');
+    console.log('<><><><><><><><><><><><><><><');
+    console.log('<><><><><><><><><><><><><><><');
     // // Emit latest decision to clients
     emitUpdatedTable(io, tableId);
 
@@ -917,6 +933,15 @@ async processForfeitedPlayers(io, tableId) {
         userId,
         tableBalance,
       };
+
+      console.log('<><><><><><><>test 3  <><><><><><><><');
+      console.log('<><><><><><><><><><><><><><><');
+      console.log('<><><><><><><><><><><><><><><');
+      // console.log(rooms[tableId]);
+      console.log(rooms[tableId].actionSeat);
+      console.log('<><><><><><><><><><><><><><><');
+      console.log('<><><><><><><><><><><><><><><');
+      console.log('<><><><><><><><><><><><><><><');
       emitUpdatedTable(io, tableId)
 
       await gameController.leaveSeat(leaveSeatObj);
@@ -1006,7 +1031,7 @@ async calculateAndSavePlayerHand(
       totalWinnings
     );
 
-    //Update the hands bet to show profit/loss
+    //Update the hand's bet to show profit/loss
     if (rooms[tableId]?.seats?.[player.seat]?.hands?.[key]?.bet) {
       rooms[tableId].seats[player.seat].hands[key].bet += profitLoss;
     }
@@ -1039,7 +1064,7 @@ resetRoomForNextHand(tableId) {
     handSummary: null,
     bestValue: null,
   };
-
+  
   rooms[tableId].forfeitedPlayers = [];
   rooms[tableId].sortedFinishedPlayers = [];
   rooms[tableId].insuredPlayers = {};
@@ -1074,9 +1099,11 @@ async endRound(io, tableId) {
   let room = tableId;
   let bestDealerValue = rooms[tableId].dealerCards.bestValue;
   let finishedPlayers = rooms[tableId].sortedFinishedPlayers;
+  rooms[tableId].actionSeat = null
 
   this.stopActionTimer(io, tableId);
   // Update table with latest info before ending the round
+
   emitUpdatedTable(io, tableId)
 
   if (!finishedPlayers.length) {
@@ -1108,6 +1135,15 @@ async endRound(io, tableId) {
     await new Promise((resolve) => setTimeout(resolve, 3000));
 
     // Display any winnings going to tableBalance
+
+    console.log('<><><><><><><>test 6  <><><><><><><><');
+    console.log('<><><><><><><><><><><><><><><');
+    console.log('<><><><><><><><><><><><><><><');
+    // console.log(rooms[tableId]);
+    console.log(rooms[tableId].actionSeat);
+    console.log('<><><><><><><><><><><><><><><');
+    console.log('<><><><><><><><><><><><><><><');
+    console.log('<><><><><><><><><><><><><><><');
     emitUpdatedTable(io, tableId)
   }
 

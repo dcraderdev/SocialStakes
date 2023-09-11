@@ -99,7 +99,7 @@ import { WindowContext } from '../../context/WindowContext';
       let currTable = currentTables?.[activeTable.id]
       if(!currTable) return
 
-
+      console.log(currTable.actionSeat);
 
       let userInActiveSeat = currTable.actionSeat === currentSeat && currentSeat !== null;
       let handInProgress = currTable.handInProgress;
@@ -370,7 +370,8 @@ const rebet = (multiplier) => {
 
 
 
-
+console.log(isHandInProgress);
+console.log(isActionSeat);
 
 
   return (
@@ -379,7 +380,7 @@ const rebet = (multiplier) => {
         <div className="bet-container flex center">
 
 <>
-          {isActionSeat && !isInsuranceOffered &&(
+          {isActionSeat && isHandInProgress && !isInsuranceOffered &&(
             <div className={`actions-container flex center ${showMessages ? 'shrunk' : ''} ${isWideView || !showMessages ? 'row' : ''}`}>
               <div className="action-button" onClick={()=>handleAction('hit')}>Hit</div>
               <div className="action-button" onClick={()=>handleAction('stay')}>Stay</div>

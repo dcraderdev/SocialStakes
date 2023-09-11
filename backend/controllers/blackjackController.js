@@ -137,14 +137,6 @@ const blackjackController = {
       if (!leaveSeat) {
         return;
       }
-      console.log('<><><><><><><>test 1  <><><><><><><><');
-      console.log('<><><><><><><><><><><><><><><');
-      console.log('<><><><><><><><><><><><><><><');
-      // console.log(rooms[tableId]);
-      console.log(rooms[tableId].actionSeat);
-      console.log('<><><><><><><><><><><><><><><');
-      console.log('<><><><><><><><><><><><><><><');
-      console.log('<><><><><><><><><><><><><><><');
 
       emitUpdatedTable(io, tableId);
       io.in(userId).emit('player_leave', leaveSeatObj);
@@ -358,14 +350,6 @@ const blackjackController = {
   async gameLoop(io, tableId) {
     // console.log('------- GAME LOOP -------');
 
-    console.log('<><><><><><><>test 2  <><><><><><><><');
-    console.log('<><><><><><><><><><><><><><><');
-    console.log('<><><><><><><><><><><><><><><');
-    // console.log(rooms[tableId]);
-    console.log(rooms[tableId].actionSeat);
-    console.log('<><><><><><><><><><><><><><><');
-    console.log('<><><><><><><><><><><><><><><');
-    console.log('<><><><><><><><><><><><><><><');
     // // Emit latest decision to clients
     emitUpdatedTable(io, tableId);
 
@@ -934,14 +918,6 @@ async processForfeitedPlayers(io, tableId) {
         tableBalance,
       };
 
-      console.log('<><><><><><><>test 3  <><><><><><><><');
-      console.log('<><><><><><><><><><><><><><><');
-      console.log('<><><><><><><><><><><><><><><');
-      // console.log(rooms[tableId]);
-      console.log(rooms[tableId].actionSeat);
-      console.log('<><><><><><><><><><><><><><><');
-      console.log('<><><><><><><><><><><><><><><');
-      console.log('<><><><><><><><><><><><><><><');
       emitUpdatedTable(io, tableId)
 
       await gameController.leaveSeat(leaveSeatObj);
@@ -1135,15 +1111,6 @@ async endRound(io, tableId) {
     await new Promise((resolve) => setTimeout(resolve, 3000));
 
     // Display any winnings going to tableBalance
-
-    console.log('<><><><><><><>test 6  <><><><><><><><');
-    console.log('<><><><><><><><><><><><><><><');
-    console.log('<><><><><><><><><><><><><><><');
-    // console.log(rooms[tableId]);
-    console.log(rooms[tableId].actionSeat);
-    console.log('<><><><><><><><><><><><><><><');
-    console.log('<><><><><><><><><><><><><><><');
-    console.log('<><><><><><><><><><><><><><><');
     emitUpdatedTable(io, tableId)
   }
 

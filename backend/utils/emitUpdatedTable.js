@@ -4,15 +4,6 @@ const {
 
 function emitUpdatedTable(io, tableId) {
 
-  console.log('<><><><><><><>emitUpdatedTable<><><><><><><><');
-  console.log('<><><><><><><><><><><><><><><');
-  console.log('<><><><><><><><><><><><><><><');
-  // console.log(rooms[tableId]);
-  console.log(rooms[tableId].actionSeat);
-  console.log('<><><><><><><><><><><><><><><');
-  console.log('<><><><><><><><><><><><><><><');
-  console.log('<><><><><><><><><><><><><><><');
-
   if (!rooms[tableId]) return;
   let room = tableId;
   let updateObj = {

@@ -109,9 +109,15 @@ const Table = () => {
     let countdownInterval = null;
     let currTable = currentTables?.[activeTable?.id]
     if(!currTable) return
+console.log('<^><^><^><^><^><^><^><^><^><^><^><^><^><^><');
+console.log('<^><^><^><^><^><^><^><^><^><^><^><^><^><^><');
+console.log('<^><^><^><^><^><^><^><^><^><^><^><^><^><^><');
+    console.log(currTable);
+console.log('<^><^><^><^><^><^><^><^><^><^><^><^><^><^><');
+console.log('<^><^><^><^><^><^><^><^><^><^><^><^><^><^><');
 
 
-    let countdownRemaining = Math.ceil((currTable.countdownEnd - Date.now()) / 1000);
+    let countdownRemaining = Math.ceil((currTable.dealCardsTimeStamp - Date.now()) / 1000);
     let dealerCards = currTable.dealerCards
 
     if(currTable.handInProgress){

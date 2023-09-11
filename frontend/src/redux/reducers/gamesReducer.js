@@ -151,10 +151,20 @@ const gamesReducer = (state = initialState, action) => {
 
 
       if (updatedCurrentTables[tableId]) {
+
+        console.log('<^><^><^><^><^><^><^><^><^><^><^><^><^><^><');
+        console.log('<^><^><^><^><^><^><^><^><^><^><^><^><^><^><');
+        console.log('<^><^><^><^><^><^><^><^><^><^><^><^><^><^><');
+            console.log(action.payload);
+            console.log(action.payload.table.actionEndTimeStamp);
+        console.log('<^><^><^><^><^><^><^><^><^><^><^><^><^><^><');
+        console.log('<^><^><^><^><^><^><^><^><^><^><^><^><^><^><');
+
+
         const currentTable = updatedCurrentTables[tableId];
 
         currentTable.tableUsers = table.seats
-        currentTable.countdownEnd = table.countdownEnd;
+        currentTable.dealCardsTimeStamp = table.dealCardsTimeStamp;
         currentTable.actionEndTimeStamp = action.payload.table.actionEndTimeStamp;
         // currentTable.dealerCards = action.payload.table.dealerCards?.visibleCards;
         // currentTable.actionSeat = action.payload.table.actionSeat;
@@ -392,14 +402,14 @@ const gamesReducer = (state = initialState, action) => {
     case UPDATE_TABLE_COUNTDOWN: {
 
       
-      const {countdownEnd, tableId} = action.payload;
+      const {dealCardsTimeStamp, tableId} = action.payload;
       
       
       const newCurrentTables = { ...newState.currentTables };
       const newCurrentTable = { ...newCurrentTables[tableId] };
       
       
-      newCurrentTable.countdownEnd = countdownEnd
+      newCurrentTable.dealCardsTimeStamp = dealCardsTimeStamp
       newCurrentTables[tableId] = newCurrentTable;
       
       console.log(newCurrentTable);
@@ -410,12 +420,12 @@ const gamesReducer = (state = initialState, action) => {
 
     case COLLECT_BETS: {
 
-      const {countdownEnd, tableId} = action.payload;
+      const {dealCardsTimeStamp, tableId} = action.payload;
       
       const newCurrentTables = { ...newState.currentTables };
       const newCurrentTable = { ...newCurrentTables[tableId] };
 
-      newCurrentTable.countdownEnd = countdownEnd
+      newCurrentTable.dealCardsTimeStamp = dealCardsTimeStamp
       newCurrentTables[tableId] = newCurrentTable;
 
       return { ...newState, currentTables: newCurrentTables };

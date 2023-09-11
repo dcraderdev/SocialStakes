@@ -110,7 +110,7 @@ const SocketProvider = ({ children }) => {
         dispatch(showConversationAction(tableObj));
       }); 
 
-      
+
       socket.on('join_table', (table) => {
         dispatch(joinTableAction(table));
       }); 
@@ -130,24 +130,24 @@ const SocketProvider = ({ children }) => {
 
       socket.on('get_updated_table', (updateObject) => {
 
-        console.log('_+_+_+_+_+_+_+_+_+_+_+');
-        console.log('_+_+_+_+_+_+_+_+_+_+_+');
-        console.log(updateObject);
-        console.log('_+_+_+_+_+_+_+_+_+_+_+');
-        console.log('_+_+_+_+_+_+_+_+_+_+_+');
-        console.log('_+_+_+_+_+_+_+_+_+_+_+');
+        // console.log('_+_+_+_+_+_+_+_+_+_+_+');
+        // console.log('_+_+_+_+_+_+_+_+_+_+_+');
+        // console.log(updateObject);
+        // console.log('_+_+_+_+_+_+_+_+_+_+_+');
+        // console.log('_+_+_+_+_+_+_+_+_+_+_+');
+        // console.log('_+_+_+_+_+_+_+_+_+_+_+');
 
 
         dispatch(updateTableAction(updateObject)); 
       }); 
 
       socket.on('new_payout', (messageObj) => {
-        console.log(messageObj);
+        // console.log(messageObj);
         dispatch(addPayoutMessageAction(messageObj));
       });
 
       socket.on('new_message', (messageObj) => {
-        console.log(messageObj);
+        // console.log(messageObj);
         dispatch(addMessageAction(messageObj));
       });
 
@@ -164,17 +164,6 @@ const SocketProvider = ({ children }) => {
       });    
 
       socket.on('player_leave', (seatObj) => {
-        console.log('player_leave');
-        console.log('player_leave');
-        console.log('player_leave');
-        console.log('player_leave');
-        console.log('player_leave');
-        console.log(seatObj);
-        console.log('player_leave');
-        console.log('player_leave');
-        console.log('player_leave');
-        console.log('player_leave');
-
         dispatch(leaveSeatAction(seatObj)); 
       });   
 
@@ -209,10 +198,6 @@ const SocketProvider = ({ children }) => {
       });  
 
       socket.on('player_reconnected', ({seat, tableId, convoId, timer}) => {
-        console.log('here');
-        console.log('here');
-        console.log('here');
-
         dispatch(playerReconnectAction({seat, tableId, timer})); 
       });  
 
@@ -225,7 +210,7 @@ const SocketProvider = ({ children }) => {
       });  
 
       socket.on('countdown_update', (countdownObj) => {
-  console.log(countdownObj);
+        console.log(countdownObj);
 
         dispatch(updateTableCountdownAction(countdownObj)); 
       });  

@@ -155,7 +155,7 @@ const gamesReducer = (state = initialState, action) => {
 
         currentTable.tableUsers = table.seats
         currentTable.countdownEnd = table.countdownEnd;
-        currentTable.actionEnd = action.payload.table.actionEnd;
+        currentTable.actionEndTimeStamp = action.payload.table.actionEndTimeStamp;
         // currentTable.dealerCards = action.payload.table.dealerCards?.visibleCards;
         // currentTable.actionSeat = action.payload.table.actionSeat;
         // currentTable.actionTimer = action.payload.table.actionTimer;
@@ -191,17 +191,6 @@ const gamesReducer = (state = initialState, action) => {
     }
 
     case JOIN_TABLE:{
-
-      console.log('<><><><><><>');
-      console.log('<><><><><><>');
-      console.log('<><><><><><>');
-      console.log('<><><><><><>');
-      console.log(action.payload);
-      console.log(action.payload.id);
-      console.log('<><><><><><>');
-      console.log('<><><><><><>');
-      console.log('<><><><><><>');
- 
 
       let newCurrentTables = {...newState.currentTables}
       newCurrentTables[action.payload.id] = action.payload

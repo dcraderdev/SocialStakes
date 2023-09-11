@@ -35,8 +35,8 @@ let fetchUpdatedTable = require('../utils/fetchUpdatedTable');
 let { countdownInterval } = require('../global');
 
 const timerController = {
+
   startGlobalCountdown(io, rooms) {
-    console.log(rooms);
     if (countdownInterval) return;
 
     countdownInterval = setInterval(async () => {
@@ -59,9 +59,6 @@ const timerController = {
 
           // if theres bets, start hand otherwise cancel
           if (!blackjackController.anyBetsLeft(tableId)) {
-            console.log('no bets');
-            console.log('no bets');
-            console.log('no bets');
             blackjackController.stopCountdownToDeal(io, tableId);
             continue;
           }
@@ -91,7 +88,7 @@ const timerController = {
             tableId,
           };
           io.in(tableId).emit('collect_bets', countdownObj);
-          // dealCards(tableId, io);
+          await blackjackController.dealCards( io, tableId);
         }
       }
     }, 1000); 

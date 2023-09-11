@@ -4,10 +4,6 @@ const {
 
 function emitUpdatedTable(io, tableId) {
 
-  // conversationId 9e4384d0-83f1-4a02-8e29-016736c97211
-  // tableId e10d8de4-f4c2-4d28-9324-56aa9c920801
-
-console.log(rooms[tableId]);
 
   if (!rooms[tableId]) return;
   let room = tableId;
@@ -20,7 +16,7 @@ console.log(rooms[tableId]);
       },
 
       actionSeat: rooms[tableId].actionSeat,
-      actionEnd: rooms[tableId].actionEnd,
+      actionEndTimeStamp: rooms[tableId].actionEndTimeStamp,
       dealCardsTimeStamp: rooms[tableId].dealCardsTimeStamp,
       handInProgress: rooms[tableId].handInProgress,
       conversationId: rooms[tableId].conversationId,

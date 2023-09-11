@@ -1,7 +1,7 @@
 const { rooms } = require('../global');
 const { chatController } = require('../controllers/chatController');
 
-async function emitCustomMessage(socket, io, messageObj) {
+async function emitCustomMessage( io, messageObj) {
   // Broadcast message to specific room
 
   let roomUserId = 'e10d8de4-f4c7-0000-0000-000000000000';

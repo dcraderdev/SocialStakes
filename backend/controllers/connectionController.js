@@ -164,7 +164,6 @@ const connectionController = {
         let gameTable = rooms[tableId];
         let playerSeatObj = rooms[tableId].seats[seat];
 
-        console.log(playerSeatObj);
 
         socket.leave(convoId);
         socket.leave(convoId);
@@ -172,7 +171,6 @@ const connectionController = {
         if (playerSeatObj) {
           if (gameTable.gameType === 'Blackjack') {
             await blackjackController.handleLeaveBlackjackTable(
-              socket,
               io,
               gameTable,
               playerSeatObj
@@ -202,7 +200,7 @@ const connectionController = {
       table: {
         actionSeat: rooms[tableId].actionSeat,
         dealCardsTimeStamp: rooms[tableId].dealCardsTimeStamp,
-        actionEnd: rooms[tableId].actionEnd,
+        actionEndTimeStamp: rooms[tableId].actionEndTimeStamp,
         handInProgress: rooms[tableId].handInProgress,
         seats: rooms[tableId].seats,
         gameSessionId: rooms[tableId].gameSessionId,
@@ -218,20 +216,10 @@ const connectionController = {
     let conversationId = rooms[tableId].conversationId;
     let content = `${username} has joined the room.`;
 
-
-    console.log('--------------');
-    console.log(`joining table`);
-    console.log(`conversationId`,conversationId);
-    console.log(`tableId`,tableId);
-    console.log('--------------');
-
-
     socket.join(conversationId);
     socket.join(tableId);
 
-
- 
-    await emitCustomMessage(socket, io, { conversationId, content, tableId });
+    await emitCustomMessage( io, { conversationId, content, tableId });
 
 
     io.in(userId).emit('join_table', updatedTable);

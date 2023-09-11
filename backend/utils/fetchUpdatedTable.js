@@ -1,4 +1,4 @@
-const { rooms } = require('../global');
+const { rooms, roomInit } = require('../global');
 const { gameController } = require('../controllers/gameController');
 
 async function fetchUpdatedTable(tableId) {

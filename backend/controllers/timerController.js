@@ -56,10 +56,13 @@ const timerController = {
 
     }
 
-    if (rooms[tableId].tableId === 'be11a610-7777-7777-7777-7be11a610777' && !room.handInProgress) {      await botController.startBotRound(io, tableId)
-
+    if (rooms[tableId].tableId === 'be11a610-7777-7777-7777-7be11a610777' && !room.handInProgress) {      
+      await botController.startBotRound(io, tableId)
     }
 
+    if (rooms[tableId].tableId === 'be11a610-7777-7777-7777-7be11a610777' && room.handInProgress) {      
+      await botController.handleBotActions(io, tableId)
+    }
 
 
 

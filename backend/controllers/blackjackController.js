@@ -525,6 +525,7 @@ const blackjackController = {
 
 
 
+
   async playerHit(actionObj) {
     const { tableId, seat, handId } = actionObj;
     let currentHand = rooms[tableId].seats[seat].hands[handId];

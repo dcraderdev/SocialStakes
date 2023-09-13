@@ -2,10 +2,6 @@ const { rooms } = require('../global');
 
 
 function setDealCardsTimeStamp(io, tableId) {
-  console.log('setDealCardsTimeStamp');
-  console.log('setDealCardsTimeStamp');
-  console.log('setDealCardsTimeStamp');
-  console.log('setDealCardsTimeStamp');
   if (!rooms[tableId]) return;
   if (rooms[tableId].dealCardsTimeStamp) return;
 

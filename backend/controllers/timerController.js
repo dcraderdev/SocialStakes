@@ -40,7 +40,6 @@ const timerController = {
     if (countdownInterval) return;
 
     countdownInterval = setInterval(async () => {
-      console.log('tick');
       for (const tableId in rooms) {
         await this.shouldTakeAction(io, tableId)
       }
@@ -60,11 +59,6 @@ const timerController = {
       await botController.startBotRound(io, tableId)
     }
 
-    if (rooms[tableId].tableId === 'be11a610-7777-7777-7777-7be11a610777' && room.handInProgress) {      
-      await botController.handleBotActions(io, tableId)
-    }
-
-
 
     return false;
   },
@@ -76,17 +70,13 @@ const timerController = {
 
   async handleDealAction(io, tableId) {
     const room = rooms[tableId];
-    console.log('time up');
     room.dealCardsTimeStamp = null;
 
 
 
     if (room.gameType === 'Blackjack') {
       // ... additional logic if needed
-
-
-
-
+1
     }
 
     // if there are no bets, start hand otherwise cancel

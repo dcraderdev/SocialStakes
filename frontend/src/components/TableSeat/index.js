@@ -15,7 +15,7 @@ import pokerChip from '../../images/poker-chip.svg'
 import pokerChipWithDollarSign from '../../images/poker-chip-with-dollar-sign.svg'
 import PokerChip from '../PokerChip';
 
-import bluePokerChip from '../../images/blue-poker-chip.svg'
+import bluePokerChip from '../../images/blue_chip.png'
 
 
 

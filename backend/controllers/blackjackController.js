@@ -21,6 +21,7 @@ const { friendController } = require('./friendController');
 const { cardConverter } = require('./cardConverter');
 const { botController } = require('./botController');
 
+
 const { drawCards, handSummary, bestValue } = require('./cardController');
 
 const {
@@ -361,8 +362,7 @@ const blackjackController = {
       await this.handleDealerTurn(io, tableId);
       return;
     }
-
-    // If some, handle player turn
+    
     await this.handlePlayerTurn(io, tableId, nextPlayer );
 
     // cirlce back into gameLoop
@@ -387,6 +387,7 @@ const blackjackController = {
 
 
   async handlePlayerTurn(io, tableId, player) {
+
       let room = tableId;
 
       //Iterate over each player's hand
@@ -457,28 +458,30 @@ const blackjackController = {
         }
 
         // Create action end timestamp
-        const actionDuration = 1000; // 5 seconds
+        const actionDuration = 5000; // 5 seconds
         rooms[tableId].actionEndTimeStamp = Math.ceil(Date.now() + actionDuration);
 
         // Set action seat
         rooms[tableId].actionSeat = player.seat;
         rooms[tableId].actionHand = key;
 
-        // Emit update to clients
-        let updateObj = {
-          tableId,
-          table: {
-            actionSeat: player.seat,
-            actionHand: key,
-            actionEndTimeStamp: rooms[tableId].actionEndTimeStamp,
-            seats: rooms[tableId].seats,
-            dealerCards: {
-              visibleCards: rooms[tableId].dealerCards.visibleCards,
-            },
-          },
-        };
 
-        io.in(room).emit('get_updated_table', updateObj);
+        emitUpdatedTable(io, tableId)
+
+        // If some, handle player turn
+        if (tableId === 'be11a610-7777-7777-7777-7be11a610777') {      
+          await botController.handleBotAction(io, tableId)
+
+          if (rooms[tableId] && rooms[tableId].timerId) {
+            clearInterval(rooms[tableId].timerId);
+            rooms[tableId].actionEndTimeStamp = 0;
+          }
+
+          // return this.gameLoop(io, tableId);
+          return
+
+        }
+
         // // If timer already exists, return without creating another one
         // if (rooms[tableId].timerId) {
         //   clearInterval(rooms[tableId].timerId)
@@ -515,7 +518,7 @@ const blackjackController = {
               handData.turnEnded = true;
               resolve(); // Resolve the promise to let the game loop continue
             }
-          }, 10000);
+          }, 1000);
         });
       }
       return;
@@ -553,7 +556,6 @@ const blackjackController = {
   // Handle player stay action
   async playerStay(actionObj) {
     const { tableId, action, seat, handId } = actionObj;
-    console.log('playerStay');
 
     // Update hand to show no more decisions need to be made for the gameLoop
     let playersHand = rooms[tableId].seats[seat].hands[handId];
@@ -562,7 +564,6 @@ const blackjackController = {
   },
 
   async playerSplit(io, actionObj) {
-    console.log('playerSplit');
     const { tableId, action, seat, handId } = actionObj;
     let room = tableId;
     let userTableId = rooms[tableId].seats[seat].id;
@@ -615,7 +616,6 @@ const blackjackController = {
   },
 
   async playerDouble(io, actionObj) {
-    console.log('playerDouble');
 
     const { tableId, action, seat, handId } = actionObj;
     let currentSeat = rooms[tableId].seats[seat];
@@ -661,12 +661,17 @@ const blackjackController = {
     };
 
 
-    await emitCustomMessage( io, messageObj);
-
+    
     // Update hand to show no more decisions need to be made for the gameLoop
     let playersHand = rooms[tableId].seats[seat].hands[handId];
     playersHand.turnEnded = true;
     rooms[tableId].seats[seat].hands[handId] = playersHand;
+    
+    
+    
+    await emitCustomMessage( io, messageObj);
+    emitUpdatedTable(io, tableId)
+
     return;
 
     // End players turn

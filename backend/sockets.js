@@ -389,15 +389,6 @@ module.exports = function (io) {
       let currentHand = player.hands[handId];
 
 
-      console.log('><^><^><^><^><^><^><^><^><^><^><^>^<><^><^>');
-      console.log('><^><^><^><^><^><^><^><^><^><^><^>^<><^><^>');
-      console.log('player', player);
-      console.log('currentHand', currentHand);
-      console.log('handId', handId);
-      console.log('><^><^><^><^><^><^><^><^><^><^><^>^<><^><^>');
-      console.log('><^><^><^><^><^><^><^><^><^><^><^>^<><^><^>');
-
-
       let playerBestValue = await bestValue(currentHand.summary.values);
       
       let messageObj = {
@@ -406,12 +397,6 @@ module.exports = function (io) {
         tableId,
       };
       
-
-
-
-
-
-
 
       if (action === 'hit') {
         await blackjackController.playerHit(actionObj);

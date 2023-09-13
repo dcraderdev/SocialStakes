@@ -25,10 +25,17 @@ const {
   lastPayouts,
 } = require('../global');
 
+const { drawCards, handSummary, bestValue } = require('./cardController');
+
+
 const { gameController } = require('./gameController');
 const { cardConverter } = require('./cardConverter');
 const setDealCardsTimeStamp = require('../utils/setDealCardsTimeStamp');
-const { blackjackController } = require('./blackjackController');
+// const { blackjackController } = require('./blackjackController');
+let emitCustomMessage = require('../utils/emitCustomMessage');
+const emitUpdatedTable = require('../utils/emitUpdatedTable');
+
+
 
 const botController = {
   buyInAmount: 5000,
@@ -118,15 +125,18 @@ const botController = {
     });
   },
 
+
+
   async startBotRound(io, tableId) {
-    const room = rooms[tableId];
-    const seats = room.seats;
+    const seats = rooms[tableId].seats;
 
     // iterate over bots
     Object.values(seats).map(async (seat, index) => {
       await this.handleBotBetDecision(io, tableId, seat);
     });
   },
+
+
 
   async handleBotBetDecision(io, tableId, seat) {
     // check chip stack
@@ -189,13 +199,11 @@ const botController = {
     io.in(tableId).emit('new_bet', betObj);
   },
 
-  // await blackjackController.playerHit(actionObj) {
-  //   await blackjackController.playerStay(actionObj) {
-  //     await blackjackController.playerSplit(io, actionObj) {
-  //       await blackjackController.playerDouble(io, actionObj) {
-  // // const { tableId, seat, handId } = actionObj;
+
 
   getActionForHand(playerHandValue, dealerCardValue, canSplit = false, enoughFunds = false) {
+
+
     if (playerHandValue <= 8) {
       return 'hit';
     }
@@ -271,19 +279,18 @@ const botController = {
     return total;
   },
 
-  async handleBotActions(io, tableId) {
+  async handleBotAction(io, tableId) {
     const room = rooms[tableId];
     let actionSeat = room.actionSeat;
     let actionHand = room.actionHand;
     if (!actionHand || !actionSeat) return;
     let currentHand = room.seats[actionSeat].hands[actionHand];
-    let currentHandValues =
-      room.seats[actionSeat].hands[actionHand].summary.values;
 
     let playerFunds = room.seats[actionSeat].tableBalance;
     let currentBet = currentHand.bet;
 
     let dealerCards = room.dealerCards;
+    let username = room.seats[actionSeat].username;
 
     const dealerVisibleCard = dealerCards.visibleCards[0];
     const dealerCardValue = this.getCardValueFromConverter(dealerVisibleCard);
@@ -310,77 +317,218 @@ const botController = {
       handId: actionHand,
     };
 
-    console.log('action--->', action);
 
-    switch (action) {
-      case 'hit':
-        console.log('hit');
-        await blackjackController.playerHit(actionObj);
-        break;
-      case 'stay':
-        console.log('stay');
-        await blackjackController.playerStay(actionObj);
-        break;
-      case 'split':
-        console.log('split');
-        await blackjackController.playerSplit(io, actionObj);
-        break;
-      case 'double':
-        console.log('double');
-        await blackjackController.playerDouble(io, actionObj);
-        break;
-      default:
-        console.error('Invalid action returned from getActionForHand');
+    // add delay
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+
+
+    // // Reset the timer whenever a player takes an action
+    // if (rooms[tableId] && rooms[tableId].timerId) {
+    //   clearInterval(rooms[tableId].timerId);
+    //   rooms[tableId].actionEndTimeStamp = 0;
+    // }
+
+      let playerBestValue = await bestValue(currentHand.summary.values);
+      
+      let messageObj = {
+        conversationId: rooms[tableId].conversationId,
+        content: `${username} shows: `,
+        tableId,
+      };
+      
+
+      if (action === 'hit') {
+        await this.playerHit(actionObj);
+        messageObj.content = `${username} hits!`;
+      }
+      if (action === 'stay') {
+        await this.playerStay(actionObj);
+        messageObj.content = `${username} stays. ${playerBestValue}.`;
+      }
+      if (action === 'double') {
+        await this.playerDouble(io, actionObj);
+        messageObj.content = `${username} doubles! `;
+      }
+      if (action === 'split') {
+        await this.playerSplit(io, actionObj);
+        messageObj.content = `${username} splits! `;
+      }
+
+      await emitCustomMessage( io, messageObj);
+      emitUpdatedTable(io, tableId)
+
+
+  },
+
+
+
+
+
+
+
+  async playerHit(actionObj) {
+    const { tableId, seat, handId } = actionObj;
+
+    let currentHand = rooms[tableId].seats[seat].hands[handId];
+    let cardsToDraw = 1;
+
+    let drawObj = {
+      deck: rooms[tableId].deck,
+      cardsToDraw,
+      cursor: rooms[tableId].cursor,
+    };
+
+    const drawnCardsAndDeck = drawCards(drawObj);
+    const { drawnCards, newDeck } = drawnCardsAndDeck;
+
+    rooms[tableId].deck = newDeck;
+
+    // const newCard = await drawCards(drawObj)
+    rooms[tableId].cursor += cardsToDraw;
+    currentHand.cards.push(...drawnCards);
+    return;
+  },
+
+  // Handle player stay action
+  async playerStay(actionObj) {
+    const { tableId, action, seat, handId } = actionObj;
+    console.log('playerStay');
+
+    // Update hand to show no more decisions need to be made for the gameLoop
+    let playersHand = rooms[tableId].seats[seat].hands[handId];
+
+
+    playersHand.turnEnded = true;
+    return;
+  },
+
+  async playerSplit(io, actionObj) {
+    const { tableId, action, seat, handId } = actionObj;
+    let room = tableId;
+    let userTableId = rooms[tableId].seats[seat].id;
+    let roundId = rooms[tableId].roundId;
+    let currentSeat = rooms[tableId].seats[seat];
+
+    // Create new hand for the split
+    const newHand = await gameController.createHand(userTableId, roundId);
+    let newHandId = newHand.id;
+
+    if (!newHand) {
+      await gameLoop(io, tableId);
     }
 
-    // // const { tableId, seat, handId } = actionObj;
+    if (newHand) {
+      // Get the existing hand
+      let existingHand = rooms[tableId].seats[seat].hands[handId];
 
-    // currentHand
-    // {
-    //   cards: [ 16, 47 ],
-    //   bet: 300,
-    //   turnEnded: false,
-    //   summary: {
-    //     blackjack: false,
-    //     softSeventeen: false,
-    //     busted: false,
-    //     values: [ 15 ]
-    //   }
-    // }
+      if (existingHand.cards.length < 2) {
+        return;
+      }
 
-    // dealerCards
-    // {
-    //   naturalBlackjack: false,
-    //   hiddenCards: [ 45 ],
-    //   visibleCards: [ 34 ],
-    //   otherCards: [],
-    //   handSummary: {
-    //     blackjack: false,
-    //     softSeventeen: false,
-    //     busted: false,
-    //     values: [ 18 ]
+      // Remove chips from table balance if available
+      if (currentSeat.tableBalance < existingHand.bet) return;
+      currentSeat.tableBalance -= existingHand.bet;
+
+      // Split the cards between the two hands
+      // Add the current bet to the newHands bet
+      let cardToMove = existingHand.cards.pop();
+      let newSplitHand = {
+        cards: [cardToMove],
+        bet: existingHand.bet,
+        turnEnded: false,
+      };
+
+      // Update the hands
+      rooms[tableId].seats[seat].hands[newHandId] = newSplitHand;
+    }
+
+    // let updateObj = {
+    //   tableId,
+    //   table: {
+    //     seats: rooms[tableId].seats,
     //   },
-    //   bestValue: 18
-    // }
+    // };
 
-    // console.log('=-=-=-=-=-=-=-=-=-=-=');
-    // console.log('=-=-=-=-=-=-=-=-=-=-=');
-    // console.log('=-=-=-=-=-=-=-=-=-=-=');
-    // console.log(actionSeat);
-    // console.log(actionHand);
-    // console.log(currentHand);
-    // console.log(dealerCards);
-    // console.log('=-=-=-=-=-=-=-=-=-=-=');
-    // console.log('=-=-=-=-=-=-=-=-=-=-=');
-    // console.log('=-=-=-=-=-=-=-=-=-=-=');
+    // io.in(room).emit('get_updated_table', updateObj);
+    emitUpdatedTable(io, tableId)
 
-    // get current actionseat
-    // get currentHand that is being played
-    // evaluate hand
-    // evaluate dealer hand
-    // make decision
-    // emit decision
+    return;
   },
+
+  async playerDouble(io, actionObj) {
+
+    const { tableId, action, seat, handId } = actionObj;
+    let currentSeat = rooms[tableId].seats[seat];
+    let currentHand = rooms[tableId].seats[seat].hands[handId];
+    let currentBet = rooms[tableId].seats[seat].hands[handId].bet;
+    let username = rooms[tableId].seats[seat].username
+    let cardsToDraw = 1;
+    let drawObj = {
+      deck: rooms[tableId].deck,
+      cardsToDraw,
+      cursor: rooms[tableId].cursor,
+    };
+
+    // Double the current bet, remove chips from table balance
+    // currentBet *= 2;
+    currentSeat.tableBalance -= currentBet;
+
+    // Save the updated balance and bet in rooms object
+    currentHand.bet += currentBet;
+
+    // // Draw one more card and push to currentHand
+    // const newCard = await drawCards(drawObj)
+    // currentHand.cards.push(newCard);
+    // rooms[tableId].cursor += cardsToDraw
+
+    const drawnCardsAndDeck = drawCards(drawObj);
+    const { drawnCards, newDeck } = drawnCardsAndDeck;
+
+    rooms[tableId].deck = newDeck;
+
+    // const newCard = await drawCards(drawObj)
+    rooms[tableId].cursor += cardsToDraw;
+    currentHand.cards.push(...drawnCards);
+
+    let playerHand = await handSummary(currentHand.cards);
+    let valuesStr = playerHand.values.join(',');
+
+    let messageObj = {
+      conversationId: rooms[tableId].conversationId,
+      content: `${username} shows: ${valuesStr}`,
+      tableId,
+      cards: currentHand.cards,
+    };
+
+
+    
+    // Update hand to show no more decisions need to be made for the gameLoop
+    let playersHand = rooms[tableId].seats[seat].hands[handId];
+    playersHand.turnEnded = true;
+    rooms[tableId].seats[seat].hands[handId] = playersHand;
+    
+    
+    
+    await emitCustomMessage( io, messageObj);
+    emitUpdatedTable(io, tableId)
+
+    return;
+
+    // End players turn
+    // rooms[tableId].sortedFinishedPlayers.push(nextPlayer)
+  },
+
+
+
+
+
+
+
+
+
+
+
+
 };
 
 module.exports = { botController };

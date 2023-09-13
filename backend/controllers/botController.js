@@ -22,23 +22,18 @@ const {
   rooms,
   disconnectTimeouts,
   disconnectTimes,
-  lastPayouts
+  lastPayouts,
 } = require('../global');
 
-
-const {gameController} = require('./gameController')
-const {cardConverter} = require('./cardConverter')
+const { gameController } = require('./gameController');
+const { cardConverter } = require('./cardConverter');
 const setDealCardsTimeStamp = require('../utils/setDealCardsTimeStamp');
 const { blackjackController } = require('./blackjackController');
 
-
-
 const botController = {
-  
+  buyInAmount: 5000,
 
-
-
-  async handleBotInit () {
+  async handleBotInit() {
     let bots = [
       {
         id: 'e10d8de4-f4c8-4d28-9324-56aa9c924a83',
@@ -62,8 +57,8 @@ const botController = {
       },
       {
         id: 'e10d8de4-f4c8-4d28-9324-56aa9c924a88',
-        username: 'Seymon Dukach'
-      }
+        username: 'Seymon Dukach',
+      },
     ];
 
     let bellagioTableId = 'be11a610-7777-7777-7777-7be11a610777';
@@ -82,15 +77,12 @@ const botController = {
       rooms[bellagioTableId].chatName = updatedTable.Conversation.chatName;
       rooms[bellagioTableId].gameType = updatedTable.Game.shortName;
       rooms[bellagioTableId].Game = updatedTable.Game;
-
-    } 
+    }
 
     bots.forEach(async (user, index) => {
-
       let tableId = bellagioTableId;
       let seat = index + 1;
-      let amount = 50000;
-
+      let amount = this.buyInAmount;
 
       await gameController.removeUserFromTables(user.id);
 
@@ -119,61 +111,51 @@ const botController = {
             accepted: false,
             bet: 0,
           },
-        }; 
+        };
 
         rooms[tableId].seats[seat] = takeSeatObj;
       }
     });
   },
 
-
-  async startBotRound(io, tableId){
-
+  async startBotRound(io, tableId) {
     const room = rooms[tableId];
-    const seats = room.seats
-    
-    // iterate over bots
-    Object.values(seats).map( async (seat,index)=>{
-      await this.handleBotBetDecision(io, tableId, seat)
-    })
+    const seats = room.seats;
 
+    // iterate over bots
+    Object.values(seats).map(async (seat, index) => {
+      await this.handleBotBetDecision(io, tableId, seat);
+    });
   },
 
-
-  async handleBotBetDecision(io, tableId, seat){
-
+  async handleBotBetDecision(io, tableId, seat) {
     // check chip stack
     // check card count
     // make bet
 
-
     const room = rooms[tableId];
 
-    let minBet = rooms[tableId].Game.minBet
-    let hasBalance = seat.tableBalance > minBet
-    
-    let bet = minBet
+    let minBet = rooms[tableId].Game.minBet;
+    let hasBalance = seat.tableBalance > minBet;
 
+    let bet = minBet;
 
-
-    if(!hasBalance){
-
+    if (!hasBalance) {
       let room = tableId;
       let userId = seat.userId;
-      let userTableId = seat.id
-      let amount
-    
+      let userTableId = seat.id;
+      let amount;
+
       const currUser = await User.findByPk(userId);
-      let balanceNotInPlay = currUser.balance
+      let balanceNotInPlay = currUser.balance;
 
-      if(balanceNotInPlay > 50000){
-        amount = 50000
+      if (balanceNotInPlay > this.buyInAmount) {
+        amount = this.buyInAmount;
       } else if (amount === 0) {
-        return
+        return;
       } else {
-        amount = balanceNotInPlay
+        amount = balanceNotInPlay;
       }
-
 
       const seatObj = { tableId, seat, userId, amount, userTableId };
       const addFunds = await gameController.addFunds(seatObj);
@@ -189,24 +171,22 @@ const botController = {
       }
     }
 
-
     // If handInProgress, dont add the bet
     if (room.handInProgress) {
       return;
     }
 
     // Update pendingBet in the rooms object
-      seat.pendingBet += bet;
-      seat.tableBalance -= bet;
+    seat.pendingBet += bet;
+    seat.tableBalance -= bet;
 
     if (!rooms[tableId].dealCardsTimeStamp) {
       setDealCardsTimeStamp(io, tableId);
     }
-     
-    const betObj = { bet, tableId, seat:seat.seat };
+
+    const betObj = { bet, tableId, seat: seat.seat };
 
     io.in(tableId).emit('new_bet', betObj);
-
   },
 
   // await blackjackController.playerHit(actionObj) {
@@ -215,94 +195,58 @@ const botController = {
   //       await blackjackController.playerDouble(io, actionObj) {
   // // const { tableId, seat, handId } = actionObj;
 
-  getActionForHand(playerHandValue, dealerCardValue, canSplit = false) {
+  getActionForHand(playerHandValue, dealerCardValue, canSplit = false, enoughFunds = false) {
     if (playerHandValue <= 8) {
-      console.log('-----=======-------');
-      console.log('hit');
-      console.log('-----=======-------');
-      blackjackController.playerHit
-      return "hit"
-    };
+      return 'hit';
+    }
+
+    if (playerHandValue === 20) {
+      return 'stay';
+    } 
 
     if (playerHandValue === 9) {
-        if (dealerCardValue >= 3 && dealerCardValue <= 6) {
-          console.log('-----=======-------');
-          console.log('double');
-          console.log('-----=======-------');
-          return "double"
-        } 
-          else
-          {
-            console.log('-----=======-------');
-            console.log('HIT');
-            console.log('-----=======-------');
-            return "hit";
-          }
+      if (dealerCardValue >= 3 && dealerCardValue <= 6  && enoughFunds) {
+        return 'double';
+      } else {
+        return 'hit';
+      }
     }
 
     if (playerHandValue === 10) {
-        if (dealerCardValue <= 9) {
-          console.log('-----=======-------');
-          console.log('double');
-          console.log('-----=======-------');
-          return "double"
-        } else {
-          console.log('-----=======-------');
-          console.log('HIT');
-          console.log('-----=======-------');
-          return "hit";
-        }
+      if (dealerCardValue <= 9  && enoughFunds) {
+        return 'double';
+      } else {
+        return 'hit';
+      }
     }
 
     if (playerHandValue === 11) {
-        if (dealerCardValue <= 10) {
-          console.log('-----=======-------');
-          console.log('double');
-          console.log('-----=======-------');
-          return "double"
-        } else {
-          console.log('-----=======-------');
-          console.log('HIT');
-          console.log('-----=======-------');
-          return "hit";
-        }
+      if (dealerCardValue <= 10 && enoughFunds) {
+        return 'double';
+      } else {
+        return 'hit';
+      }
     }
 
     if (playerHandValue >= 12 && playerHandValue <= 16) {
-      console.log('-----=======-------');
-      console.log('HIT');
-      console.log('-----=======-------');
-        if (dealerCardValue <= 6) {
-          console.log('-----=======-------');
-          console.log('stay');
-          console.log('-----=======-------');
-          return "stay"
-        } else {
-          console.log('-----=======-------');
-          console.log('hit');
-          console.log('-----=======-------');
-          return "hit";
-        }
+      if (dealerCardValue <= 6) {
+        return 'stay';
+      } else {
+        return 'hit';
+      }
     }
 
-    if (playerHandValue >= 17) return "stay";
+    if (playerHandValue >= 17) return 'stay';
 
-    if (canSplit) {
-        if (playerHandValue === 20) {
-          console.log('-----=======-------');
-          console.log('stay');
-          console.log('-----=======-------');
-          return "stay"
-        } // 10,10 or J,Q, etc.
-        else {
-          console.log('-----=======-------');
-          console.log('split');
-          console.log('-----=======-------');
-          return "split";
-        }
+    if (canSplit && enoughFunds) {
+
+      return 'split';
+      
+    } else {
+      return 'stay';
     }
-},
-
+    
+  },
 
   getCardValueFromConverter(card) {
     const modCard = card % 51;
@@ -310,65 +254,86 @@ const botController = {
   },
 
   computeHandValue(cards) {
-      let total = 0;
-      let aces = 0;
+    let total = 0;
+    let aces = 0;
 
-      for (const card of cards) {
-          const value = this.getCardValueFromConverter(card);
-          total += value;
-          if (value === 11) aces++;
-      }
+    for (const card of cards) {
+      const value = this.getCardValueFromConverter(card);
+      total += value;
+      if (value === 11) aces++;
+    }
 
-      while (total > 21 && aces) {
-          total -= 10;
-          aces--;
-      }
+    while (total > 21 && aces) {
+      total -= 10;
+      aces--;
+    }
 
-      return total;
+    return total;
   },
 
-  async handleBotActions(io, tableId){
-
+  async handleBotActions(io, tableId) {
     const room = rooms[tableId];
-    let actionSeat = room.actionSeat
-    let actionHand = room.actionHand
-    if(!actionHand || !actionSeat) return
-    let currentHand = room.seats[actionSeat].hands[actionHand]
-    let currentHandValues = room.seats[actionSeat].hands[actionHand].summary.values
+    let actionSeat = room.actionSeat;
+    let actionHand = room.actionHand;
+    if (!actionHand || !actionSeat) return;
+    let currentHand = room.seats[actionSeat].hands[actionHand];
+    let currentHandValues =
+      room.seats[actionSeat].hands[actionHand].summary.values;
 
-    let dealerCards = room.dealerCards
-    
+    let playerFunds = room.seats[actionSeat].tableBalance;
+    let currentBet = currentHand.bet;
+
+    let dealerCards = room.dealerCards;
+
     const dealerVisibleCard = dealerCards.visibleCards[0];
     const dealerCardValue = this.getCardValueFromConverter(dealerVisibleCard);
     const playerHandValue = this.computeHandValue(currentHand.cards);
 
     // Check if the hand can be split (both cards have the same value)
-    const canSplit = currentHand.cards.length === 2 && this.getCardValueFromConverter(currentHand.cards[0]) === this.getCardValueFromConverter(currentHand.cards[1]);
+    const canSplit =
+      currentHand.cards.length === 2 &&
+      this.getCardValueFromConverter(currentHand.cards[0]) ===
+        this.getCardValueFromConverter(currentHand.cards[1]);
 
-    let action = this.getActionForHand(playerHandValue, dealerCardValue, canSplit);
+    const enoughFunds = playerFunds >= currentBet;
+
+    let action = this.getActionForHand(
+      playerHandValue,
+      dealerCardValue,
+      canSplit,
+      enoughFunds
+    );
 
     let actionObj = {
-      tableId, seat: actionSeat, handId: actionHand
-    }
+      tableId,
+      seat: actionSeat,
+      handId: actionHand,
+    };
+
+    console.log('action--->', action);
 
     switch (action) {
-      case "hit":
-          await blackjackController.playerHit(actionObj);
-          break;
-      case "stay":
-          await blackjackController.playerStay(actionObj);
-          break;
-      case "split":
-          await blackjackController.playerSplit(io, actionObj);
-          break;
-      case "double":
-          await blackjackController.playerDouble(io, actionObj);
-          break;
+      case 'hit':
+        console.log('hit');
+        await blackjackController.playerHit(actionObj);
+        break;
+      case 'stay':
+        console.log('stay');
+        await blackjackController.playerStay(actionObj);
+        break;
+      case 'split':
+        console.log('split');
+        await blackjackController.playerSplit(io, actionObj);
+        break;
+      case 'double':
+        console.log('double');
+        await blackjackController.playerDouble(io, actionObj);
+        break;
       default:
-          console.error("Invalid action returned from getActionForHand");
-  }
+        console.error('Invalid action returned from getActionForHand');
+    }
 
-  // // const { tableId, seat, handId } = actionObj;
+    // // const { tableId, seat, handId } = actionObj;
 
     // currentHand
     // {
@@ -409,27 +374,13 @@ const botController = {
     // console.log('=-=-=-=-=-=-=-=-=-=-=');
     // console.log('=-=-=-=-=-=-=-=-=-=-=');
 
-
-
-
     // get current actionseat
     // get currentHand that is being played
     // evaluate hand
     // evaluate dealer hand
     // make decision
     // emit decision
-
-
-    
   },
+};
 
-
-
-
-
-}
-
-module.exports = {botController};
-
-
-
+module.exports = { botController };

@@ -515,7 +515,7 @@ const blackjackController = {
               handData.turnEnded = true;
               resolve(); // Resolve the promise to let the game loop continue
             }
-          }, 1000);
+          }, 10000);
         });
       }
       return;
@@ -528,6 +528,8 @@ const blackjackController = {
 
   async playerHit(actionObj) {
     const { tableId, seat, handId } = actionObj;
+    console.log('playerHit');
+
     let currentHand = rooms[tableId].seats[seat].hands[handId];
     let cardsToDraw = 1;
 
@@ -551,6 +553,7 @@ const blackjackController = {
   // Handle player stay action
   async playerStay(actionObj) {
     const { tableId, action, seat, handId } = actionObj;
+    console.log('playerStay');
 
     // Update hand to show no more decisions need to be made for the gameLoop
     let playersHand = rooms[tableId].seats[seat].hands[handId];
@@ -559,6 +562,7 @@ const blackjackController = {
   },
 
   async playerSplit(io, actionObj) {
+    console.log('playerSplit');
     const { tableId, action, seat, handId } = actionObj;
     let room = tableId;
     let userTableId = rooms[tableId].seats[seat].id;
@@ -611,6 +615,8 @@ const blackjackController = {
   },
 
   async playerDouble(io, actionObj) {
+    console.log('playerDouble');
+
     const { tableId, action, seat, handId } = actionObj;
     let currentSeat = rooms[tableId].seats[seat];
     let currentHand = rooms[tableId].seats[seat].hands[handId];

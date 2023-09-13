@@ -38,7 +38,7 @@ function LeaveModal() {
       tableId,
       seat,
     }
-
+ 
     
     if(type && type==='leaveTableViaTab'){
       dispatch(leaveTableAction(tableId))

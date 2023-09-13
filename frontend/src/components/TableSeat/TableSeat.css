@@ -324,6 +324,8 @@
     gold 75%
   );
   background-size: 200% 200%; 
+  aspect-ratio: 1/1;
+
   animation: moveGradient 3s infinite linear;
 }
 

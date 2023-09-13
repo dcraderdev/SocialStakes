@@ -34,7 +34,6 @@ const StatPage = () => {
   }, [currentTables]);
 
   useEffect(() => {
-    console.log('here');
     dispatch(getUserTables());
   }, []);
 
@@ -65,8 +64,6 @@ const StatPage = () => {
 
 
           {stats && stats.sessionStats && Object.entries(stats.sessionStats).map(([key,table], index) => {
-            console.log(key);
-            console.log(table);
             return(
               <div className='statspage-table-wrapper flex' key={index}>
                   <div className='statpage-data start'>{table.startTime}</div>

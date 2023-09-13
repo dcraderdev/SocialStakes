@@ -25,44 +25,47 @@
 }
 
 .table-button-container.menu{
-  right: 10px;
-  top: 8px;
+  right: 15px;
+  top: 18px;
   z-index: 1000000;
 
 }
 
 
 .table-button-container.home {
-  right: 10px;
-  top: 55px;
+  right: 15px;
+  top: 65px;
 }
 
 .table-button-container.chat{
-  left: 10px;
-  top: 8px;
+  /* left: 20px; */
+  margin-left: 1%;
+  top: 18px;
   z-index: 1000000;
 
 }
 
 
 .table-button-container.leave{
-  right: 10px;
-  top: 102px;
+  right: 15px;
+  top: 112px;
 }
 
 .table-button-container.money{
   left: 10px;
-  top: 102px;
+  top: 112px;
 }
 
 .table-button-container.theme{
-  left: 10px;
-  top: 55px;
+  /* left: 10px; */
+  margin-left: 1%;
+
+  top: 65px;
 }
 
 .table-button-container.settings{
   left: 10px;
-  top: 149px;
+  top: 159px;
 }
 
 

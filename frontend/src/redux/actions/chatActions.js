@@ -20,7 +20,6 @@ export const addMessageAction = (messageObj) => {
   };
 };
 export const addPayoutMessageAction = (payout) => {
-  console.log(payout);
   return {
     type: ADD_PAYOUT_MESSAGE,
     payload: payout

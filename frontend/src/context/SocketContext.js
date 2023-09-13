@@ -108,8 +108,8 @@ const SocketProvider = ({ children }) => {
       socket.on('view_table', (tableObj) => {
         dispatch(viewTableAction(tableObj));
         dispatch(showConversationAction(tableObj));
-
       }); 
+
 
       socket.on('join_table', (table) => {
         dispatch(joinTableAction(table));
@@ -137,23 +137,17 @@ const SocketProvider = ({ children }) => {
         // console.log('_+_+_+_+_+_+_+_+_+_+_+');
         // console.log('_+_+_+_+_+_+_+_+_+_+_+');
 
-        if(updateObject.resetRoomForNextHand){
-          // console.log('resetRoomForNextHand');
-          // console.log('resetRoomForNextHand');
-          // console.log('resetRoomForNextHand');
-          // console.log('resetRoomForNextHand');
-          // console.log('resetRoomForNextHand');
-        }
+
         dispatch(updateTableAction(updateObject)); 
       }); 
 
       socket.on('new_payout', (messageObj) => {
-        console.log(messageObj);
+        // console.log(messageObj);
         dispatch(addPayoutMessageAction(messageObj));
       });
 
       socket.on('new_message', (messageObj) => {
-        console.log(messageObj);
+        // console.log(messageObj);
         dispatch(addMessageAction(messageObj));
       });
 
@@ -179,6 +173,7 @@ const SocketProvider = ({ children }) => {
 
 
       socket.on('new_bet', (betObj) => {
+        console.log(betObj);
         dispatch(addBetAction(betObj)); 
       });  
 
@@ -203,7 +198,7 @@ const SocketProvider = ({ children }) => {
         dispatch(playerDisconnectAction({seat, tableId, timer})); 
       });  
 
-      socket.on('player_reconnected', ({seat, tableId, timer}) => {
+      socket.on('player_reconnected', ({seat, tableId, convoId, timer}) => {
         dispatch(playerReconnectAction({seat, tableId, timer})); 
       });  
 

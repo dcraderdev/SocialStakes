@@ -15,7 +15,7 @@ import pokerChip from '../../images/poker-chip.svg'
 import pokerChipWithDollarSign from '../../images/poker-chip-with-dollar-sign.svg'
 import PokerChip from '../PokerChip';
 
-import bluePokerChip from '../../images/blue-poker-chip.svg'
+import bluePokerChip from '../../images/blue_chip.png'
 
 
 
@@ -148,7 +148,7 @@ useEffect(()=>{
     }
 
     let countdownInterval = null;
-    let countdownRemaining = Math.ceil((currentTables[activeTable.id].actionEnd - Date.now()) / 1000);
+    let countdownRemaining = Math.ceil((currentTables[activeTable.id].actionEndTimeStamp - Date.now()) / 1000);
 
     let currUser = currentTables[activeTable.id]?.tableUsers?.[seatNumber]
 
@@ -214,6 +214,7 @@ useEffect(()=>{
 
     if(hands && actionHand && hands[actionHand] && hands[actionHand].cards){
 
+      
 
       let summary = handSummary(hands[actionHand].cards)
 
@@ -271,6 +272,10 @@ useEffect(()=>{
 
 
     if(currentTables && activeTable){
+
+
+      console.log(currentTables[activeTable.id]);
+
       let currMinBet = currentTables[activeTable.id].Game.minBet
       setUpdateObj({minBet:currMinBet, seatNumber, type:'initDeposit'})
       openModal('balanceModal')

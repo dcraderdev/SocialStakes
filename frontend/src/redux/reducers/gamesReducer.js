@@ -151,11 +151,12 @@ const gamesReducer = (state = initialState, action) => {
 
 
       if (updatedCurrentTables[tableId]) {
+
         const currentTable = updatedCurrentTables[tableId];
 
         currentTable.tableUsers = table.seats
-        currentTable.countdownEnd = table.countdownEnd;
-        currentTable.actionEnd = action.payload.table.actionEnd;
+        currentTable.dealCardsTimeStamp = table.dealCardsTimeStamp;
+        currentTable.actionEndTimeStamp = action.payload.table.actionEndTimeStamp;
         // currentTable.dealerCards = action.payload.table.dealerCards?.visibleCards;
         // currentTable.actionSeat = action.payload.table.actionSeat;
         // currentTable.actionTimer = action.payload.table.actionTimer;
@@ -191,41 +192,12 @@ const gamesReducer = (state = initialState, action) => {
     }
 
     case JOIN_TABLE:{
+
       let newCurrentTables = {...newState.currentTables}
       newCurrentTables[action.payload.id] = action.payload
       newCurrentTables[action.payload.id].messages = []
       return {...newState, currentTables: newCurrentTables}
     }
-
-    // case LEAVE_TABLE: {
-    //   let newCurrentTables = { ...newState.currentTables };
-    //   let activeTable = { ...newState.activeTable}
-
-    //   delete newCurrentTables[action.payload];
-
-    //   if(newState.showCreatingGame){
-    //     return { ...newState, currentTables: newCurrentTables, showGames: false, showTables: false, showCreatingGame:true };
-    //   }
-    //   if(newState.showTables){
-    //     return { ...newState, currentTables: newCurrentTables, activeTable, showGames: false, showTables: true, showCreatingGame:false };
-    //   }
-
-    //   // if active table still exists dont switch
-    //   if(newCurrentTables[activeTable.id]){
-    //     return { ...newState, currentTables: newCurrentTables, activeTable};
-    //   } else {
-    //   //Check if any tables left, if so switch to the first one
-    //   const tableIds = Object.keys(newCurrentTables);
-    //   let activeTable = null;
-    //   if (tableIds.length > 0) {
-    //       activeTable = newCurrentTables[tableIds[0]];
-    //       return { ...newState, currentTables: newCurrentTables, activeTable };
-    //   }
-
-
-    //   return { ...newState, currentTables: newCurrentTables, activeTable, showGames: true, showTables: false, showCreatingGame:false };
-    //   }
-    // }
 
 
     case LEAVE_TABLE: {
@@ -235,6 +207,11 @@ const gamesReducer = (state = initialState, action) => {
       if(newState.showCreatingGame){
         return { ...newState, currentTables: newCurrentTables, activeTable:null, showGames: false, showTables: false, showCreatingGame: true };
       }
+
+      if(newState.showGames){
+        return { ...newState, currentTables: newCurrentTables, activeTable:null, showGames: true, showTables: false, showCreatingGame: false };
+      }
+
       if(newState.showTables){
         return { ...newState, currentTables: newCurrentTables, activeTable:null, showGames: false, showTables: true, showCreatingGame: false };
       }
@@ -308,6 +285,8 @@ const gamesReducer = (state = initialState, action) => {
 
     case ADD_BET: {
       const { bet, tableId, seat } = action.payload;
+
+      console.log(action.payload);
     
       const newCurrentTables = { ...newState.currentTables };
       const newCurrentTable = { ...newCurrentTables[tableId] };
@@ -415,28 +394,31 @@ const gamesReducer = (state = initialState, action) => {
 
     case UPDATE_TABLE_COUNTDOWN: {
 
-      const {countdownEnd, tableId} = action.payload;
-
+      
+      const {dealCardsTimeStamp, tableId} = action.payload;
+      
       
       const newCurrentTables = { ...newState.currentTables };
       const newCurrentTable = { ...newCurrentTables[tableId] };
-
-
-      newCurrentTable.countdownEnd = countdownEnd
+      
+      
+      newCurrentTable.dealCardsTimeStamp = dealCardsTimeStamp
       newCurrentTables[tableId] = newCurrentTable;
-
+      
+      console.log(newCurrentTable);
+      console.log(newCurrentTables);
       
       return { ...newState, currentTables: newCurrentTables };
     }
 
     case COLLECT_BETS: {
 
-      const {countdownEnd, tableId} = action.payload;
+      const {dealCardsTimeStamp, tableId} = action.payload;
       
       const newCurrentTables = { ...newState.currentTables };
       const newCurrentTable = { ...newCurrentTables[tableId] };
 
-      newCurrentTable.countdownEnd = countdownEnd
+      newCurrentTable.dealCardsTimeStamp = dealCardsTimeStamp
       newCurrentTables[tableId] = newCurrentTable;
 
       return { ...newState, currentTables: newCurrentTables };

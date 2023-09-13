@@ -368,8 +368,6 @@ async removeFriend(userId, friendObj){
     (existingFriendship.user1Id === friendId && existingFriendship.user2Id === userId)
   ) {
 
-    console.log(existingFriendship);
-console.log(existingFriendship.conversationId);
 
     const existingConversation = await Conversation.findByPk(existingFriendship.conversationId);
 

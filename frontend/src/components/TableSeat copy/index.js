@@ -99,7 +99,7 @@ const TableSeat = ({seatNumber}) => {
     }
 
     let countdownInterval = null;
-    let countdownRemaining = Math.ceil((currentTables[activeTable.id].actionEnd - Date.now()) / 1000);
+    let countdownRemaining = Math.ceil((currentTables[activeTable.id].actionEndTimeStamp - Date.now()) / 1000);
 
     let currUser = currentTables[activeTable.id]?.tableUsers?.[seatNumber]
 

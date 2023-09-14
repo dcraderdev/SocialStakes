@@ -6,14 +6,10 @@
   left: 0px;
   display: flex;
   flex-direction: column;
-
   border-right: rgba(0, 0, 0, 0.466) solid 1px;
-  
-
 }
 
 .creatinggameview-settings-container.extended {
-  width: 200px;
   height: calc(100%);
   position: absolute;
   top: 0px;
@@ -31,6 +27,7 @@
   display: flex;
   border-right: rgba(0, 0, 0, 0.466) solid 1px;
 }
+
 
 
 
@@ -609,4 +606,29 @@
   }
 }
 
+
+
+
+@media screen and (max-width: 500px) {
+  .creatinggameview-settings-container{
+    width: 150px;
+  }
+  
+
+
+  .creatinggameview-option-header{
+    font-size: 16px;
+  }
+
+  .creatinggameview-options-wrapper{
+    position: absolute;
+    width: calc(100% - 150px);
+    height: 100%;
+    left: 150px;
+    flex-direction: column;
+  
+  }
+  
+
+}
 

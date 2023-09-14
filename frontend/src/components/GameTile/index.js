@@ -117,4 +117,5 @@ const GameTile = ({game, cbFunc, delay, animateTiles}) => {
   ); 
 };
 
-export default GameTile;
+// export default GameTile;
+export default React.memo(GameTile);

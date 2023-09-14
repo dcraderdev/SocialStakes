@@ -1,7 +1,11 @@
 
 .tablesortbar-wrapper{
-  width: 98%;
-  left: 1%;
+  width: 100%;
+  width: 100vw;
+
+
+
+
   height: 35px;
   position: relative;
   background-color: #1d1e1c;
@@ -14,9 +18,9 @@
 
 .tablesortbar-container{
   justify-content: space-between;
-  width: 100%;
-  
-
+  width: 98%;
+  position: relative;
+  left: 1%;
 
 }
 
@@ -72,5 +76,18 @@
 @media screen and (min-width: 720px) {
   .tablesort-text{
     font-size: 20px;
+  }
+}
+
+
+
+
+@media screen and (max-width: 500px) {
+  .tablesortbar-header-container{
+    margin-left: 0px;
+    margin-right: 0px;
+  }
+  .arrow-container{
+    margin-left: 7px;
   }
 }

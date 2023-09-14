@@ -52,6 +52,8 @@ const Table = () => {
 
 
   const [tableName, setTableName] = useState('');
+  const [minBet, setMinBet] = useState('');
+  const [maxBet, setMaxBet] = useState('');
 
 
   const [isTableCreator, setIsTableCreator] = useState(false)
@@ -140,6 +142,9 @@ const Table = () => {
     }
 
     setTableName(currTable.tableName)
+    setMinBet(currTable.Game.minBet)
+    setMaxBet(currTable.Game.maxBet)
+    console.log(currTable);
 
 
     if(currTable.dealerCards){
@@ -157,7 +162,7 @@ const Table = () => {
 
 
 
-
+console.log(neonTheme);
 
 
 
@@ -293,7 +298,6 @@ const Table = () => {
         
         }
       </div>
-      <div className='table-countdown'>{countdown > 0 ? `Dealing in: ${countdown}`: ''}</div>
 
 
 
@@ -301,6 +305,7 @@ const Table = () => {
 
 
       <div className='dealer-cards flex center'>
+      <div className={`${neonTheme}-text table-countdown`}>{countdown > 0 ? `Dealing in: ${countdown}`: ''}</div>
 
         {cards && cards.map((card, index) => 
 
@@ -314,7 +319,17 @@ const Table = () => {
             </div>
           )}
       </div>
+      <div className={`table-description flex center`}>
+          <div className={`${neonTheme}-text`}>BLACKJACK</div>
+          <div className={`${neonTheme}-text`}>{tableName}</div>
+          <div className={`${neonTheme}-text`}>Blackjack pays 3 to 2 - Insurance pays 2 to 1</div>
 
+          
+          <div className={`${neonTheme}-text`}>${minBet} Min - ${maxBet} Max</div>
+          <div className={`${neonTheme}-text`}></div>
+
+
+      </div>
 
 
 

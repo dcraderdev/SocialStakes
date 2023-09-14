@@ -207,6 +207,7 @@ const SocketProvider = ({ children }) => {
       // });  
 
       socket.on('player_add_table_funds', (seatObj) => {
+        console.log(seatObj);
         dispatch(playerAddTableFundsAction(seatObj)); 
       });  
 

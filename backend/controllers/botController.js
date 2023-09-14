@@ -146,9 +146,10 @@ const botController = {
     const room = rooms[tableId];
 
     let minBet = rooms[tableId].Game.minBet;
-    let hasBalance = seat.tableBalance > minBet;
+    let hasBalance = seat.tableBalance > (minBet * 5);
 
     let bet = minBet;
+
 
     if (!hasBalance) {
       let room = tableId;
@@ -158,6 +159,7 @@ const botController = {
 
       const currUser = await User.findByPk(userId);
       let balanceNotInPlay = currUser.balance;
+ 
 
       if (balanceNotInPlay > this.buyInAmount) {
         amount = this.buyInAmount;
@@ -173,13 +175,20 @@ const botController = {
         return;
       }
 
-      if (addFunds) {
-        if (rooms[tableId] && rooms[tableId].seats[seat]) {
-          rooms[tableId].seats[seat].tableBalance += amount;
-        }
+      if (addFunds) { 
+        console.log('yes add funds');
+
+        if (rooms[tableId] && rooms[tableId].seats[seat.seat]) {
+          console.log('adding funds to seat',rooms[tableId].seats[seat.seat] );
+
+          rooms[tableId].seats[seat.seat].tableBalance += amount;
+        }  
+
+        console.log(rooms[tableId].seats[seat.seat]);
         io.in(room).emit('player_add_table_funds', seatObj);
+        emitUpdatedTable(io, tableId)
       }
-    }
+    } 
 
     // If handInProgress, dont add the bet
     if (room.handInProgress) {

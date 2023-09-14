@@ -144,12 +144,15 @@ const botController = {
     // make bet
 
     const room = rooms[tableId];
-
     let minBet = rooms[tableId].Game.minBet;
     let hasBalance = seat.tableBalance > (minBet * 5);
+    let hasPendingBet = seat.pendingBet > 0;
 
+    
+    if(hasPendingBet) return
+    
+    
     let bet = minBet;
-
 
     if (!hasBalance) {
       let room = tableId;

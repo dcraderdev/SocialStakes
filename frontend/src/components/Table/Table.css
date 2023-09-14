@@ -180,16 +180,29 @@
 
 }
 
-
+.black-text{
+  color: black;
+}
 
 
 .table-countdown{
-  left: 50%;
+  left: 55%;
   top: 30%;
   transform: translate(-50%, 0);
   position: absolute;
   width: 120px;
   height: 120px;
+}
+
+
+.table-description{
+  left: 50%;
+  top: calc(10% + 75px);
+  transform: translate(-50%, 0);
+  position: absolute;
+  width: 100vw;
+  height: 100px;
+  flex-direction: column;
 }
 
 
@@ -243,7 +256,7 @@
 
 .table-chatbox-header-container{
   border-bottom: rgb(255, 255, 255) solid 1px;
-  height: 60px;
+  height: 55px;
   width: 100%;
   position: relative;
   color: white;
@@ -262,7 +275,7 @@
   font-size: 20px;
 
   width: 80%;
-  margin-left: 20%;
+  margin-left: 5%;
   height: fit-content;
 
 

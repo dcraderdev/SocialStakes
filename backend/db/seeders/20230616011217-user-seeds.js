@@ -122,7 +122,7 @@ module.exports = {
         email: 'jeffrey.ma@user.io',
         username: 'Jeff Ma',
         hashedPassword: await bcrypt.hash('password', salt),
-        balance: 300000
+        balance: 50000000
     },
     {
         id:"e10d8de4-f4c8-4d28-9324-56aa9c924a84",
@@ -131,7 +131,7 @@ module.exports = {
         email: 'john.chang@user.io',
         username: 'John Chang',
         hashedPassword: await bcrypt.hash('password', salt),
-        balance: 300000
+        balance: 50000000
     },
     {
         id:"e10d8de4-f4c8-4d28-9324-56aa9c924a85",
@@ -140,7 +140,7 @@ module.exports = {
         email: 'bill.kaplan@user.io',
         username: 'Bill Kaplan',
         hashedPassword: await bcrypt.hash('password', salt),
-        balance: 300000
+        balance: 50000000
     },
     {
         id:"e10d8de4-f4c8-4d28-9324-56aa9c924a86",
@@ -149,7 +149,7 @@ module.exports = {
         email: 'mike.aponte@user.io',
         username: 'Mike Aponte',
         hashedPassword: await bcrypt.hash('password', salt),
-        balance: 300000
+        balance: 50000000
     },
     {
         id:"e10d8de4-f4c8-4d28-9324-56aa9c924a87",
@@ -158,7 +158,7 @@ module.exports = {
         email: 'jane.willis@user.io',
         username: 'Jane Willis',
         hashedPassword: await bcrypt.hash('password', salt),
-        balance: 300000
+        balance: 50000000
     },
     {
       id:"e10d8de4-f4c8-4d28-9324-56aa9c924a88",
@@ -167,7 +167,7 @@ module.exports = {
       email: 'semyon.dukach@user.io',
       username: 'Semyon Dukach',
       hashedPassword: await bcrypt.hash('password', salt),
-      balance: 300000
+      balance: 50000000
   }
     
 

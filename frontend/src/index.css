@@ -359,7 +359,10 @@ body{
   background: darkgrey; /* Color of the thumb of the scrollbar when hovered */
 }
 
-
+.main-logo-wrapper{
+  width: 100%;
+  height: 100%;
+}
 
 .loading-wrapper {
   position: fixed;

@@ -10,6 +10,8 @@
   bottom: 0;
   z-index: 10000000000;
   background-color: rgba(0, 0, 0, 0.5);
+  font-family: sans-serif;
+  
 }
 
 .modal-container-transparent {
@@ -23,6 +25,8 @@
   bottom: 0;
   z-index: 100;
   background-color: transparent;
+  font-family: sans-serif;
+
 }
 
 body{
@@ -47,6 +51,8 @@ body{
 
 
 }
+
+
 
 
 
@@ -294,6 +300,7 @@ body{
   z-index: 2;
   min-height: 250px; */
   filter: blur(400px);
+  
 }
 
 
@@ -305,9 +312,7 @@ body{
 
 
 
-*{
-  font-family: 'Montserrat', sans-serif;
-}
+
 
 
 .flex{
@@ -343,7 +348,9 @@ body{
 }
 
 
-
+/* *{
+  font-family: sans-serif;
+} */
 
 
 /* Styling the scrollbar */
@@ -373,6 +380,7 @@ body{
   height: 100vh;
   overflow: hidden;
   background-color: #131312;
+  background-color: black;
   z-index: 10000000;
   flex-direction: column;
 }

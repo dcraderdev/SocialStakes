@@ -87,7 +87,7 @@ const Table = () => {
     }
     setTimeout(() => {
       setIsLoaded(true)
-    }, 800);
+    }, 1000);
 
   }, [themes]);
 

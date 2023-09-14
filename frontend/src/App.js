@@ -97,9 +97,8 @@ function App() {
             <Logo />
           </div>
           <div className='main-logo-wrapper'>
-          
-          <LoadingBar isLoaded={setFillBar} />
-        </div>
+            <LoadingBar isLoaded={setFillBar} />
+          </div>
         </div>
  
 

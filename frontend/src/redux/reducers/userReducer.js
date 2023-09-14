@@ -38,12 +38,17 @@ const userReducer = (state = initialState, action) => {
         return acc
       },{})
 
+      console.log(themes);
+      console.log(themes[themes.length - 1]);
+
       return {
         ...newState,
         themes: themes,
+        tableTheme: 'Authentic'
       };   
     }
     case CHANGE_TABLE_THEME:{
+      console.log(action.payload);
       return {
         ...newState,
         tableTheme: action.payload,

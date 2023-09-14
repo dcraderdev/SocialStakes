@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useContext } from 'react';
+import React, { useState, useRef, useEffect, useContext, useMemo } from 'react';
 import { Route, Router, Switch, NavLink, Link,useHistory, useParams} from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import './Table.css'
@@ -26,6 +26,8 @@ import {
  } from '../../redux/actions/gameActions';
 import Chatbox from '../Chatbox';
 import ChatInputArea from '../ChatInputArea';
+import Logo from '../Logo';
+import LoadingBar from '../LoadingBar';
 
 
 
@@ -42,7 +44,7 @@ const Table = () => {
   const showMessages = useSelector((state) => state.games.showMessages);
   const conversations = useSelector((state) => state.chats.conversations);
 
-
+  const [isLoaded, setIsLoaded] = useState(false)
   
   const [countdown, setCountdown] = useState(null);
   const [cards, setCards] = useState([]);
@@ -78,16 +80,14 @@ const Table = () => {
     if(themes && Object.values(themes).length){
       let currThemes = Object.entries(themes)
 
-      
-
       currThemes.forEach(([key,src]) => {
         const img = new Image();
         img.src = src.url;
       });
-
-
     }
-
+    setTimeout(() => {
+      setIsLoaded(true)
+    }, 1000);
 
   }, [themes]);
 
@@ -144,7 +144,6 @@ const Table = () => {
     setTableName(currTable.tableName)
     setMinBet(currTable.Game.minBet)
     setMaxBet(currTable.Game.maxBet)
-    console.log(currTable);
 
 
     if(currTable.dealerCards){
@@ -162,9 +161,10 @@ const Table = () => {
 
 
 
-console.log(neonTheme);
 
-
+const tableImage = useMemo(() => {
+  return themes[tableTheme] && tableTheme !== 'None' ? <img src={themes[tableTheme].url} alt='table'></img> : null;
+}, [themes, tableTheme]);
 
 
 
@@ -197,6 +197,15 @@ console.log(neonTheme);
 
   return (
     <div className='table-wrapper'>
+
+<div className={`loading-wrapper flex center ${isLoaded ? 'fade-out' : ''}`}>
+          <div className='main-logo-wrapper fade-in-long'>
+            <Logo />
+          </div>
+          <div className='main-logo-wrapper'>
+            <LoadingBar isLoaded={true} />
+          </div>
+        </div>
 
 
 
@@ -292,10 +301,12 @@ console.log(neonTheme);
 
       <div className={`table-content ${neonTheme}`}>
         {themes[tableTheme] && 
+        // <div className='table-image-container'>
+        //  {tableTheme !== 'None' && <img src={themes[tableTheme].url} alt='table'></img>}
+        // </div>
         <div className='table-image-container'>
-         {tableTheme !== 'None' && <img src={themes[tableTheme].url} alt='table'></img>}
+          {tableImage}
         </div>
-        
         }
       </div>
 
@@ -347,4 +358,5 @@ console.log(neonTheme);
     </div>
   )
 }
-export default Table
+// export default Table
+export default React.memo(Table);

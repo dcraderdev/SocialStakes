@@ -24,47 +24,61 @@
   z-index: 1;
 }
 
-.table-button-container.menu{
-  right: 15px;
-  top: 18px;
-  z-index: 1000000;
 
+
+
+/* left side */
+.table-button-container.chat,
+.table-button-container.money,
+.table-button-container.theme,
+.table-button-container.settings{
+    /* left: 20px; */
+    margin-left: 1%;
 }
+
+
+
+/* right side */
+.table-button-container.menu,
+.table-button-container.home,
+.table-button-container.leave{
+  right: 15px;
+  
+}
+
+
+
+
+.table-button-container.menu{
+  top: 14px;
+  z-index: 1000000;
+}
+
 
 
 .table-button-container.home {
-  right: 15px;
-  top: 65px;
+  top: 63px;
 }
 
 .table-button-container.chat{
-  /* left: 20px; */
-  margin-left: 1%;
-  top: 18px;
+  top: 14px;
   z-index: 1000000;
-
 }
 
 
 .table-button-container.leave{
-  right: 15px;
   top: 112px;
 }
 
 .table-button-container.money{
-  left: 10px;
   top: 112px;
 }
 
 .table-button-container.theme{
-  /* left: 10px; */
-  margin-left: 1%;
-
-  top: 65px;
+  top: 63px;
 }
 
 .table-button-container.settings{
-  left: 10px;
   top: 159px;
 }
 
@@ -229,7 +243,7 @@
 
 .table-chatbox-header-container{
   border-bottom: rgb(255, 255, 255) solid 1px;
-  height: 50px;
+  height: 60px;
   width: 100%;
   position: relative;
   color: white;

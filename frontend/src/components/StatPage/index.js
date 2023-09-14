@@ -45,7 +45,7 @@ const StatPage = () => {
         hasCurrentTables ? '' : 'extended'
       } flex`}
     >
-      {/* <div className="statpage-top-container flex">
+      <div className="statpage-top-container flex">
         <div className="statpage-date-wrapper">date goes here</div>
 
         <div className="statpage-gametype-wrapper">gameType goes here</div>
@@ -85,7 +85,7 @@ const StatPage = () => {
 
           </div>
         )}
-      </div> */}
+      </div>
 
       <div className='comingsoon-wrapper'>
         <ComingSoonImage/>

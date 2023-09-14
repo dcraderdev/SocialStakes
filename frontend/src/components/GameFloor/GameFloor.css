@@ -160,22 +160,36 @@
   width: 100%;
   position: relative;
   justify-content: space-around;
+}
+
+@media screen and (max-width: 500px) {
+  .available-game-types-container{
+    justify-content: space-around;
+  }
 
 }
+
+
 
 .available-game-types{
   flex-direction: row;
   border-bottom: rgba(255, 217, 0, 0.466) solid .5px;
   border-top: rgba(255, 217, 0, 0.466) solid .5px;
   box-shadow: rgba(0, 0, 0, 0.5) 0px 3px 6px, rgba(0, 0, 0, 0.5) 0px 3px 6px;
-
   width: 15%;
   height: 50px;
   cursor: pointer;
-
   background-color: #1c1c1cfa;
+  color: white;
 
 }
+
+
+
+
+
+
+
 
 
 .creatinggame-wrapper{
@@ -197,7 +211,6 @@
 
 
 .gameicon-container{
-  color: white;
   font-size: 11px;
   text-align: center;
   flex-direction: column;
@@ -212,6 +225,7 @@
 .highlite {
   position: relative;  /* Add this */
   border: rgba(255, 217, 0, 0.466) solid 1px;
+  color: gold;
 
   &::after {
     content: "";
@@ -232,7 +246,9 @@
     );
     background-size: 100% 100%;
     animation: moveGradient 1s infinite linear;
+
   }
+  
 }
 
 @keyframes moveGradient {
@@ -279,4 +295,39 @@
     font-size: 15px;
   }
 
+}
+
+
+
+
+.mobile-available-game-types-container{
+  width: 100%;
+  width: 100vw;
+  position: relative;
+  left: -5px;
+
+  overflow-x: scroll;
+  overflow-y: hidden;
+  flex-direction: row;
+}
+
+.available-game-types.mobile-view{
+  flex-direction: row;
+  border-bottom: rgba(255, 217, 0, 0.466) solid .5px;
+  border-top: rgba(255, 217, 0, 0.466) solid .5px;
+  box-shadow: rgba(0, 0, 0, 0.5) 0px 3px 6px, rgba(0, 0, 0, 0.5) 0px 3px 6px;
+  width: 260px;
+  min-width: 100px;
+  padding: 2%;
+
+  height: 50px;
+  cursor: pointer;
+  background-color: #1c1c1cfa;
+
+
+}
+
+.gold-text {
+  color: gold;
+  background-color: gold;
 }

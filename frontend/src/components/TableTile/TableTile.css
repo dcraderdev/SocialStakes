@@ -1,23 +1,18 @@
 .tabletile-wrapper {
-  /* border: black solid 1px;
-  border-radius: 14px; */
   position: relative;
   display: flex;
   flex-direction: column;
   cursor: pointer;
-  width: 100%;
+  width: 100vw;
   height: 100px;
   box-shadow: rgba(0, 0, 0, 0.5) 0px 3px 6px, rgba(0, 0, 0, 0.5) 0px 3px 6px;
-  background-color: #28292b;
   background-color: #1d1e1c;
-
   border-bottom: rgba(255, 217, 0, 0.466) solid .5px;
   border-top: rgba(255, 217, 0, 0.466) solid .5px;
   opacity: 0;
-
-  
-
 }
+
+
 .tabletile-wrapper:last-child {
   margin-bottom: 10px;
 }
@@ -36,8 +31,9 @@
 
 .playercount-container {
   width: 100px;
-
 }
+
+
 .playercount-ring {
   border: #7a7b7c solid 3px;
   width: 90px;
@@ -114,9 +110,11 @@
 
 .betsize-container {
   position: relative;
+  position: absolute;
   justify-content: space-between;
-  right: 5px;
-  top: 35px;
+  right: 20px;
+  /* top: 35px; */
+  bottom: -10px;
   font-size: 25px;
   /* color: rgb(200, 57, 13); */
 
@@ -134,4 +132,70 @@
 
 .betsize-maxbet{
   margin-left: 5px;
+}
+
+
+
+@media screen and (max-width: 500px) {
+
+  .tabletile-wrapper {
+    width: 100vw;
+  }
+
+  .betsize-container {
+    right: 25px;
+    bottom: -10px;
+    font-size: 22px;
+
+  }
+
+
+
+  .status-playercount-container {
+    position: relative;
+    left: 5px;
+    width: calc(100% - 5px);
+  }
+
+  .status-container {
+    width: 25px;
+    min-width: 25px;
+
+  }
+
+
+  .playercount-ring {
+    border: #7a7b7c solid 3px;
+    width: 70px;
+    min-width: 70px;
+    height: 40px;
+    border-radius: 40px;
+    font-size: 20px;
+    color: #7a7b7c;
+  }
+
+
+
+  .game-deck-container {   
+    font-size: 20px;
+    width: calc(100% - 150px);
+    left: -10px;
+
+  }
+
+
+  .tablename-text{
+
+    width: 270px;
+    position: relative;
+
+
+
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-top: 15px;
+  }
+
 }

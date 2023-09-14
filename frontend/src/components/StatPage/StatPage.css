@@ -12,13 +12,14 @@
 
 
 .comingsoon-wrapper{
-  position: absolute;
-  width: 500px;
-  height: 500px;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%,-50%);
-  z-index: 10000;
+
+
+
+  position: fixed;
+  top: 55px;
+  left: 0px;
+  width: 100vw;
+  height: calc(100vh - 60px);
 
 }
 

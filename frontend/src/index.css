@@ -30,22 +30,11 @@
 }
 
 body{
-  /* background-color: rgba(100, 148, 237, 0.584); */
-  /* background-color: #803a34;
-  background-color: #803a34;*/
-  background-color: #2d2e2c;
-  background-color: #1d1e1c;
-  background-color: #1b1c1bfa;
   background-color: #282828fa;
-
-  /* background: radial-gradient(circle, rgba(111,112,110,1) 0%, rgba(31,32,30,1) 100%); */
   width: 99vw;
   overflow-x: hidden;
   overflow-y: scroll;
   height: 100%;
-
-  /* margin-top: 0;
-  padding-top: 0; */
   position: absolute;
   left: -10px;
 

@@ -10,6 +10,7 @@ import {
 
 import { SocketContext } from '../../context/SocketContext';
 import { ModalContext } from '../../context/ModalContext';
+import { WindowContext } from '../../context/WindowContext';
 
 import './GameFloor.css';
 
@@ -24,6 +25,7 @@ import PayoutChatbox from '../PayoutChatbox';
 function GameFloor() {
   const { socket } = useContext(SocketContext);
   const { openModal, setUpdateObj, updateObj } = useContext(ModalContext);
+  const { windowWidth } = useContext(WindowContext);
   const location = useLocation();
   const dispatch = useDispatch();
 
@@ -233,11 +235,7 @@ function GameFloor() {
 </div>
 
 
-
-
-
             )}
-
 
 
 
@@ -245,20 +243,53 @@ function GameFloor() {
             {/* SHOW AVAILABLE TABLES PER GAME TYPE */}
             {isLoaded && showTables && (
               <div className="available-tables-grid">
-                <div className="available-game-types-container flex center">
-                  {allGames &&
+
+
+
+                <div className={`flex ${windowWidth <= 500 ? ' mobile-available-game-types-container' : ' available-game-types-container'}`}>
+
+
+                  {allGames && windowWidth > 500 &&
+
+
+
                     Object.values(allGames).map((game, index) => (
                       <div
                         key={index}
-                        className={`flex available-game-types flex center ${
+                        className={`available-game-types flex center ${
                           currTables === game?.gameType ? ' highlite' : ''
                         }`}
                         onClick={() => checkTables(game?.gameType)}
                       >
                         {getIcon(game.gameType)}
                       </div>
+
+
+
                     ))}
+
+
+{allGames && windowWidth <= 500 &&
+                    Object.values(allGames).map((game, index) => (
+                      <div
+                        key={index}
+                        className={`available-game-types mobile-view flex center ${
+                          currTables === game?.gameType ? ' highlite gold-text' : ''
+                        }`}
+                        onClick={() => checkTables(game?.gameType)}
+                      >
+                        {getIcon(game.gameType)}
+                      </div>
+                    ))}
+
+
+
+
+
                 </div>
+
+
+
 
                 <TableSortBar/>
 

@@ -109,13 +109,6 @@ const Table = () => {
     let countdownInterval = null;
     let currTable = currentTables?.[activeTable?.id]
     if(!currTable) return
-console.log('<^><^><^><^><^><^><^><^><^><^><^><^><^><^><');
-console.log('<^><^><^><^><^><^><^><^><^><^><^><^><^><^><');
-console.log('<^><^><^><^><^><^><^><^><^><^><^><^><^><^><');
-    console.log(currTable);
-console.log('<^><^><^><^><^><^><^><^><^><^><^><^><^><^><');
-console.log('<^><^><^><^><^><^><^><^><^><^><^><^><^><^><');
-
 
     let countdownRemaining = Math.ceil((currTable.dealCardsTimeStamp - Date.now()) / 1000);
     let dealerCards = currTable.dealerCards
@@ -189,30 +182,12 @@ console.log('<^><^><^><^><^><^><^><^><^><^><^><^><^><^><');
       setUpdateObj({minBet:currMinBet, seatNumber:currentSeat, type:'addDeposit'})
       openModal('balanceModal')
     }
-    // setUpdateObj({minBet:activeTable.Game.minBet, seatNumber:currentSeat, type:'addDeposit'})
-    // openModal('balanceModal')
+
 };
 
 
 
-// useEffect(() => {
 
-//   if(showMessages){
-//     const handleClickOutside = (event) => {
-    
-  
-//       if (chatBoxRef.current && !chatBoxRef.current.contains(event.target)) {
-//         dispatch(toggleShowMessages())
-//       }
-//     };
-//     document.addEventListener('mousedown', handleClickOutside);
-//     return () => {
-//       document.removeEventListener('mousedown', handleClickOutside);
-//     };
-//   }
-
-
-// }, [showMessages]);
 
 
   return (
@@ -223,10 +198,6 @@ console.log('<^><^><^><^><^><^><^><^><^><^><^><^><^><^><');
       <div ref={chatBoxRef} className={`table-chatbox-wrapper ${showMessages ? ' visible' : ' hidden'}`}>
 
         <div className='table-chatbox-header-container flex'>
-
-
-        
-          
 
           <div className='table-chatbox-header'>
             {tableName}

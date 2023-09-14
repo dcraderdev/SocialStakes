@@ -197,14 +197,29 @@
 
 .table-description{
   left: 50%;
-  top: calc(10% + 75px);
+  top: calc(10% + 85px);
   transform: translate(-50%, 0);
   position: absolute;
   width: 100vw;
-  height: 100px;
+  height: 120px;
   flex-direction: column;
+  text-align: center;
 }
 
+.table-description > .large{
+  font-size: 25px;
+  width: 100%;
+  
+
+}
+
+.table-description > .med{
+  width: 100%;
+  font-size: 18px;
+
+
+
+}
 
 
 .seats-container{

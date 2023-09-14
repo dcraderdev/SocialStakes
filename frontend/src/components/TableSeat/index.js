@@ -273,9 +273,6 @@ useEffect(()=>{
 
     if(currentTables && activeTable){
 
-
-      console.log(currentTables[activeTable.id]);
-
       let currMinBet = currentTables[activeTable.id].Game.minBet
       setUpdateObj({minBet:currMinBet, seatNumber, type:'initDeposit'})
       openModal('balanceModal')
@@ -326,7 +323,7 @@ return(
 
 <div className='tableseat-bet-area flex center'>
       {disconnectTimer > 0 && (<div className='disconnect-timer flex center'>{disconnectTimer}s</div>)}
-      {actionTimer > 0 && isActiveSeat && (<div className='turn-timer flex center'>{actionTimer}s</div>)}
+      {actionTimer > 0 && isActiveSeat && (<div className={`turn-timer flex center ${neonTheme}-text`}>{actionTimer}s</div>)}
 
 
         {pendingBet > 0 &&             

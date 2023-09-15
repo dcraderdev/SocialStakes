@@ -9,11 +9,12 @@
 
 .seat-wrapper {
   width: 15%;
-  height: 40vh;
+  height: 30vh;
   position: relative;
   z-index: 1;
   flex-direction: column;
   font-family: sans-serif;
+  border: red solid 1px;
 }
 
 
@@ -38,6 +39,14 @@
 }
 
 
+.turn-timer{
+  border: red solid 1px;
+  height: 30px;
+  width: 100%;
+  position: absolute;
+  top: 150%;
+
+}
 
 
 
@@ -215,14 +224,6 @@
 
 
 
-.turn-timer,
-.disconnect-timer {
-  height: 100px;
-  width: 100px;
-  position: absolute;
-  bottom: 0px;
-  left: 100px;
-}
 
 
 

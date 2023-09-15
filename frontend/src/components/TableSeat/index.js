@@ -323,7 +323,7 @@ return(
 
 <div className='tableseat-bet-area flex center'>
       {disconnectTimer > 0 && (<div className='disconnect-timer flex center'>{disconnectTimer}s</div>)}
-      {actionTimer > 0 && isActiveSeat && (<div className={`turn-timer flex center ${neonTheme}-text`}>{actionTimer}s</div>)}
+      {/* {actionTimer > 0 && isActiveSeat && (<div className={`turn-timer flex center ${neonTheme}-text`}>{actionTimer}s</div>)} */}
 
 
         {pendingBet > 0 &&             
@@ -374,7 +374,7 @@ return(
         </div>
         }
 
-                <div className={`tableseat-hand-cards flex center ${handId === actionHand ? ' bigger' : ''}`} key={handId}>
+                <div className={`tableseat-hand-cards flex center`} key={handId}>
                   {handData.cards.map((card, index) => (
                         <div 
                         className={`cardarea-card-container`} 
@@ -405,8 +405,14 @@ return(
             <div className={`${neonTheme}-text name-space`}>{player.username}</div>
             <div className={`seat-tablebalance flex center ${neonTheme}-text`}>${currentBalance}</div>
           </div>
+
+          {!actionTimer && (<div className={`turn-timer flex center ${neonTheme}-text`}>sssss</div>)}
+
         </div>
       )}
+
+
+
 
 
 {!player && (

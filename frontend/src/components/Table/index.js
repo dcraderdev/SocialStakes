@@ -198,14 +198,30 @@ const tableImage = useMemo(() => {
   return (
     <div className='table-wrapper'>
 
-<div className={`loading-wrapper flex center ${isLoaded ? 'fade-out' : ''}`}>
+{/* <div className={`loading-wrapper flex center ${isLoaded ? 'fade-out' : ''}`}>
           <div className='main-logo-wrapper fade-in-long'>
             <Logo />
           </div>
           <div className='main-logo-wrapper'>
             <LoadingBar isLoaded={true} />
           </div>
+        </div> */}
+
+
+
+
+        <div className={`loading-wrapper flex center ${isLoaded ? 'fade-out' : ''}`}>
+          <div className='main-logo-wrapper flex center fade-in-long'>
+            <Logo />
+          </div>
+          <div className='main-loading-wrapper flex center'>
+            <LoadingBar isLoaded={true} />
+          </div>
         </div>
+
+
+
+
 
 
 

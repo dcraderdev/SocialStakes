@@ -93,10 +93,10 @@ function App() {
     <>
 
         <div className={`loading-wrapper flex center ${isLoaded ? 'fade-out' : ''}`}>
-          <div className='main-logo-wrapper fade-in-long'>
+          <div className='main-logo-wrapper flex center fade-in-long'>
             <Logo />
           </div>
-          <div className='main-logo-wrapper'>
+          <div className='main-loading-wrapper flex center'>
             <LoadingBar isLoaded={setFillBar} />
           </div>
         </div>

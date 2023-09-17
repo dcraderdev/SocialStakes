@@ -160,12 +160,22 @@
 
 
 .tableseat-hands-container{
-
+  position: relative;
+  left: 10%;
   height: 100%;
   width: 100%;
-
-
 }
+
+@media screen and (min-width: 700px) {
+
+  .tableseat-hands-container{
+    left: 0%;
+    justify-content: center;
+  }
+}
+
+
+
 
 
 .tableseat-hand-value{

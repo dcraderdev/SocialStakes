@@ -56,7 +56,12 @@ const PayoutChatbox = () => {
           {payoutMessages.map((message, index) => (
             <div key={index} className={`winnerchatbox-item-container flex ${index % 2 === 0 ? ' darker' : ' lighter'}`}>
               <div className={`winnerchatbox-item flex`}>{message.gameType}</div>
-              <div className={`winnerchatbox-item flex`}>{message.username}</div>
+              <div className={`winnerchatbox-item flex`}>
+                
+                
+                <div className={`winnerchatbox-item-username flex`}>{message.username}</div>
+                
+              </div>
 { windowWidth > 1000 &&             <div className={`winnerchatbox-item flex`}>{convertToReadableFormatShort(message.createdAt)}</div>}
               <div className={`winnerchatbox-item flex`}>${message.bet}</div>
               <div className={`winnerchatbox-item flex`}>${message.payout}</div>

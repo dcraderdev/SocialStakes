@@ -456,9 +456,9 @@ const blackjackController = {
           clearInterval(rooms[tableId].timerId);
           continue;
         }
-
+ 
         // Create action end timestamp
-        const actionDuration = 5000; // 5 seconds
+        const actionDuration = rooms[tableId].Game.actionTimer * 1000;
         rooms[tableId].actionEndTimeStamp = Math.ceil(Date.now() + actionDuration);
 
         // Set action seat
@@ -467,7 +467,7 @@ const blackjackController = {
 
 
         emitUpdatedTable(io, tableId)
-
+ 
         // If some, handle player turn
         if (tableId === 'be11a610-7777-7777-7777-7be11a610777') {      
           await botController.handleBotAction(io, tableId)

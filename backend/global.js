@@ -4,6 +4,7 @@ const roomInit = () => {
     roundId: null,
     actionSeat: null,
     actionHand: null,
+    actionTimer: null,
     dealCardsTimeStamp: null,
     actionEndTimeStamp: null,
     handInProgress: false,

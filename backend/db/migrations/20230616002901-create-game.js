@@ -63,6 +63,10 @@ module.exports = {
         type: Sequelize.INTEGER,
         defaultValue: 2
       },
+      actionTimer: {
+        type: Sequelize.INTEGER,
+        defaultValue: 15
+      },
       createdAt: {
         type: Sequelize.DATE,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')

@@ -1,16 +1,13 @@
 
 
-.progress {
-  --progress: 0%;
-  width: 80vw;        
-  min-width: 300px;   
-  max-width: 800px; 
-  height: 40px;
-  margin: 9em auto;
+.custom-progress {
+  --custom-progress: 0%;
+  width: 100%;        
+
+  height: 100%;
   border: 1px solid #fff;
   border: 1px solid rgb(96, 96, 96);
   border-radius: 40px;
-  padding: 12px 10px;
 
   /* padding-left: 20px;
   padding-right: 20px; */
@@ -20,10 +17,11 @@
   align-items: center;
   justify-content: center;
   z-index: 100000;
+  overflow: hidden;
 
 }
 
-.progress .bar {
+.custom-progress .custom-bar {
   width: var(--progress);
   border-radius: 40px;
 
@@ -36,7 +34,10 @@
   animation: 
     shine 4s ease-in infinite,
     end 1s ease-out 1 2s;
-  transition: width 1s 1s;
+  /* transition: width 1s 1s; */
+
+  transition: width var(--duration) linear; /* updated transition duration */
+
 }
 
 
@@ -49,14 +50,14 @@
 @keyframes end {
   /* 0%, 100% { box-shadow: 0 0 10px 0px orange; }
   50% { box-shadow: 0 0 15px 5px orange; } */
-  0%, 100% { box-shadow: 0 0 5px 3px rgba(255, 35, 35, 0.512); }
-  50% { box-shadow: 0 0 5px 5px rgba(255, 35, 35, 0.512) }
+  0%, 100% { box-shadow: 0 0 3px 1px rgba(255, 35, 35, 0.512); }
+  50% { box-shadow: 0 0 3px 3px rgba(255, 35, 35, 0.512) }
 }
 
 
 @media screen and (max-width: 700px) {
 
-  .progress {
-    height: 20px;
+  .custom-progress {
+    height: 50%;
   }
 }

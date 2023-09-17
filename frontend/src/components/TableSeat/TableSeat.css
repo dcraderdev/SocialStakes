@@ -14,7 +14,6 @@
   z-index: 1;
   flex-direction: column;
   font-family: sans-serif;
-  border: red solid 1px;
 }
 
 
@@ -40,8 +39,7 @@
 
 
 .turn-timer{
-  border: red solid 1px;
-  height: 30px;
+  height: 20px;
   width: 100%;
   position: absolute;
   top: 150%;

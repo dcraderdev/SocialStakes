@@ -89,7 +89,7 @@ const botController = {
     bots.forEach(async (user, index) => {
       let tableId = bellagioTableId;
       let seat = index + 1;
-      let amount = this.buyInAmount;
+      let amount = 100;
 
       await gameController.removeUserFromTables(user.id);
 
@@ -179,15 +179,10 @@ const botController = {
       }
 
       if (addFunds) { 
-        console.log('yes add funds');
-
         if (rooms[tableId] && rooms[tableId].seats[seat.seat]) {
-          console.log('adding funds to seat',rooms[tableId].seats[seat.seat] );
-
           rooms[tableId].seats[seat.seat].tableBalance += amount;
         }  
 
-        console.log(rooms[tableId].seats[seat.seat]);
         io.in(room).emit('player_add_table_funds', seatObj);
         emitUpdatedTable(io, tableId)
       }
@@ -404,7 +399,6 @@ const botController = {
   // Handle player stay action
   async playerStay(actionObj) {
     const { tableId, action, seat, handId } = actionObj;
-    console.log('playerStay');
 
     // Update hand to show no more decisions need to be made for the gameLoop
     let playersHand = rooms[tableId].seats[seat].hands[handId];

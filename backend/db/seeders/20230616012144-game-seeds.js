@@ -26,6 +26,7 @@ module.exports = {
           bigBlind: 0,
           minBet: 1,
           maxBet: 50,
+          actionTimer: 15,
         },
         {
           id: 'blackjack_4_deck_low_stakes_multi',
@@ -41,6 +42,7 @@ module.exports = {
           bigBlind: 0,
           minBet: 1,
           maxBet: 200,
+          actionTimer: 15,
         },
         {
           id: 'blackjack_6_deck_low_stakes_multi',
@@ -56,6 +58,7 @@ module.exports = {
           bigBlind: 0,
           minBet: 1,
           maxBet: 500,
+          actionTimer: 15,
         },
 
         {
@@ -72,6 +75,7 @@ module.exports = {
           bigBlind: 0,
           minBet: 25,
           maxBet: 1250,
+          actionTimer: 15,
         },
         {
           id: 'blackjack_4_deck_mid_stakes_multi',
@@ -87,6 +91,7 @@ module.exports = {
           bigBlind: 0,
           minBet: 1,
           maxBet: 5000,
+          actionTimer: 15,
         },
         {
           id: 'blackjack_6_deck_mid_stakes_multi',
@@ -102,6 +107,7 @@ module.exports = {
           bigBlind: 0,
           minBet: 25,
           maxBet: 12500,
+          actionTimer: 15,
         },
 
         {
@@ -118,6 +124,7 @@ module.exports = {
           bigBlind: 0,
           minBet: 100,
           maxBet: 5000,
+          actionTimer: 15,
         },
         {
           id: 'blackjack_4_deck_high_stakes_multi',
@@ -133,6 +140,7 @@ module.exports = {
           bigBlind: 0,
           minBet: 100,
           maxBet: 25000,
+          actionTimer: 15,
         },
         {
           id: 'blackjack_6_deck_high_stakes_multi',
@@ -148,6 +156,7 @@ module.exports = {
           bigBlind: 0,
           minBet: 100,
           maxBet: 50000,
+          actionTimer: 15,
         },
 
         // SINGLE PLAYER BLACKJACK
@@ -165,6 +174,7 @@ module.exports = {
           bigBlind: 0,
           minBet: 1,
           maxBet: 50,
+          actionTimer: 15,
         },
         {
           id: 'blackjack_4_deck_low_stakes_single',
@@ -180,6 +190,7 @@ module.exports = {
           bigBlind: 0,
           minBet: 1,
           maxBet: 200,
+          actionTimer: 15,
         },
         {
           id: 'blackjack_6_deck_low_stakes_single',
@@ -195,6 +206,7 @@ module.exports = {
           bigBlind: 0,
           minBet: 1,
           maxBet: 500,
+          actionTimer: 15,
         },
 
         {
@@ -211,6 +223,7 @@ module.exports = {
           bigBlind: 0,
           minBet: 25,
           maxBet: 1250,
+          actionTimer: 15,
         },
         {
           id: 'blackjack_4_deck_mid_stakes_single',
@@ -226,6 +239,7 @@ module.exports = {
           bigBlind: 0,
           minBet: 1,
           maxBet: 5000,
+          actionTimer: 15,
         },
         {
           id: 'blackjack_6_deck_mid_stakes_single',
@@ -241,6 +255,7 @@ module.exports = {
           bigBlind: 0,
           minBet: 25,
           maxBet: 12500,
+          actionTimer: 15,
         },
 
         {
@@ -257,6 +272,7 @@ module.exports = {
           bigBlind: 0,
           minBet: 100,
           maxBet: 5000,
+          actionTimer: 15,
         },
         {
           id: 'blackjack_4_deck_high_stakes_single',
@@ -272,6 +288,7 @@ module.exports = {
           bigBlind: 0,
           minBet: 100,
           maxBet: 25000,
+          actionTimer: 15,
         },
         {
           id: 'blackjack_6_deck_high_stakes_single',
@@ -287,6 +304,7 @@ module.exports = {
           bigBlind: 0,
           minBet: 100,
           maxBet: 50000,
+          actionTimer: 15,
         },
 
         {
@@ -301,40 +319,8 @@ module.exports = {
           maxNumPlayers: 6,
           minBet: 5,
           maxBet: 100,
+          actionTimer: 15,
         },
-        // {
-        //   id: 'rouletteAmerican',
-        //   gameType: 'roulette',
-        //   variant: 'American',
-        //   decksUsed: 0,
-        //   active: false,
-        //   minNumPlayers: 1,
-        //   maxNumPlayers: 8,
-        //   minBet: 1,
-        //   maxBet: 200,
-        // },
-        // {
-        //   id: 'rouletteEuropean',
-        //   gameType: 'roulette',
-        //   variant: 'european',
-        //   decksUsed: 0,
-        //   active: false,
-        //   minNumPlayers: 1,
-        //   maxNumPlayers: 8,
-        //   minBet: 1,
-        //   maxBet: 200,
-        // },
-        // {
-        //   id: 'craps',
-        //   gameType: 'craps',
-        //   variant: 'craps',
-        //   active: false,
-        //   decksUsed: 0,
-        //   minNumPlayers: 1,
-        //   maxNumPlayers: 20,
-        //   minBet: 1,
-        //   maxBet: 100,
-        // },
         {
           id: 'pokerTexasHoldem',
           gameType: 'poker',
@@ -348,86 +334,8 @@ module.exports = {
           bigBlind: 2,
           minBet: 1,
           maxBet: 100,
+          actionTimer: 15,
         },
-        // {
-        //   id: 'pokerOmaha',
-        //   gameType: 'poker',
-        //   variant: 'omaha',
-        //   decksUsed: 1,
-        //   active: false,
-        //   minNumPlayers: 2,
-        //   maxNumPlayers: 9,
-        //   smallBlind: 1,
-        //   bigBlind: 2,
-        //   minBet: 1,
-        //   maxBet: 100,
-        // },
-        // {
-        //   id: 'baccarat',
-        //   gameType: 'baccarat',
-        //   variant: 'baccarat',
-        //   decksUsed: 8,
-        //   active: false,
-        //   minNumPlayers: 1,
-        //   maxNumPlayers: 14,
-        //   minBet: 5,
-        //   maxBet: 500,
-        // },
-        // {
-        //   id: 'threeCardPoker',
-        //   gameType: 'three_card_poker',
-        //   variant: 'poker',
-        //   decksUsed: 1,
-        //   active: false,
-        //   minNumPlayers: 1,
-        //   maxNumPlayers: 6,
-        //   minBet: 1,
-        //   maxBet: 100,
-        // },
-        // {
-        //   id: 'war',
-        //   gameType: 'war',
-        //   variant: 'war',
-        //   decksUsed: 1,
-        //   active: false,
-        //   minNumPlayers: 1,
-        //   maxNumPlayers: 2,
-        //   minBet: 1,
-        //   maxBet: 50,
-        // },
-        // {
-        //   id: 'superFun21',
-        //   gameType: 'super_fun_21',
-        //   variant: 'blackjack',
-        //   decksUsed: 8,
-        //   active: false,
-        //   minNumPlayers: 1,
-        //   maxNumPlayers: 5,
-        //   minBet: 5,
-        //   maxBet: 100,
-        // },
-        // {
-        //   id: 'crazy4Poker',
-        //   gameType: 'crazy_4_poker',
-        //   variant: 'poker',
-        //   decksUsed: 1,
-        //   active: false,
-        //   minNumPlayers: 1,
-        //   maxNumPlayers: 6,
-        //   minBet: 5,
-        //   maxBet: 200,
-        // },
-        // {
-        //   id: 'paiGowPoker',
-        //   gameType: 'pai_gow_poker',
-        //   variant: 'poker',
-        //   decksUsed: 1,
-        //   active: false,
-        //   minNumPlayers: 1,
-        //   maxNumPlayers: 6,
-        //   minBet: 5,
-        //   maxBet: 200,
-        // },
         {
           id: 'aceyDuecey',
           gameType: 'acey_duecey',
@@ -439,6 +347,7 @@ module.exports = {
           maxNumPlayers: 6,
           minBet: 1,
           maxBet: 2000,
+          actionTimer: 15,
         },
         {
           id: 'coinFlip',
@@ -451,6 +360,7 @@ module.exports = {
           maxNumPlayers: 2,
           minBet: 1,
           maxBet: 2000,
+          actionTimer: 15,
         },
         {
           id: 'hiLo',
@@ -463,6 +373,7 @@ module.exports = {
           maxNumPlayers: 6,
           minBet: 1,
           maxBet: 2000,
+          actionTimer: 15,
         },
       ],
       {}

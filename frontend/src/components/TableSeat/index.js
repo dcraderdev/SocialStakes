@@ -368,7 +368,7 @@ return(
         </div>
         }
 
-                <div className={`tableseat-hand-cards flex center`} key={handId}>
+                <div className={`tableseat-hand-cards flex`} key={handId}>
                   {handData.cards.map((card, index) => (
                         <div 
                         className={`cardarea-card-container`} 

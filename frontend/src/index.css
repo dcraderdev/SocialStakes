@@ -361,8 +361,18 @@ body{
 
 .main-logo-wrapper{
   width: 100%;
-  height: 100%;
+  height: 45%;
 }
+
+
+@media screen and (max-width: 500px) {
+  .main-logo-wrapper{
+    height: 40%;
+  }
+}
+
+
+
 
 .loading-wrapper {
   position: fixed;

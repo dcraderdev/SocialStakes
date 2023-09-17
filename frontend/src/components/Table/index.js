@@ -331,13 +331,12 @@ const tableImage = useMemo(() => {
           )}
       </div>
       <div className={`table-description flex center`}>
-          <div className={`${neonTheme}-text`}>BLACKJACK</div>
-          <div className={`${neonTheme}-text`}>{tableName}</div>
-          <div className={`${neonTheme}-text`}>Blackjack pays 3 to 2 - Insurance pays 2 to 1</div>
+          <div className={`large ${neonTheme}-text`}>BLACKJACK</div>
+          <div className={`large ${neonTheme}-text`}>{tableName}</div>
 
-          
-          <div className={`${neonTheme}-text`}>${minBet} Min - ${maxBet} Max</div>
-          <div className={`${neonTheme}-text`}></div>
+          <div className={` med ${neonTheme}-text`}>Dealer hits on soft 17</div>
+          <div className={` med ${neonTheme}-text`}>Blackjack pays 3:2 - Insurance pays 2:1</div>
+          <div className={` med ${neonTheme}-text`}>${minBet} Min - ${maxBet} Max</div>
 
 
       </div>

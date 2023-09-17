@@ -16,6 +16,8 @@ import pokerChipWithDollarSign from '../../images/poker-chip-with-dollar-sign.sv
 import PokerChip from '../PokerChip';
 
 import bluePokerChip from '../../images/blue_chip.png'
+import LoadingBarCustom from '../LoadingBarCustom';
+import LoadingBar from '../LoadingBar';
 
 
 
@@ -32,8 +34,7 @@ const TableSeat = ({seatNumber}) => {
   const neonTheme = useSelector(state=>state.users.neonTheme)
   const tableTheme = useSelector(state=>state.users.tableTheme)
 
-  const [disconnectTimer, setDisconnectTimer] = useState(0)
-  const [actionTimer, setActionTimer] = useState(0)
+
   const [pendingBet, setPendingBet] = useState(0)
   const [currentBet, setCurrentBet] = useState(0)
   const [allCurrentBets, setAllCurrentBets] = useState(0)
@@ -56,13 +57,11 @@ const TableSeat = ({seatNumber}) => {
   const [actionHand, setActionHand] = useState(null);
   const [isHandInProgress, setIsHandInProgress] = useState(false);
   const [isForfeited, setIsForfeited] = useState(false);
-  const [testBets, aaaaaa] = useState([1]);
 
-  const [testCards, bbbbb] = useState({1:{cards:[1,1,1,1]},2:{cards:[1,1]},3:{cards:[1,1]},4:{cards:[1,1]}});
-  // const [testCards, bbbbb] = useState({});
-  // const [testCards, bbbbb] = useState({1:{cards:[1,1,1,1]},2:{cards:[1,1]}});
-  
-  // const [testCards, bbbbb] = useState({1:{cards:[1,1,1,1]}});
+  const [disconnectTimer, setDisconnectTimer] = useState(0)
+
+  const [endTimeStamp, setEndTimeStamp] = useState(0)
+  const [totalTime, setTotalTime] = useState(0)
 
 
   const [tableBalance, setTableBalance] = useState(0)
@@ -147,11 +146,14 @@ useEffect(()=>{
       return;
     }
 
-    let countdownInterval = null;
-    let countdownRemaining = Math.ceil((currentTables[activeTable.id].actionEndTimeStamp - Date.now()) / 1000);
+
+    let tableAtionTimer = currentTables[activeTable.id]?.Game?.actionTimer
+    let tableEndTimeStamp = currentTables[activeTable.id].actionEndTimeStamp
+
+
+
 
     let currUser = currentTables[activeTable.id]?.tableUsers?.[seatNumber]
-
     let userDisconnectTimer = currUser?.disconnectTimer;
     let userPendingBet = currUser?.pendingBet;
     let userInsuranceBet = currUser?.insurance;
@@ -184,20 +186,10 @@ useEffect(()=>{
     }
 
 
-    if (countdownRemaining > 0) {
-      setActionTimer(countdownRemaining);
-      countdownInterval = setInterval(() => {
-        setActionTimer((prevCountdown) => prevCountdown && prevCountdown > 1 ? prevCountdown - 1 : null);
-      }, 1000);
-    } else {
-      setActionTimer(null);
-    }
+    setEndTimeStamp(tableEndTimeStamp);
+    setTotalTime(tableAtionTimer);
+
   
-    return () => {
-      if (countdownInterval) clearInterval(countdownInterval);
-    };
-
-
 
   }, [currentTables, activeTable, seatNumber]);
 
@@ -273,9 +265,6 @@ useEffect(()=>{
 
     if(currentTables && activeTable){
 
-
-      console.log(currentTables[activeTable.id]);
-
       let currMinBet = currentTables[activeTable.id].Game.minBet
       setUpdateObj({minBet:currMinBet, seatNumber, type:'initDeposit'})
       openModal('balanceModal')
@@ -318,6 +307,8 @@ useEffect(()=>{
   };
 
 
+
+
 return(
 
     <div className={`seat-wrapper seat${seatNumber} flex center`}>
@@ -326,7 +317,7 @@ return(
 
 <div className='tableseat-bet-area flex center'>
       {disconnectTimer > 0 && (<div className='disconnect-timer flex center'>{disconnectTimer}s</div>)}
-      {actionTimer > 0 && isActiveSeat && (<div className='turn-timer flex center'>{actionTimer}s</div>)}
+      {/* {actionTimer > 0 && isActiveSeat && (<div className={`turn-timer flex center ${neonTheme}-text`}>{actionTimer}s</div>)} */}
 
 
         {pendingBet > 0 &&             
@@ -377,7 +368,7 @@ return(
         </div>
         }
 
-                <div className={`tableseat-hand-cards flex center ${handId === actionHand ? ' bigger' : ''}`} key={handId}>
+                <div className={`tableseat-hand-cards flex`} key={handId}>
                   {handData.cards.map((card, index) => (
                         <div 
                         className={`cardarea-card-container`} 
@@ -408,8 +399,17 @@ return(
             <div className={`${neonTheme}-text name-space`}>{player.username}</div>
             <div className={`seat-tablebalance flex center ${neonTheme}-text`}>${currentBalance}</div>
           </div>
+
+          {isActiveSeat && (<div className={`turn-timer flex center`}>
+            
+            <LoadingBarCustom totalTime={totalTime} endTimeStamp={endTimeStamp}/>
+          </div>)}
+
         </div>
       )}
+
+
+
 
 
 {!player && (

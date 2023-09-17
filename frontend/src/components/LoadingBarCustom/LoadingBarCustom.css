@@ -1,0 +1,63 @@
+
+
+.custom-progress {
+  --custom-progress: 0%;
+  width: 100%;        
+
+  height: 100%;
+  border: 1px solid #fff;
+  border: 1px solid rgb(96, 96, 96);
+  border-radius: 40px;
+
+  /* padding-left: 20px;
+  padding-right: 20px; */
+  box-shadow: 0 0 10px #aaa;
+  top: 50%;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  z-index: 100000;
+  overflow: hidden;
+
+}
+
+.custom-progress .custom-bar {
+  width: var(--progress);
+  border-radius: 40px;
+
+  height: 100%;
+  background: linear-gradient(gold, #c85, gold);
+  background: linear-gradient(rgb(165, 3, 0), rgb(193, 3, 0), rgb(165, 3, 0));
+  background-repeat: repeat;
+  box-shadow: 0 0 10px 0px orange;
+  box-shadow: 0 0 10px 0px red;
+  animation: 
+    shine 4s ease-in infinite,
+    end 1s ease-out 1 2s;
+  /* transition: width 1s 1s; */
+
+  transition: width var(--duration) linear; /* updated transition duration */
+
+}
+
+
+
+@keyframes shine {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 50px; }
+}
+
+@keyframes end {
+  /* 0%, 100% { box-shadow: 0 0 10px 0px orange; }
+  50% { box-shadow: 0 0 15px 5px orange; } */
+  0%, 100% { box-shadow: 0 0 3px 1px rgba(255, 35, 35, 0.512); }
+  50% { box-shadow: 0 0 3px 3px rgba(255, 35, 35, 0.512) }
+}
+
+
+@media screen and (max-width: 700px) {
+
+  .custom-progress {
+    height: 50%;
+  }
+}

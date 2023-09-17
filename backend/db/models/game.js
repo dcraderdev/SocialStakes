@@ -26,7 +26,8 @@ module.exports = (sequelize, DataTypes) => {
     bigBlind: DataTypes.INTEGER,
     minBet: DataTypes.INTEGER,
     maxBet: DataTypes.INTEGER,
-    rake: DataTypes.INTEGER
+    rake: DataTypes.INTEGER,
+    actionTimer: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Game',

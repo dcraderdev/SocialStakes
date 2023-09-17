@@ -45,6 +45,18 @@
   width: 30%;
 }
 
+.winnerchatbox-item-username{
+
+  width: 95%;
+
+  height: 100%;
+  white-space: nowrap;
+  overflow: hidden; 
+  text-overflow: ellipsis;
+  display: inline-block;
+  flex-shrink: 0; 
+}
+
 
 
 .winnerchatbox-item:first-child{

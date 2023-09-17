@@ -183,6 +183,8 @@ const botController = {
           rooms[tableId].seats[seat.seat].tableBalance += amount;
         }  
 
+
+      console.log('new balance:', rooms[tableId].seats[seat.seat]);
         io.in(room).emit('player_add_table_funds', seatObj);
         emitUpdatedTable(io, tableId)
       }

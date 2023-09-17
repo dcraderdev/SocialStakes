@@ -328,14 +328,11 @@ const botController = {
 
 
     // add delay
-    await new Promise((resolve) => setTimeout(resolve, 3000));
+    //if action is 'stay' we want to move along quickly
+    // let waitTime = Math.floor(Math.random() * 10000)
+    let waitTime = action === 'stay' ? 1000 : Math.floor(Math.random() * 10000)
+    await new Promise((resolve) => setTimeout(resolve, waitTime));
 
-
-    // // Reset the timer whenever a player takes an action
-    // if (rooms[tableId] && rooms[tableId].timerId) {
-    //   clearInterval(rooms[tableId].timerId);
-    //   rooms[tableId].actionEndTimeStamp = 0;
-    // }
 
       let playerBestValue = await bestValue(currentHand.summary.values);
       

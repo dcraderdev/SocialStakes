@@ -6,8 +6,18 @@ import PlayerBetOptions from '../PlayerBetOptions';
 import './Game.css'
 import ActiveGameBar from '../ActiveGameBar';
 
+import { WindowContext } from '../../context/WindowContext';
+
 
 const Game = () => {
+
+  const {windowWidth, windowHeight} = useContext(WindowContext)
+
+  console.log(windowWidth);
+  console.log(windowHeight);
+  let isMobileView = windowHeight < 500
+
+
 
 
   return (
@@ -18,7 +28,14 @@ const Game = () => {
       </div>
  
       <Table />
-      <PlayerBetOptions /> 
+
+      {!isMobileView && (
+        <PlayerBetOptions /> 
+      )}
+
+      {!isMobileView && (
+        <PlayerBetOptions /> 
+      )}
 
     </div>
   )

@@ -1,29 +1,27 @@
 
 
-.comingsoon-container{
+.main-logo-container{
   color: white;
-  width: 100%;
+  width: 90%;
   height: 100%;
-  position: absolute;
+  position: relative;
   flex-direction: column;
 }
 
 
 
 
-.comingsoon-image-container{
-  height: fit-content;
-  width: fit-content;
-  position: absolute;
+.main-logo-image-container{
+
+  position: relative;
 
   left: 50%;
-  top: 15%;
   transform: translate(-50%,0);  
 
 }
 
 
-.comingsoon-image-container img{
+.main-logo-image-container img{
 
   height: 50vh;
   width: 100vw;
@@ -34,7 +32,7 @@
 
 
 
-.comingsoon-name{
+.main-logo-name{
   min-width: 200px;
   width: 100%;
   word-wrap: none;

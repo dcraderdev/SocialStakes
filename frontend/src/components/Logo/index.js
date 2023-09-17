@@ -5,12 +5,12 @@ import './Logo.css'
 const Logo = () => {
 
   return (
-    <div className='comingsoon-container flex'>
+    <div className='main-logo-container flex'>
 
 
-      <div className='comingsoon-image-container flex center'>
+      <div className='main-logo-image-container flex center'>
         <img src={socialstakesCards2} alt="cards"></img>
-        <div className='comingsoon-name flex center'>SOCIAL STAKES</div> 
+        <div className='main-logo-name flex center'>SOCIAL STAKES</div> 
       </div>
       
 

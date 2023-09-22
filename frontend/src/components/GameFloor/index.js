@@ -108,8 +108,6 @@ function GameFloor() {
 
 
 
-
-
   const getIcon = (gameType) => {
     if (gameType === 'multi_blackjack') {
       return (

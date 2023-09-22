@@ -169,8 +169,10 @@ const FriendsPage = () => {
         )}
 
         {showConversation && (
+          <div className="chatbox-chatinput-wrapper">
           <div className="chatbox-chatinput-container">
             <ChatInputArea />
+          </div>
           </div>
         )}
 

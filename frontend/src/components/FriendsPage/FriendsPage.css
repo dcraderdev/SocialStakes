@@ -8,7 +8,6 @@
   overflow: hidden;
   font-family: sans-serif;
 
-  
 }
 
 
@@ -45,8 +44,10 @@
   top: 0px;
 
   right: 0px;
-  width: calc(100vw - 200px);
+  width: calc(100vw - 203px);
   flex-direction: column;
+
+
 
 }
 
@@ -175,8 +176,7 @@
 
 
 
-
-.chatbox-chatinput-container{
+.chatbox-chatinput-wrapper{
 
   height: 40px;
   min-height: 40px;
@@ -186,8 +186,20 @@
   position: relative;
   top: 5px;
   border-top: 1px solid black;
-  border-left: 1px solid black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
+.chatbox-chatinput-container{
+
+  height: 40px;
+  min-height: 40px;
+  width: 95%;
+
+  position: relative;
+
+  border-top: 1px solid black;
 }
 
 
@@ -237,7 +249,7 @@
     width: 300px;
   }
   .friendspage-content-wrapper{
-    width: calc(100vw - 300px);
+    width: calc(100vw - 307px);
   }
   .nav-text{
     font-size: 20px;

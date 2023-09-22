@@ -151,8 +151,10 @@ const FriendsPage = () => {
             )}
 
             {currentFriendViewTab === currentFriendViewConversations && currentFriendView && (
+              <div className="chatbox-chatinput-wrapper">
               <div className="chatbox-chatinput-container">
                 <ChatInputArea />
+              </div>
               </div>
             )}
 

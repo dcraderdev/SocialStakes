@@ -32,6 +32,7 @@
 .chatinput-button{
   border-radius: 8px;
   width: 25%;
+  max-width: 200px;
   position: relative;
   cursor: pointer;
   height: 100%;

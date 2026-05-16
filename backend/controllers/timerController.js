@@ -55,12 +55,14 @@ const timerController = {
 
     }
 
-    // For any table that has bot seats and no hand in progress, let bots place bets
-    if (!room.handInProgress) {
-      const hasBotSeats = Object.values(room.seats).some((s) =>
-        botController.isBotUser(s.userId)
-      );
-      if (hasBotSeats) {
+    // For any table with bot seats and no hand/countdown in progress, let bots initiate betting
+    if (!room.handInProgress && !room.dealCardsTimeStamp) {
+      const seats = Object.values(room.seats);
+      const hasBotSeats = seats.some((s) => botController.isBotUser(s.userId));
+      const hasHumanSeats = seats.some((s) => !botController.isBotUser(s.userId));
+      // Only auto-bet when bots are present (Bellagio always, demo tables only with a human)
+      const shouldBotBet = hasBotSeats && (tableId === 'be11a610-7777-7777-7777-7be11a610777' || hasHumanSeats);
+      if (shouldBotBet) {
         await botController.startBotRound(io, tableId);
       }
     }

@@ -196,6 +196,7 @@ module.exports = function (io) {
       if (!rooms[tableId]) {
         await fetchUpdatedTable(tableId);
       }
+      if (!rooms[tableId]) return;
 
       // Add the player to the room
       rooms[tableId].seats[seat] = takeSeatObj;
@@ -292,11 +293,9 @@ module.exports = function (io) {
 
       // If the room doesnt exist create a new room
       if (!rooms[tableId]) {
-        let updatedTable = await gameController.getTableById(tableId);
-        rooms[tableId] = roomInit();
-        rooms[tableId].gameSessionId = updatedTable.gameSessions[0].id;
-        rooms[tableId].decksUsed = updatedTable.Game.decksUsed;
+        await fetchUpdatedTable(tableId);
       }
+      if (!rooms[tableId]) return;
 
       // If handInProgress, dont add the bet
       if (rooms[tableId].handInProgress) {

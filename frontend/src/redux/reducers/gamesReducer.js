@@ -286,18 +286,17 @@ const gamesReducer = (state = initialState, action) => {
     case ADD_BET: {
       const { bet, tableId, seat } = action.payload;
 
-      console.log(action.payload);
-    
       const newCurrentTables = { ...newState.currentTables };
       const newCurrentTable = { ...newCurrentTables[tableId] };
-    
+      if (!newCurrentTable.tableUsers?.[seat]) return newState;
+
       const playerSeat = { ...newCurrentTable.tableUsers[seat] };
-      playerSeat.pendingBet += bet;
-      playerSeat.tableBalance -= bet;
-    
+      playerSeat.pendingBet = (playerSeat.pendingBet || 0) + bet;
+      playerSeat.tableBalance = (playerSeat.tableBalance || 0) - bet;
+
       newCurrentTable.tableUsers[seat] = playerSeat;
       newCurrentTables[tableId] = newCurrentTable;
-    
+
       return { ...newState, currentTables: newCurrentTables };
     }
 

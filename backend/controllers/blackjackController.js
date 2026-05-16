@@ -332,7 +332,7 @@ const blackjackController = {
 
       io.in(room).emit('offer_insurance', tableId);
 
-      await new Promise((resolve) => setTimeout(resolve, 5000)); // Wait for 10 seconds
+      await new Promise((resolve) => setTimeout(resolve, 3000)); // Insurance decision window
       // socket.emit('remove_insurance_offer', tableId);
 
       io.in(room).emit('remove_insurance_offer', tableId);
@@ -1121,7 +1121,7 @@ async endRound(io, tableId) {
     // Update and clear player data
     this.updateAndClearPlayerData(player, totalWinnings);
 
-    await new Promise((resolve) => setTimeout(resolve, 3000));
+    await new Promise((resolve) => setTimeout(resolve, 1500));
 
     // Display any winnings going to tableBalance
     emitUpdatedTable(io, tableId)

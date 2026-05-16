@@ -402,7 +402,7 @@ const botController = {
     // add delay
     //if action is 'stay' we want to move along quickly
     // let waitTime = Math.floor(Math.random() * 10000)
-    let waitTime = action === 'stay' ? 1000 : Math.floor(Math.random() * 10000)
+    let waitTime = action === 'stay' ? 800 : Math.floor(Math.random() * 2500) + 500
     await new Promise((resolve) => setTimeout(resolve, waitTime));
 
 

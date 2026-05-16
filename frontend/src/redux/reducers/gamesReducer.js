@@ -403,10 +403,7 @@ const gamesReducer = (state = initialState, action) => {
       
       newCurrentTable.dealCardsTimeStamp = dealCardsTimeStamp
       newCurrentTables[tableId] = newCurrentTable;
-      
-      console.log(newCurrentTable);
-      console.log(newCurrentTables);
-      
+
       return { ...newState, currentTables: newCurrentTables };
     }
 

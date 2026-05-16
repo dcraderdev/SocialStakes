@@ -1,277 +1,453 @@
-/* ===== GameFloor layout — cleaned up, no hacked offsets ===== */
-
-.gamefloor-wrapper {
+.gamefloor-wrapper{
   width: 100%;
-  /* Clear the fixed nav bar (56px) with room to breathe */
-  padding-top: 72px;
+  position: relative;
+  top: 245px;
   font-family: sans-serif;
-  box-sizing: border-box;
+
 }
 
-.gamefloor-container {
+.gamefloor-container{
   width: 100%;
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 0 24px;
-  box-sizing: border-box;
   height: fit-content;
   position: relative;
-  /* Stack children vertically, horizontally centered */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 }
 
-/* Slight extra shift when actively viewing a table */
-.gamefloor-wrapper.table-view {
-  padding-top: 56px;
+.table-view{
+  top: 50px;
 }
 
-.game-view {
+
+
+.game-view{
   position: relative;
+  top: -5px;
+  left: 0px;
   height: calc(100vh - 65px);
-  width: 100%;
+  width: 99vw;
 }
 
 
-
-/* ===== Games grid (showGames state) ===== */
-
-.showgames-wrapper {
-  width: 100%;
+.showgames-wrapper{
+  position: relative;
+  top: -65px;
+  left: -10px;
   height: fit-content;
-  display: flex;
+  width: 99vw;
   flex-direction: column;
-  align-items: center;
+
 }
+
+
 
 .games-grid {
-  width: 100%;
+  position: relative;
+  left: 10px;
+
+
+
+  width: 95%;
   max-width: 1200px;
   display: grid;
+
+
   grid-template-columns: repeat(3, 1fr);
   grid-auto-rows: minmax(250px, 1fr);
-  gap: 40px;
+  grid-gap: 40px;
+  grid-row-gap: 30px;
+
+
+
+  
   transition: all 0.3s ease;
+
 }
 
-.winnerchatbox-wrapper {
-  width: 100%;
+.winnerchatbox-wrapper{
+  position: relative;
+  left: 10px;
+
+  width: 95%;
   max-width: 1200px;
   height: 400px;
   margin-top: 30px;
+
+
+
 }
 
 
 
-/* ===== Private game buttons ===== */
-
-.private-game-buttons {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 24px;
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px 0 16px;
-  box-sizing: border-box;
-}
-
-.private-game-button {
-  width: 280px;
-  height: 40px;
-  border-top: rgba(255, 217, 0, 0.466) solid .5px;
-  border-bottom: rgba(255, 217, 0, 0.466) solid .5px;
-  cursor: pointer;
-  box-shadow: rgba(0, 0, 0, 0.5) 0px 3px 6px;
-  color: #fdfcfc;
-  font-size: 16px;
-  background-color: #1c1c1cfa;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.private-game-button:hover {
-  box-shadow: rgba(0, 0, 0, 0) 0px 3px 6px;
-}
-
-
-
-/* ===== Available tables (showTables state) ===== */
 
 .available-tables-grid {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  grid-gap: 16px;
   width: 100%;
-  padding-top: 8px;
+  position: relative;
+  top: -80px;
+
+  position: absolute;
+  left: 0px;
+  left: calc(50% + 10px);
+  transform: translate(-51%,0);
+
 }
 
-.tables-coming-soon-container {
+.private-game-buttons{
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 80%;
+  height: 100px;
+  max-width: 1200px;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%,0);
+  top: -170px;
+}
+
+
+
+.private-game-button{
+  width: 40%;
+  height: 40px;
+  border-top: black solid 1px;
+  border-bottom: black solid 1px;
+  border-bottom: rgba(255, 217, 0, 0.466) solid .5px;
+  border-top: rgba(255, 217, 0, 0.466) solid .5px;
+  position: relative;
+  cursor: pointer;
+  box-shadow: rgba(0, 0, 0, 0.5) 0px 3px 6px, rgba(0, 0, 0, 0.5) 0px 3px 6px;
+
+  color: #fdfcfc;
+  font-size: 16px;
+
+  background-color: #1c1c1cfa;
+
+}
+
+
+.available-game-types:hover,
+.private-game-button:hover{
+  box-shadow: 0 -1px rgba(218, 165, 32, 0.277), 0 1px rgba(218, 165, 32, 0.272);
+  box-shadow: rgba(0, 0, 0) 0px 3px 6px, rgba(0, 0, 0) 0px 3px 6px;
+
+}
+
+
+
+
+
+
+.tables-coming-soon-container{
   width: 100%;
+
   height: calc(100vh - 400px);
-  min-height: 200px;
   font-size: 30px;
+
   color: white;
   border-bottom: rgba(255, 217, 0, 0.466) solid .5px;
   border-top: rgba(255, 217, 0, 0.466) solid .5px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
+  
 }
 
 
 
-/* ===== Game type tab selectors (visible only on mobile) ===== */
 
-.available-game-types-container {
+
+
+.available-game-types-container{
   width: 100%;
   position: relative;
   justify-content: space-around;
 }
 
-.available-game-types {
+@media screen and (max-width: 500px) {
+  .available-game-types-container{
+    justify-content: space-around;
+  }
+
+}
+
+
+
+.available-game-types{
   flex-direction: row;
   border-bottom: rgba(255, 217, 0, 0.466) solid .5px;
   border-top: rgba(255, 217, 0, 0.466) solid .5px;
-  box-shadow: rgba(0, 0, 0, 0.5) 0px 3px 6px;
+  box-shadow: rgba(0, 0, 0, 0.5) 0px 3px 6px, rgba(0, 0, 0, 0.5) 0px 3px 6px;
   width: 15%;
   height: 50px;
   cursor: pointer;
   background-color: #1c1c1cfa;
   color: white;
-}
 
-.available-game-types:hover,
-.private-game-button:hover {
-  box-shadow: rgba(0, 0, 0, 0) 0px 3px 6px;
-}
-
-.mobile-available-game-types-container {
-  width: 100%;
-  overflow-x: scroll;
-  overflow-y: hidden;
-  flex-direction: row;
-}
-
-.available-game-types.mobile-view {
-  flex-direction: row;
-  border-bottom: rgba(255, 217, 0, 0.466) solid .5px;
-  border-top: rgba(255, 217, 0, 0.466) solid .5px;
-  box-shadow: rgba(0, 0, 0, 0.5) 0px 3px 6px;
-  width: 260px;
-  min-width: 100px;
-  padding: 2%;
-  height: 50px;
-  cursor: pointer;
-  background-color: #1c1c1cfa;
 }
 
 
 
-/* ===== Creating game view ===== */
 
-.creatinggame-wrapper {
-  position: fixed;
-  top: 56px;
-  left: 0;
+
+
+
+
+
+.creatinggame-wrapper{
+  position: absolute;
+  left: -5px;
   width: 100vw;
-  height: calc(100vh - 56px);
+  top: -150px;
+  height: calc(100vh - 110px);
+
+
 }
 
-.creatinggame-wrapper.extended {
-  top: 56px;
-  height: calc(100vh - 56px);
+.creatinggame-wrapper.extended{
+  top: -200px;
+  height: calc(100vh - 60px);
 }
 
 
 
-/* ===== Game icons ===== */
 
-.gameicon-container {
+.gameicon-container{
   font-size: 11px;
   text-align: center;
   flex-direction: column;
 }
-
-.gameicon-text {
+.gameicon-text{
   margin-left: 5px;
   text-align: center;
 }
 
 
 
-/* ===== Highlighted game type (active selection) ===== */
-
 .highlite {
-  position: relative;
+  position: relative;  /* Add this */
   border: rgba(255, 217, 0, 0.466) solid 1px;
   color: gold;
 
   &::after {
     content: "";
     position: absolute;
-    top: -2px;
-    left: -2px;
-    right: -2px;
-    bottom: -2px;
+    top: -2px;          /* Adjust as needed */
+    left: -2px;         /* Adjust as needed */
+    right: -2px;        /* Adjust as needed */
+    bottom: -2px;       /* Adjust as needed */
     z-index: -1;
+
     border: var(--border-width) solid transparent;
-    background: linear-gradient(60deg, gold, goldenrod, gold, white);
+    background: linear-gradient(
+      60deg,
+      gold,
+      goldenrod,
+      gold,
+      white
+    );
     background-size: 100% 100%;
     animation: moveGradient 1s infinite linear;
+
   }
+  
 }
 
 @keyframes moveGradient {
-  50% { background-position: 100% 50%; }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+
+
+
+@media screen and (max-width: 600px) {
+  .games-grid {
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: 180px;
+    grid-gap: 16px;
+  }
+}
+
+
+@media screen and (min-width: 700px) {
+  .private-game-button{
+    font-size: 22px;
+  }
+
+  .gameicon-container{
+    font-size: 15px;
+  }
+
+}
+
+@media screen and (max-width: 700px) {
+  .private-game-buttons{
+    width: 90vw;
+    justify-content: space-around;
+  }
+
+  .private-game-button{
+    font-size: 16px;
+    width: 40vw;
+  }
+
+  .gameicon-container{
+    font-size: 15px;
+  }
+
+}
+
+
+
+
+/* ── Right-rail lobby layout ──────────────────────────────────────────────
+   All new class names — zero existing rules modified.
+
+   Structure inside .showgames-wrapper (flex column, align-items: center):
+     .wticker-bar       — full-width scrolling ticker
+     .lobby-body        — flex row: center games + right rail
+       .lobby-center    — game tiles + payout chatbox
+       .lobby-rail      — FriendsOnline + ProvablyFairCard (sticky)
+   ─────────────────────────────────────────────────────────────────────── */
+
+.lobby-body {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  width: 95%;
+  max-width: 1280px;
+  /* +10px compensates for showgames-wrapper's left: -10px */
+  position: relative;
+  left: 10px;
+}
+
+.lobby-center {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/*
+  Reset the legacy left:10px / width:95% that .games-grid and
+  .winnerchatbox-wrapper carry from their own rules when they live
+  inside our column wrapper. The theme.css !important overrides for
+  left and width already set these to 0/100%, so these rules are a
+  readable intent declaration even if they don't always win specificity.
+*/
+.lobby-center .games-grid {
+  left: 0;
+  width: 100%;
+}
+
+.lobby-center .winnerchatbox-wrapper {
+  left: 0;
+  width: 100%;
+}
+
+/* ── Right rail ──────────────────────────────────────────── */
+
+.lobby-rail {
+  width: 288px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  /* Stick below the nav bar while the center column scrolls past */
+  position: sticky;
+  top: 76px;
+  align-self: flex-start;
+  /* Slide in from the right on mount */
+  animation: rail-fadein 0.32s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: 0.08s;
+}
+
+@keyframes rail-fadein {
+  from { opacity: 0; transform: translateX(14px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* ── Responsive — stack below tiles ─────────────────────── */
+
+/* 1100-1280px: two-column layout still fits, just narrower */
+@media screen and (max-width: 1200px) {
+  .lobby-rail {
+    width: 260px;
+  }
+}
+
+/* < 1100px: switch to stacked; rail becomes a side-by-side pair */
+@media screen and (max-width: 1100px) {
+  .lobby-body {
+    flex-direction: column;
+    gap: 16px;
+  }
+  .lobby-rail {
+    width: 100%;
+    position: static;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 14px;
+    animation: none; /* already visible when stacked, skip slide-in */
+  }
+  .lobby-rail > * {
+    flex: 1;
+    min-width: 260px;
+  }
+}
+
+/* < 600px: single column, full width */
+@media screen and (max-width: 600px) {
+  .lobby-body {
+    left: 0;
+    width: 98%;
+  }
+  .lobby-rail {
+    flex-direction: column;
+  }
+  .lobby-rail > * {
+    min-width: unset;
+    flex: unset;
+  }
+}
+
+/* Respect reduced motion for the rail slide-in */
+@media (prefers-reduced-motion: reduce) {
+  .lobby-rail {
+    animation: none;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────── */
+
+.mobile-available-game-types-container{
+  width: 100%;
+  width: 100vw;
+  position: relative;
+  left: -5px;
+
+  overflow-x: scroll;
+  overflow-y: hidden;
+  flex-direction: row;
+}
+
+.available-game-types.mobile-view{
+  flex-direction: row;
+  border-bottom: rgba(255, 217, 0, 0.466) solid .5px;
+  border-top: rgba(255, 217, 0, 0.466) solid .5px;
+  box-shadow: rgba(0, 0, 0, 0.5) 0px 3px 6px, rgba(0, 0, 0, 0.5) 0px 3px 6px;
+  width: 260px;
+  min-width: 100px;
+  padding: 2%;
+
+  height: 50px;
+  cursor: pointer;
+  background-color: #1c1c1cfa;
+
+
 }
 
 .gold-text {
   color: gold;
-}
-
-
-
-/* ===== Responsive ===== */
-
-@media screen and (max-width: 900px) {
-  .games-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
-  }
-}
-
-/* Stack buttons vertically before they'd overflow (2×280 + 24gap = 584px) */
-@media screen and (max-width: 660px) {
-  .gamefloor-container {
-    padding: 0 12px;
-  }
-  .games-grid {
-    grid-template-columns: repeat(2, 1fr);
-    grid-auto-rows: 180px;
-    gap: 12px;
-  }
-  .private-game-buttons {
-    flex-direction: column;
-    gap: 12px;
-    padding: 16px 0 12px;
-  }
-  .private-game-button {
-    width: 85%;
-    max-width: 320px;
-    font-size: 16px;
-  }
-  .tables-coming-soon-container {
-    font-size: 22px;
-  }
-}
-
-@media screen and (min-width: 700px) {
-  .gameicon-container {
-    font-size: 15px;
-  }
+  background-color: gold;
 }

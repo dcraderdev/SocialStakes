@@ -1,0 +1,198 @@
+/* ── ProvablyFairCard ────────────────────────────────────────────── */
+
+.pfc-card {
+  display: flex;
+  flex-direction: column;
+  border-color: var(--ss-gold-line) !important;
+  background: linear-gradient(
+    150deg,
+    var(--ss-bg-elev) 0%,
+    rgba(229, 179, 76, 0.04) 100%
+  ) !important;
+}
+
+/* ── Header ─────────────────────────────────────────────── */
+
+.pfc-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.pfc-shield {
+  font-size: 18px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.pfc-header-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.pfc-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ss-gold);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.pfc-subtitle {
+  font-size: 10px;
+  color: var(--ss-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Live pill ───────────────────────────────────────────── */
+
+.pfc-live-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ss-green);
+  background: rgba(74, 222, 128, 0.08);
+  border: 1px solid rgba(74, 222, 128, 0.25);
+  border-radius: var(--ss-r-pill);
+  padding: 3px 8px;
+  flex-shrink: 0;
+}
+
+.pfc-live-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--ss-green);
+  flex-shrink: 0;
+  animation: pfc-blink 2s ease-in-out infinite;
+}
+
+@keyframes pfc-blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.3; }
+}
+
+/* ── Description ─────────────────────────────────────────── */
+
+.pfc-desc {
+  font-size: 12px;
+  color: var(--ss-text-dim);
+  line-height: 1.55;
+  margin: 0 0 12px;
+}
+
+/* ── Rolling block hash ──────────────────────────────────── */
+
+.pfc-hash-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--ss-gold-line);
+  border-radius: var(--ss-r-sm);
+  padding: 7px 10px;
+  margin-bottom: 12px;
+}
+
+.pfc-hash-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ss-text-muted);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.pfc-hash {
+  font-size: 11px;
+  color: var(--ss-gold);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* Fade-out class toggled by JS during hash rotation */
+.pfc-hash--fade {
+  opacity: 0;
+}
+
+/* ── Latest verified hand ────────────────────────────────── */
+
+.pfc-latest {
+  border-top: 1px solid var(--ss-border);
+  padding-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.pfc-latest-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ss-text-muted);
+}
+
+.pfc-latest-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pfc-hand-id {
+  font-size: 12px;
+  color: var(--ss-text-dim);
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pfc-time {
+  font-size: 11px;
+  color: var(--ss-text-muted);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.pfc-verify-link {
+  display: inline-flex;
+  align-items: center;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ss-green);
+  text-decoration: none;
+  border: 1px solid rgba(74, 222, 128, 0.3);
+  border-radius: var(--ss-r-pill);
+  padding: 3px 10px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.pfc-verify-link:hover {
+  background: rgba(74, 222, 128, 0.1);
+  border-color: var(--ss-green);
+  text-decoration: none;
+  color: var(--ss-green);
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .pfc-live-dot  { animation: none; }
+  .pfc-hash      { transition: none; }
+}

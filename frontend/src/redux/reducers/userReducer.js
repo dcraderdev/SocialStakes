@@ -1,9 +1,9 @@
 
-import { 
-  SET_USER, REMOVE_USER, 
+import {
+  SET_USER, REMOVE_USER,
   SET_THEMES, CHANGE_NEON_THEME, CHANGE_TABLE_THEME,
   LEAVE_SEAT, TAKE_SEAT, PLAYER_ADD_TABLE_FUNDS,
-  REMOVE_PLAYER
+  REMOVE_PLAYER, REFILL_BALANCE
 } from '../actions/actionTypes'
 
 
@@ -124,6 +124,9 @@ const userReducer = (state = initialState, action) => {
       return newState;
     }
 
+    case REFILL_BALANCE: {
+      return { ...newState, balance: action.payload };
+    }
 
     default:
       return newState;

@@ -196,18 +196,20 @@ async function ensureDefaultTables() {
     await ensureGames();
     await ensureSystemUser();
 
-    const existingCount = await Table.count({
+    const existingTable = await Table.findOne({
       where: { active: true },
       include: [
         {
           model: Game,
           where: { gameType: 'multi_blackjack' },
+          attributes: ['id'],
           required: true,
         },
       ],
+      attributes: ['id'],
     });
 
-    if (existingCount > 0) return;
+    if (existingTable) return;
 
     console.log('[boot] No active multi_blackjack tables found — seeding defaults…');
 

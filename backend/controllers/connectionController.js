@@ -163,6 +163,12 @@ const connectionController = {
         let convoId = table.Table.Conversation.id;
         let tableId = table.tableId;
         let seat = table.seat;
+
+        if (!rooms[tableId]) {
+          await gameController.removeUserFromTable(userTableId, userId);
+          continue;
+        }
+
         let gameTable = rooms[tableId];
         let playerSeatObj = rooms[tableId].seats[seat];
 

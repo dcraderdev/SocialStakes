@@ -204,11 +204,9 @@ const botController = {
 
   async startBotRound(io, tableId) {
     const seats = rooms[tableId].seats;
-
-    // iterate over bots
-    Object.values(seats).map(async (seat, index) => {
-      await this.handleBotBetDecision(io, tableId, seat);
-    });
+    await Promise.all(
+      Object.values(seats).map((seat) => this.handleBotBetDecision(io, tableId, seat))
+    );
   },
 
 

@@ -1,7 +1,7 @@
 // backend/routes/api/friends.js
 const express = require('express');
 const { requireAuth } = require('../../utils/auth');
-const { User, Friendship, UserTable } = require('../../db/models');
+const { Event, User, Friendship, UserTable } = require('../../db/models');
 const { Op, Sequelize } = require('sequelize');
 const router = express.Router();
 
@@ -64,7 +64,6 @@ router.get('/suggestions', requireAuth, async (req, res, next) => {
     }
 
     // --- Strategy 2: Co-table players ---
-    // Find tables the current user has sat at, then find other players at those tables
     try {
       const userTables = await UserTable.findAll({
         where: { userId },
@@ -131,6 +130,59 @@ router.get('/suggestions', requireAuth, async (req, res, next) => {
     return res.status(200).json({ suggestions });
   } catch (err) {
     return next(err);
+  }
+});
+
+
+// GET /api/friends/activity
+router.get('/activity', requireAuth, async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    const limit = Math.min(parseInt(req.query.limit) || 50, 100);
+    const cursor = req.query.cursor;
+
+    const friendships = await Friendship.findAll({
+      where: {
+        status: 'accepted',
+        [Op.or]: [{ user1Id: userId }, { user2Id: userId }],
+      },
+      attributes: ['user1Id', 'user2Id'],
+    });
+
+    const friendIds = friendships.map((f) =>
+      f.user1Id === userId ? f.user2Id : f.user1Id
+    );
+
+    if (!friendIds.length) {
+      return res.json({ events: [], nextCursor: null });
+    }
+
+    const where = {
+      userId: { [Op.in]: friendIds },
+      ...(cursor && { createdAt: { [Op.lt]: new Date(cursor) } }),
+    };
+
+    const events = await Event.findAll({
+      where,
+      include: [
+        {
+          model: User,
+          as: 'user',
+          attributes: ['id', 'username', 'rank'],
+        },
+      ],
+      order: [['createdAt', 'DESC']],
+      limit,
+    });
+
+    const nextCursor =
+      events.length === limit
+        ? events[events.length - 1].createdAt.toISOString()
+        : null;
+
+    return res.json({ events, nextCursor });
+  } catch (err) {
+    next(err);
   }
 });
 

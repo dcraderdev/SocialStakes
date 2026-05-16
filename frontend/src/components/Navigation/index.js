@@ -124,6 +124,7 @@ function Navigation(){
 
             {isWideScreen && <div className='nav-user-button' onClick={handleGameClick}>Lobby</div>}
             {isWideScreen && <div className='nav-user-button' onClick={handleFriendsClick}>Friends</div>}
+            {isWideScreen && <div className='nav-user-button' onClick={()=>history.push('/friends/activity')}>Activity</div>}
             {isWideScreen && <div className='nav-user-button' onClick={()=>history.push('/history')}>History</div>}
             {isWideScreen && <div className='nav-user-button' onClick={()=>history.push('/verify')}>Verify hand</div>}
             <div className='nav-user-button balance'>{balance}</div>

@@ -257,6 +257,14 @@ const FriendsNavBar = () => {
             Friends
           </div>
         </div>
+
+        <div
+          className="friendsnavbar-invite-friend-btn flex center"
+          onClick={() => openModal('inviteFriend')}
+        >
+          <i className="fa-solid fa-user-plus" />
+          <span>Invite a Friend</span>
+        </div>
       </div>
     </div>
   );

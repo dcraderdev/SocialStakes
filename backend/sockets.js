@@ -841,5 +841,21 @@ module.exports = function (io) {
       }
     });
 
+    // Table invite: sender emits { friendId, tableId, tableName }
+    // Recipient receives a notification with a deep link
+    socket.on('send_table_invite', ({ friendId, tableId, tableName }) => {
+      if (!friendId || !tableId) return;
+
+      const tableUrl = `${process.env.APP_BASE_URL || 'http://localhost:3000'}/table/${tableId}`;
+
+      io.in(friendId).emit('receive_table_invite', {
+        senderId: userId,
+        senderUsername: username,
+        tableId,
+        tableName: tableName || 'a table',
+        tableUrl,
+      });
+    });
+
   });
 };

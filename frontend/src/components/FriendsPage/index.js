@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect, useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import { SocketContext } from '../../context/SocketContext';
 
 import { getUserFriends } from '../../redux/middleware/friends';
@@ -16,6 +17,7 @@ import ChatInputArea from '../ChatInputArea';
 import FriendsPageHeader from '../FriendsPageHeader';
 import FriendSearchBar from '../FriendSearchBar';
 import SuggestedFriends from '../SuggestedFriends';
+import { dismissTableInviteAction } from '../../redux/actions/inviteActions';
 
 const FriendsPage = () => {
 
@@ -39,6 +41,8 @@ const FriendsPage = () => {
 
   const { openModal, setUpdateObj, updateObj } = useContext(ModalContext);
   const { socket } = useContext(SocketContext);
+  const history = useHistory();
+  const tableInvites = useSelector((state) => state.invites.tableInvites);
 
   const currentTables = useSelector((state) => state.games.currentTables);
   const [hasCurrentTables, setHasCurrentTables] = useState(false);
@@ -125,6 +129,42 @@ const FriendsPage = () => {
                 );
               }
             )}
+          </div>
+        )}
+
+        {showTableInvites && (
+          <div>
+            <div className="friendspage-invite-header top flex">
+              <div className="friendspage-invite-text flex center">Table Invites</div>
+            </div>
+            <div className="friendspage-requests-container">
+              {Object.values(tableInvites).length === 0 && (
+                <div className="friendspage-invite-empty flex center">No table invites yet.</div>
+              )}
+              {Object.values(tableInvites).map((invite, index) => (
+                <div key={index} className="friendspage-table-invite-tile flex center">
+                  <div className="friendspage-table-invite-info">
+                    <span className="friendspage-table-invite-sender">{invite.senderUsername}</span>
+                    {' '}invited you to{' '}
+                    <span className="friendspage-table-invite-name">{invite.tableName}</span>
+                  </div>
+                  <div className="friendspage-table-invite-actions flex center">
+                    <button
+                      className="friendspage-table-invite-join"
+                      onClick={() => history.push(`/table/${invite.tableId}`)}
+                    >
+                      Join
+                    </button>
+                    <button
+                      className="friendspage-table-invite-dismiss"
+                      onClick={() => dispatch(dismissTableInviteAction(invite.senderId))}
+                    >
+                      <i className="fa-solid fa-x" />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         )}
 

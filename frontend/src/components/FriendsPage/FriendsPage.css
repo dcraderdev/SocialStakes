@@ -267,3 +267,71 @@
   box-sizing: border-box;
   border-bottom: 1px solid rgba(0, 0, 0, 0.4);
 }
+
+.friendspage-invite-empty {
+  color: #666;
+  font-size: 13px;
+  padding: 16px;
+}
+
+.friendspage-table-invite-tile {
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  gap: 10px;
+}
+
+.friendspage-table-invite-info {
+  font-size: 13px;
+  color: #c4c8d8;
+  flex: 1;
+}
+
+.friendspage-table-invite-sender {
+  font-weight: 700;
+  color: #a5b4fc;
+}
+
+.friendspage-table-invite-name {
+  font-weight: 600;
+  color: #e8eaf0;
+}
+
+.friendspage-table-invite-actions {
+  gap: 8px;
+}
+
+.friendspage-table-invite-join {
+  background: #6366f1;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: opacity 0.15s;
+}
+
+.friendspage-table-invite-join:hover {
+  opacity: 0.85;
+}
+
+.friendspage-table-invite-dismiss {
+  background: rgba(255,255,255,0.06);
+  color: #888;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 11px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s;
+}
+
+.friendspage-table-invite-dismiss:hover {
+  background: rgba(255,255,255,0.1);
+  color: #ccc;
+}
+

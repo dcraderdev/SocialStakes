@@ -121,3 +121,7 @@ export const OPTIMISTIC_SUGGEST_ADD = 'friends/OPTIMISTIC_SUGGEST_ADD';
 // activity
 export const GET_FRIEND_ACTIVITY = 'activity/GET_FRIEND_ACTIVITY';
 export const SET_ACTIVITY_FILTER = 'activity/SET_ACTIVITY_FILTER';
+// invites
+export const ADD_TABLE_INVITE = 'invites/ADD_TABLE_INVITE';
+export const DISMISS_TABLE_INVITE = 'invites/DISMISS_TABLE_INVITE';
+export const SET_INVITE_CODE_INFO = 'invites/SET_INVITE_CODE_INFO';

@@ -6,6 +6,7 @@ const gamesRouter = require('./games.js');
 const tablesRouter = require('./tables.js');
 const handsRouter = require('./hands.js');
 const friendsRouter = require('./friends.js');
+const invitesRouter = require('./invites.js');
 const { restoreUser } = require('../../utils/auth.js');
 
 
@@ -16,6 +17,7 @@ router.use('/games', gamesRouter);
 router.use('/tables', tablesRouter);
 router.use('/hands', handsRouter);
 router.use('/friends', friendsRouter);
+router.use('/invites', invitesRouter);
 
 
 

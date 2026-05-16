@@ -8,6 +8,8 @@ const { handleValidationErrors, validateSignup , validateQueryParameters} = requ
 const { json, Op } = require('sequelize');
 const db = require('../../db/models');
 const { historyController } = require('../../controllers/historyController');
+const { inviteController } = require('../../controllers/inviteController');
+const { friendController } = require('../../controllers/friendController');
 const router = express.Router();
 
 
@@ -39,7 +41,31 @@ router.post('/', validateSignup, async (req, res, next) => {
   if(!errors.username && !errors.email){
     user = await User.signup({email,username,password,firstName,lastName,});
     const token = await setTokenCookie(res, user);
-  
+
+    // If signup included an invite code, redeem it to auto-friend the sender
+    const { inviteCode } = req.body;
+    if (inviteCode) {
+      try {
+        const invite = await inviteController.redeemInvite(inviteCode, user.id);
+        if (invite) {
+          await friendController.sendFriendRequest({
+            userId: invite.senderId,
+            recipientId: user.id,
+            username: 'inviter',
+            recipientUsername: user.username,
+          });
+          await friendController.acceptFriendRequest({
+            userId: user.id,
+            recipientId: invite.senderId,
+            username: user.username,
+            recipientUsername: 'inviter',
+          });
+        }
+      } catch (inviteErr) {
+        console.error('[signup] Invite redemption failed:', inviteErr.message);
+      }
+    }
+
     return res.status(200).json({
       id: user.id,
       firstName: user.firstName,

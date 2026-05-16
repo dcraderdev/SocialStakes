@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState, useContext } from 'react';
 import * as sessionActions from '../../redux/middleware/users';
+import { redeemInviteCode } from '../../redux/middleware/invites';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect, useHistory } from 'react-router-dom';
@@ -83,11 +84,17 @@ function SignupModal() {
     e.preventDefault();
 
     try {
+      const pendingInviteCode = localStorage.getItem('pendingInviteCode');
       const { data, response } = await dispatch(
-       sessionActions.signup({ username, firstName, lastName, email, password })
+       sessionActions.signup({ username, firstName, lastName, email, password, inviteCode: pendingInviteCode || undefined })
       );
 
-      if (response.ok) closeModal();
+      if (response.ok) {
+        if (pendingInviteCode) {
+          localStorage.removeItem('pendingInviteCode');
+        }
+        closeModal();
+      }
     } catch (error) {
       setDisabledButton(true);
       setButtonClass('signinDiv-button disabled disabled2');

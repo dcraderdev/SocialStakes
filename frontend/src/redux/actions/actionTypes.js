@@ -101,6 +101,11 @@ export const SHOW_FRIENDS = 'friends/SHOW_FRIENDS';
 export const SHOW_CONVERSATION_BY_ID = 'friends/SHOW_CONVERSATION_BY_ID';
 
 
-//stats 
+//stats
 export const GET_USER_STATS = 'stats/GET_USER_STATS';
 export const GET_USER_TABLES = 'stats/GET_USER_TABLES';
+
+// invites
+export const ADD_TABLE_INVITE = 'invites/ADD_TABLE_INVITE';
+export const DISMISS_TABLE_INVITE = 'invites/DISMISS_TABLE_INVITE';
+export const SET_INVITE_CODE_INFO = 'invites/SET_INVITE_CODE_INFO';

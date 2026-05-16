@@ -5,6 +5,7 @@ import './FriendTile.css';
 import { showFriendsAction } from '../../redux/actions/friendActions';
 import { SocketContext } from '../../context/SocketContext';
 import { ModalContext } from '../../context/ModalContext';
+import { dismissTableInviteAction } from '../../redux/actions/inviteActions';
 const FriendTile = ({ friend, type, cb, isInvited }) => {
   const dispatch = useDispatch();
   const {socket} = useContext(SocketContext)
@@ -13,7 +14,11 @@ const FriendTile = ({ friend, type, cb, isInvited }) => {
   const [status, setStatus] = useState('online');
   const [isActive, setIsActive ] = useState(false);
   const user = useSelector((state) => state.users.user);
-  const [isHovering, setIsHovering] = useState(false)
+  const [isHovering, setIsHovering] = useState(false);
+  const currentTables = useSelector((state) => state.games.currentTables);
+  const hasCurrentTables = Object.keys(currentTables).length > 0;
+  const firstTableId = hasCurrentTables ? Object.keys(currentTables)[0] : null;
+  const firstTableName = firstTableId ? currentTables[firstTableId]?.name || 'my table' : null;
 
   useEffect(()=> {
     setIsActive(false)
@@ -99,6 +104,23 @@ const FriendTile = ({ friend, type, cb, isInvited }) => {
           </div>
 
           <div className={`friendtile-online-container flex center`}>
+            {hasCurrentTables && (
+              <div
+                className="friendtile-table-invite-btn flex center"
+                title="Invite to table"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (!socket || !friend) return;
+                  socket.emit('send_table_invite', {
+                    friendId: friend.friend.id,
+                    tableId: firstTableId,
+                    tableName: firstTableName,
+                  });
+                }}
+              >
+                <i className="fa-solid fa-circle-plus" />
+              </div>
+            )}
             <div className={`friendtile-online flex center`}>
               <div className={`friend-status ${status}`}></div>
             </div>

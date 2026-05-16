@@ -272,3 +272,18 @@
 
 
 
+
+.friendtile-table-invite-btn {
+  color: #6366f1;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 4px;
+  transition: color 0.15s, background 0.15s;
+  margin-right: 4px;
+}
+
+.friendtile-table-invite-btn:hover {
+  color: #a5b4fc;
+  background: rgba(99, 102, 241, 0.12);
+}

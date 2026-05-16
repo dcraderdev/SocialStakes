@@ -1,0 +1,75 @@
+.invite-redemption-wrapper {
+  min-height: 100vh;
+  background: #0e1117;
+}
+
+.invite-redemption-card {
+  background: #1a1f2e;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 48px 40px;
+  max-width: 420px;
+  width: 92vw;
+  text-align: center;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+}
+
+.invite-redemption-icon {
+  font-size: 48px;
+  color: #6366f1;
+  margin-bottom: 20px;
+}
+
+.invite-redemption-title {
+  color: #e8eaf0;
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 0 12px;
+}
+
+.invite-redemption-sub {
+  color: #9aa0b4;
+  font-size: 15px;
+  line-height: 1.6;
+  margin: 0 0 28px;
+}
+
+.invite-redemption-actions {
+  flex-direction: column;
+  gap: 10px;
+}
+
+.invite-redemption-btn {
+  background: #6366f1;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 13px 24px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  font-family: inherit;
+  transition: opacity 0.15s;
+}
+
+.invite-redemption-btn:hover {
+  opacity: 0.88;
+}
+
+.invite-redemption-btn-secondary {
+  background: rgba(255, 255, 255, 0.05);
+  color: #9aa0b4;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 11px 24px;
+  font-size: 14px;
+  cursor: pointer;
+  width: 100%;
+  font-family: inherit;
+  transition: background 0.15s;
+}
+
+.invite-redemption-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.09);
+}

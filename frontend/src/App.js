@@ -39,6 +39,8 @@ import ThemesModal from './components/ThemesModal';
 import AboutMeModal from './components/AboutMeModal';
 import LoadingBar from './components/LoadingBar';
 import Logo from './components/Logo';
+import InviteFriendModal from './components/InviteFriendModal';
+import InviteRedemptionPage from './components/InviteRedemptionPage';
 
 
 import gameTileBackground from './images/game-tile-background2.jpeg'
@@ -197,6 +199,12 @@ function App() {
         </div>
       )}
 
+{modal  === 'inviteFriend' && (
+        <div className='modal-container'>
+          {modal === 'inviteFriend' && <InviteFriendModal />}
+        </div>
+      )}
+
 
         <div className={`profile-modal ${modal === 'profileModal' ? ' visible' : ' hidden'}`} >
           <ProfileButtonModal />
@@ -243,6 +251,9 @@ function App() {
             {isLoaded && <AceyDuecey />}
           </Route>
 
+          <Route path="/invite/:code" exact>
+            {isLoaded && <InviteRedemptionPage />}
+          </Route>
 
           <Route>
             <h1>404:Unknown Route</h1>

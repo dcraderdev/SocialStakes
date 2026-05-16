@@ -1,39 +1,26 @@
 import React, { useEffect, useRef, useState, useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, Redirect, useHistory } from 'react-router-dom';
 import './JoinPrivateGameModal.css';
 import { ModalContext } from '../../context/ModalContext';
 import { SocketContext } from '../../context/SocketContext';
-import * as sessionActions from '../../redux/middleware/users';
 import * as gameActions from '../../redux/middleware/games';
-import { showGamesAction } from '../../redux/actions/gameActions';
 
 function JoinPrivateGameModal() {
   const dispatch = useDispatch();
-  const history = useHistory();
   const formRef = useRef(null);
 
-  const [password, setPassword] = useState('');
-  const [tableId, setTableId] = useState('');
-  const [tableName, setTableName] = useState('');
+  const [code, setCode] = useState('');
   const [showError, setShowError] = useState(false);
-  const [hasId, setHasId] = useState(false)
+  const [hasId, setHasId] = useState(false);
 
   const { socket } = useContext(SocketContext);
-  const { modal, openModal, closeModal, updateObj, setUpdateObj } =
-    useContext(ModalContext);
-
-  const user = useSelector((state) => state.users.user);
-  const balance = useSelector((state) => state.users.balance);
-  const table = useSelector((state) => state.games.activeTable);
-
+  const { closeModal, updateObj, setUpdateObj } = useContext(ModalContext);
 
   useEffect(() => {
-    if(updateObj && updateObj.tableId){
-      setHasId(true)
+    if (updateObj && updateObj.tableId) {
+      setHasId(true);
     }
   }, [updateObj]);
-
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -49,32 +36,38 @@ function JoinPrivateGameModal() {
   }, []);
 
   const joinTable = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    let join
-    if(hasId){
-      let setTableId = updateObj.tableId
-      join = await dispatch(gameActions.joinPrivateTable(setTableId, tableName, password, socket));
+    let join;
+    if (hasId) {
+      // Clicked a private table tile — join by tableId + code as password
+      join = await dispatch(
+        gameActions.joinPrivateTable(updateObj.tableId, null, code, socket)
+      );
+    } else {
+      // No tableId — send code as password; backend will find the table by passCode
+      join = await dispatch(
+        gameActions.joinPrivateTable(null, null, code, socket)
+      );
+    }
 
-    }else{
-      join = await dispatch(gameActions.joinPrivateTable(tableId, tableName, password, socket));
+    if (join && join.status > 200) {
+      setShowError(true);
+      setTimeout(() => setShowError(false), 3000);
+      return;
     }
-    if (join) {
-      if (join.status > 200) {
-        setShowError(true);
-        setTimeout(() => {
-          setShowError(false);
-        }, 3000);
-        return
-      }
-    }
-    closeModal()
+
+    closeModal();
     setUpdateObj(null);
   };
 
   const cancel = () => {
     closeModal();
     setUpdateObj(null);
+  };
+
+  const handleCodeChange = (e) => {
+    setCode(e.target.value.toUpperCase().slice(0, 6));
   };
 
   return (
@@ -84,36 +77,17 @@ function JoinPrivateGameModal() {
           Join Private Game
         </div>
         {showError && (
-          <div className="jointable-error red">Could not join table.</div>
+          <div className="jointable-error red">Could not join table. Check the code and try again.</div>
         )}
         <form className="flex jointable-form" onSubmit={joinTable}>
-          {!hasId &&  <input
-            className="jointable-funding-input"
-            type="text"
-            value={tableId}
-            onChange={(e) => setTableId(e.target.value)}
-            placeholder="Enter table id"
-          />
-          }
-          <div className='jointable-text flex center'>or</div>
-          
-          {!hasId &&  <input
-            className="jointable-funding-input"
-            type="text"
-            value={tableName}
-            onChange={(e) => setTableName(e.target.value)}
-            placeholder="Enter table name"
-            />
-          }
-          <div className='jointable-text flex center'>and</div>
-
-
           <input
             className="jointable-funding-input"
             type="text"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Enter table passcode"
+            value={code}
+            onChange={handleCodeChange}
+            placeholder="Enter 6-char join code"
+            autoFocus
+            maxLength={6}
           />
         </form>
 
@@ -123,11 +97,11 @@ function JoinPrivateGameModal() {
           </div>
           <div
             className={`jointable-addbalance flex center ${
-              password.length === 0 ? ' disabled' : ''
+              code.length === 0 ? ' disabled' : ''
             }`}
-            onClick={(e)=>joinTable(e)}
+            onClick={(e) => joinTable(e)}
           >
-            Submit
+            Join
           </div>
         </div>
       </div>

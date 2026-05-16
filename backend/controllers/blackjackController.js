@@ -468,8 +468,8 @@ const blackjackController = {
 
         emitUpdatedTable(io, tableId)
  
-        // If some, handle player turn
-        if (tableId === 'be11a610-7777-7777-7777-7be11a610777') {      
+        // If current player is a bot, have it act automatically
+        if (botController.isBotUser(player.userId)) {
           await botController.handleBotAction(io, tableId)
 
           if (rooms[tableId] && rooms[tableId].timerId) {
@@ -477,9 +477,7 @@ const blackjackController = {
             rooms[tableId].actionEndTimeStamp = 0;
           }
 
-          // return this.gameLoop(io, tableId);
           return
-
         }
 
         // // If timer already exists, return without creating another one

@@ -6,6 +6,10 @@ const { botController } = require('./controllers/botController');
 const { connectionController } = require('./controllers/connectionController');
 const { blackjackController } = require('./controllers/blackjackController');
 const { timerController } = require('./controllers/timerController');
+const ensureDefaultTables = require('./utils/ensureDefaultTables');
+const { ensureBotsExist } = require('./utils/ensureBotsExist');
+
+const BELLAGIO_TABLE_ID = 'be11a610-7777-7777-7777-7be11a610777';
 
 const {
   drawCards,
@@ -54,6 +58,9 @@ module.exports = function (io) {
   initializeRooms();
   initializeBot();
   initializeCounter();
+
+  ensureBotsExist();
+  ensureDefaultTables();
 
   // _*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_
   // _*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_
@@ -307,6 +314,17 @@ module.exports = function (io) {
       }
 
       io.in(room).emit('new_bet', betObj);
+
+      // Spawn bots when a solo human player places their first bet
+      if (tableId !== BELLAGIO_TABLE_ID) {
+        const seats = Object.values(rooms[tableId].seats);
+        const humanSeats = seats.filter((s) => !botController.isBotUser(s.userId));
+        const botSeats = seats.filter((s) => botController.isBotUser(s.userId));
+
+        if (humanSeats.length === 1 && botSeats.length === 0) {
+          await botController.spawnRoamingBotsForTable(io, tableId, 2);
+        }
+      }
     });
 
 

@@ -164,11 +164,15 @@ function HoldEm() {
       setBankroll(b => b + Math.floor(finalPot / 2));
     } else if (winner === 'player') {
       delta = finalPot - currentInvested;
-      msg = `You win $${finalPot}! ${phName} beats ${bhName}.`;
+      msg = phName
+        ? `You win $${finalPot}! ${phName} beats ${bhName}.`
+        : `Bot folded — you win $${finalPot}!`;
       setBankroll(b => b + finalPot);
     } else {
       delta = -currentInvested;
-      msg = `Bot wins with ${bhName}${phName ? ` vs your ${phName}` : ''}.`;
+      msg = bhName
+        ? `Bot wins with ${bhName}${phName ? ` vs your ${phName}` : ''}.`
+        : 'You folded. Bot takes the pot.';
     }
     setResult({ winner, delta, playerHand: phName, botHand: bhName });
     setHistory(h => [{ winner, delta, playerHand: phName, botHand: bhName }, ...h].slice(0, 10));
@@ -217,7 +221,6 @@ function HoldEm() {
 
   const playerFold = () => {
     endHand('bot', pot, null, null, investedRef.current);
-    setMessage('You folded.');
   };
 
   const playerCheck = () => {

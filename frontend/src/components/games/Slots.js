@@ -95,6 +95,8 @@ function Slots() {
 
   // rapid symbol cycling during spin
   const intervalRef = useRef(null);
+  // ref tracks locked reels so the setInterval callback reads current state (no stale closure)
+  const lockedRef = useRef([false, false, false]);
 
   const spin = () => {
     if (isSpinning || bet <= 0 || bet > bankroll) return;
@@ -103,6 +105,7 @@ function Slots() {
     setIsSpinning(true);
     setSpinResult(null);
     setCelebration('');
+    lockedRef.current = [false, false, false];
     setLocked([false, false, false]);
 
     // pick final results up front
@@ -112,13 +115,14 @@ function Slots() {
     setSpinning([true, true, true]);
     setReels([randSymbol(), randSymbol(), randSymbol()]);
 
-    // rapid visual symbol changes while spinning
+    // rapid visual cycling — use ref so callback always sees current lock state
     intervalRef.current = setInterval(() => {
-      setReels(r => r.map((sym, i) => spinning[i] !== false ? randSymbol() : sym));
+      setReels(r => r.map((sym, i) => lockedRef.current[i] ? sym : randSymbol()));
     }, 80);
 
     // reel 1 locks at t=800ms
     setTimeout(() => {
+      lockedRef.current = [true, false, false];
       setReels(r => [finals[0], r[1], r[2]]);
       setSpinning([false, true, true]);
       setLocked([true, false, false]);
@@ -126,6 +130,7 @@ function Slots() {
 
     // reel 2 locks at t=1200ms
     setTimeout(() => {
+      lockedRef.current = [true, true, false];
       setReels(r => [finals[0], finals[1], r[2]]);
       setSpinning([false, false, true]);
       setLocked([true, true, false]);
@@ -133,6 +138,7 @@ function Slots() {
 
     // reel 3 locks at t=1700ms, evaluate result
     setTimeout(() => {
+      lockedRef.current = [true, true, true];
       clearInterval(intervalRef.current);
       setReels(finals);
       setSpinning([false, false, false]);
@@ -151,7 +157,6 @@ function Slots() {
         setCelebration(winMsg);
         setHistory(h => [{ reels: finals, delta, label: result.label, win: winAmount }, ...h].slice(0, 12));
       } else {
-        setBankroll(b => b); // already deducted
         setSpinResult({ mult: 0, delta });
         setHistory(h => [{ reels: finals, delta, label: result?.label ?? 'No match' }, ...h].slice(0, 12));
       }

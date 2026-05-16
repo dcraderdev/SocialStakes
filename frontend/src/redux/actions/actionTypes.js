@@ -101,6 +101,10 @@ export const SHOW_FRIENDS = 'friends/SHOW_FRIENDS';
 export const SHOW_CONVERSATION_BY_ID = 'friends/SHOW_CONVERSATION_BY_ID';
 
 
-//stats 
+//stats
 export const GET_USER_STATS = 'stats/GET_USER_STATS';
 export const GET_USER_TABLES = 'stats/GET_USER_TABLES';
+
+// activity
+export const GET_FRIEND_ACTIVITY = 'activity/GET_FRIEND_ACTIVITY';
+export const SET_ACTIVITY_FILTER = 'activity/SET_ACTIVITY_FILTER';

@@ -36,6 +36,7 @@ const {
 let emitCustomMessage = require('../utils/emitCustomMessage');
 let emitUpdatedTable = require('../utils/emitUpdatedTable');
 let emitMainPageWinnerMessage = require('../utils/emitMainPageWinnerMessage');
+const { eventController } = require('./eventController');
 
 let { countdownInterval } = require('../global');
 
@@ -999,6 +1000,19 @@ async calculateAndSavePlayerHand(
 
     // Save the results
     await gameController.savePlayerHand(handObj);
+
+    // Emit activity event for wins and blackjacks
+    if ((result === 'WIN' || result === 'BLACKJACK') && player.userId) {
+      await eventController.createEvent(
+        player.userId,
+        result === 'BLACKJACK' ? 'hand_blackjack' : 'hand_won',
+        {
+          tableId,
+          gameType: rooms[tableId]?.gameType || 'Blackjack',
+          amount: profitLoss,
+        }
+      );
+    }
 
     // display the winners to the room
     if (totalProfitLoss > 0) {

@@ -28,6 +28,7 @@ let emitUpdatedTable = require('./utils/emitUpdatedTable');
 let fetchUpdatedTable = require('./utils/fetchUpdatedTable');
 let emitCustomMessage = require('./utils/emitCustomMessage');
 let setDealCardsTimeStamp = require('./utils/setDealCardsTimeStamp');
+const { eventController } = require('./controllers/eventController');
 
 
 
@@ -200,6 +201,13 @@ module.exports = function (io) {
 
       // io.in(room).emit('new_message', messageObj);
       io.in(room).emit('new_player', takeSeatObj);
+
+      if (user?.id) {
+        await eventController.createEvent(user.id, 'table_joined', {
+          tableId,
+          gameType: rooms[tableId]?.gameType || 'Blackjack',
+        });
+      }
 
       // console.log('--------------');
       // console.log(`${username} taking seat${seat} in ${room}`);
@@ -493,6 +501,15 @@ module.exports = function (io) {
 
       io.in(recipientId).emit('accept_friend_request', recipientObj);
       socket.emit('accept_friend_request', senderObj);
+
+      await eventController.createEvent(userId, 'friend_added', {
+        friendId: recipientId,
+        friendUsername: recipientUsername,
+      });
+      await eventController.createEvent(recipientId, 'friend_added', {
+        friendId: userId,
+        friendUsername: username,
+      });
 
       Object.values(senderConnections).forEach((connection) => {
         connection.socket.join(newConversation.id);

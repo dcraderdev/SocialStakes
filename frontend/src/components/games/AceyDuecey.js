@@ -112,7 +112,6 @@ function CardArt({ card, animKey, shake, aceGlow }) {
 
   return (
     <div
-      key={animKey || undefined}
       style={{
         width: 90, height: 130, borderRadius: 10, background: '#fafaf6',
         boxShadow: '0 8px 22px rgba(0,0,0,0.45)',
@@ -158,6 +157,7 @@ function AceyDuecey() {
   const [result, setResult] = useState(null);
   const [midKey, setMidKey] = useState(0);
   const [postShake, setPostShake] = useState(false);
+  const [midRevealing, setMidRevealing] = useState(false);
   const [roundKey, setRoundKey] = useState(0);
 
   const autoTimerRef    = useRef(null);
@@ -197,6 +197,7 @@ function AceyDuecey() {
       setMiddle(null);
       setResult(null);
       setPostShake(false);
+      setMidRevealing(false);
       setRoundKey(k => k + 1);
     }, AUTO_DELAY);
     return () => clearTimeout(autoTimerRef.current);
@@ -214,6 +215,7 @@ function AceyDuecey() {
       setMiddle(null);
       setResult(null);
       setPostShake(false);
+      setMidRevealing(false);
       setRoundKey(k => k + 1);
     }, 700);
     return () => {
@@ -233,6 +235,7 @@ function AceyDuecey() {
     clearTimeout(autoTimerRef.current);
     clearTimeout(autoPassRef.current);
     setAutoPassMsg(null);
+    setMidRevealing(false);
     const next = freshDeal();
     setDeal(next);
     setMiddle(null);
@@ -245,10 +248,12 @@ function AceyDuecey() {
     clearTimeout(autoTimerRef.current);
     clearTimeout(autoPassRef.current);
     setAutoPassMsg(null);
+    setMidRevealing(false);
     setBankroll(1000);
     setHistory([]);
     setResult(null);
     setMiddle(null);
+    setPostShake(false);
     setDeal(freshDeal());
     setRoundKey(k => k + 1);
   };
@@ -268,6 +273,7 @@ function AceyDuecey() {
       phrase = ['Hit the post — double penalty!', 'Ouch! Right on the post.', 'Post hit. That\'ll cost ya.'][
         Math.floor(Math.random() * 3)
       ];
+      // Shake immediately; skip reveal so shake doesn't re-trigger it after 500ms
       setPostShake(true);
       setTimeout(() => setPostShake(false), 500);
     } else if (m.rank > low && m.rank < high) {
@@ -276,12 +282,16 @@ function AceyDuecey() {
       phrase = ['In between — you win!', 'Nailed it!', 'Smooth read!', 'Right through the gap!'][
         Math.floor(Math.random() * 4)
       ];
+      setMidRevealing(true);
+      setTimeout(() => setMidRevealing(false), 450);
     } else {
       delta = -effectiveBet;
       type = 'outside';
       phrase = ['Outside the posts.', 'Too far out.', 'Just missed.', 'Outside — try again.'][
         Math.floor(Math.random() * 4)
       ];
+      setMidRevealing(true);
+      setTimeout(() => setMidRevealing(false), 450);
     }
 
     setBankroll(b => b + delta);
@@ -420,10 +430,12 @@ function AceyDuecey() {
 
             {/* Post cards + middle card */}
             <div style={{ display: 'flex', gap: 18, justifyContent: 'center', alignItems: 'flex-end', marginBottom: 20, minHeight: 165, flexWrap: 'wrap' }}>
-              {/* Left post */}
+              {/* Left post — key includes roundKey + eff so remount triggers reveal on each new round
+                  and again when Ace is resolved (eff flips from null→14/1) */}
               <div style={{ textAlign: 'center' }}>
                 <div className="ss-stat-label" style={{ marginBottom: 8 }}>Post</div>
                 <CardArt
+                  key={`p0-${roundKey}-${effectiveRanks[0] ?? 'x'}`}
                   card={cards[0]}
                   animKey={effectiveRanks[0] !== null ? roundKey : null}
                   aceGlow={effectiveRanks[0] === null}
@@ -434,15 +446,22 @@ function AceyDuecey() {
                   </div>
                 )}
               </div>
-              {/* Middle card */}
+              {/* Middle card — key on midKey forces remount on each deal;
+                  animKey only set while midRevealing so reveal never re-fires after shake */}
               <div style={{ textAlign: 'center' }}>
                 <div className="ss-stat-label" style={{ marginBottom: 8 }}>Middle</div>
-                <CardArt card={middle} animKey={middle ? midKey : null} shake={postShake} />
+                <CardArt
+                  key={`mid-${midKey}`}
+                  card={middle}
+                  animKey={middle && midRevealing ? midKey : null}
+                  shake={postShake}
+                />
               </div>
               {/* Right post */}
               <div style={{ textAlign: 'center' }}>
                 <div className="ss-stat-label" style={{ marginBottom: 8 }}>Post</div>
                 <CardArt
+                  key={`p1-${roundKey}-${effectiveRanks[1] ?? 'x'}`}
                   card={cards[1]}
                   animKey={effectiveRanks[1] !== null ? roundKey : null}
                   aceGlow={effectiveRanks[1] === null}

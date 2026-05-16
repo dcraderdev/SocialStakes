@@ -35,10 +35,6 @@ const STYLES = `
   0%, 100% { opacity: 0.3; transform: scaleX(1); }
   50%       { opacity: 1;   transform: scaleX(1.3); }
 }
-@keyframes hl-current-swap {
-  0%   { opacity: 0.4; transform: scale(0.93); }
-  100% { opacity: 1;   transform: scale(1); }
-}
 `;
 
 const WIN_PHRASES = [
@@ -100,7 +96,6 @@ function CardArt({ card, big, animKey }) {
 
   return (
     <div
-      key={animKey}
       style={{
         width: w, height: h, borderRadius: 10, background: '#fafaf6',
         boxShadow: '0 8px 22px rgba(0,0,0,0.45)',
@@ -194,6 +189,7 @@ function HiLo() {
       setCurrent(n);
       setCurrentKey(k => k + 1);
       setNext(null);
+      setResult(null);
       setWaiting(false);
     }, 1100);
   };
@@ -297,7 +293,8 @@ function HiLo() {
             <div style={{ display: 'flex', gap: 20, justifyContent: 'center', alignItems: 'center', marginBottom: 16, minHeight: 180 }}>
               <div style={{ textAlign: 'center' }}>
                 <div className="ss-stat-label" style={{ marginBottom: 8 }}>Current</div>
-                <CardArt card={current} big animKey={currentKey > 0 ? `cur-${currentKey}` : null} />
+                {/* key at call site forces remount on each card swap → restarts CSS animation */}
+                <CardArt key={`cur-${currentKey}`} card={current} big animKey={currentKey > 0 ? `cur-${currentKey}` : null} />
               </div>
               <div style={{
                 fontSize: 26, color: 'var(--ss-text-muted)', userSelect: 'none', flexShrink: 0,
@@ -307,7 +304,7 @@ function HiLo() {
               </div>
               <div style={{ textAlign: 'center' }}>
                 <div className="ss-stat-label" style={{ marginBottom: 8 }}>Next</div>
-                <CardArt card={next} big animKey={next ? cardRevealKey : null} />
+                <CardArt key={`next-${cardRevealKey}`} card={next} big animKey={next ? cardRevealKey : null} />
               </div>
             </div>
 

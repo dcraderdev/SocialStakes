@@ -19,7 +19,7 @@ function HistoryPage() {
 
   useEffect(() => {
     if (!user) return;
-    const days = range === '7d' ? 7 : range === '30d' ? 30 : range === '90d' ? 90 : 365;
+    const days = range === '7d' ? 7 : range === '30d' ? 30 : range === '90d' ? 90 : 36500;
     dispatch(loadHistoryStats(days));
   }, [dispatch, user, range]);
 

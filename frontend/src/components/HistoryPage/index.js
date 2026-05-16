@@ -21,9 +21,13 @@ function HistoryPage() {
     if (!user) return;
     const days = range === '7d' ? 7 : range === '30d' ? 30 : range === '90d' ? 90 : 365;
     dispatch(loadHistoryStats(days));
+  }, [dispatch, user, range]);
+
+  useEffect(() => {
+    if (!user) return;
     dispatch(loadHandHistory(50));
     dispatch(loadFriendsLeaderboard());
-  }, [dispatch, user, range]);
+  }, [dispatch, user]);
 
   const stats = historyStats || {};
   const curve = stats.curve || [];

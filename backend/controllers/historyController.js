@@ -40,15 +40,31 @@ function daysAgo(n) {
   return d;
 }
 
+// result filter: exclude null AND empty string (default is '' in schema)
+const RESULT_FILTER = {
+  [Op.and]: [{ [Op.ne]: null }, { [Op.ne]: '' }],
+};
+
 async function seedDemoHands(userId) {
-  // Find any active blackjack table
+  // Bail early if user already has hands (prevents double-seeding on concurrent requests)
+  const existingUt = await UserTable.findOne({ where: { userId }, attributes: ['id'] });
+  if (existingUt) {
+    const existingHand = await Hand.findOne({
+      where: { userTableId: existingUt.id, result: RESULT_FILTER },
+      attributes: ['id'],
+    });
+    if (existingHand) return;
+  }
+
+  // Find any active table — don't filter by gameType since seeded value is 'multi_blackjack'
   const table = await Table.findOne({
-    include: [{ model: Game, where: { gameType: 'blackjack' } }],
     where: { active: true },
+    include: [{ model: Game, attributes: ['decksUsed', 'gameType'] }],
+    order: [['createdAt', 'ASC']],
   });
   if (!table) return;
 
-  // Find or create a UserTable for this user at that table
+  // Find or create a UserTable for this user at that table (seat 9 = history-only slot)
   let ut = await UserTable.findOne({ where: { userId, tableId: table.id } });
   if (!ut) {
     ut = await UserTable.create({
@@ -63,29 +79,37 @@ async function seedDemoHands(userId) {
   }
 
   const scenarios = [
-    { result: 'Win', pl: 100, cards: '[8, 21]' },
-    { result: 'Lose', pl: -100, cards: '[5, 18]' },
-    { result: 'Blackjack', pl: 150, cards: '[12, 21]' },
-    { result: 'Bust', pl: -100, cards: '[6, 19, 14]' },
-    { result: 'Win', pl: 200, cards: '[11, 24]' },
-    { result: 'Push', pl: 0, cards: '[8, 21]' },
-    { result: 'Lose', pl: -50, cards: '[3, 16]' },
-    { result: 'Win', pl: 100, cards: '[10, 23]' },
-    { result: 'Blackjack', pl: 150, cards: '[12, 24]' },
-    { result: 'Bust', pl: -200, cards: '[7, 20, 15]' },
-    { result: 'Win', pl: 100, cards: '[9, 22]' },
-    { result: 'Lose', pl: -100, cards: '[4, 17]' },
+    { result: 'Win',       pl:  100, cards: '[8, 21]' },
+    { result: 'Lose',      pl: -100, cards: '[5, 18]' },
+    { result: 'Blackjack', pl:  150, cards: '[12, 21]' },
+    { result: 'Bust',      pl: -100, cards: '[6, 19, 14]' },
+    { result: 'Win',       pl:  200, cards: '[11, 24]' },
+    { result: 'Push',      pl:    0, cards: '[8, 21]' },
+    { result: 'Lose',      pl:  -50, cards: '[3, 16]' },
+    { result: 'Win',       pl:  100, cards: '[10, 23]' },
+    { result: 'Blackjack', pl:  150, cards: '[12, 24]' },
+    { result: 'Bust',      pl: -200, cards: '[7, 20, 15]' },
+    { result: 'Win',       pl:  100, cards: '[9, 22]' },
+    { result: 'Lose',      pl: -100, cards: '[4, 17]' },
+    { result: 'Win',       pl:  300, cards: '[11, 24]' },
+    { result: 'Bust',      pl:  -75, cards: '[2, 15, 19]' },
+    { result: 'Push',      pl:    0, cards: '[7, 20]' },
   ];
+
+  const createdHandIds = [];
+  const timestamps = [];
 
   for (let i = 0; i < scenarios.length; i++) {
     const sc = scenarios[i];
-    const daysBack = Math.floor(i * 2.5);
+    // Spread over last 28 days so curve has meaningful shape
+    const daysBack = Math.floor((i / (scenarios.length - 1)) * 28);
     const ts = new Date();
     ts.setDate(ts.getDate() - daysBack);
+    ts.setHours(10 + (i % 12), i * 3 % 60, 0, 0);
 
     const round = await Round.create({ tableId: table.id, active: false, nonce: i + 1 });
 
-    await Hand.create({
+    const hand = await Hand.create({
       userTableId: ut.id,
       roundId: round.id,
       cards: sc.cards,
@@ -93,9 +117,20 @@ async function seedDemoHands(userId) {
       profitLoss: sc.pl,
       insuranceBet: false,
       initialBet: Math.abs(sc.pl) || 100,
-      createdAt: ts,
-      updatedAt: ts,
     });
+
+    createdHandIds.push(hand.id);
+    timestamps.push(ts);
+  }
+
+  // Back-date createdAt via raw SQL so the bankroll curve spreads across days
+  const schema = process.env.NODE_ENV === 'production' ? `"${process.env.SCHEMA}".` : '';
+  for (let i = 0; i < createdHandIds.length; i++) {
+    const ts = timestamps[i].toISOString();
+    await Hand.sequelize.query(
+      `UPDATE ${schema}"Hands" SET "createdAt" = :ts, "updatedAt" = :ts WHERE id = :id`,
+      { replacements: { ts, id: createdHandIds[i] } }
+    );
   }
 }
 
@@ -119,7 +154,7 @@ const historyController = {
       where: {
         userTableId: { [Op.in]: utIds },
         createdAt: { [Op.gte]: since },
-        result: { [Op.ne]: null },
+        result: RESULT_FILTER,
       },
       attributes: ['result', 'profitLoss', 'createdAt'],
     }) : [];
@@ -132,18 +167,17 @@ const historyController = {
     const handsPlayed = hands.length;
     const netPL = hands.reduce((s, h) => s + (h.profitLoss || 0), 0);
     const wins = hands.filter((h) =>
-      ['Win', 'Blackjack', 'Win × 2'].some((r) => h.result?.startsWith(r))
+      ['Win', 'Blackjack'].some((r) => h.result?.startsWith(r))
     ).length;
     const winRate = handsPlayed ? (wins / handsPlayed) * 100 : 0;
     const pls = hands.map((h) => h.profitLoss || 0);
-    const biggestWin = Math.max(0, ...pls);
-    const biggestLoss = Math.min(0, ...pls);
+    const biggestWin = pls.length ? Math.max(0, ...pls) : 0;
+    const biggestLoss = pls.length ? Math.min(0, ...pls) : 0;
 
-    // Bankroll curve: cumulative P&L per day over the last `days` days
+    // Bankroll curve: cumulative P&L per day over the requested range
     const dayMap = {};
     for (let i = days - 1; i >= 0; i--) {
-      const d = daysAgo(i);
-      const key = d.toISOString().slice(0, 10);
+      const key = daysAgo(i).toISOString().slice(0, 10);
       dayMap[key] = 0;
     }
     for (const h of hands) {
@@ -180,7 +214,7 @@ const historyController = {
     const hands = utIds.length ? await Hand.findAll({
       where: {
         userTableId: { [Op.in]: utIds },
-        result: { [Op.ne]: null },
+        result: RESULT_FILTER,
       },
       order: [['createdAt', 'DESC']],
       limit,
@@ -213,7 +247,6 @@ const historyController = {
   async getFriendsLeaderboard(userId) {
     const since = daysAgo(7);
 
-    // Get accepted friends
     const friendships = await Friendship.findAll({
       where: {
         [Op.or]: [{ user1Id: userId }, { user2Id: userId }],
@@ -222,19 +255,15 @@ const historyController = {
       attributes: ['user1Id', 'user2Id'],
     });
 
-    const friendIds = friendships
-      .map((f) => (f.user1Id === userId ? f.user2Id : f.user1Id))
-      .filter(Boolean);
+    const friendIds = friendships.map((f) =>
+      f.user1Id === userId ? f.user2Id : f.user1Id
+    ).filter(Boolean);
 
-    // Include self
     const allIds = [userId, ...friendIds];
 
     const rows = [];
     for (const uid of allIds) {
-      const uts = await UserTable.findAll({
-        where: { userId: uid },
-        attributes: ['id'],
-      });
+      const uts = await UserTable.findAll({ where: { userId: uid }, attributes: ['id'] });
       const utIds = uts.map((ut) => ut.id);
       let netPL = 0;
       if (utIds.length) {
@@ -242,16 +271,14 @@ const historyController = {
           where: {
             userTableId: { [Op.in]: utIds },
             createdAt: { [Op.gte]: since },
-            result: { [Op.ne]: null },
+            result: RESULT_FILTER,
           },
           attributes: ['profitLoss'],
         });
         netPL = hands.reduce((s, h) => s + (h.profitLoss || 0), 0);
       }
       const user = await User.findByPk(uid, { attributes: ['id', 'username'] });
-      if (user) {
-        rows.push({ id: uid, name: user.username, delta: netPL, isMe: uid === userId });
-      }
+      if (user) rows.push({ id: uid, name: user.username, delta: netPL, isMe: uid === userId });
     }
 
     rows.sort((a, b) => b.delta - a.delta);
@@ -259,17 +286,17 @@ const historyController = {
   },
 
   async verifyHand(handId, userId) {
-    // Confirm hand belongs to user
     const hand = await Hand.findByPk(handId, {
       include: [{ model: Round, attributes: ['id', 'nonce', 'cards'] }],
     });
     if (!hand) return null;
 
+    // Confirm the hand belongs to this user
     const ut = await UserTable.findOne({
       where: { id: hand.userTableId, userId },
       attributes: ['id', 'tableId'],
     });
-    if (!ut) return null; // not this user's hand
+    if (!ut) return null;
 
     const table = await Table.findByPk(ut.tableId, {
       attributes: ['id', 'tableName', 'gameId'],

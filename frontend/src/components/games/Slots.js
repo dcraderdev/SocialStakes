@@ -199,15 +199,15 @@ function Slots() {
     <>
       <Navigation />
       <div className="ss-page">
-        <div className="ss-pill ss-pill-gold" style={{ marginBottom: 12 }}>Demo grade · Math.random()</div>
-        <h1 className="ss-h1">Slots</h1>
-        <p className="ss-sub">Match 3 symbols to win. Three 7s pay 50× your bet.</p>
+        <div className="ss-pill ss-pill-gold" style={{ marginBottom: 8 }}>Demo grade · Math.random()</div>
+        <h1 className="ss-h1" style={{ marginBottom: 4 }}>Slots</h1>
+        <p className="ss-sub" style={{ marginBottom: 12 }}>Match 3 symbols to win. Three 7s pay 50× your bet.</p>
 
         <div className="ss-side-grid">
           <div className="ss-card" style={{ padding: 28 }}>
 
             {/* ── stats row ── */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 28 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
               <div>
                 <div className="ss-stat-label">Bankroll</div>
                 <div className="ss-stat-value">${bankroll.toLocaleString()}</div>
@@ -359,6 +359,7 @@ function Slots() {
             {/* spin history */}
             <div className="ss-card">
               <div className="ss-stat-label" style={{ marginBottom: 12 }}>Recent spins</div>
+              <div style={{ maxHeight: 220, overflowY: 'auto' }}>
               {history.length === 0 ? (
                 <div style={{ color: 'var(--ss-text-muted)', fontSize: 13 }}>No spins yet.</div>
               ) : (
@@ -378,6 +379,7 @@ function Slots() {
                   </div>
                 ))
               )}
+              </div>
             </div>
           </div>
         </div>

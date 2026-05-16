@@ -1,11 +1,15 @@
 import {
-  ADD_INCOMING_FRIEND_REQUEST, 
-  ADD_OUTGOING_FRIEND_REQUEST, 
-  ACCEPT_FRIEND_REQUEST, 
+  ADD_INCOMING_FRIEND_REQUEST,
+  ADD_OUTGOING_FRIEND_REQUEST,
+  ACCEPT_FRIEND_REQUEST,
   DENY_FRIEND_REQUEST,
   GET_USER_FRIENDS,
-  SHOW_TABLE_INVITES, SHOW_FRIEND_INVITES, SHOW_FRIENDS, REMOVE_FRIEND, 
-  SHOW_CONVERSATION_BY_ID, REMOVE_CONVERSATION
+  SHOW_TABLE_INVITES, SHOW_FRIEND_INVITES, SHOW_FRIENDS, REMOVE_FRIEND,
+  SHOW_CONVERSATION_BY_ID, REMOVE_CONVERSATION,
+  SET_USER_SEARCH_RESULTS,
+  CLEAR_USER_SEARCH_RESULTS,
+  SET_FRIEND_SUGGESTIONS,
+  OPTIMISTIC_SUGGEST_ADD,
 } from '../actions/actionTypes'
 
 
@@ -14,17 +18,18 @@ import {
 
 
 const initialState = {
-    incomingRequests: {}, 
-    outgoingRequests: {}, 
-    rejectedRequests: {}, 
+    incomingRequests: {},
+    outgoingRequests: {},
+    rejectedRequests: {},
     friends: {},
     showFriendInvites: false,
     showTableInvites: false,
     showFriends: false,
     currentFriendView: null,
     showConversation: false,
-
-
+    userSearchResults: [],
+    suggestions: [],
+    pendingSuggestions: {},
 };
 
 const userReducer = (state = initialState, action) => {
@@ -172,6 +177,26 @@ const userReducer = (state = initialState, action) => {
       }
     }
     
+
+    case SET_USER_SEARCH_RESULTS: {
+      return { ...newState, userSearchResults: action.payload };
+    }
+
+    case CLEAR_USER_SEARCH_RESULTS: {
+      return { ...newState, userSearchResults: [] };
+    }
+
+    case SET_FRIEND_SUGGESTIONS: {
+      return { ...newState, suggestions: action.payload };
+    }
+
+    case OPTIMISTIC_SUGGEST_ADD: {
+      const uid = action.payload;
+      return {
+        ...newState,
+        pendingSuggestions: { ...newState.pendingSuggestions, [uid]: true },
+      };
+    }
 
     default:
       return newState;

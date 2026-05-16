@@ -14,6 +14,8 @@ import Chatbox from '../Chatbox';
 import { showConversationAction } from '../../redux/actions/chatActions';
 import ChatInputArea from '../ChatInputArea';
 import FriendsPageHeader from '../FriendsPageHeader';
+import FriendSearchBar from '../FriendSearchBar';
+import SuggestedFriends from '../SuggestedFriends';
 
 const FriendsPage = () => {
 
@@ -82,15 +84,14 @@ const FriendsPage = () => {
         }`}
       >
         <div className="friendspage-header flex center">
-          
-
-
-    
           <FriendsPageHeader />
-
-          
-
         </div>
+
+        <div className="friendspage-search-section">
+          <FriendSearchBar />
+        </div>
+
+        <SuggestedFriends />
 
 
         {showFriendInvites && (

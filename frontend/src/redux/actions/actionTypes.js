@@ -111,3 +111,9 @@ export const GET_HAND_HISTORY = 'stats/GET_HAND_HISTORY';
 export const GET_FRIENDS_LEADERBOARD = 'stats/GET_FRIENDS_LEADERBOARD';
 export const GET_HAND_VERIFY = 'stats/GET_HAND_VERIFY';
 export const SET_HISTORY_LOADING = 'stats/SET_HISTORY_LOADING';
+
+// friend search + suggestions
+export const SET_USER_SEARCH_RESULTS = 'friends/SET_USER_SEARCH_RESULTS';
+export const CLEAR_USER_SEARCH_RESULTS = 'friends/CLEAR_USER_SEARCH_RESULTS';
+export const SET_FRIEND_SUGGESTIONS = 'friends/SET_FRIEND_SUGGESTIONS';
+export const OPTIMISTIC_SUGGEST_ADD = 'friends/OPTIMISTIC_SUGGEST_ADD';

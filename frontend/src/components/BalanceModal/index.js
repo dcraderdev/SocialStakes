@@ -4,7 +4,7 @@ import { Link, Redirect, useHistory } from 'react-router-dom';
 import './BalanceModal.css';
 import { ModalContext } from '../../context/ModalContext';
 import { SocketContext } from '../../context/SocketContext';
-import * as sessionActions from '../../redux/middleware/users';
+import { refillBalance } from '../../redux/middleware/users';
 import { showGamesAction } from '../../redux/actions/gameActions';
 
 function BalanceModal() {
@@ -135,12 +135,10 @@ function BalanceModal() {
     };
   }, []);
 
-// Add 1k to user balance
-  const addBalance = () => {
-
-    const newBalance = 1000
-    dispatch(addBalance(user.id, newBalance))
-    setUpdateObj(null)
+// Add 1k to user balance (demo refill)
+  const handleAddBalance = () => {
+    dispatch(refillBalance());
+    setUpdateObj(null);
   }
 
   
@@ -171,7 +169,7 @@ function BalanceModal() {
             
           </div>
           <div className='balancemodal-user-buttons flex between'>        
-            <div className='balancemodal-addbalance flex center' onClick={addBalance}>Add Balance(1000)</div>
+            <div className='balancemodal-addbalance flex center' onClick={handleAddBalance}>Add Balance(1000)</div>
             <div className='balancemodal-cancel flex center' onClick={cancel}>Cancel</div>
           </div>
         </div>

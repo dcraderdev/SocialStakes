@@ -1,9 +1,9 @@
 
-import { 
-  SET_USER, REMOVE_USER, 
+import {
+  SET_USER, REMOVE_USER,
   SET_THEMES, CHANGE_NEON_THEME, CHANGE_TABLE_THEME,
   LEAVE_SEAT, TAKE_SEAT, PLAYER_ADD_TABLE_FUNDS,
-  REMOVE_PLAYER
+  REMOVE_PLAYER, REFILL_BALANCE
 } from '../actions/actionTypes'
 
 
@@ -38,17 +38,13 @@ const userReducer = (state = initialState, action) => {
         return acc
       },{})
 
-      console.log(themes);
-      console.log(themes[themes.length - 1]);
-
       return {
         ...newState,
         themes: themes,
         tableTheme: 'Authentic'
-      };   
+      };
     }
     case CHANGE_TABLE_THEME:{
-      console.log(action.payload);
       return {
         ...newState,
         tableTheme: action.payload,
@@ -124,6 +120,9 @@ const userReducer = (state = initialState, action) => {
       return newState;
     }
 
+    case REFILL_BALANCE: {
+      return { ...newState, balance: action.payload };
+    }
 
     default:
       return newState;

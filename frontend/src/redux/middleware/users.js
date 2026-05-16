@@ -1,5 +1,6 @@
 import { setUser, removeUser, setThemes } from '../actions/userActions'
 import { showGamesAction } from '../actions/gameActions'
+import { REFILL_BALANCE } from '../actions/actionTypes'
 import { csrfFetch } from './csrf';
 
 
@@ -57,6 +58,16 @@ export const restoreUser = () => async (dispatch) => {
     dispatch(setUser(data.user));
   }
   return response;
+};
+
+export const refillBalance = () => async (dispatch) => {
+  try {
+    const response = await csrfFetch('/api/users/refill', { method: 'POST' });
+    const data = await response.json();
+    dispatch({ type: REFILL_BALANCE, payload: data.balance });
+  } catch (err) {
+    console.error('refillBalance error:', err);
+  }
 };
 
 export const loadThemes = () => async (dispatch) => {

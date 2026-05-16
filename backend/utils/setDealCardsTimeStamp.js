@@ -7,7 +7,7 @@ function setDealCardsTimeStamp(io, tableId) {
 
   let room = tableId;
   // Set countdown end time
-  const countdownDuration = 3000; // 5 seconds
+  const countdownDuration = 10000; // 10 seconds
   const endTime = Math.ceil(Date.now() + countdownDuration);
   rooms[tableId].dealCardsTimeStamp = endTime;
 

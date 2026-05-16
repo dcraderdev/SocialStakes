@@ -4,10 +4,11 @@ const { gameController } = require('../controllers/gameController');
 async function fetchUpdatedTable(tableId) {
   let updatedTable = await gameController.getTableById(tableId);
   if (!updatedTable) return;
+  if (!updatedTable.Conversation || !updatedTable.gameSessions || !updatedTable.gameSessions[0]) return;
 
   if (!rooms[tableId]) {
     rooms[tableId] = roomInit();
-    rooms[tableId].id = updatedTable.tableId;
+    rooms[tableId].id = updatedTable.id;
     rooms[tableId].gameSessionId = updatedTable.gameSessions[0].id;
     rooms[tableId].blockHash = updatedTable.gameSessions[0].blockHash;
     rooms[tableId].decksUsed = updatedTable.Game.decksUsed;

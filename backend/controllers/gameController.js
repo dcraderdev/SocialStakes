@@ -179,15 +179,21 @@ const gameController = {
     return table;
   },
 
-  async checkTableCredentials(tableId,tableName, password){
+  async checkTableCredentials(tableId, tableName, password){
 
     let table
 
     if(tableId){
       table = await Table.findByPk(tableId)
-    } 
+    }
     else if(tableName){
       table = await Table.findOne({where:{tableName}})
+    }
+    else if(password){
+      // Find private table directly by its passCode (6-char join code flow)
+      table = await Table.findOne({
+        where: { passCode: password, private: true, active: true }
+      })
     }
 
     if(!table) {
@@ -198,14 +204,13 @@ const gameController = {
     }
 
     if(!table.passCode || table.passCode === '' || table.passCode === password){
-      return { 
+      return {
         canJoin: true,
         table: table
       }
     }
 
-
-    return { 
+    return {
       canJoin: false,
       table: table
     }
@@ -221,12 +226,7 @@ const gameController = {
     const {gameType, deckSize, betSizing, isPrivate, privateKey, tableName } = tableObj
     const userId = user.id
 
-
-
-    // console.log(tableObj);
-    // console.log(userId);
-
-    let private = isPrivate && privateKey.trim().length > 0 ? isPrivate : false 
+    let isTablePrivate = isPrivate && privateKey.trim().length > 0 ? isPrivate : false
     let nickname = tableName.length ? tableName : null
     let shufflePoint
     let decksUsed = deckSize
@@ -260,7 +260,7 @@ const gameController = {
       gameId:game.id,
       userId: userId,
       shufflePoint,
-      private,
+      private: isTablePrivate,
       passCode: privateKey,
       tableName: nickname
     });

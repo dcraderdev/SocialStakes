@@ -138,7 +138,17 @@ router.get('/search', requireAuth, async (req, res, next) => {
     return next(err);
   }
 });
+// Refill demo balance — gives broke users $1000 to keep playing
+router.post('/refill', requireAuth, async (req, res, next) => {
+  const { user } = req;
+  const currUser = await User.findByPk(user.id);
+  if (!currUser) return next(Object.assign(new Error('User not found'), { status: 404 }));
 
+  currUser.balance += 1000;
+  await currUser.save();
+
+  return res.status(200).json({ balance: currUser.balance });
+});
 
 // Get info about curruser
 router.get('/current',requireAuth, validateQueryParameters, async (req, res, next) => {

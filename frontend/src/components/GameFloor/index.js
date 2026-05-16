@@ -49,6 +49,9 @@ function GameFloor() {
   // handle loading active games on component load
   useEffect(() => {
     dispatch(gameActions.getAllGames());
+    // Auto-show multi-player blackjack tables so the lobby is immediately useful
+    setCurrTables('multi_blackjack');
+    dispatch(gameActions.getTablesByType('multi_blackjack'));
   }, []);
 
   // handle checking active games

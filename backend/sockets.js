@@ -6,6 +6,10 @@ const { botController } = require('./controllers/botController');
 const { connectionController } = require('./controllers/connectionController');
 const { blackjackController } = require('./controllers/blackjackController');
 const { timerController } = require('./controllers/timerController');
+const ensureDefaultTables = require('./utils/ensureDefaultTables');
+const { ensureBotsExist } = require('./utils/ensureBotsExist');
+
+const BELLAGIO_TABLE_ID = 'be11a610-7777-7777-7777-7be11a610777';
 
 const {
   drawCards,
@@ -55,6 +59,9 @@ module.exports = function (io) {
   initializeRooms();
   initializeBot();
   initializeCounter();
+
+  ensureBotsExist();
+  ensureDefaultTables();
 
   // _*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_
   // _*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_
@@ -190,6 +197,7 @@ module.exports = function (io) {
       if (!rooms[tableId]) {
         await fetchUpdatedTable(tableId);
       }
+      if (!rooms[tableId]) return;
 
       // Add the player to the room
       rooms[tableId].seats[seat] = takeSeatObj;
@@ -293,11 +301,9 @@ module.exports = function (io) {
 
       // If the room doesnt exist create a new room
       if (!rooms[tableId]) {
-        let updatedTable = await gameController.getTableById(tableId);
-        rooms[tableId] = roomInit();
-        rooms[tableId].gameSessionId = updatedTable.gameSessions[0].id;
-        rooms[tableId].decksUsed = updatedTable.Game.decksUsed;
+        await fetchUpdatedTable(tableId);
       }
+      if (!rooms[tableId]) return;
 
       // If handInProgress, dont add the bet
       if (rooms[tableId].handInProgress) {
@@ -310,11 +316,23 @@ module.exports = function (io) {
         rooms[tableId].seats[seat].tableBalance -= bet;
       }
 
+      io.in(room).emit('new_bet', betObj);
+
+      // Spawn bots before starting countdown so they get to bet in time
+      if (tableId !== BELLAGIO_TABLE_ID) {
+        const seats = Object.values(rooms[tableId].seats);
+        const humanSeats = seats.filter((s) => !botController.isBotUser(s.userId));
+        const botSeats = seats.filter((s) => botController.isBotUser(s.userId));
+
+        if (humanSeats.length === 1 && botSeats.length === 0) {
+          await botController.spawnRoamingBotsForTable(io, tableId, 2);
+        }
+      }
+
+      // Start countdown after bots have placed their bets (bots may have already started it)
       if (!rooms[tableId].dealCardsTimeStamp) {
         setDealCardsTimeStamp(io, tableId);
       }
-
-      io.in(room).emit('new_bet', betObj);
     });
 
 

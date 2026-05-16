@@ -156,6 +156,20 @@ function GameFloor() {
         </div>
       );
     }
+    if (gameType === 'slots') {
+      return (
+        <div className="gameicon-container flex center">
+            <div className="gameicon-text flex center">Slots</div>
+        </div>
+      );
+    }
+    if (gameType === 'roulette') {
+      return (
+        <div className="gameicon-container flex center">
+            <div className="gameicon-text flex center">Roulette</div>
+        </div>
+      );
+    }
   };
 
 

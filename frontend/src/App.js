@@ -30,6 +30,9 @@ import VerifyHandPage from './components/VerifyHandPage';
 import CoinFlip from './components/games/CoinFlip';
 import HiLo from './components/games/HiLo';
 import AceyDuecey from './components/games/AceyDuecey';
+import HoldEm from './components/games/HoldEm';
+import Slots from './components/games/Slots';
+import Roulette from './components/games/Roulette';
 import RemoveFriendModal from './components/RemoveFriendModal';
 import ProfileButtonModal from './components/ProfileButtonModal';
 import StartConversationModal from './components/StartConversationModal';
@@ -243,6 +246,17 @@ function App() {
             {isLoaded && <AceyDuecey />}
           </Route>
 
+          <Route path="/play/holdem" exact>
+            {isLoaded && <HoldEm />}
+          </Route>
+
+          <Route path="/play/slots" exact>
+            {isLoaded && <Slots />}
+          </Route>
+
+          <Route path="/play/roulette" exact>
+            {isLoaded && <Roulette />}
+          </Route>
 
           <Route>
             <h1>404:Unknown Route</h1>

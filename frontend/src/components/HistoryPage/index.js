@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import Navigation from '../Navigation';
+import { SkeletonStatGrid, SkeletonCard, SkeletonTableRow } from '../Skeleton';
 
 /**
  * "Your last 30 days" history dashboard. Mirrors 04-history.jpg in the
@@ -12,9 +13,33 @@ import Navigation from '../Navigation';
 function HistoryPage() {
   const user = useSelector((state) => state.users.user);
   const [range, setRange] = useState('30d');
+  const [loading] = useState(false);
 
   const data = useMemo(() => generateMockHistory(), []);
   const stats = useMemo(() => deriveStats(data), [data]);
+
+  if (loading) {
+    return (
+      <>
+        <Navigation />
+        <div className="ss-page">
+          <div className="ss-skeleton ss-skeleton-text wide" style={{ height: 32, width: 280, marginBottom: 8 }} />
+          <div className="ss-skeleton ss-skeleton-text" style={{ width: 420, marginBottom: 28 }} />
+          <SkeletonStatGrid count={5} />
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: 16 }}>
+            <SkeletonCard rows={3} style={{ height: 320 }} />
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+              <SkeletonCard rows={3} />
+              <SkeletonCard rows={2} />
+            </div>
+          </div>
+          <div className="ss-card" style={{ marginTop: 22, padding: '8px 0' }}>
+            {Array.from({ length: 6 }).map((_, i) => <SkeletonTableRow key={i} />)}
+          </div>
+        </div>
+      </>
+    );
+  }
 
   return (
     <>
@@ -24,29 +49,29 @@ function HistoryPage() {
         <p className="ss-sub">All hands cryptographically logged. Click any row to replay or verify.</p>
 
         <div className="ss-grid-stats">
-          <div className="ss-card ss-stat-card">
+          <div className="ss-card ss-stat-card ss-card-hover">
             <div className="ss-stat-label">Hands played</div>
             <div className="ss-stat-value">{stats.handsPlayed.toLocaleString()}</div>
             <div className="ss-stat-sub">+{stats.handsDelta} from prior month</div>
           </div>
-          <div className="ss-card ss-stat-card">
+          <div className="ss-card ss-stat-card ss-card-hover">
             <div className="ss-stat-label">Net P&amp;L</div>
             <div className="ss-stat-value" style={{ color: stats.netPL >= 0 ? 'var(--ss-green)' : 'var(--ss-red)' }}>
               {stats.netPL >= 0 ? '+ ' : '- '}$ {Math.abs(stats.netPL).toLocaleString()}
             </div>
             <div className="ss-stat-sub">All-time + $4,820</div>
           </div>
-          <div className="ss-card ss-stat-card">
+          <div className="ss-card ss-stat-card ss-card-hover">
             <div className="ss-stat-label">Win rate</div>
             <div className="ss-stat-value">{stats.winRate.toFixed(1)}%</div>
             <div className="ss-stat-sub">House edge 0.5%</div>
           </div>
-          <div className="ss-card ss-stat-card">
+          <div className="ss-card ss-stat-card ss-card-hover">
             <div className="ss-stat-label">Best session</div>
             <div className="ss-stat-value" style={{ color: 'var(--ss-green)' }}>+ $ {stats.bestSession.amount}</div>
             <div className="ss-stat-sub">{stats.bestSession.table}</div>
           </div>
-          <div className="ss-card ss-stat-card">
+          <div className="ss-card ss-stat-card ss-card-hover">
             <div className="ss-stat-label">Worst session</div>
             <div className="ss-stat-value" style={{ color: 'var(--ss-red)' }}>− $ {stats.worstSession.amount}</div>
             <div className="ss-stat-sub">{stats.worstSession.table}</div>

@@ -11,6 +11,7 @@ import { restoreCSRF, csrfFetch } from './redux/middleware/csrf';
 import { ModalProvider } from './context/ModalContext';
 import { SocketProvider } from './context/SocketContext';
 import { WindowProvider } from './context/WindowContext';
+import { ToastProvider } from './context/ToastContext';
 
 const store = configureStore();
 
@@ -29,13 +30,15 @@ function Root(){
   return(
     <Provider store={store}>
       <BrowserRouter>
-          <ModalProvider> 
-            <SocketProvider> 
-              <WindowProvider> 
+          <ModalProvider>
+            <SocketProvider>
+              <WindowProvider>
+                <ToastProvider>
                   <App />
-              </WindowProvider> 
-            </SocketProvider> 
-          </ModalProvider> 
+                </ToastProvider>
+              </WindowProvider>
+            </SocketProvider>
+          </ModalProvider>
       </BrowserRouter>
     </Provider>
   );

@@ -1,0 +1,131 @@
+/* HistoryPage — scoped styles. No globals touched. */
+
+/* ── filter bar ──────────────────────────────────────────────────────────── */
+.hp-filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 22px;
+}
+
+/* segmented date-range control */
+.hp-range-group {
+  display: flex;
+  gap: 0;
+  background: var(--ss-bg-soft);
+  border: 1px solid var(--ss-border);
+  border-radius: var(--ss-r-pill);
+  padding: 3px;
+}
+
+.hp-range-btn {
+  padding: 5px 13px;
+  border-radius: var(--ss-r-pill);
+  font-size: 12px;
+  font-weight: 500;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--ss-text-dim);
+  cursor: pointer;
+  font-family: var(--ss-font);
+  transition: color 0.1s, background 0.1s, border-color 0.1s;
+  white-space: nowrap;
+}
+.hp-range-btn:hover:not(.hp-range-btn--active) {
+  color: var(--ss-text);
+}
+.hp-range-btn--active {
+  background: var(--ss-gold-faint);
+  border-color: var(--ss-gold-line);
+  color: var(--ss-gold);
+}
+
+/* dropdown selects */
+.hp-select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: var(--ss-bg-soft);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%237c8290' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  border: 1px solid var(--ss-border);
+  border-radius: var(--ss-r-pill);
+  color: var(--ss-text-dim);
+  padding: 6px 30px 6px 14px;
+  font-size: 12px;
+  font-weight: 500;
+  font-family: var(--ss-font);
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.1s, color 0.1s;
+}
+.hp-select:hover {
+  border-color: var(--ss-gold-line);
+  color: var(--ss-text);
+}
+.hp-select:focus {
+  border-color: var(--ss-gold-line);
+  color: var(--ss-text);
+}
+.hp-select option {
+  background: var(--ss-bg-elev);
+  color: var(--ss-text);
+}
+
+/* date inputs */
+.hp-date-input {
+  background: var(--ss-bg-soft);
+  border: 1px solid var(--ss-border);
+  border-radius: var(--ss-r-md);
+  color: var(--ss-text);
+  padding: 6px 10px;
+  font-size: 12px;
+  font-family: var(--ss-font);
+  outline: none;
+  color-scheme: dark;
+  transition: border-color 0.1s;
+}
+.hp-date-input:focus {
+  border-color: var(--ss-gold-line);
+}
+.hp-date-input::-webkit-calendar-picker-indicator {
+  filter: invert(0.6);
+  cursor: pointer;
+}
+
+/* ── hand log ─────────────────────────────────────────────────────────────── */
+.hp-hand-row {
+  transition: background 0.08s;
+  box-sizing: border-box;
+}
+.hp-hand-row:hover {
+  background: rgba(229, 179, 76, 0.03) !important;
+}
+
+/* ── streak cards ─────────────────────────────────────────────────────────── */
+.hp-streak-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+/* ── responsive ──────────────────────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .hp-filter-row {
+    gap: 8px;
+  }
+  .hp-range-group {
+    flex-wrap: wrap;
+    border-radius: var(--ss-r-lg);
+  }
+  .hp-streak-grid {
+    grid-template-columns: 1fr;
+  }
+  /* hand log: scroll horizontally on narrow screens */
+  .hp-log-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}

@@ -83,10 +83,11 @@ function CoinFlip() {
   const [history, setHistory]   = useSessionState('cf_history', []);
   const [winStreak, setWinStreak] = useSessionState('cf_streak', 0);
   const [bet, setBet]           = useState(25);
-  const [result, setResult]     = useState(null);
-  const [flipping, setFlipping] = useState(false);
-  const [flipKey, setFlipKey]   = useState(0);
-  const [bankrollAnim, setBankrollAnim] = useState('');
+  const [result, setResult]      = useState(null);
+  const [flipping, setFlipping]  = useState(false);
+  const [flipKey, setFlipKey]    = useState(0);
+  const [bankrollAnim, setBankrollAnim]   = useState('');
+  const [bankrollAnimKey, setBankrollAnimKey] = useState(0);
 
   const isBroke       = bankroll <= 0;
   const effectiveBet  = Math.max(1, Math.min(Math.floor(bet), bankroll));
@@ -116,6 +117,7 @@ function CoinFlip() {
       setResult({ outcome, won, delta, phrase, newStreak });
       setHistory(h => [{ call, outcome, delta }, ...h].slice(0, 12));
       setFlipping(false);
+      setBankrollAnimKey(k => k + 1);
       setBankrollAnim(won ? 'cf-bankroll-flash-win' : 'cf-bankroll-flash-lose');
       setTimeout(() => setBankrollAnim(''), 700);
     }, 900);
@@ -154,7 +156,7 @@ function CoinFlip() {
               <div>
                 <div className="ss-stat-label">Bankroll</div>
                 <div
-                  key={result ? result.delta + result.outcome : 'init'}
+                  key={bankrollAnimKey}
                   className="ss-stat-value"
                   style={{
                     color: isBroke ? 'var(--ss-red)' : 'var(--ss-text)',

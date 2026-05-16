@@ -51,6 +51,16 @@ const STYLES = `
   0%   { opacity: 0; transform: translateY(-8px); }
   100% { opacity: 1; transform: translateY(0); }
 }
+@keyframes ad-bankroll-win {
+  0%   { color: var(--ss-text); }
+  45%  { color: var(--ss-green); }
+  100% { color: var(--ss-text); }
+}
+@keyframes ad-bankroll-lose {
+  0%   { color: var(--ss-text); }
+  45%  { color: var(--ss-red); }
+  100% { color: var(--ss-text); }
+}
 `;
 
 function drawCard() {
@@ -153,7 +163,10 @@ function AceyDuecey() {
   const autoTimerRef    = useRef(null);
   const autoPassRef     = useRef(null);
   const [autoPassMsg, setAutoPassMsg] = useState(null);
+  const [bankrollAnimKey, setBankrollAnimKey] = useState(0);
+  const [bankrollAnimType, setBankrollAnimType] = useState('');
   const isBroke = bankroll <= 0;
+  const netPL   = bankroll - 1000;
 
   // Index of first Ace post still needing High/Low choice (-1 if all resolved)
   const pendingAceIdx = effectiveRanks.findIndex(r => r === null);
@@ -168,7 +181,12 @@ function AceyDuecey() {
   const info = spread !== null ? spreadInfo(spread) : { label: 'Choose Ace value first', color: 'var(--ss-gold)', winPct: 0 };
 
   const effectiveBet = Math.max(1, Math.min(Math.floor(bet), bankroll));
-  const betOverflow = bet > bankroll && !isBroke;
+  const betOverflow  = bet > bankroll && !isBroke;
+
+  // Phase flags — declared early so useEffects below can reference them
+  const inResult    = !!result;
+  const inAcePrompt = !inResult && pendingAceIdx >= 0;
+  const inReady     = !inResult && !inAcePrompt && !isBroke;
 
   // Auto-advance to next hand after result is shown
   useEffect(() => {
@@ -267,6 +285,8 @@ function AceyDuecey() {
     }
 
     setBankroll(b => b + delta);
+    setBankrollAnimKey(k => k + 1);
+    setBankrollAnimType(type === 'between' ? 'win' : 'lose');
     setResult({ type, delta, phrase });
     setHistory(h => [{
       left: cards[0], right: cards[1], mid: m,
@@ -278,10 +298,6 @@ function AceyDuecey() {
   const resultColor = result
     ? (result.type === 'between' ? 'var(--ss-green)' : 'var(--ss-red)')
     : 'var(--ss-text)';
-
-  const inResult = !!result;
-  const inAcePrompt = !inResult && pendingAceIdx >= 0;
-  const inReady = !inResult && !inAcePrompt && !isBroke;
 
   return (
     <>
@@ -302,9 +318,21 @@ function AceyDuecey() {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 20, flexWrap: 'wrap', gap: 12 }}>
               <div>
                 <div className="ss-stat-label">Bankroll</div>
-                <div className="ss-stat-value" style={{ color: isBroke ? 'var(--ss-red)' : 'var(--ss-text)' }}>
+                <div
+                  key={bankrollAnimKey}
+                  className="ss-stat-value"
+                  style={{
+                    color: isBroke ? 'var(--ss-red)' : 'var(--ss-text)',
+                    animation: bankrollAnimType ? `ad-bankroll-${bankrollAnimType} 0.65s ease` : 'none',
+                  }}
+                >
                   ${bankroll.toLocaleString()}
                 </div>
+                {netPL !== 0 && (
+                  <div className="ss-mono" style={{ fontSize: 11, color: netPL > 0 ? 'var(--ss-green)' : 'var(--ss-red)', marginTop: 2 }}>
+                    {netPL > 0 ? '+' : ''}${netPL.toLocaleString()} session
+                  </div>
+                )}
               </div>
               <div style={{ textAlign: 'center' }}>
                 <div className="ss-stat-label">Spread</div>
@@ -500,31 +528,41 @@ function AceyDuecey() {
                 <span style={{ color: 'var(--ss-text-dim)', fontWeight: 600 }}>Deal the middle card to begin.</span>
               </div>
             ) : (
-              history.map((h, i) => {
-                const typeColor = h.type === 'between' ? 'var(--ss-green)' : 'var(--ss-red)';
-                const typeLabel = h.type === 'between' ? 'HIT' : h.type === 'post' ? 'POST' : 'OUT';
-                return (
-                  <div key={i} style={{
-                    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                    padding: '8px 0', borderBottom: '1px solid var(--ss-border-soft)', fontSize: 12,
-                    gap: 8,
-                  }}>
-                    <span className="ss-mono" style={{ color: 'var(--ss-text-muted)', flexShrink: 0 }}>
-                      {effLabel(h.left.rank, h.leftEff, h.left.suit)}
-                      <span style={{ color: 'var(--ss-border)', margin: '0 3px' }}>|</span>
-                      <span style={{ color: typeColor }}>{rankLabel(h.mid.rank)}{h.mid.suit}</span>
-                      <span style={{ color: 'var(--ss-border)', margin: '0 3px' }}>|</span>
-                      {effLabel(h.right.rank, h.rightEff, h.right.suit)}
-                    </span>
-                    <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', color: typeColor, flexShrink: 0 }}>
-                      {typeLabel}
-                    </span>
-                    <span className="ss-mono" style={{ color: h.delta > 0 ? 'var(--ss-green)' : 'var(--ss-red)', fontWeight: 600, flexShrink: 0 }}>
-                      {h.delta > 0 ? '+' : ''}${h.delta}
-                    </span>
-                  </div>
-                );
-              })
+              <>
+                {history.map((h, i) => {
+                  const typeColor = h.type === 'between' ? 'var(--ss-green)' : 'var(--ss-red)';
+                  const typeLabel = h.type === 'between' ? 'HIT' : h.type === 'post' ? 'POST' : 'OUT';
+                  return (
+                    <div key={i} style={{
+                      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                      padding: '8px 0', borderBottom: '1px solid var(--ss-border-soft)', fontSize: 12,
+                      gap: 8,
+                    }}>
+                      <span className="ss-mono" style={{ color: 'var(--ss-text-muted)', flexShrink: 0 }}>
+                        {effLabel(h.left.rank, h.leftEff, h.left.suit)}
+                        <span style={{ color: 'var(--ss-border)', margin: '0 3px' }}>|</span>
+                        <span style={{ color: typeColor }}>{rankLabel(h.mid.rank)}{h.mid.suit}</span>
+                        <span style={{ color: 'var(--ss-border)', margin: '0 3px' }}>|</span>
+                        {effLabel(h.right.rank, h.rightEff, h.right.suit)}
+                      </span>
+                      <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', color: typeColor, flexShrink: 0 }}>
+                        {typeLabel}
+                      </span>
+                      <span className="ss-mono" style={{ color: h.delta > 0 ? 'var(--ss-green)' : 'var(--ss-red)', fontWeight: 600, flexShrink: 0 }}>
+                        {h.delta > 0 ? '+' : ''}${h.delta}
+                      </span>
+                    </div>
+                  );
+                })}
+                <div style={{ marginTop: 12, paddingTop: 12, borderTop: '1px solid var(--ss-border-soft)', display: 'flex', justifyContent: 'space-between', fontSize: 12 }}>
+                  <span style={{ color: 'var(--ss-text-muted)' }}>
+                    {history.filter(h => h.delta > 0).length}W — {history.filter(h => h.delta < 0).length}L
+                  </span>
+                  <span className="ss-mono" style={{ color: netPL >= 0 ? 'var(--ss-green)' : 'var(--ss-red)', fontWeight: 600 }}>
+                    {netPL >= 0 ? '+' : ''}${netPL.toLocaleString()}
+                  </span>
+                </div>
+              </>
             )}
           </div>
         </div>

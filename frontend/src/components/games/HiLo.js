@@ -13,8 +13,8 @@ const STYLES = `
 }
 @keyframes hl-streak-pop {
   0%   { transform: scale(1); }
-  35%  { transform: scale(1.3); }
-  65%  { transform: scale(0.92); }
+  35%  { transform: scale(1.35); }
+  65%  { transform: scale(0.9); }
   100% { transform: scale(1); }
 }
 @keyframes hl-result-in {
@@ -23,23 +23,35 @@ const STYLES = `
 }
 @keyframes hl-bankroll-win {
   0%   { color: var(--ss-text); }
-  50%  { color: var(--ss-green); }
+  45%  { color: var(--ss-green); }
   100% { color: var(--ss-text); }
 }
 @keyframes hl-bankroll-lose {
   0%   { color: var(--ss-text); }
-  50%  { color: var(--ss-red); }
+  45%  { color: var(--ss-red); }
   100% { color: var(--ss-text); }
+}
+@keyframes hl-arrow-pulse {
+  0%, 100% { opacity: 0.3; transform: scaleX(1); }
+  50%       { opacity: 1;   transform: scaleX(1.3); }
+}
+@keyframes hl-current-swap {
+  0%   { opacity: 0.4; transform: scale(0.93); }
+  100% { opacity: 1;   transform: scale(1); }
 }
 `;
 
 const WIN_PHRASES = [
   'Nice call!', 'You read it right!', 'Cards are on your side!',
-  'Spot on!', 'Trust the gut!', 'Smooth move.',
+  'Spot on!', 'Trust the gut!', 'Smooth move.', 'The deck bows to you.',
 ];
 const LOSE_PHRASES = [
-  'Missed it.', 'Tie always loses — rough.', 'Cards had other plans.',
-  'Next one\'s yours!', 'So close!', 'Shake it off.',
+  'Missed it.', 'Cards had other plans.', 'Next one\'s yours!',
+  'So close!', 'Shake it off.', 'The deck remembers nothing.',
+];
+const TIE_PHRASES = [
+  'Same rank — tie always loses. Rough.', 'Tie goes to the house.',
+  'Matching ranks — bad timing.', 'Tied — house rule: you lose.',
 ];
 
 function drawCard() {
@@ -57,6 +69,14 @@ function useSessionState(key, defaultValue) {
     try { sessionStorage.setItem(key, JSON.stringify(state)); } catch {}
   }, [key, state]);
   return [state, setState];
+}
+
+// Probability context for a given current-card rank (1–13)
+function oddsFor(rank) {
+  const higher = 13 - rank; // ranks strictly above
+  const lower  = rank - 1;  // ranks strictly below
+  // tie = 1 rank (always loses)
+  return { higher, lower };
 }
 
 function CardArt({ card, big, animKey }) {
@@ -101,75 +121,82 @@ function CardArt({ card, big, animKey }) {
   );
 }
 
-function streakLabel(streak) {
-  if (streak >= 8) return 'LEGENDARY';
-  if (streak >= 6) return 'UNSTOPPABLE';
-  if (streak >= 4) return 'ON FIRE';
-  if (streak >= 2) return 'STREAK';
+function streakLabel(s) {
+  if (s >= 8) return 'LEGENDARY';
+  if (s >= 6) return 'UNSTOPPABLE';
+  if (s >= 4) return 'ON FIRE';
+  if (s >= 2) return 'STREAK';
   return null;
 }
+const streakColor = s =>
+  s >= 6 ? 'var(--ss-gold)' : s >= 4 ? 'var(--ss-green)' : s >= 2 ? 'var(--ss-blue)' : 'var(--ss-text)';
 
 function HiLo() {
   const [bankroll, setBankroll] = useSessionState('hl_bankroll', 1000);
-  const [history, setHistory] = useSessionState('hl_history', []);
-  const [streak, setStreak] = useSessionState('hl_streak', 0);
-  const [bet, setBet] = useState(25);
-  const [current, setCurrent] = useState(drawCard);
-  const [next, setNext] = useState(null);
-  const [result, setResult] = useState(null);
-  const [waiting, setWaiting] = useState(false);
+  const [history, setHistory]   = useSessionState('hl_history', []);
+  const [streak, setStreak]     = useSessionState('hl_streak', 0);
+  const [bet, setBet]           = useState(25);
+  const [current, setCurrent]   = useState(drawCard);
+  const [currentKey, setCurrentKey] = useState(0); // for current-card swap animation
+  const [next, setNext]         = useState(null);
+  const [result, setResult]     = useState(null);
+  const [waiting, setWaiting]   = useState(false);
   const [cardRevealKey, setCardRevealKey] = useState(0);
-  const [bankrollAnimClass, setBankrollAnimClass] = useState('');
+  const [bankrollAnimKey, setBankrollAnimKey] = useState(0);
+  const [bankrollAnimType, setBankrollAnimType] = useState('');
 
-  const isBroke = bankroll <= 0;
+  const isBroke      = bankroll <= 0;
   const effectiveBet = Math.max(1, Math.min(Math.floor(bet), bankroll));
-  const betOverflow = bet > bankroll && !isBroke;
+  const betOverflow  = bet > bankroll && !isBroke;
+  const netPL        = bankroll - 1000;
+  const label        = streakLabel(streak);
+  const sColor       = streakColor(streak);
+  const odds         = oddsFor(current.rank);
 
   const resetBankroll = () => {
-    setBankroll(1000);
-    setHistory([]);
-    setStreak(0);
-    setResult(null);
-    setCurrent(drawCard());
-    setNext(null);
+    setBankroll(1000); setHistory([]); setStreak(0); setResult(null);
+    const nc = drawCard();
+    setCurrent(nc); setCurrentKey(k => k + 1); setNext(null);
   };
 
   const guess = (direction) => {
     if (waiting || isBroke) return;
-    const n = drawCard();
+    const n    = drawCard();
+    const tied = n.rank === current.rank;
     let won;
-    if (n.rank === current.rank) won = false;
+    if (tied)                        won = false;
     else if (direction === 'higher') won = n.rank > current.rank;
-    else won = n.rank < current.rank;
+    else                             won = n.rank < current.rank;
 
-    const delta = won ? effectiveBet : -effectiveBet;
+    const delta     = won ? effectiveBet : -effectiveBet;
     const newStreak = won ? streak + 1 : 0;
-    const phrases = won ? WIN_PHRASES : LOSE_PHRASES;
-    const phrase = phrases[Math.floor(Math.random() * phrases.length)];
+
+    let phrase;
+    if (tied) {
+      phrase = TIE_PHRASES[Math.floor(Math.random() * TIE_PHRASES.length)];
+    } else {
+      const pool = won ? WIN_PHRASES : LOSE_PHRASES;
+      phrase = pool[Math.floor(Math.random() * pool.length)];
+    }
 
     setBankroll(b => b + delta);
     setStreak(newStreak);
     setNext(n);
-    setResult({ won, delta, phrase, newStreak });
+    setResult({ won, delta, phrase, newStreak, tied });
     setHistory(h => [{ from: current, to: n, direction, delta }, ...h].slice(0, 10));
     setCardRevealKey(k => k + 1);
     setWaiting(true);
 
-    setBankrollAnimClass(won ? 'hl-bankroll-win' : 'hl-bankroll-lose');
-    setTimeout(() => setBankrollAnimClass(''), 700);
+    setBankrollAnimKey(k => k + 1);
+    setBankrollAnimType(won ? 'win' : 'lose');
 
     setTimeout(() => {
       setCurrent(n);
+      setCurrentKey(k => k + 1);
       setNext(null);
       setWaiting(false);
     }, 1100);
   };
-
-  const label = streakLabel(streak);
-  const streakColor = streak >= 6 ? 'var(--ss-gold)'
-    : streak >= 4 ? 'var(--ss-green)'
-    : streak >= 2 ? 'var(--ss-blue)'
-    : 'var(--ss-text)';
 
   return (
     <>
@@ -183,13 +210,25 @@ function HiLo() {
         <div className="ss-side-grid">
           <div className="ss-card" style={{ padding: 28 }}>
 
-            {/* Stats row */}
+            {/* Stats row: bankroll / streak / bet */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 24, flexWrap: 'wrap', gap: 12 }}>
               <div>
                 <div className="ss-stat-label">Bankroll</div>
-                <div className="ss-stat-value" style={{ animation: bankrollAnimClass ? `${bankrollAnimClass} 0.65s ease` : 'none', color: isBroke ? 'var(--ss-red)' : 'var(--ss-text)' }}>
+                <div
+                  key={bankrollAnimKey}
+                  className="ss-stat-value"
+                  style={{
+                    color: isBroke ? 'var(--ss-red)' : 'var(--ss-text)',
+                    animation: bankrollAnimType ? `hl-bankroll-${bankrollAnimType} 0.65s ease` : 'none',
+                  }}
+                >
                   ${bankroll.toLocaleString()}
                 </div>
+                {netPL !== 0 && (
+                  <div className="ss-mono" style={{ fontSize: 11, color: netPL > 0 ? 'var(--ss-green)' : 'var(--ss-red)', marginTop: 2 }}>
+                    {netPL > 0 ? '+' : ''}${netPL.toLocaleString()} session
+                  </div>
+                )}
               </div>
 
               <div style={{ textAlign: 'center' }}>
@@ -198,16 +237,14 @@ function HiLo() {
                   key={streak}
                   style={{
                     fontSize: streak >= 4 ? 32 : 26, fontWeight: 700, letterSpacing: '-0.02em',
-                    fontVariantNumeric: 'tabular-nums',
-                    color: streakColor,
+                    fontVariantNumeric: 'tabular-nums', color: sColor, lineHeight: 1,
                     animation: streak > 0 ? 'hl-streak-pop 0.42s cubic-bezier(.22,.61,.36,1)' : 'none',
-                    lineHeight: 1,
                   }}
                 >
                   {streak}
                 </div>
                 {label && (
-                  <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: streakColor, marginTop: 3 }}>
+                  <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: sColor, marginTop: 3 }}>
                     {label}
                   </div>
                 )}
@@ -215,7 +252,7 @@ function HiLo() {
 
               <div style={{ textAlign: 'right' }}>
                 <div className="ss-stat-label" style={{ color: betOverflow ? 'var(--ss-red)' : undefined }}>
-                  {betOverflow ? `Bet (capped $${bankroll})` : 'Bet'}
+                  {betOverflow ? `Capped $${bankroll}` : 'Bet'}
                 </div>
                 <input
                   type="number"
@@ -256,29 +293,51 @@ function HiLo() {
               </div>
             )}
 
-            {/* Cards */}
-            <div style={{ display: 'flex', gap: 24, justifyContent: 'center', alignItems: 'center', marginBottom: 20, minHeight: 180 }}>
+            {/* Cards — current → (animated arrow) → next */}
+            <div style={{ display: 'flex', gap: 20, justifyContent: 'center', alignItems: 'center', marginBottom: 16, minHeight: 180 }}>
               <div style={{ textAlign: 'center' }}>
                 <div className="ss-stat-label" style={{ marginBottom: 8 }}>Current</div>
-                <CardArt card={current} big />
+                <CardArt card={current} big animKey={currentKey > 0 ? `cur-${currentKey}` : null} />
               </div>
-              <div style={{ fontSize: 28, color: 'var(--ss-text-muted)', userSelect: 'none', flexShrink: 0 }}>→</div>
+              <div style={{
+                fontSize: 26, color: 'var(--ss-text-muted)', userSelect: 'none', flexShrink: 0,
+                animation: waiting ? 'hl-arrow-pulse 0.7s ease-in-out infinite' : 'none',
+              }}>
+                →
+              </div>
               <div style={{ textAlign: 'center' }}>
                 <div className="ss-stat-label" style={{ marginBottom: 8 }}>Next</div>
                 <CardArt card={next} big animKey={next ? cardRevealKey : null} />
               </div>
             </div>
 
+            {/* Odds hint — based on current card rank */}
+            {!isBroke && (
+              <div style={{ textAlign: 'center', marginBottom: 16 }}>
+                <div style={{ display: 'inline-flex', gap: 12, alignItems: 'center', fontSize: 12, color: 'var(--ss-text-muted)', background: 'var(--ss-bg-soft)', borderRadius: 8, padding: '5px 12px', border: '1px solid var(--ss-border-soft)' }}>
+                  <span style={{ color: odds.higher >= odds.lower ? 'var(--ss-green)' : 'var(--ss-text-muted)', fontWeight: odds.higher >= odds.lower ? 700 : 400 }}>
+                    ↑ {odds.higher}/13
+                  </span>
+                  <span style={{ opacity: 0.4 }}>·</span>
+                  <span style={{ fontSize: 11, opacity: 0.55 }}>tie = loss</span>
+                  <span style={{ opacity: 0.4 }}>·</span>
+                  <span style={{ color: odds.lower >= odds.higher ? 'var(--ss-green)' : 'var(--ss-text-muted)', fontWeight: odds.lower >= odds.higher ? 700 : 400 }}>
+                    ↓ {odds.lower}/13
+                  </span>
+                </div>
+              </div>
+            )}
+
             {/* Result banner */}
             {result && (
               <div
-                key={result.delta + (result.won ? 'w' : 'l')}
+                key={result.delta + (result.won ? 'w' : 'l') + (result.tied ? 't' : '')}
                 style={{ textAlign: 'center', marginBottom: 16, animation: 'hl-result-in 0.3s ease forwards' }}
               >
                 <div style={{ fontSize: 18, fontWeight: 800, color: result.won ? 'var(--ss-green)' : 'var(--ss-red)' }}>
                   {result.won ? `Won $${result.delta}` : `Lost $${-result.delta}`}
                   {result.won && result.newStreak >= 2 && (
-                    <span style={{ fontSize: 13, marginLeft: 10, color: streakColor, fontWeight: 700 }}>
+                    <span style={{ fontSize: 13, marginLeft: 10, color: streakColor(result.newStreak), fontWeight: 700 }}>
                       Streak x{result.newStreak}!
                     </span>
                   )}
@@ -300,23 +359,31 @@ function HiLo() {
               </div>
             ) : (
               <div style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
-                <button className="ss-btn ss-btn-primary" onClick={() => guess('higher')} disabled={waiting}
-                  style={{ flex: 1, maxWidth: 160, height: 52, fontSize: 15, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                <button
+                  className="ss-btn ss-btn-primary"
+                  onClick={() => guess('higher')}
+                  disabled={waiting}
+                  style={{ flex: 1, maxWidth: 160, height: 52, fontSize: 15, textTransform: 'uppercase', letterSpacing: '0.08em' }}
+                >
                   ↑ Higher
                 </button>
-                <button className="ss-btn" onClick={() => guess('lower')} disabled={waiting}
-                  style={{ flex: 1, maxWidth: 160, height: 52, fontSize: 15, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                <button
+                  className="ss-btn"
+                  onClick={() => guess('lower')}
+                  disabled={waiting}
+                  style={{ flex: 1, maxWidth: 160, height: 52, fontSize: 15, textTransform: 'uppercase', letterSpacing: '0.08em' }}
+                >
                   ↓ Lower
                 </button>
               </div>
             )}
           </div>
 
-          {/* History */}
+          {/* History panel */}
           <div className="ss-card">
             <div className="ss-stat-label" style={{ marginBottom: 12 }}>Recent hands</div>
             {history.length === 0 ? (
-              <div style={{ color: 'var(--ss-text-muted)', fontSize: 13, padding: '32px 0', textAlign: 'center', lineHeight: 1.7 }}>
+              <div style={{ color: 'var(--ss-text-muted)', fontSize: 13, padding: '36px 0', textAlign: 'center', lineHeight: 1.75 }}>
                 No hands yet.<br />
                 <span style={{ color: 'var(--ss-text-dim)', fontWeight: 600 }}>Higher or lower — your call.</span>
               </div>
@@ -338,6 +405,16 @@ function HiLo() {
                   </span>
                 </div>
               ))
+            )}
+            {history.length > 0 && (
+              <div style={{ marginTop: 12, paddingTop: 12, borderTop: '1px solid var(--ss-border-soft)', display: 'flex', justifyContent: 'space-between', fontSize: 12 }}>
+                <span style={{ color: 'var(--ss-text-muted)' }}>
+                  {history.filter(h => h.delta > 0).length}W — {history.filter(h => h.delta < 0).length}L
+                </span>
+                <span className="ss-mono" style={{ color: netPL >= 0 ? 'var(--ss-green)' : 'var(--ss-red)', fontWeight: 600 }}>
+                  {netPL >= 0 ? '+' : ''}${netPL.toLocaleString()}
+                </span>
+              </div>
             )}
           </div>
         </div>

@@ -150,7 +150,9 @@ function AceyDuecey() {
   const [postShake, setPostShake] = useState(false);
   const [roundKey, setRoundKey] = useState(0);
 
-  const autoTimerRef = useRef(null);
+  const autoTimerRef    = useRef(null);
+  const autoPassRef     = useRef(null);
+  const [autoPassMsg, setAutoPassMsg] = useState(null);
   const isBroke = bankroll <= 0;
 
   // Index of first Ace post still needing High/Low choice (-1 if all resolved)
@@ -182,6 +184,26 @@ function AceyDuecey() {
     return () => clearTimeout(autoTimerRef.current);
   }, [result, isBroke]);
 
+  // Auto-pass when posts leave zero spread (same rank or adjacent)
+  useEffect(() => {
+    if (!allResolved || spread === null || spread > 0 || isBroke || inResult) return;
+    setAutoPassMsg('No gap between posts — redealing…');
+    autoPassRef.current = setTimeout(() => {
+      setAutoPassMsg(null);
+      clearTimeout(autoTimerRef.current);
+      const next = freshDeal();
+      setDeal(next);
+      setMiddle(null);
+      setResult(null);
+      setPostShake(false);
+      setRoundKey(k => k + 1);
+    }, 700);
+    return () => {
+      clearTimeout(autoPassRef.current);
+      setAutoPassMsg(null);
+    };
+  }, [allResolved, spread, isBroke, inResult]);
+
   const resolveAce = (choice) => {
     if (pendingAceIdx < 0) return;
     const newEff = [...effectiveRanks];
@@ -191,6 +213,8 @@ function AceyDuecey() {
 
   const newRound = () => {
     clearTimeout(autoTimerRef.current);
+    clearTimeout(autoPassRef.current);
+    setAutoPassMsg(null);
     const next = freshDeal();
     setDeal(next);
     setMiddle(null);
@@ -201,6 +225,8 @@ function AceyDuecey() {
 
   const resetBankroll = () => {
     clearTimeout(autoTimerRef.current);
+    clearTimeout(autoPassRef.current);
+    setAutoPassMsg(null);
     setBankroll(1000);
     setHistory([]);
     setResult(null);
@@ -446,16 +472,20 @@ function AceyDuecey() {
               <div style={{ textAlign: 'center', color: 'var(--ss-text-muted)', fontSize: 12, paddingTop: 4 }}>
                 Next hand coming…
               </div>
+            ) : autoPassMsg ? (
+              <div style={{ textAlign: 'center', color: 'var(--ss-text-muted)', fontSize: 13, paddingTop: 4, fontStyle: 'italic' }}>
+                {autoPassMsg}
+              </div>
             ) : inReady ? (
               <div style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
                 <button className="ss-btn ss-btn-primary" onClick={deal}
-                  disabled={!allResolved || spread === null || spread <= 0}
+                  disabled={spread === null || spread <= 0}
                   style={{ flex: 1, maxWidth: 160, height: 52, fontSize: 14, textTransform: 'uppercase', letterSpacing: '0.07em' }}>
                   Deal middle
                 </button>
                 <button className="ss-btn" onClick={newRound}
                   style={{ flex: 1, maxWidth: 160, height: 52, fontSize: 14, textTransform: 'uppercase', letterSpacing: '0.07em' }}>
-                  {spread !== null && spread <= 0 ? 'Redeal' : 'Pass'}
+                  Pass
                 </button>
               </div>
             ) : null /* ace-prompt phase: no deal/pass buttons yet */}

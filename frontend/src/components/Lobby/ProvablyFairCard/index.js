@@ -50,7 +50,7 @@ export default function ProvablyFairCard() {
         <span className="pfc-shield">🔐</span>
         <div className="pfc-header-text">
           <div className="pfc-title">Provably fair</div>
-          <div className="pfc-subtitle">Bitcoin block hash RNG</div>
+          <div className="pfc-subtitle">BTC block hash</div>
         </div>
         <span className="pfc-live-pill">
           <span className="pfc-live-dot" />

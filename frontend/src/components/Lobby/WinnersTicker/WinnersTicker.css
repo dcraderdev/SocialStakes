@@ -10,11 +10,11 @@
   border: 1px solid var(--ss-border);
   border-radius: var(--ss-r-md);
   padding: 0;
-  margin-bottom: 20px;
+  margin-bottom: 18px;
   overflow: hidden;
   position: relative;
   left: 10px;
-  height: 36px;
+  height: 40px;
 }
 
 /* Gold "Big winners" label tab on the left */
@@ -42,19 +42,17 @@
   height: 100%;
   display: flex;
   align-items: center;
-  /* Soft fade on both edges */
+  /* Soft fade on right edge only — left is handled by the label */
   mask-image: linear-gradient(
     to right,
-    transparent 0%,
-    black 4%,
-    black 90%,
+    black 0%,
+    black 88%,
     transparent 100%
   );
   -webkit-mask-image: linear-gradient(
     to right,
-    transparent 0%,
-    black 4%,
-    black 90%,
+    black 0%,
+    black 88%,
     transparent 100%
   );
 }
@@ -63,12 +61,12 @@
   display: flex;
   align-items: center;
   white-space: nowrap;
-  /* 32 s feels alive without being dizzying */
-  animation: wticker-scroll 32s linear infinite;
+  animation: wticker-scroll 34s linear infinite;
 }
 
-/* Pause the ticker on hover — gives the user time to read */
-.wticker-bar:hover .wticker-track {
+/* Pause on hover or keyboard focus within the bar */
+.wticker-bar:hover .wticker-track,
+.wticker-bar:focus-within .wticker-track {
   animation-play-state: paused;
 }
 
@@ -96,10 +94,10 @@
 .wticker-item {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  font-size: 12.5px;
+  gap: 7px;
+  font-size: 13px;
   color: var(--ss-text-dim);
-  padding: 0 2px;
+  padding: 0 4px;
   user-select: none;
 }
 
@@ -110,10 +108,11 @@
 }
 
 .wticker-sep {
-  margin: 0 18px;
+  margin: 0 20px;
   color: var(--ss-border);
   font-size: 16px;
   line-height: 1;
+  opacity: 0.8;
 }
 
 /* ── Screen-reader-only list ─────────────────────────────── */
@@ -135,13 +134,14 @@
   .wticker-bar {
     width: 98%;
     left: 0;
-    height: 32px;
+    height: 36px;
+    margin-bottom: 14px;
   }
   .wticker-label {
     padding: 0 10px;
     font-size: 9px;
   }
   .wticker-item {
-    font-size: 11.5px;
+    font-size: 12px;
   }
 }

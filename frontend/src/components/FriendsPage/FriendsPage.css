@@ -1,10 +1,10 @@
 .friendspage-wrapper{
-  height: calc(100vh - 50px);
+  height: calc(100vh - 56px);
 
-  width: 100vw;
+  width: 100%;
   position: absolute;
   left: 0px;
-  top: 50px;
+  top: 56px;
   overflow: hidden;
   font-family: sans-serif;
 
@@ -25,13 +25,13 @@
 
 
 .friendspage-friendsnavbar-wrapper.shrunk {
-  
+
   transition: .5s top;
-  top: 101px;
+  top: 107px;
 }
 
 .friendspage-friendsnavbar-wrapper.expanded {
-  top: 150px;
+  top: 156px;
 }
 
 

@@ -143,11 +143,16 @@ body {
 /* ---------- lobby ---------- */
 .gamefloor-wrapper {
   font-family: var(--ss-font) !important;
-  /* keep legacy top: 245px so the absolute-positioned children below the
-     game-tiles grid still land in the right place */
+  /* GameFloor.css now uses padding-top: 72px; no legacy top offset needed */
 }
 
-/* "Start / Join Private Game" buttons — keep legacy positioning, restyle */
+/* Container is now flex-column — override any row-default */
+.gamefloor-container {
+  flex-direction: column !important;
+  align-items: center !important;
+}
+
+/* "Start / Join Private Game" buttons — restyle */
 .private-game-button {
   border: 1px solid var(--ss-border) !important;
   border-radius: var(--ss-r-pill) !important;
@@ -166,9 +171,11 @@ body {
   background: var(--ss-gold-faint) !important;
 }
 
-/* Game tile grid: keep 3-column layout from legacy */
+/* Game tile grid */
 .games-grid {
-  max-width: 1280px !important;
+  width: 100% !important;
+  max-width: 1200px !important;
+  margin: 0 auto !important;
 }
 
 /* Each game-type tile: cleaner background, amber border on hover */
@@ -313,11 +320,13 @@ body {
   left: 0 !important;
   transform: none !important;
   display: flex !important;
-  flex-direction: column;
+  flex-direction: column !important;
   gap: 16px;
-  max-width: 1280px;
-  margin: 0 auto;
+  width: 100% !important;
+  max-width: 1200px !important;
+  margin: 0 auto !important;
   padding-top: 8px;
+  box-sizing: border-box;
 }
 
 /* The PayoutChatbox below the grid */
@@ -846,3 +855,216 @@ input, textarea, select { font-family: var(--ss-font); }
 .gamebar-tab-container,
 .gametabs-expanded,
 .gametabs-shrunk { display: none !important; height: 0 !important; visibility: hidden !important; }
+
+/* ============================================================
+   Lobby: table-sort bar and table tile full-width fix
+   ============================================================ */
+.tablesortbar-wrapper {
+  background-color: var(--ss-bg-elev) !important;
+  border-top: 1px solid var(--ss-border) !important;
+  border-bottom: 1px solid var(--ss-border) !important;
+  box-shadow: none !important;
+  border-radius: var(--ss-r-md) !important;
+}
+.tablesortbar-container {
+  max-width: 100% !important;
+  left: 0 !important;
+}
+.tablesort-text { color: var(--ss-text-muted) !important; }
+
+/* Tables-coming-soon empty state — always centered */
+.tables-coming-soon-container {
+  text-align: center !important;
+  color: var(--ss-text-dim) !important;
+  font-size: clamp(18px, 4vw, 30px) !important;
+  border-color: var(--ss-border) !important;
+}
+
+/* ============================================================
+   Nav bar — ensure it's visually distinct from the dark bg
+   ============================================================ */
+.nav-bar {
+  background-color: rgba(18, 20, 26, 0.96) !important;
+  border-bottom: 1px solid var(--ss-border) !important;
+  box-shadow: 0 1px 12px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* ============================================================
+   Responsive — mobile first (≤ 600px)
+   ============================================================ */
+
+/* -- Navigation -- */
+@media (max-width: 600px) {
+  .nav-bar {
+    height: 52px !important;
+  }
+  .nav-buttons {
+    padding: 0 12px !important;
+  }
+  .logo-name {
+    font-size: 18px !important;
+    white-space: nowrap;
+  }
+  .nav-user-button {
+    width: auto !important;
+    padding: 0 8px !important;
+    min-width: 44px;
+    min-height: 44px;
+  }
+  .nav-user-button.balance {
+    padding: 6px 10px !important;
+    font-size: 12px !important;
+  }
+  /* Hide nav text links on small screens — profile burger menu handles them */
+  .nav-user-buttons-container > .nav-user-button:not(.profile):not(.balance) {
+    display: none !important;
+  }
+}
+
+/* -- Lobby -- */
+@media (max-width: 600px) {
+  .gamefloor-wrapper {
+    padding-top: 60px !important;
+  }
+  .gamefloor-container {
+    padding: 0 12px !important;
+  }
+  .private-game-buttons {
+    flex-direction: column !important;
+    gap: 12px !important;
+    padding: 16px 0 12px !important;
+  }
+  .private-game-button {
+    width: 80% !important;
+    max-width: 320px !important;
+    font-size: 14px !important;
+    height: 44px !important;
+  }
+  .games-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
+    grid-auto-rows: 160px !important;
+  }
+  .gametile-name {
+    font-size: 16px !important;
+  }
+  .available-tables-grid {
+    gap: 10px !important;
+  }
+  .tabletile-wrapper {
+    min-height: 90px !important;
+    padding: 12px 14px !important;
+  }
+}
+
+/* -- ss-page (History, Verify, Games) -- */
+@media (max-width: 900px) {
+  .ss-page {
+    padding-top: 72px !important;
+  }
+  .ss-grid-stats {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+}
+
+@media (max-width: 600px) {
+  .ss-page {
+    padding: 68px 14px 32px !important;
+  }
+  .ss-grid-stats {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+  }
+  .ss-side-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .ss-h1 {
+    font-size: 22px !important;
+  }
+  .ss-sub {
+    font-size: 13px !important;
+  }
+  /* Deck order grid in verify page — fewer columns on mobile */
+  .ss-card [style*="grid-template-columns: repeat(13"] {
+    grid-template-columns: repeat(6, 1fr) !important;
+  }
+}
+
+/* -- Friends page -- */
+@media (max-width: 600px) {
+  .friendspage-wrapper {
+    top: 52px !important;
+    height: calc(100vh - 52px) !important;
+  }
+  .friendspage-friendsnavbar-wrapper {
+    width: 160px !important;
+  }
+  .friendspage-content-wrapper {
+    width: calc(100vw - 163px) !important;
+  }
+}
+
+/* -- Table view (game) -- */
+@media (max-width: 768px) {
+  .table-wrapper {
+    width: 98vw !important;
+    height: min(55vh, 480px) !important;
+    margin: 72px auto 160px !important;
+  }
+  .seats-container {
+    bottom: 10% !important;
+    padding: 0 2% !important;
+  }
+  .seat-wrapper {
+    width: 16% !important;
+  }
+  .card {
+    width: 40px !important;
+    height: 60px !important;
+  }
+  .easy-view.card-rank,
+  .easy-view.card-rank-flip {
+    font-size: 11px !important;
+  }
+  .easy-view.card-suit {
+    font-size: 18px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .table-wrapper {
+    margin: 60px auto 120px !important;
+  }
+  .seat-wrapper {
+    width: 18% !important;
+  }
+  .seat-namebalance-container .name-space {
+    font-size: 10px !important;
+  }
+  .card {
+    width: 32px !important;
+    height: 48px !important;
+  }
+}
+
+/* -- Touch targets: ensure all interactive buttons are ≥ 44px -- */
+@media (max-width: 768px) {
+  .private-game-button,
+  .ss-btn,
+  .nav-user-button {
+    min-height: 44px !important;
+  }
+  .sort-arrow {
+    min-width: 32px;
+    min-height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+/* -- Prevent horizontal overflow on all viewports -- */
+html, body, #root {
+  max-width: 100vw;
+  overflow-x: hidden;
+}

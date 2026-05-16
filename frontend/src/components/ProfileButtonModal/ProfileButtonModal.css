@@ -18,12 +18,16 @@
 
 .profile-modal.visible{
   right: 0;
+  visibility: visible;
+  pointer-events: auto;
   transition: right 1s ease;
 }
 
 .profile-modal.hidden {
   right: -300px;
-  transition: right 1s ease;
+  visibility: hidden;
+  pointer-events: none;
+  transition: right 1s ease, visibility 0s linear 1s;
 }
 
 

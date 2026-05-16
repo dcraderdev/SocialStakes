@@ -1,0 +1,195 @@
+.fol-card {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Header ─────────────────────────────────────────────── */
+
+.fol-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.fol-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ss-text-muted);
+}
+
+.fol-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: var(--ss-green);
+  background: rgba(74, 222, 128, 0.08);
+  border: 1px solid rgba(74, 222, 128, 0.25);
+  border-radius: var(--ss-r-pill);
+  padding: 2px 8px;
+  font-weight: 600;
+}
+
+.fol-badge-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ss-green);
+  flex-shrink: 0;
+  animation: fol-pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes fol-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.55; transform: scale(0.85); }
+}
+
+/* ── List ────────────────────────────────────────────────── */
+
+.fol-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.fol-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* ── Avatar + status dot ─────────────────────────────────── */
+
+.fol-avatar-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.fol-dot {
+  position: absolute;
+  bottom: -1px;
+  right: -1px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  border: 2px solid var(--ss-bg-elev);
+  transition: background 0.3s ease;
+}
+
+.fol-dot.online {
+  background: var(--ss-green);
+  box-shadow: 0 0 0 2px rgba(74, 222, 128, 0.2);
+}
+
+.fol-dot.offline {
+  background: var(--ss-text-muted);
+}
+
+/* ── Friend info ─────────────────────────────────────────── */
+
+.fol-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.fol-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ss-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fol-activity {
+  font-size: 11px;
+  color: var(--ss-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fol-activity.active {
+  color: var(--ss-green);
+  opacity: 0.85;
+}
+
+/* ── Overflow link ───────────────────────────────────────── */
+
+.fol-more {
+  display: block;
+  margin-top: 14px;
+  font-size: 12px;
+  color: var(--ss-text-muted);
+  text-decoration: none;
+  text-align: right;
+  transition: color 0.15s ease;
+}
+
+.fol-more:hover {
+  color: var(--ss-gold);
+  text-decoration: none;
+}
+
+/* ── Empty state ─────────────────────────────────────────── */
+
+.fol-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0 4px;
+  text-align: center;
+}
+
+.fol-empty-icon {
+  font-size: 28px;
+  line-height: 1;
+  opacity: 0.75;
+}
+
+.fol-empty-avatar-row {
+  display: flex;
+  gap: 0;
+  justify-content: center;
+  margin-bottom: 4px;
+}
+
+.fol-placeholder-av {
+  background: var(--ss-bg-soft) !important;
+  border: 1.5px dashed var(--ss-border) !important;
+  color: transparent !important;
+}
+
+.fol-empty-avatar-row .fol-placeholder-av + .fol-placeholder-av {
+  margin-left: -8px;
+  box-shadow: 0 0 0 2px var(--ss-bg-elev);
+}
+
+.fol-empty-text {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ss-text-dim);
+  margin: 0;
+}
+
+.fol-empty-sub {
+  font-size: 11px;
+  color: var(--ss-text-muted);
+  line-height: 1.5;
+  margin: 0;
+  max-width: 200px;
+}
+
+.fol-cta {
+  text-decoration: none;
+  margin-top: 4px;
+}

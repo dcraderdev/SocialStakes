@@ -21,6 +21,9 @@ import CreatingGameView from '../CreatingGameView';
 import TableTile from '../TableTile';
 import TableSortBar from '../TableSortBar';
 import PayoutChatbox from '../PayoutChatbox';
+import WinnersTicker from '../Lobby/WinnersTicker';
+import FriendsOnline from '../Lobby/FriendsOnline';
+import ProvablyFairCard from '../Lobby/ProvablyFairCard';
 
 function GameFloor() {
   const { socket } = useContext(SocketContext);
@@ -217,17 +220,29 @@ function GameFloor() {
 
 <div className='showgames-wrapper flex center'>
 
+              {/* Full-width winners ticker above the grid */}
+              <WinnersTicker />
 
-              <div className="games-grid">
-                {allGames &&
-                  Object.values(allGames).map((game, index) => (
-                    <GameTile key={index} game={game} cbFunc={checkTables} delay={index} style={{animationDelay: `${index * 3}s`}} />
-                  ))}
-              </div>
+              {/* Two-column layout: game tiles center + right rail */}
+              <div className="lobby-body">
+                <div className="lobby-center">
+                  <div className="games-grid">
+                    {allGames &&
+                      Object.values(allGames).map((game, index) => (
+                        <GameTile key={index} game={game} cbFunc={checkTables} delay={index} style={{animationDelay: `${index * 3}s`}} />
+                      ))}
+                  </div>
 
+                  <div className="winnerchatbox-wrapper">
+                      <PayoutChatbox />
+                  </div>
+                </div>
 
-              <div className="winnerchatbox-wrapper">
-                  <PayoutChatbox />
+                {/* Right rail — friends online + provably fair */}
+                <aside className="lobby-rail">
+                  <FriendsOnline />
+                  <ProvablyFairCard />
+                </aside>
               </div>
 
 </div>

@@ -15,7 +15,6 @@ import { ModalContext } from '../../context/ModalContext';
 
 import './CreatingGameView.css';
 import FriendTile from '../FriendTile';
-import { Pricing } from 'aws-sdk';
 
 const CreatingGameView = () => {
   const dispatch = useDispatch();

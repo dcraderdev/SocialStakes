@@ -82,7 +82,6 @@ const timerController = {
 
     if (room.gameType === 'Blackjack') {
       // ... additional logic if needed
-1
     }
 
     // if there are no bets, start hand otherwise cancel

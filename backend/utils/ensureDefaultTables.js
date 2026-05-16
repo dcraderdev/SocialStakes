@@ -15,6 +15,84 @@ const {
 
 const SYSTEM_USER_ID = 'e10d8de4-f4c7-4d28-9324-56aa9c000001';
 
+const DEFAULT_GAMES = [
+  {
+    id: 'blackjack_6_deck_low_stakes_multi',
+    gameType: 'multi_blackjack',
+    variant: 'American 21',
+    shortName: 'Blackjack',
+    decksUsed: 6,
+    active: true,
+    minNumPlayers: 1,
+    maxNumPlayers: 6,
+    smallBlind: 0,
+    bigBlind: 0,
+    minBet: 1,
+    maxBet: 500,
+    actionTimer: 15,
+  },
+  {
+    id: 'blackjack_4_deck_low_stakes_multi',
+    gameType: 'multi_blackjack',
+    variant: 'American 21',
+    shortName: 'Blackjack',
+    decksUsed: 4,
+    active: true,
+    minNumPlayers: 1,
+    maxNumPlayers: 6,
+    smallBlind: 0,
+    bigBlind: 0,
+    minBet: 1,
+    maxBet: 200,
+    actionTimer: 15,
+  },
+  {
+    id: 'blackjack_6_deck_mid_stakes_multi',
+    gameType: 'multi_blackjack',
+    variant: 'American 21',
+    shortName: 'Blackjack',
+    decksUsed: 6,
+    active: true,
+    minNumPlayers: 1,
+    maxNumPlayers: 6,
+    smallBlind: 0,
+    bigBlind: 0,
+    minBet: 25,
+    maxBet: 12500,
+    actionTimer: 15,
+  },
+  {
+    id: 'blackjack_4_deck_mid_stakes_multi',
+    gameType: 'multi_blackjack',
+    variant: 'American 21',
+    shortName: 'Blackjack',
+    decksUsed: 4,
+    active: true,
+    minNumPlayers: 1,
+    maxNumPlayers: 6,
+    smallBlind: 0,
+    bigBlind: 0,
+    minBet: 1,
+    maxBet: 5000,
+    actionTimer: 15,
+  },
+  {
+    id: 'blackjack_6_deck_high_stakes_multi',
+    gameType: 'multi_blackjack',
+    variant: 'American 21',
+    shortName: 'Blackjack',
+    decksUsed: 6,
+    active: true,
+    minNumPlayers: 1,
+    maxNumPlayers: 6,
+    smallBlind: 0,
+    bigBlind: 0,
+    minBet: 100,
+    maxBet: 50000,
+    actionTimer: 15,
+  },
+];
+
 const DEFAULT_TABLES = [
   {
     gameId: 'blackjack_6_deck_low_stakes_multi',
@@ -42,6 +120,15 @@ const DEFAULT_TABLES = [
     shufflePoint: 180,
   },
 ];
+
+async function ensureGames() {
+  for (const game of DEFAULT_GAMES) {
+    await Game.findOrCreate({
+      where: { id: game.id },
+      defaults: game,
+    });
+  }
+}
 
 async function ensureSystemUser() {
   await User.findOrCreate({
@@ -106,6 +193,7 @@ async function createTableWithDependencies(tableData) {
 
 async function ensureDefaultTables() {
   try {
+    await ensureGames();
     await ensureSystemUser();
 
     const existingCount = await Table.count({

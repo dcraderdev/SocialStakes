@@ -309,13 +309,9 @@ module.exports = function (io) {
         rooms[tableId].seats[seat].tableBalance -= bet;
       }
 
-      if (!rooms[tableId].dealCardsTimeStamp) {
-        setDealCardsTimeStamp(io, tableId);
-      }
-
       io.in(room).emit('new_bet', betObj);
 
-      // Spawn bots when a solo human player places their first bet
+      // Spawn bots before starting countdown so they get to bet in time
       if (tableId !== BELLAGIO_TABLE_ID) {
         const seats = Object.values(rooms[tableId].seats);
         const humanSeats = seats.filter((s) => !botController.isBotUser(s.userId));
@@ -324,6 +320,11 @@ module.exports = function (io) {
         if (humanSeats.length === 1 && botSeats.length === 0) {
           await botController.spawnRoamingBotsForTable(io, tableId, 2);
         }
+      }
+
+      // Start countdown after bots have placed their bets (bots may have already started it)
+      if (!rooms[tableId].dealCardsTimeStamp) {
+        setDealCardsTimeStamp(io, tableId);
       }
     });
 

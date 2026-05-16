@@ -209,19 +209,9 @@
 
 
 @media screen and (max-width: 500px) {
-  
-  .logo-container{
-    position: relative;
-    left: -10px;
-  }
 
   .logo-name{
     font-size: 22px;
-  }
-
-
-  .mobile{
-    left: -20px;
   }
 
   .demousers-container {

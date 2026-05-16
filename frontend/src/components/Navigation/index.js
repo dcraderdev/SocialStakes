@@ -115,16 +115,18 @@ function Navigation(){
             <div className='logo-image-container flex center'>
               <img src={socialstakesCards2} alt="cards" onClick={handleLogoClick}></img>
             </div>
-              <div className='logo-name' onClick={handleLogoClick}>SOCIAL STAKES</div> 
+              <div className='logo-name' onClick={handleLogoClick}>Social <span className='ss-accent'>Stakes</span></div>
           </div>
 
 
           {user && !isMobileScreen && (
           <div className='nav-user-buttons-container'>
 
-            {isWideScreen && <div className='nav-user-button' onClick={handleGameClick}>Games</div>}
+            {isWideScreen && <div className='nav-user-button' onClick={handleGameClick}>Lobby</div>}
             {isWideScreen && <div className='nav-user-button' onClick={handleFriendsClick}>Friends</div>}
-            <div className='nav-user-button balance'>${balance}</div>
+            {isWideScreen && <div className='nav-user-button' onClick={()=>history.push('/history')}>History</div>}
+            {isWideScreen && <div className='nav-user-button' onClick={()=>history.push('/verify')}>Verify hand</div>}
+            <div className='nav-user-button balance'>{balance}</div>
             <div ref={profileBtnRef} className='nav-user-button profile' onClick={handleProfileButtonClick}>
               <div className='profile-icon-container flex center'>
                 {/* <i className="fa-regular fa-user"></i> */}

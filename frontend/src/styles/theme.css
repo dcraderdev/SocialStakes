@@ -1,0 +1,848 @@
+/* ============================================================
+   Social Stakes — Showcase Theme
+   Design tokens + comprehensive overrides to match the
+   portfolio reference at dcrader.dev (01-table, 02-lobby,
+   03-verify, 04-history)
+   ============================================================ */
+
+:root {
+  /* surfaces */
+  --ss-bg:           #0a0b0e;
+  --ss-bg-elev:     #12141a;
+  --ss-bg-elev-2:   #181b22;
+  --ss-bg-soft:     #1d2029;
+  --ss-border:       #262a33;
+  --ss-border-soft: #1c1f27;
+
+  /* text */
+  --ss-text:         #f6f3ec;
+  --ss-text-dim:    #b6bac3;
+  --ss-text-muted:  #7c8290;
+
+  /* accents */
+  --ss-gold:         #e5b34c;
+  --ss-gold-soft:   #cf9e3a;
+  --ss-gold-faint:  rgba(229, 179, 76, 0.12);
+  --ss-gold-line:   rgba(229, 179, 76, 0.32);
+
+  /* semantic */
+  --ss-green:        #4ade80;
+  --ss-green-soft:  #2f9c5a;
+  --ss-red:          #ef5d5d;
+  --ss-red-soft:    #c54343;
+  --ss-blue:         #6aa9ff;
+  --ss-purple:       #c084fc;
+
+  /* avatar palette */
+  --ss-av-pink:     #f4a8c6;
+  --ss-av-yellow:   #f6c553;
+  --ss-av-green:    #74d5a0;
+  --ss-av-purple:   #b58cf2;
+  --ss-av-blue:     #7fb6ff;
+  --ss-av-red:      #ee7878;
+
+  /* felt + wood */
+  --ss-felt-1:      #0e3f2c;
+  --ss-felt-2:      #154f38;
+  --ss-felt-3:      #1c5e44;
+  --ss-wood-1:      #5b3d1d;
+  --ss-wood-2:      #8a5c2c;
+  --ss-wood-3:      #b78448;
+
+  /* radius + shadow */
+  --ss-r-sm:  6px;
+  --ss-r-md:  10px;
+  --ss-r-lg:  16px;
+  --ss-r-pill: 999px;
+  --ss-shadow-sm: 0 2px 6px rgba(0,0,0,.35);
+  --ss-shadow-md: 0 6px 18px rgba(0,0,0,.45);
+
+  --ss-font: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --ss-mono: ui-monospace, SFMono-Regular, "JetBrains Mono", Menlo, monospace;
+}
+
+/* ---------- global typography + chrome ---------- */
+html, body, #root {
+  background-color: var(--ss-bg) !important;
+  color: var(--ss-text);
+  font-family: var(--ss-font);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+body {
+  /* old index.css forced weird absolute positioning + horizontal offset */
+  position: static !important;
+  left: 0 !important;
+  width: 100% !important;
+  overflow-x: hidden;
+}
+
+/* Wipe the legacy modal grey */
+.modal-container { background-color: rgba(2,4,8,0.72) !important; }
+
+/* ---------- top nav ---------- */
+.nav-bar {
+  background-color: rgba(10, 11, 14, 0.88) !important;
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--ss-border) !important;
+  height: 56px !important;
+}
+.nav-buttons { max-width: 1280px !important; padding: 0 24px; }
+.logo-image-container { display: none !important; }
+.logo-container { align-items: center; }
+.logo-name {
+  font-family: var(--ss-font) !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.01em !important;
+  font-size: 22px !important;
+  text-shadow: none !important;
+  color: var(--ss-text) !important;
+  width: auto !important;
+  white-space: nowrap;
+  margin-left: 4px !important;
+}
+.logo-name .ss-accent { color: var(--ss-gold) !important; }
+
+.nav-user-button {
+  border-left: none !important;
+  font-weight: 500;
+  color: var(--ss-text-dim) !important;
+  font-size: 14px;
+  font-family: var(--ss-font) !important;
+  transition: color 0.15s ease;
+}
+.nav-user-button:hover { color: var(--ss-gold) !important; }
+.nav-user-button.balance {
+  border: 1px solid var(--ss-gold-line);
+  border-radius: var(--ss-r-pill);
+  padding: 6px 14px !important;
+  height: auto !important;
+  top: 50% !important;
+  transform: translateY(-50%);
+  color: var(--ss-gold) !important;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  background: rgba(229, 179, 76, 0.06);
+}
+.nav-user-button.balance::before {
+  content: "$ ";
+  opacity: 0.75;
+  margin-right: 2px;
+}
+.nav-user-button.balance > * + *::before { content: ""; }
+.profile-icon-container {
+  border: none !important;
+  background: var(--ss-gold);
+  width: 30px !important;
+  height: 30px !important;
+}
+.profile-icon-container i { color: var(--ss-bg) !important; }
+
+.demousers-container { background: var(--ss-bg-elev); border-radius: var(--ss-r-md); }
+
+/* ---------- lobby ---------- */
+.gamefloor-wrapper {
+  font-family: var(--ss-font) !important;
+  /* keep legacy top: 245px so the absolute-positioned children below the
+     game-tiles grid still land in the right place */
+}
+
+/* "Start / Join Private Game" buttons — keep legacy positioning, restyle */
+.private-game-button {
+  border: 1px solid var(--ss-border) !important;
+  border-radius: var(--ss-r-pill) !important;
+  background: transparent !important;
+  color: var(--ss-text-dim) !important;
+  font-size: 13px !important;
+  box-shadow: none !important;
+  font-family: var(--ss-font) !important;
+  font-weight: 500;
+  transition: all 0.15s ease;
+  height: 36px !important;
+}
+.private-game-button:hover {
+  border-color: var(--ss-gold-line) !important;
+  color: var(--ss-gold) !important;
+  background: var(--ss-gold-faint) !important;
+}
+
+/* Game tile grid: keep 3-column layout from legacy */
+.games-grid {
+  max-width: 1280px !important;
+}
+
+/* Each game-type tile: cleaner background, amber border on hover */
+.gametile-container {
+  background-image: none !important;
+  background: linear-gradient(135deg, #11171a 0%, #0c1518 50%, #0e2520 100%) !important;
+  border: 1px solid var(--ss-border) !important;
+  border-radius: var(--ss-r-lg) !important;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.15s ease;
+}
+.gametile-container::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 35%, rgba(229,179,76,0.05), transparent 60%);
+  pointer-events: none;
+}
+.gametile-container:hover {
+  border-color: var(--ss-gold-line) !important;
+  box-shadow: 0 0 0 1px var(--ss-gold-line), 0 18px 40px rgba(0,0,0,0.55) !important;
+  transform: translateY(-2px);
+}
+.gametile-container img { display: none !important; }
+.gametile-name {
+  color: var(--ss-text) !important;
+  font-size: 22px !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.01em;
+  position: relative !important;
+  text-align: center;
+}
+.gametile-coming-soon {
+  color: var(--ss-gold) !important;
+  font-size: 11px !important;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  top: 12px !important;
+  background: var(--ss-gold-faint);
+  padding: 3px 10px;
+  border-radius: var(--ss-r-pill);
+  border: 1px solid var(--ss-gold-line);
+}
+
+/* table-tile (the row each open table renders as) — restyle to match showcase card */
+.tabletile-wrapper {
+  width: 100% !important;
+  height: auto !important;
+  min-height: 120px;
+  background: linear-gradient(135deg, rgba(15,20,16,1) 0%, rgba(22,40,30,1) 100%) !important;
+  border: 1px solid var(--ss-border) !important;
+  border-top: 1px solid var(--ss-border) !important;
+  border-bottom: 1px solid var(--ss-border) !important;
+  border-radius: var(--ss-r-lg) !important;
+  box-shadow: var(--ss-shadow-sm) !important;
+  opacity: 1 !important;
+  padding: 18px 20px;
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+.tabletile-wrapper:hover {
+  border-color: var(--ss-gold-line) !important;
+  transform: translateY(-1px);
+}
+.tabletile-content {
+  width: 100%;
+}
+.status-playercount-container { left: 0 !important; gap: 14px; align-items: center; }
+
+.status-container { width: auto !important; }
+.status-icon {
+  width: 10px !important;
+  height: 10px !important;
+  border: none !important;
+  border-radius: 50% !important;
+  box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.18);
+}
+.status-icon.open { background: var(--ss-green) !important; }
+.status-icon.full { background: var(--ss-red) !important; box-shadow: 0 0 0 3px rgba(239, 93, 93, 0.18); }
+.status-icon.private { background: var(--ss-purple) !important; box-shadow: 0 0 0 3px rgba(192, 132, 252, 0.18); }
+
+.playercount-container { width: auto !important; }
+.playercount-ring {
+  border: 1px solid var(--ss-border) !important;
+  background: rgba(0,0,0,0.25);
+  color: var(--ss-text-dim) !important;
+  width: 64px !important;
+  height: 28px !important;
+  border-radius: var(--ss-r-pill) !important;
+  font-size: 13px !important;
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+}
+.game-deck-container {
+  width: auto !important;
+  margin-left: 6px !important;
+  color: var(--ss-text) !important;
+  gap: 4px;
+}
+.tablename-text {
+  width: auto !important;
+  font-size: 18px !important;
+  font-weight: 600 !important;
+  margin-top: 0 !important;
+  color: var(--ss-text) !important;
+  letter-spacing: -0.01em;
+}
+.game-text {
+  font-size: 13px !important;
+  color: var(--ss-text-muted) !important;
+  margin-top: 0 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.deck-text {
+  font-size: 12px !important;
+  color: var(--ss-text-muted) !important;
+}
+.betsize-container {
+  position: static !important;
+  right: auto !important;
+  bottom: auto !important;
+  font-size: 16px !important;
+  background: none !important;
+  -webkit-background-clip: initial !important;
+  -webkit-text-fill-color: initial !important;
+  color: var(--ss-gold) !important;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  gap: 4px;
+  align-items: center;
+}
+.betsize-container > div:nth-child(2) { color: var(--ss-text-muted); font-weight: 400; }
+.betsize-maxbet { margin-left: 0 !important; }
+
+/* Hide the legacy game-type-tab carousel; we go straight to tables */
+.available-game-types-container,
+.mobile-available-game-types-container { display: none !important; }
+.available-tables-grid {
+  position: static !important;
+  top: 0 !important;
+  left: 0 !important;
+  transform: none !important;
+  display: flex !important;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding-top: 8px;
+}
+
+/* The PayoutChatbox below the grid */
+.winnerchatbox-wrapper {
+  left: 0 !important;
+  width: 100% !important;
+  max-width: 1280px !important;
+  margin: 32px auto 60px !important;
+  border: 1px solid var(--ss-border);
+  border-radius: var(--ss-r-lg);
+  padding: 16px 18px;
+  background: var(--ss-bg-elev);
+}
+
+/* ---------- table view (gameplay) ---------- */
+/* Make the wrapper the same shape as the felt oval so all the legacy
+   absolutely-positioned children (dealer cards, description, seats) land
+   *inside* the felt rather than floating around the viewport. */
+.table-wrapper {
+  position: relative !important;
+  top: 0 !important;
+  width: min(92vw, 1240px) !important;
+  height: min(64vh, 620px) !important;
+  min-height: 480px;
+  margin: 88px auto 240px !important;
+  background: transparent;
+}
+
+/* The felt + wood rim — fills the wrapper */
+.table-content {
+  background-color: transparent !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  aspect-ratio: auto !important;
+  border-radius: 50% / 30% !important;
+  overflow: visible !important;
+  background:
+    radial-gradient(ellipse at center, var(--ss-felt-3) 0%, var(--ss-felt-2) 55%, var(--ss-felt-1) 100%) !important;
+  box-shadow:
+    inset 0 0 0 12px var(--ss-wood-1),
+    inset 0 0 0 16px var(--ss-wood-2),
+    inset 0 0 0 18px var(--ss-wood-3),
+    inset 0 0 80px rgba(0,0,0,0.55),
+    0 30px 70px rgba(0,0,0,0.55) !important;
+  z-index: 0;
+}
+.table-content::after {
+  content: "social stakes";
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  color: rgba(255,255,255,0.05);
+  font-family: "Georgia", serif;
+  font-style: italic;
+  font-size: clamp(28px, 4vw, 56px);
+  letter-spacing: 0.1em;
+  pointer-events: none;
+}
+
+/* hide the bg theme image entirely — felt is now the gradient */
+.table-image-container { display: none !important; }
+
+/* dealer area: absolutely positioned over the oval */
+.dealer-cards {
+  position: absolute !important;
+  top: 14% !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  display: flex !important;
+  gap: 8px !important;
+  width: auto !important;
+  height: auto !important;
+  border: none !important;
+}
+.dealer-cards .cardarea-card-container { position: relative !important; }
+.dealer-card-values {
+  position: absolute !important;
+  top: 8% !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  width: auto !important;
+  height: auto !important;
+  font-size: 14px !important;
+  color: var(--ss-gold) !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-family: var(--ss-font) !important;
+}
+.dealer-card-values::before { content: "Dealer · "; opacity: 0.6; font-weight: 500; }
+
+/* table-description is the BLACKJACK/Eureka/rules block — relocate to
+   the top header area instead of overlapping the felt watermark. We
+   keep just the table name + rules small and tasteful. */
+.table-description {
+  position: fixed !important;
+  top: 70px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  width: auto !important;
+  text-align: center;
+  flex-direction: column !important;
+  gap: 2px;
+  pointer-events: none;
+  z-index: 5;
+  height: auto !important;
+}
+.table-description .large {
+  font-size: 13px !important;
+  color: var(--ss-gold) !important;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-weight: 700 !important;
+  text-shadow: none !important;
+}
+.table-description .med {
+  font-size: 10.5px !important;
+  color: var(--ss-text-muted) !important;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-shadow: none !important;
+}
+/* hide the redundant duplicate BLACKJACK label */
+.table-description .large:first-child { display: none !important; }
+.table-description .med:first-of-type, .table-description .med:nth-of-type(2) { display: none !important; }
+
+/* Seats arranged in an arc at the bottom of the oval */
+.seats-container {
+  position: absolute !important;
+  bottom: 16% !important;
+  left: 0 !important;
+  width: 100% !important;
+  display: flex !important;
+  justify-content: space-around !important;
+  align-items: flex-end;
+  padding: 0 6%;
+  gap: 0;
+  z-index: 2;
+}
+/* Curve the row into an arc by nudging the middle seats up */
+.seats-container .seat-wrapper { transform: translateY(0); }
+.seats-container .seat-wrapper.seat2,
+.seats-container .seat-wrapper.seat5 { transform: translateY(-12px); }
+.seats-container .seat-wrapper.seat3,
+.seats-container .seat-wrapper.seat4 { transform: translateY(-20px); }
+.seat-wrapper {
+  width: 14% !important;
+  height: auto !important;
+  flex-direction: column !important;
+  position: relative !important;
+}
+.seat-container { height: auto !important; min-height: 90px; }
+
+/* Player cards above the avatar — make them stack horizontally not vertical */
+.tableseat-hands-container { flex-direction: row !important; gap: 8px; justify-content: center; }
+.tableseat-hand-container { flex-direction: column !important; align-items: center; }
+.tableseat-hand-cards { position: relative !important; display: flex !important; gap: -16px; }
+.cardarea-card-container { position: relative !important; }
+.tableseat-hand-cards .cardarea-card-container + .cardarea-card-container { margin-left: -32px; }
+.tableseat-hand-value {
+  font-size: 12px !important;
+  color: var(--ss-gold) !important;
+  background: rgba(0,0,0,0.45);
+  padding: 2px 8px;
+  border-radius: var(--ss-r-pill);
+  margin-bottom: 4px;
+  font-weight: 600;
+  text-shadow: none !important;
+}
+
+/* the on-table side buttons — fix them to the viewport edge instead of
+   positioning them relative to the (now oval-sized) wrapper */
+.table-button-container {
+  background-color: rgba(10,11,14,0.55) !important;
+  border: 1px solid var(--ss-border) !important;
+  width: 38px !important;
+  height: 38px !important;
+  position: fixed !important;
+}
+.table-button-container.menu  { top: 72px !important; right: 18px !important; left: auto !important; margin-left: 0 !important; }
+.table-button-container.home  { top: 122px !important; right: 18px !important; left: auto !important; margin-left: 0 !important; }
+.table-button-container.leave { top: 172px !important; right: 18px !important; left: auto !important; margin-left: 0 !important; }
+
+.table-button-container.chat     { top: 72px !important; left: 18px !important; margin-left: 0 !important; }
+.table-button-container.theme    { top: 122px !important; left: 18px !important; margin-left: 0 !important; }
+.table-button-container.money    { top: 172px !important; left: 18px !important; margin-left: 0 !important; }
+.table-button-container.settings { top: 222px !important; left: 18px !important; margin-left: 0 !important; }
+
+.table-button-container:hover { background-color: rgba(229,179,76,0.10) !important; border-color: var(--ss-gold-line) !important; }
+.table-button-subcontainer i { font-size: 16px !important; color: var(--ss-text-dim) !important; }
+.table-button-container:hover .table-button-subcontainer i { color: var(--ss-gold) !important; }
+
+/* The dealer card area at top of table */
+.dealer-area, .dealer-cards { /* legacy classes — give them spacing if present */ }
+
+/* ---------- seats ---------- */
+.seat-wrapper {
+  font-family: var(--ss-font) !important;
+}
+.profile-container { max-width: 80px !important; }
+.profileimage-container {
+  border: none !important;
+  background: var(--ss-bg-soft);
+  width: 44px !important;
+  height: 44px !important;
+}
+.profileimage-sub-container { background-color: transparent !important; }
+.profileimage-container.gold {
+  background: var(--ss-gold) !important;
+  box-shadow: 0 0 0 3px rgba(229,179,76,0.25);
+}
+.profileimage-image i, .profileimage-takeseat i { color: var(--ss-text) !important; font-size: 16px; }
+.profileimage-container.gold .profileimage-image i { color: var(--ss-bg) !important; }
+.emptyseat-border { border: 1.5px dashed var(--ss-border) !important; opacity: 0.6; }
+.emptyseat-border:hover { border-color: var(--ss-gold-line) !important; opacity: 1; }
+
+/* seat avatar colors by index */
+.seat1 .profileimage-container:not(.gold) { background: var(--ss-av-pink); }
+.seat2 .profileimage-container:not(.gold) { background: var(--ss-av-yellow); }
+.seat3 .profileimage-container:not(.gold) { background: var(--ss-av-green); }
+.seat4 .profileimage-container:not(.gold) { background: var(--ss-av-purple); }
+.seat5 .profileimage-container:not(.gold) { background: var(--ss-av-blue); }
+.seat6 .profileimage-container:not(.gold) { background: var(--ss-av-red); }
+.seat1 .profileimage-container:not(.gold) i,
+.seat2 .profileimage-container:not(.gold) i,
+.seat3 .profileimage-container:not(.gold) i,
+.seat4 .profileimage-container:not(.gold) i,
+.seat5 .profileimage-container:not(.gold) i,
+.seat6 .profileimage-container:not(.gold) i { color: rgba(0,0,0,0.55) !important; }
+
+.seat-namebalance-container {
+  flex-direction: column !important;
+  margin-top: 6px;
+  gap: 2px;
+  align-items: center;
+}
+.seat-namebalance-container .name-space {
+  color: var(--ss-text) !important;
+  font-size: 13px;
+  font-weight: 500;
+  text-shadow: none !important;
+  letter-spacing: 0;
+}
+.seat-tablebalance {
+  color: var(--ss-text-muted) !important;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  text-shadow: none !important;
+}
+
+/* ---------- cards ---------- */
+.card {
+  background-color: #fafaf6 !important;
+  border: 1px solid rgba(0,0,0,0.08) !important;
+  border-radius: 8px !important;
+  width: 56px !important;
+  height: 82px !important;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.35), 0 1px 0 rgba(255,255,255,0.6) inset;
+}
+.card.hidden {
+  background:
+    repeating-linear-gradient(45deg, #2e63b8 0 6px, #224b8c 6px 12px),
+    #2e63b8 !important;
+  border: 1px solid rgba(0,0,0,0.15) !important;
+}
+/* Rank+suit top-left */
+.easy-view.card-rank {
+  top: 6px !important;
+  left: 6px !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  color: #1a1a1a;
+  line-height: 1;
+}
+.easy-view.card-rank-flip {
+  bottom: 6px !important;
+  right: 6px !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  width: auto !important; height: auto !important;
+  color: #1a1a1a;
+  line-height: 1;
+}
+/* Big center suit symbol */
+.easy-view.card-suit {
+  font-size: 26px !important;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+.card.easy-view > .card-suit { font-size: 26px !important; }
+/* Red vs black suits — the legacy red class also sets background-color
+   to red which we have to wipe */
+.diamond, .heart { background-color: transparent !important; color: #d63a3a !important; }
+.spade, .club   { background-color: transparent !important; color: #111 !important; }
+.easy-view.card-rank.diamond, .easy-view.card-rank.heart,
+.easy-view.card-rank-flip.diamond, .easy-view.card-rank-flip.heart { color: #d63a3a !important; }
+.easy-view.card-rank.spade, .easy-view.card-rank.club,
+.easy-view.card-rank-flip.spade, .easy-view.card-rank-flip.club { color: #111 !important; }
+
+/* ---------- action bar (Hit / Stay / Double / Split) ---------- */
+.playerbetoptions-container,
+.player-bet-options-container,
+.playerbet-options,
+.player-options { /* legacy class hooks */ }
+
+.playerbetoptions-container button,
+.playerbet-options button,
+.player-options button,
+button.bet-option,
+.bet-option-button,
+.option-button {
+  background: var(--ss-bg-elev) !important;
+  color: var(--ss-text) !important;
+  border: 1px solid var(--ss-border) !important;
+  border-radius: var(--ss-r-pill) !important;
+  height: 44px !important;
+  padding: 0 22px !important;
+  font-weight: 700 !important;
+  font-size: 14px !important;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-family: var(--ss-font) !important;
+  cursor: pointer;
+  transition: all 0.12s ease;
+}
+.playerbetoptions-container button:hover,
+.playerbet-options button:hover { transform: translateY(-1px); }
+
+/* Try to color the standard action buttons by their button text via
+   role-ish class names — Donovan's CSS doesn't have these so the
+   generic style above will catch them. We also expose a utility set: */
+.ss-btn-hit       { background: var(--ss-green) !important; color: #0a1f12 !important; border-color: var(--ss-green) !important; }
+.ss-btn-stand     { background: var(--ss-red) !important;   color: #1a0a0a !important; border-color: var(--ss-red) !important; }
+.ss-btn-double    { background: var(--ss-gold) !important;  color: #1a1408 !important; border-color: var(--ss-gold) !important; }
+.ss-btn-split     { background: var(--ss-bg-elev-2) !important; color: var(--ss-text) !important; }
+.ss-btn-surrender { background: var(--ss-bg-elev-2) !important; color: var(--ss-text) !important; }
+
+/* ---------- chat panel (Chatbox) ---------- */
+.chatbox-wrapper, .chatbox-container,
+.payoutchatbox-wrapper, .payoutchatbox-container {
+  background: var(--ss-bg-elev) !important;
+  border: 1px solid var(--ss-border) !important;
+  border-radius: var(--ss-r-lg) !important;
+  font-family: var(--ss-font) !important;
+}
+.chatbox-message, .message-tile, .messagetile-container {
+  font-size: 13px;
+  color: var(--ss-text-dim);
+}
+.chatbox-input, .chatinputarea-container input, .chatinputarea-container textarea {
+  background: var(--ss-bg-soft) !important;
+  border: 1px solid var(--ss-border) !important;
+  border-radius: var(--ss-r-md) !important;
+  color: var(--ss-text) !important;
+  font-family: var(--ss-font) !important;
+}
+
+/* ---------- modals (Login, Signup, BalanceModal, Themes) ---------- */
+.loginmodal-container, .signupmodal-container,
+.balancemodal-container, .themesmodal-container,
+.settingsmodal-container, .closetablemodal-container,
+.leavemodal-container, .joinprivategamemodal-container,
+.removefriendmodal-container, .startconversationmodal-container,
+.leaveconversationmodal-container, .addfriendsmodal-container,
+.tableclosedmodal-container, .insurancemodal-container,
+.profilebuttonmodal-container, .aboutmemodal-container {
+  background: var(--ss-bg-elev) !important;
+  border: 1px solid var(--ss-border) !important;
+  border-radius: var(--ss-r-lg) !important;
+  color: var(--ss-text) !important;
+  font-family: var(--ss-font) !important;
+  box-shadow: var(--ss-shadow-md);
+  padding: 18px 22px;
+}
+.loginmodal-container input,
+.signupmodal-container input,
+.balancemodal-container input {
+  background: var(--ss-bg-soft) !important;
+  border: 1px solid var(--ss-border) !important;
+  border-radius: var(--ss-r-md) !important;
+  color: var(--ss-text) !important;
+  padding: 10px 12px !important;
+  font-family: var(--ss-font) !important;
+  outline: none;
+}
+.loginmodal-container input:focus,
+.signupmodal-container input:focus,
+.balancemodal-container input:focus { border-color: var(--ss-gold-line) !important; }
+.loginmodal-container button,
+.signupmodal-container button,
+.balancemodal-container button,
+.themesmodal-container button {
+  background: var(--ss-gold) !important;
+  color: var(--ss-bg) !important;
+  border: none !important;
+  border-radius: var(--ss-r-md) !important;
+  font-weight: 700 !important;
+  padding: 10px 14px !important;
+  cursor: pointer;
+}
+
+/* ---------- reusable utility classes used by new components ---------- */
+.ss-page {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 88px 24px 48px;
+  color: var(--ss-text);
+  font-family: var(--ss-font);
+}
+.ss-h1 { font-size: 30px; font-weight: 800; letter-spacing: -0.02em; margin: 0 0 8px; }
+.ss-sub { color: var(--ss-text-muted); font-size: 14px; margin: 0 0 28px; }
+
+.ss-card {
+  background: var(--ss-bg-elev);
+  border: 1px solid var(--ss-border);
+  border-radius: var(--ss-r-lg);
+  padding: 18px 20px;
+}
+.ss-stat-card { padding: 18px 20px; }
+.ss-stat-label {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 11px;
+  color: var(--ss-text-muted);
+  margin-bottom: 8px;
+}
+.ss-stat-value { font-size: 26px; font-weight: 700; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.ss-stat-sub { font-size: 12px; color: var(--ss-text-muted); margin-top: 4px; }
+
+.ss-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  border: 1px solid var(--ss-border);
+  border-radius: var(--ss-r-pill);
+  padding: 4px 10px;
+  font-size: 12px;
+  color: var(--ss-text-dim);
+  background: rgba(255,255,255,0.02);
+}
+.ss-pill-gold { border-color: var(--ss-gold-line); background: var(--ss-gold-faint); color: var(--ss-gold); }
+.ss-pill-green { border-color: rgba(74, 222, 128, 0.35); background: rgba(74, 222, 128, 0.08); color: var(--ss-green); }
+.ss-pill-red   { border-color: rgba(239, 93, 93, 0.35); background: rgba(239, 93, 93, 0.08); color: var(--ss-red); }
+
+.ss-mono { font-family: var(--ss-mono); }
+
+.ss-grid-stats {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 14px;
+  margin-bottom: 24px;
+}
+@media (max-width: 900px) {
+  .ss-grid-stats { grid-template-columns: repeat(2, 1fr); }
+}
+
+.ss-side-grid {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 18px;
+}
+@media (max-width: 1000px) {
+  .ss-side-grid { grid-template-columns: 1fr; }
+}
+
+.ss-avatar {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: var(--ss-av-yellow);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700; color: rgba(0,0,0,0.55);
+  flex-shrink: 0;
+}
+.ss-avatar.pink   { background: var(--ss-av-pink); }
+.ss-avatar.yellow { background: var(--ss-av-yellow); }
+.ss-avatar.green  { background: var(--ss-av-green); }
+.ss-avatar.purple { background: var(--ss-av-purple); }
+.ss-avatar.blue   { background: var(--ss-av-blue); }
+.ss-avatar.red    { background: var(--ss-av-red); }
+.ss-avatar.empty  { background: transparent; border: 1.5px dashed var(--ss-border); }
+.ss-avatar-row { display: flex; gap: -6px; }
+.ss-avatar-row .ss-avatar + .ss-avatar { margin-left: -8px; box-shadow: 0 0 0 2px var(--ss-bg-elev); }
+
+.ss-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: var(--ss-r-pill);
+  padding: 0 14px; height: 32px;
+  font-size: 13px; font-weight: 600;
+  border: 1px solid var(--ss-border);
+  background: var(--ss-bg-soft);
+  color: var(--ss-text);
+  cursor: pointer;
+  font-family: var(--ss-font);
+}
+.ss-btn:hover { border-color: var(--ss-gold-line); color: var(--ss-gold); }
+.ss-btn-primary {
+  background: var(--ss-gold); color: var(--ss-bg);
+  border-color: var(--ss-gold);
+}
+.ss-btn-primary:hover { background: var(--ss-gold-soft); color: var(--ss-bg); }
+
+/* ---------- friends page (existing) ---------- */
+.friendspage-wrapper, .friendsnavbar-container, .friends-container {
+  background: var(--ss-bg) !important;
+  font-family: var(--ss-font) !important;
+}
+
+/* StatPage will be replaced by HistoryPage; in the meantime hide the
+   coming-soon overlay if any element retains it */
+.comingsoon-image-container, .stats-coming-soon, .coming-soon-overlay {
+  display: none !important;
+}
+
+/* General fixes */
+button { font-family: var(--ss-font); }
+input, textarea, select { font-family: var(--ss-font); }
+
+/* Hide the legacy ActiveGameBar — the new top nav already shows
+   "Lobby / Friends / History / Verify hand" so the floating tab strip
+   below it is redundant and renders as an awkward "1/50" pill. */
+.nav-active-games,
+.gamebar-container,
+.gamebar-tab-container,
+.gametabs-expanded,
+.gametabs-shrunk { display: none !important; height: 0 !important; visibility: hidden !important; }

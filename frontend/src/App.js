@@ -227,6 +227,10 @@ function App() {
             {isLoaded && <HistoryPage />}
           </Route>
 
+          <Route path="/verify/:handId">
+            {isLoaded && <VerifyHandPage />}
+          </Route>
+
           <Route path="/verify" exact>
             {isLoaded && <VerifyHandPage />}
           </Route>

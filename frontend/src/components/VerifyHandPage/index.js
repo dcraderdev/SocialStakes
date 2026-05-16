@@ -271,7 +271,7 @@ function VerifyHandPage() {
             )}
             <div style={{ marginLeft: 'auto', textAlign: 'right' }}>
               <div style={{ color: 'var(--ss-text-muted)', marginBottom: 6 }}>Result</div>
-              <span className={`ss-pill ${result === 'Win' || result === 'Blackjack' ? 'ss-pill-green' : result === 'Bust' || result === 'Lose' ? 'ss-pill-red' : ''}`}>
+              <span className={`ss-pill ${(() => { const r = (result || '').toUpperCase(); return r === 'WIN' || r === 'BLACKJACK' ? 'ss-pill-green' : r === 'BUST' || r === 'LOSE' ? 'ss-pill-red' : ''; })()}`}>
                 {result}
               </span>
               {delta !== undefined && (

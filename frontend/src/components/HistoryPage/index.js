@@ -194,8 +194,9 @@ const td = {
 
 function resultPill(result) {
   if (!result) return '';
-  if (result === 'Blackjack' || result === 'Win' || result.startsWith('Win')) return 'ss-pill-green';
-  if (result === 'Bust' || result === 'Lose') return 'ss-pill-red';
+  const r = result.toUpperCase();
+  if (r === 'WIN' || r === 'BLACKJACK' || r.startsWith('WIN')) return 'ss-pill-green';
+  if (r === 'BUST' || r === 'LOSE') return 'ss-pill-red';
   return '';
 }
 

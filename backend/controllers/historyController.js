@@ -78,22 +78,23 @@ async function seedDemoHands(userId) {
     });
   }
 
+  // Results match the game engine's uppercase format
   const scenarios = [
-    { result: 'Win',       pl:  100, cards: '[8, 21]' },
-    { result: 'Lose',      pl: -100, cards: '[5, 18]' },
-    { result: 'Blackjack', pl:  150, cards: '[12, 21]' },
-    { result: 'Bust',      pl: -100, cards: '[6, 19, 14]' },
-    { result: 'Win',       pl:  200, cards: '[11, 24]' },
-    { result: 'Push',      pl:    0, cards: '[8, 21]' },
-    { result: 'Lose',      pl:  -50, cards: '[3, 16]' },
-    { result: 'Win',       pl:  100, cards: '[10, 23]' },
-    { result: 'Blackjack', pl:  150, cards: '[12, 24]' },
-    { result: 'Bust',      pl: -200, cards: '[7, 20, 15]' },
-    { result: 'Win',       pl:  100, cards: '[9, 22]' },
-    { result: 'Lose',      pl: -100, cards: '[4, 17]' },
-    { result: 'Win',       pl:  300, cards: '[11, 24]' },
-    { result: 'Bust',      pl:  -75, cards: '[2, 15, 19]' },
-    { result: 'Push',      pl:    0, cards: '[7, 20]' },
+    { result: 'WIN',       pl:  100, cards: '[8, 21]' },
+    { result: 'LOSE',      pl: -100, cards: '[5, 18]' },
+    { result: 'WIN',       pl:  150, cards: '[12, 21]' },
+    { result: 'LOSE',      pl: -100, cards: '[6, 19, 14]' },
+    { result: 'WIN',       pl:  200, cards: '[11, 24]' },
+    { result: 'PUSH',      pl:    0, cards: '[8, 21]' },
+    { result: 'LOSE',      pl:  -50, cards: '[3, 16]' },
+    { result: 'WIN',       pl:  100, cards: '[10, 23]' },
+    { result: 'WIN',       pl:  150, cards: '[12, 24]' },
+    { result: 'LOSE',      pl: -200, cards: '[7, 20, 15]' },
+    { result: 'WIN',       pl:  100, cards: '[9, 22]' },
+    { result: 'LOSE',      pl: -100, cards: '[4, 17]' },
+    { result: 'WIN',       pl:  300, cards: '[11, 24]' },
+    { result: 'LOSE',      pl:  -75, cards: '[2, 15, 19]' },
+    { result: 'PUSH',      pl:    0, cards: '[7, 20]' },
   ];
 
   const createdHandIds = [];
@@ -166,9 +167,10 @@ const historyController = {
 
     const handsPlayed = hands.length;
     const netPL = hands.reduce((s, h) => s + (h.profitLoss || 0), 0);
-    const wins = hands.filter((h) =>
-      ['Win', 'Blackjack'].some((r) => h.result?.startsWith(r))
-    ).length;
+    const wins = hands.filter((h) => {
+      const r = (h.result || '').toUpperCase();
+      return r === 'WIN' || r === 'BLACKJACK' || r.startsWith('WIN');
+    }).length;
     const winRate = handsPlayed ? (wins / handsPlayed) * 100 : 0;
     const pls = hands.map((h) => h.profitLoss || 0);
     const biggestWin = pls.length ? Math.max(0, ...pls) : 0;

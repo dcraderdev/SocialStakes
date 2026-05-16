@@ -1,3 +1,5 @@
+/* ── FriendsOnline ───────────────────────────────────────────────── */
+
 .fol-card {
   display: flex;
   flex-direction: column;
@@ -20,17 +22,19 @@
   color: var(--ss-text-muted);
 }
 
+/* ── Online badge ────────────────────────────────────────── */
+
 .fol-badge {
   display: inline-flex;
   align-items: center;
   gap: 5px;
   font-size: 11px;
+  font-weight: 600;
   color: var(--ss-green);
   background: rgba(74, 222, 128, 0.08);
   border: 1px solid rgba(74, 222, 128, 0.25);
   border-radius: var(--ss-r-pill);
   padding: 2px 8px;
-  font-weight: 600;
 }
 
 .fol-badge-dot {
@@ -44,10 +48,10 @@
 
 @keyframes fol-pulse {
   0%, 100% { opacity: 1; transform: scale(1); }
-  50%       { opacity: 0.55; transform: scale(0.85); }
+  50%       { opacity: 0.5; transform: scale(0.82); }
 }
 
-/* ── List ────────────────────────────────────────────────── */
+/* ── Friend list ─────────────────────────────────────────── */
 
 .fol-list {
   list-style: none;
@@ -55,13 +59,28 @@
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 0;
 }
 
 .fol-item {
   display: flex;
   align-items: center;
   gap: 10px;
+  padding: 7px 8px;
+  border-radius: var(--ss-r-md);
+  cursor: default;
+  transition: background 0.12s ease;
+  /* Staggered entrance — delay applied via inline style */
+  animation: fol-item-in 0.28s ease both;
+}
+
+.fol-item:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+@keyframes fol-item-in {
+  from { opacity: 0; transform: translateX(-6px); }
+  to   { opacity: 1; transform: translateX(0); }
 }
 
 /* ── Avatar + status dot ─────────────────────────────────── */
@@ -84,7 +103,7 @@
 
 .fol-dot.online {
   background: var(--ss-green);
-  box-shadow: 0 0 0 2px rgba(74, 222, 128, 0.2);
+  box-shadow: 0 0 0 2px rgba(74, 222, 128, 0.18);
 }
 
 .fol-dot.offline {
@@ -119,19 +138,21 @@
 
 .fol-activity.active {
   color: var(--ss-green);
-  opacity: 0.85;
+  opacity: 0.8;
 }
 
 /* ── Overflow link ───────────────────────────────────────── */
 
 .fol-more {
   display: block;
-  margin-top: 14px;
+  margin-top: 10px;
+  padding: 4px 8px;
   font-size: 12px;
   color: var(--ss-text-muted);
   text-decoration: none;
   text-align: right;
   transition: color 0.15s ease;
+  border-radius: var(--ss-r-sm);
 }
 
 .fol-more:hover {
@@ -146,31 +167,30 @@
   flex-direction: column;
   align-items: center;
   gap: 10px;
-  padding: 10px 0 4px;
+  padding: 8px 0 2px;
   text-align: center;
 }
 
 .fol-empty-icon {
-  font-size: 28px;
+  font-size: 26px;
   line-height: 1;
-  opacity: 0.75;
+  opacity: 0.7;
 }
 
-.fol-empty-avatar-row {
+/* Stacked placeholder avatars */
+.fol-ph-row {
   display: flex;
-  gap: 0;
-  justify-content: center;
   margin-bottom: 4px;
 }
 
-.fol-placeholder-av {
+.fol-ph {
+  position: relative; /* required for z-index stacking */
   background: var(--ss-bg-soft) !important;
   border: 1.5px dashed var(--ss-border) !important;
-  color: transparent !important;
 }
 
-.fol-empty-avatar-row .fol-placeholder-av + .fol-placeholder-av {
-  margin-left: -8px;
+.fol-ph-row .fol-ph + .fol-ph {
+  margin-left: -10px;
   box-shadow: 0 0 0 2px var(--ss-bg-elev);
 }
 
@@ -186,10 +206,20 @@
   color: var(--ss-text-muted);
   line-height: 1.5;
   margin: 0;
-  max-width: 200px;
+  max-width: 210px;
 }
 
 .fol-cta {
   text-decoration: none;
   margin-top: 4px;
+}
+
+/* Respect reduced motion for entrance animations */
+@media (prefers-reduced-motion: reduce) {
+  .fol-item {
+    animation: none;
+  }
+  .fol-badge-dot {
+    animation: none;
+  }
 }

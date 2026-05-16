@@ -6,7 +6,6 @@ import './FriendsOnline.css';
 
 const AVATAR_COLORS = ['pink', 'yellow', 'green', 'purple', 'blue', 'red'];
 
-// Simulated activities — used until real-time presence is implemented
 const ACTIVITIES = [
   'In hand at Med Stakes',
   'In lobby',
@@ -18,7 +17,7 @@ const ACTIVITIES = [
   'Just won big',
 ];
 
-// Deterministic hash so online status doesn't flicker on re-render
+// Deterministic hash — stable per string so statuses don't flicker on re-render
 function stableHash(str) {
   let h = 0;
   for (let i = 0; i < str.length; i++) {
@@ -36,46 +35,48 @@ function getInitials(name) {
 }
 
 function isOnline(userId) {
-  // ~70 % online in demo; stable per user
-  return stableHash(String(userId) + 'online') % 10 > 2;
+  return stableHash(String(userId) + 'online') % 10 > 2; // ~70 % online
 }
 
 function getActivity(userId, online) {
   if (!online) {
-    const minsAgo = [2, 5, 12, 28, 60, 90, 120];
-    const m = minsAgo[stableHash(String(userId) + 'time') % minsAgo.length];
-    return m >= 60 ? `Last seen ${m / 60 | 0}h ago` : `Last seen ${m}m ago`;
+    const opts = [2, 5, 12, 28, 60, 90, 120];
+    const m = opts[stableHash(String(userId) + 'time') % opts.length];
+    return m >= 60 ? `Last seen ${(m / 60) | 0}h ago` : `Last seen ${m}m ago`;
   }
   return ACTIVITIES[stableHash(String(userId) + 'act') % ACTIVITIES.length];
 }
 
 const MAX_SHOWN = 8;
 
-function FriendsOnline() {
+export default function FriendsOnline() {
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.users.user);
-  const reduxFriends = useSelector((state) => state.friends.friends);
+  const user     = useSelector((state) => state.users.user);
+  const raw      = useSelector((state) => state.friends.friends);
 
   useEffect(() => {
     if (user) dispatch(friendActions.getUserFriends());
   }, [user, dispatch]);
 
-  const friendList = Object.values(reduxFriends || {}).map((entry) => {
-    const id = entry.friend?.id || entry.id;
-    const username = entry.friend?.username || 'User';
-    const online = isOnline(id);
+  const friendList = Object.values(raw || {}).map((entry) => {
+    const id       = entry.friend?.id ?? entry.id;
+    const username = entry.friend?.username ?? 'User';
+    const online   = isOnline(id);
     return { id, username, online, activity: getActivity(id, online) };
   });
 
   const onlineCount = friendList.filter((f) => f.online).length;
-  const shown = friendList.slice(0, MAX_SHOWN);
-  const overflow = friendList.length - MAX_SHOWN;
+  const shown       = friendList.slice(0, MAX_SHOWN);
+  const overflow    = friendList.length - MAX_SHOWN;
 
   return (
     <div className="fol-card ss-card">
+
+      {/* ── Header ── */}
       <div className="fol-header">
         <span className="fol-title">Friends online</span>
-        {friendList.length > 0 && (
+        {/* Only show the badge when at least 1 friend is online */}
+        {onlineCount > 0 && (
           <span className="fol-badge">
             <span className="fol-badge-dot" />
             {onlineCount} online
@@ -83,25 +84,26 @@ function FriendsOnline() {
         )}
       </div>
 
-      {/* Not logged in */}
+      {/* ── Not logged in ── */}
       {!user && (
         <div className="fol-empty">
           <div className="fol-empty-icon">🎮</div>
-          <p className="fol-empty-text">Sign in to see friends</p>
+          <p className="fol-empty-text">Sign in to see who's online</p>
         </div>
       )}
 
-      {/* Logged in, no friends */}
+      {/* ── Logged in, no friends yet ── */}
       {user && friendList.length === 0 && (
         <div className="fol-empty">
-          <div className="fol-empty-avatar-row">
-            {['?', '?', '?'].map((_, i) => (
-              <div key={i} className="ss-avatar fol-placeholder-av" />
-            ))}
+          {/* Stacked placeholder avatars as a teaser */}
+          <div className="fol-ph-row">
+            <div className="ss-avatar fol-ph" style={{ zIndex: 3 }} />
+            <div className="ss-avatar fol-ph" style={{ zIndex: 2 }} />
+            <div className="ss-avatar fol-ph" style={{ zIndex: 1 }} />
           </div>
           <p className="fol-empty-text">No friends added yet</p>
           <p className="fol-empty-sub">
-            Invite friends to see who's online and jump in their game.
+            Invite friends to see who's online and jump into their game.
           </p>
           <NavLink to="/friends" className="ss-btn ss-btn-primary fol-cta">
             + Add friends
@@ -109,12 +111,16 @@ function FriendsOnline() {
         </div>
       )}
 
-      {/* Friend list */}
+      {/* ── Friend list ── */}
       {user && friendList.length > 0 && (
         <>
           <ul className="fol-list">
-            {shown.map((f) => (
-              <li key={f.id} className="fol-item">
+            {shown.map((f, idx) => (
+              <li
+                key={f.id}
+                className="fol-item"
+                style={{ animationDelay: `${idx * 55}ms` }}
+              >
                 <div className="fol-avatar-wrap">
                   <div className={`ss-avatar ${getAvatarColor(f.username)}`}>
                     {getInitials(f.username)}
@@ -126,7 +132,7 @@ function FriendsOnline() {
                 </div>
                 <div className="fol-info">
                   <span className="fol-name">{f.username}</span>
-                  <span className={`fol-activity ${f.online ? 'active' : ''}`}>
+                  <span className={`fol-activity${f.online ? ' active' : ''}`}>
                     {f.activity}
                   </span>
                 </div>
@@ -144,5 +150,3 @@ function FriendsOnline() {
     </div>
   );
 }
-
-export default FriendsOnline;

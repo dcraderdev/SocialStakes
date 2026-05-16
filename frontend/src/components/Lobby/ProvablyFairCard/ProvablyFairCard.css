@@ -1,13 +1,14 @@
+/* ── ProvablyFairCard ────────────────────────────────────────────── */
+
 .pfc-card {
   display: flex;
   flex-direction: column;
-  gap: 0;
-  /* Subtle gold tint to distinguish from FriendsOnline */
+  /* Gold accent border distinguishes this card from FriendsOnline */
   border-color: var(--ss-gold-line) !important;
   background: linear-gradient(
-    145deg,
+    150deg,
     var(--ss-bg-elev) 0%,
-    rgba(229, 179, 76, 0.035) 100%
+    rgba(229, 179, 76, 0.04) 100%
   ) !important;
 }
 
@@ -20,11 +21,11 @@
   margin-bottom: 10px;
 }
 
-.pfc-shield-icon {
+.pfc-shield {
   font-size: 18px;
   line-height: 1;
   flex-shrink: 0;
-  margin-top: 2px;
+  margin-top: 1px;
 }
 
 .pfc-header-text {
@@ -75,7 +76,7 @@
 
 @keyframes pfc-blink {
   0%, 100% { opacity: 1; }
-  50%       { opacity: 0.35; }
+  50%       { opacity: 0.3; }
 }
 
 /* ── Description ─────────────────────────────────────────── */
@@ -94,7 +95,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  background: var(--ss-bg-soft);
+  background: rgba(0, 0, 0, 0.25);
   border: 1px solid var(--ss-border);
   border-radius: var(--ss-r-sm);
   padding: 6px 10px;
@@ -113,11 +114,16 @@
 .pfc-hash {
   font-size: 11px;
   color: var(--ss-gold);
-  opacity: 0.85;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   min-width: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* Fade-out class toggled by JS during hash rotation */
+.pfc-hash--fade {
+  opacity: 0;
 }
 
 /* ── Latest verified hand ────────────────────────────────── */
@@ -127,7 +133,7 @@
   padding-top: 10px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 7px;
 }
 
 .pfc-latest-label {
@@ -172,12 +178,18 @@
   padding: 2px 9px;
   white-space: nowrap;
   flex-shrink: 0;
-  transition: all 0.15s ease;
+  transition: background 0.15s ease, border-color 0.15s ease;
 }
 
 .pfc-verify-link:hover {
   background: rgba(74, 222, 128, 0.1);
   border-color: var(--ss-green);
-  color: var(--ss-green);
   text-decoration: none;
+  color: var(--ss-green);
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .pfc-live-dot  { animation: none; }
+  .pfc-hash      { transition: none; }
 }

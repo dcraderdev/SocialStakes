@@ -1,48 +1,60 @@
+/* ── WinnersTicker ───────────────────────────────────────────────── */
+
 .wticker-bar {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 0;
   width: 95%;
   max-width: 1280px;
   background: var(--ss-bg-elev);
   border: 1px solid var(--ss-border);
   border-radius: var(--ss-r-md);
-  padding: 7px 14px;
+  padding: 0;
   margin-bottom: 20px;
   overflow: hidden;
   position: relative;
   left: 10px;
+  height: 36px;
 }
 
+/* Gold "Big winners" label tab on the left */
 .wticker-label {
+  display: inline-flex;
+  align-items: center;
+  height: 100%;
+  padding: 0 14px;
   font-size: 10px;
-  font-weight: 700;
+  font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--ss-gold);
+  letter-spacing: 0.14em;
+  color: var(--ss-bg);
+  background: var(--ss-gold);
   white-space: nowrap;
   flex-shrink: 0;
-  border-right: 1px solid var(--ss-border);
-  padding-right: 14px;
+  user-select: none;
 }
 
+/* Scrolling clip area */
 .wticker-clip {
   overflow: hidden;
   flex: 1;
   min-width: 0;
-  /* Fade edges */
+  height: 100%;
+  display: flex;
+  align-items: center;
+  /* Soft fade on both edges */
   mask-image: linear-gradient(
     to right,
     transparent 0%,
-    black 5%,
-    black 92%,
+    black 4%,
+    black 90%,
     transparent 100%
   );
   -webkit-mask-image: linear-gradient(
     to right,
     transparent 0%,
-    black 5%,
-    black 92%,
+    black 4%,
+    black 90%,
     transparent 100%
   );
 }
@@ -51,10 +63,11 @@
   display: flex;
   align-items: center;
   white-space: nowrap;
-  animation: wticker-scroll 40s linear infinite;
+  /* 32 s feels alive without being dizzying */
+  animation: wticker-scroll 32s linear infinite;
 }
 
-/* Pause on hover */
+/* Pause the ticker on hover — gives the user time to read */
 .wticker-bar:hover .wticker-track {
   animation-play-state: paused;
 }
@@ -64,46 +77,71 @@
   100% { transform: translateX(-50%); }
 }
 
-/* Respect reduced-motion preference */
+/* ── Reduced-motion: static overflow list instead ───────── */
 @media (prefers-reduced-motion: reduce) {
   .wticker-track {
-    animation: none;
-    overflow-x: auto;
+    animation: none !important;
   }
   .wticker-clip {
     mask-image: none;
     -webkit-mask-image: none;
+    overflow-x: auto;
+    scrollbar-width: none;
   }
+  .wticker-clip::-webkit-scrollbar { display: none; }
 }
+
+/* ── Item ────────────────────────────────────────────────── */
 
 .wticker-item {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  font-size: 12px;
+  gap: 6px;
+  font-size: 12.5px;
   color: var(--ss-text-dim);
-  padding-right: 4px;
+  padding: 0 2px;
   user-select: none;
 }
 
 .wticker-icon {
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1;
+  flex-shrink: 0;
 }
 
 .wticker-sep {
-  margin: 0 16px;
+  margin: 0 18px;
   color: var(--ss-border);
-  font-size: 14px;
+  font-size: 16px;
+  line-height: 1;
 }
 
+/* ── Screen-reader-only list ─────────────────────────────── */
+.wticker-sr-list {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+  list-style: none;
+}
+
+/* ── Mobile ──────────────────────────────────────────────── */
 @media (max-width: 700px) {
   .wticker-bar {
     width: 98%;
     left: 0;
-    padding: 6px 10px;
+    height: 32px;
   }
   .wticker-label {
-    display: none;
+    padding: 0 10px;
+    font-size: 9px;
+  }
+  .wticker-item {
+    font-size: 11.5px;
   }
 }

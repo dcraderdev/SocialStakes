@@ -300,9 +300,14 @@
 
 
 
-/* ── Right-rail layout ────────────────────────────────────────────────────
-   Wraps the game-tiles center column alongside the friends + provably-fair
-   side panel. All new classes — no existing classes touched.
+/* ── Right-rail lobby layout ──────────────────────────────────────────────
+   All new class names — zero existing rules modified.
+
+   Structure inside .showgames-wrapper (flex column, align-items: center):
+     .wticker-bar       — full-width scrolling ticker
+     .lobby-body        — flex row: center games + right rail
+       .lobby-center    — game tiles + payout chatbox
+       .lobby-rail      — FriendsOnline + ProvablyFairCard (sticky)
    ─────────────────────────────────────────────────────────────────────── */
 
 .lobby-body {
@@ -311,6 +316,7 @@
   gap: 24px;
   width: 95%;
   max-width: 1280px;
+  /* +10px compensates for showgames-wrapper's left: -10px */
   position: relative;
   left: 10px;
 }
@@ -322,67 +328,93 @@
   flex-direction: column;
 }
 
-/* Override the fixed left-offset on .games-grid / .winnerchatbox-wrapper
-   when they're inside .lobby-center so they fill the center column cleanly */
+/*
+  Reset the legacy left:10px / width:95% that .games-grid and
+  .winnerchatbox-wrapper carry from their own rules when they live
+  inside our column wrapper. The theme.css !important overrides for
+  left and width already set these to 0/100%, so these rules are a
+  readable intent declaration even if they don't always win specificity.
+*/
 .lobby-center .games-grid {
   left: 0;
   width: 100%;
-  max-width: none;
 }
 
 .lobby-center .winnerchatbox-wrapper {
   left: 0;
   width: 100%;
-  max-width: none;
 }
 
+/* ── Right rail ──────────────────────────────────────────── */
+
 .lobby-rail {
-  width: 280px;
+  width: 288px;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
   gap: 14px;
+  /* Stick below the nav bar while the center column scrolls past */
   position: sticky;
-  top: 72px;          /* clear the fixed nav bar */
+  top: 76px;
   align-self: flex-start;
-  /* Animate in with the rest of the lobby content */
-  animation: rail-fadein 0.35s ease both;
-  animation-delay: 0.1s;
+  /* Slide in from the right on mount */
+  animation: rail-fadein 0.32s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: 0.08s;
 }
 
 @keyframes rail-fadein {
-  from { opacity: 0; transform: translateX(12px); }
+  from { opacity: 0; transform: translateX(14px); }
   to   { opacity: 1; transform: translateX(0); }
 }
 
-/* Stack rail below game tiles on narrow viewports */
+/* ── Responsive — stack below tiles ─────────────────────── */
+
+/* 1100-1280px: two-column layout still fits, just narrower */
+@media screen and (max-width: 1200px) {
+  .lobby-rail {
+    width: 260px;
+  }
+}
+
+/* < 1100px: switch to stacked; rail becomes a side-by-side pair */
 @media screen and (max-width: 1100px) {
   .lobby-body {
     flex-direction: column;
+    gap: 16px;
   }
   .lobby-rail {
     width: 100%;
     position: static;
     flex-direction: row;
     flex-wrap: wrap;
+    gap: 14px;
+    animation: none; /* already visible when stacked, skip slide-in */
   }
   .lobby-rail > * {
     flex: 1;
-    min-width: 240px;
+    min-width: 260px;
   }
 }
 
+/* < 600px: single column, full width */
 @media screen and (max-width: 600px) {
   .lobby-body {
     left: 0;
     width: 98%;
-    gap: 14px;
   }
   .lobby-rail {
     flex-direction: column;
   }
   .lobby-rail > * {
     min-width: unset;
+    flex: unset;
+  }
+}
+
+/* Respect reduced motion for the rail slide-in */
+@media (prefers-reduced-motion: reduce) {
+  .lobby-rail {
+    animation: none;
   }
 }
 

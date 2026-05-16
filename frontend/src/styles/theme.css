@@ -150,6 +150,18 @@ body {
 .gamefloor-container {
   flex-direction: column !important;
   align-items: center !important;
+  justify-content: flex-start !important;
+}
+
+/* Ensure any anonymous wrapper divs inside the container are full-width */
+.gamefloor-container > div {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Center the private-game-buttons within the full-width anonymous wrapper */
+.private-game-buttons {
+  margin: 0 auto !important;
 }
 
 /* "Start / Join Private Game" buttons — restyle */
@@ -922,20 +934,22 @@ input, textarea, select { font-family: var(--ss-font); }
 }
 
 /* -- Lobby -- */
-@media (max-width: 600px) {
+@media (max-width: 660px) {
   .gamefloor-wrapper {
     padding-top: 60px !important;
   }
   .gamefloor-container {
     padding: 0 12px !important;
   }
+  /* Stack buttons before they'd overflow (2×280 + 24gap = 584px) */
   .private-game-buttons {
     flex-direction: column !important;
+    align-items: center !important;
     gap: 12px !important;
     padding: 16px 0 12px !important;
   }
   .private-game-button {
-    width: 80% !important;
+    width: 85% !important;
     max-width: 320px !important;
     font-size: 14px !important;
     height: 44px !important;
@@ -1064,6 +1078,10 @@ input, textarea, select { font-family: var(--ss-font); }
 }
 
 /* -- Prevent horizontal overflow on all viewports -- */
+html {
+  margin: 0;
+  padding: 0;
+}
 html, body, #root {
   max-width: 100vw;
   overflow-x: hidden;

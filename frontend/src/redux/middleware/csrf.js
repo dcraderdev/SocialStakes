@@ -3,7 +3,8 @@ import Cookies from 'js-cookie';
 
 export const setCsrfTokenThunk = () => async (dispatch, getState) => {
   try {
-    const response = await fetch('http://localhost:8000/api/csrf/restore', {
+    const apiBase = process.env.REACT_APP_BACKEND_PROD_URL || 'http://localhost:8000';
+    const response = await fetch(`${apiBase}/api/csrf/restore`, {
       method: 'GET',
       credentials: 'include',
     });

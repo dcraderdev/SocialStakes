@@ -25,6 +25,11 @@ import TableClosedModal from './components/TableClosedModal';
 import FriendsPage from './components/FriendsPage';
 import UnknownRoutePage from './components/UnknownRoutePage';
 import StatPage from './components/StatPage';
+import HistoryPage from './components/HistoryPage';
+import VerifyHandPage from './components/VerifyHandPage';
+import CoinFlip from './components/games/CoinFlip';
+import HiLo from './components/games/HiLo';
+import AceyDuecey from './components/games/AceyDuecey';
 import RemoveFriendModal from './components/RemoveFriendModal';
 import ProfileButtonModal from './components/ProfileButtonModal';
 import StartConversationModal from './components/StartConversationModal';
@@ -218,7 +223,27 @@ function App() {
             {isLoaded && <StatPage />}
           </Route>
 
-          
+          <Route path="/history" exact>
+            {isLoaded && <HistoryPage />}
+          </Route>
+
+          <Route path="/verify" exact>
+            {isLoaded && <VerifyHandPage />}
+          </Route>
+
+          <Route path="/play/coinflip" exact>
+            {isLoaded && <CoinFlip />}
+          </Route>
+
+          <Route path="/play/hilo" exact>
+            {isLoaded && <HiLo />}
+          </Route>
+
+          <Route path="/play/acey" exact>
+            {isLoaded && <AceyDuecey />}
+          </Route>
+
+
           <Route>
             <h1>404:Unknown Route</h1>
             {isLoaded && <Navigation />}

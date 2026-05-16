@@ -7,8 +7,25 @@ import Searching from '../../images/Searching.svg'
 
 
 const GameTile = ({game, cbFunc, delay, animateTiles}) => {
+  const history = useHistory();
 
   const [isActive, setIsActive] = useState(true)
+
+  // Stub games (single-player demo) — route to their dedicated pages
+  // instead of running the (non-existent) server table flow.
+  const STUB_ROUTES = {
+    coin_flip: '/play/coinflip',
+    hi_lo: '/play/hilo',
+    acey_duecey: '/play/acey',
+  };
+
+  const handleClick = () => {
+    if (STUB_ROUTES[game.gameType]) {
+      history.push(STUB_ROUTES[game.gameType]);
+      return;
+    }
+    cbFunc(game.gameType);
+  };
 
   const getIcon = (gameType) => {
     if(!gameType){
@@ -99,13 +116,15 @@ const GameTile = ({game, cbFunc, delay, animateTiles}) => {
 
   return (
     <div>
-      <div className={`gametile-container rounded ${animateTiles ? 'animate' : ''}`} style={tileStyle} onClick={() => cbFunc(game.gameType)}>
+      <div className={`gametile-container rounded ${animateTiles ? 'animate' : ''}`} style={tileStyle} onClick={handleClick}>
 
-        
+
         <div className='gametile-name'>{getIcon(game.gameType)}</div>
-        {!isActive && (
+        {STUB_ROUTES[game.gameType] ? (
+          <div className='gametile-coming-soon' style={{color:'var(--ss-green)',background:'rgba(74,222,128,0.10)',borderColor:'rgba(74,222,128,0.35)'}}>Solo demo</div>
+        ) : (!isActive && (
           <div className='gametile-coming-soon' >Game coming soon</div>
-        )}
+        ))}
 
 
         {/* <img src={gameTileBackground} alt='game tile' ></img> */}

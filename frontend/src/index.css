@@ -31,14 +31,10 @@
 
 body{
   background-color: #282828fa;
-  width: 99vw;
+  width: 100%;
   overflow-x: hidden;
   overflow-y: scroll;
   height: 100%;
-  position: absolute;
-  left: -10px;
-
-
 }
 
 

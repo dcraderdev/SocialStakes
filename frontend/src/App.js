@@ -24,6 +24,7 @@ import CloseTableModal from './components/CloseTableModal';
 import TableClosedModal from './components/TableClosedModal';
 import FriendsPage from './components/FriendsPage';
 import FriendsActivityPage from './components/FriendsActivityPage';
+import FriendsLeaderboard from './components/FriendsLeaderboard';
 import UnknownRoutePage from './components/UnknownRoutePage';
 import StatPage from './components/StatPage';
 import HistoryPage from './components/HistoryPage';
@@ -226,6 +227,11 @@ function App() {
             {isLoaded && !user && <GameFloor/>}
             {isLoaded && <Navigation />}
             {isLoaded && <FriendsActivityPage />}
+          </Route>
+
+          <Route path="/friends/leaderboard" exact>
+            {isLoaded && !user && <GameFloor/>}
+            {isLoaded && <FriendsLeaderboard />}
           </Route>
 
           <Route path="/friends" exact>

@@ -3,6 +3,7 @@ const express = require('express');
 const { requireAuth } = require('../../utils/auth');
 const { Event, User, Friendship, UserTable } = require('../../db/models');
 const { Op, Sequelize } = require('sequelize');
+const { statController } = require('../../controllers/statController');
 const router = express.Router();
 
 
@@ -184,6 +185,19 @@ router.get('/activity', requireAuth, async (req, res, next) => {
   } catch (err) {
     next(err);
   }
+});
+
+// GET /api/friends/leaderboard
+router.get('/leaderboard', requireAuth, async (req, res, next) => {
+  const { user } = req;
+  const period = req.query.period || 'week';
+
+  if (!['week', 'month', 'all'].includes(period)) {
+    return res.status(400).json({ message: 'Invalid period. Use week, month, or all.' });
+  }
+
+  const data = await statController.getFriendsLeaderboard(user.id, period);
+  return res.json(data);
 });
 
 

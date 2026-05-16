@@ -259,3 +259,11 @@
     font-size: 20px;
   }
 }
+
+/* Search section injected by FriendSearchBar feature */
+.friendspage-search-section {
+  width: 100%;
+  padding: 10px 16px;
+  box-sizing: border-box;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.4);
+}

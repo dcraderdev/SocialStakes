@@ -5,7 +5,7 @@ const { setTokenCookie, requireAuth } = require('../../utils/auth');
 const { User } = require('../../db/models');
 const { check } = require('express-validator');
 const { handleValidationErrors, validateSignup , validateQueryParameters} = require('../../utils/validation');
-const { json } = require('sequelize');
+const { json, Op } = require('sequelize');
 const db = require('../../db/models');
 const router = express.Router();
 
@@ -79,6 +79,39 @@ router.get('/', validateQueryParameters, async (req, res, next) => {
   }
   return res.status(200).json({ Users: allUsers,page,size });
 });
+
+// Search users by username or email (fuzzy)
+router.get('/search', requireAuth, async (req, res, next) => {
+  const { q } = req.query;
+  const { user } = req;
+
+  if (!q || q.trim().length < 2) {
+    return res.status(200).json({ users: [] });
+  }
+
+  try {
+    const users = await User.findAll({
+      where: {
+        [Op.and]: [
+          { id: { [Op.ne]: user.id } },
+          {
+            [Op.or]: [
+              { username: { [Op.iLike]: `%${q.trim()}%` } },
+              { email: { [Op.iLike]: `%${q.trim()}%` } },
+            ],
+          },
+        ],
+      },
+      attributes: ['id', 'username', 'rank'],
+      limit: 12,
+    });
+
+    return res.status(200).json({ users });
+  } catch (err) {
+    return next(err);
+  }
+});
+
 
 // Get info about curruser
 router.get('/current',requireAuth, validateQueryParameters, async (req, res, next) => {

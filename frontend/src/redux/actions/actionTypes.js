@@ -101,6 +101,12 @@ export const SHOW_FRIENDS = 'friends/SHOW_FRIENDS';
 export const SHOW_CONVERSATION_BY_ID = 'friends/SHOW_CONVERSATION_BY_ID';
 
 
-//stats 
+//stats
 export const GET_USER_STATS = 'stats/GET_USER_STATS';
 export const GET_USER_TABLES = 'stats/GET_USER_TABLES';
+
+// friend search + suggestions
+export const SET_USER_SEARCH_RESULTS = 'friends/SET_USER_SEARCH_RESULTS';
+export const CLEAR_USER_SEARCH_RESULTS = 'friends/CLEAR_USER_SEARCH_RESULTS';
+export const SET_FRIEND_SUGGESTIONS = 'friends/SET_FRIEND_SUGGESTIONS';
+export const OPTIMISTIC_SUGGEST_ADD = 'friends/OPTIMISTIC_SUGGEST_ADD';

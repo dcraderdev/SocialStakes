@@ -101,6 +101,13 @@ export const SHOW_FRIENDS = 'friends/SHOW_FRIENDS';
 export const SHOW_CONVERSATION_BY_ID = 'friends/SHOW_CONVERSATION_BY_ID';
 
 
-//stats 
+//stats
 export const GET_USER_STATS = 'stats/GET_USER_STATS';
 export const GET_USER_TABLES = 'stats/GET_USER_TABLES';
+
+// history / verify
+export const GET_HISTORY_STATS = 'stats/GET_HISTORY_STATS';
+export const GET_HAND_HISTORY = 'stats/GET_HAND_HISTORY';
+export const GET_FRIENDS_LEADERBOARD = 'stats/GET_FRIENDS_LEADERBOARD';
+export const GET_HAND_VERIFY = 'stats/GET_HAND_VERIFY';
+export const SET_HISTORY_LOADING = 'stats/SET_HISTORY_LOADING';

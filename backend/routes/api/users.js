@@ -7,6 +7,7 @@ const { check } = require('express-validator');
 const { handleValidationErrors, validateSignup , validateQueryParameters} = require('../../utils/validation');
 const { json } = require('sequelize');
 const db = require('../../db/models');
+const { historyController } = require('../../controllers/historyController');
 const router = express.Router();
 
 
@@ -97,5 +98,40 @@ router.get('/current',requireAuth, validateQueryParameters, async (req, res, nex
   return res.status(200).json({ User: currUser });
 });
 
+
+// GET /api/users/me/stats?days=30
+router.get('/me/stats', requireAuth, async (req, res, next) => {
+  const { user } = req;
+  const days = parseInt(req.query.days, 10) || 30;
+  try {
+    const stats = await historyController.getHistoryStats(user.id, days);
+    return res.json(stats);
+  } catch (e) {
+    next(e);
+  }
+});
+
+// GET /api/users/me/hands?limit=50
+router.get('/me/hands', requireAuth, async (req, res, next) => {
+  const { user } = req;
+  const limit = parseInt(req.query.limit, 10) || 50;
+  try {
+    const hands = await historyController.getHandHistory(user.id, limit);
+    return res.json({ hands });
+  } catch (e) {
+    next(e);
+  }
+});
+
+// GET /api/users/me/friends/leaderboard
+router.get('/me/friends/leaderboard', requireAuth, async (req, res, next) => {
+  const { user } = req;
+  try {
+    const leaderboard = await historyController.getFriendsLeaderboard(user.id);
+    return res.json({ leaderboard });
+  } catch (e) {
+    next(e);
+  }
+});
 
 module.exports = router;

@@ -1,55 +1,75 @@
-import React, { useState, useMemo } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import Navigation from '../Navigation';
+import { loadHistoryStats, loadHandHistory, loadFriendsLeaderboard } from '../../redux/middleware/stats';
 
-/**
- * "Your last 30 days" history dashboard. Mirrors 04-history.jpg in the
- * portfolio reference. For now this uses synthesized data — the underlying
- * Hands / Rounds tables are populated in the database, but the API for
- * surfacing them client-side isn't wired up. Real wiring is tracked as a
- * follow-up.
- */
+const AVATAR_COLORS = ['purple', 'yellow', 'blue', 'green', 'pink', 'red', 'orange'];
+
 function HistoryPage() {
+  const dispatch = useDispatch();
+  const routerHistory = useHistory();
   const user = useSelector((state) => state.users.user);
+  const historyStats = useSelector((state) => state.stats.historyStats);
+  const handHistory = useSelector((state) => state.stats.handHistory);
+  const friendsLeaderboard = useSelector((state) => state.stats.friendsLeaderboard);
+  const loading = useSelector((state) => state.stats.historyLoading);
+
   const [range, setRange] = useState('30d');
 
-  const data = useMemo(() => generateMockHistory(), []);
-  const stats = useMemo(() => deriveStats(data), [data]);
+  useEffect(() => {
+    if (!user) return;
+    const days = range === '7d' ? 7 : range === '30d' ? 30 : range === '90d' ? 90 : 36500;
+    dispatch(loadHistoryStats(days));
+  }, [dispatch, user, range]);
+
+  useEffect(() => {
+    if (!user) return;
+    dispatch(loadHandHistory(50));
+    dispatch(loadFriendsLeaderboard());
+  }, [dispatch, user]);
+
+  const stats = historyStats || {};
+  const curve = stats.curve || [];
+  const hands = handHistory || [];
+  const leaderboard = friendsLeaderboard || [];
 
   return (
     <>
       <Navigation />
       <div className="ss-page">
-        <h1 className="ss-h1">Your last 30 days</h1>
+        <h1 className="ss-h1">Your last {range === 'All' ? 'all time' : range}</h1>
         <p className="ss-sub">All hands cryptographically logged. Click any row to replay or verify.</p>
+
+        {loading && <div style={{ color: 'var(--ss-text-dim)', marginBottom: 16, fontSize: 13 }}>Loading…</div>}
 
         <div className="ss-grid-stats">
           <div className="ss-card ss-stat-card">
             <div className="ss-stat-label">Hands played</div>
-            <div className="ss-stat-value">{stats.handsPlayed.toLocaleString()}</div>
-            <div className="ss-stat-sub">+{stats.handsDelta} from prior month</div>
+            <div className="ss-stat-value">{(stats.handsPlayed ?? 0).toLocaleString()}</div>
+            <div className="ss-stat-sub">in selected range</div>
           </div>
           <div className="ss-card ss-stat-card">
             <div className="ss-stat-label">Net P&amp;L</div>
-            <div className="ss-stat-value" style={{ color: stats.netPL >= 0 ? 'var(--ss-green)' : 'var(--ss-red)' }}>
-              {stats.netPL >= 0 ? '+ ' : '- '}$ {Math.abs(stats.netPL).toLocaleString()}
+            <div className="ss-stat-value" style={{ color: (stats.netPL ?? 0) >= 0 ? 'var(--ss-green)' : 'var(--ss-red)' }}>
+              {(stats.netPL ?? 0) >= 0 ? '+ ' : '− '}$ {Math.abs(stats.netPL ?? 0).toLocaleString()}
             </div>
-            <div className="ss-stat-sub">All-time + $4,820</div>
+            <div className="ss-stat-sub">in selected range</div>
           </div>
           <div className="ss-card ss-stat-card">
             <div className="ss-stat-label">Win rate</div>
-            <div className="ss-stat-value">{stats.winRate.toFixed(1)}%</div>
+            <div className="ss-stat-value">{(stats.winRate ?? 0).toFixed(1)}%</div>
             <div className="ss-stat-sub">House edge 0.5%</div>
           </div>
           <div className="ss-card ss-stat-card">
-            <div className="ss-stat-label">Best session</div>
-            <div className="ss-stat-value" style={{ color: 'var(--ss-green)' }}>+ $ {stats.bestSession.amount}</div>
-            <div className="ss-stat-sub">{stats.bestSession.table}</div>
+            <div className="ss-stat-label">Biggest win</div>
+            <div className="ss-stat-value" style={{ color: 'var(--ss-green)' }}>+ $ {(stats.biggestWin ?? 0).toLocaleString()}</div>
+            <div className="ss-stat-sub">single hand</div>
           </div>
           <div className="ss-card ss-stat-card">
-            <div className="ss-stat-label">Worst session</div>
-            <div className="ss-stat-value" style={{ color: 'var(--ss-red)' }}>− $ {stats.worstSession.amount}</div>
-            <div className="ss-stat-sub">{stats.worstSession.table}</div>
+            <div className="ss-stat-label">Biggest loss</div>
+            <div className="ss-stat-value" style={{ color: 'var(--ss-red)' }}>− $ {Math.abs(stats.biggestLoss ?? 0).toLocaleString()}</div>
+            <div className="ss-stat-sub">single hand</div>
           </div>
         </div>
 
@@ -72,25 +92,37 @@ function HistoryPage() {
                 ))}
               </div>
             </div>
-            <BankrollChart points={data.curve} />
+            {curve.length > 1
+              ? <BankrollChart points={curve} />
+              : <div style={{ height: 260, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--ss-text-muted)', fontSize: 13 }}>
+                  No data yet
+                </div>
+            }
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
             <div className="ss-card">
-              <div className="ss-stat-label" style={{ marginBottom: 14 }}>Friends leaderboard · May</div>
-              {data.leaderboard.map((row, i) => (
-                <div key={i} style={{
-                  display: 'flex', alignItems: 'center', gap: 10,
-                  padding: '8px 0', borderBottom: i < data.leaderboard.length - 1 ? '1px solid var(--ss-border-soft)' : 'none',
-                  fontSize: 13,
-                }}>
-                  <span className={`ss-avatar ${row.color}`} style={{ width: 22, height: 22, fontSize: 11 }}>{i + 1}</span>
-                  <span style={{ flex: 1 }}>{row.name}</span>
-                  <span className="ss-mono" style={{ color: row.delta >= 0 ? 'var(--ss-green)' : 'var(--ss-red)', fontWeight: 600 }}>
-                    {row.delta >= 0 ? '+' : '−'} $ {Math.abs(row.delta).toLocaleString()}
-                  </span>
-                </div>
-              ))}
+              <div className="ss-stat-label" style={{ marginBottom: 14 }}>
+                Friends leaderboard · this week
+              </div>
+              {leaderboard.length === 0
+                ? <div style={{ fontSize: 13, color: 'var(--ss-text-dim)' }}>No friends data yet.</div>
+                : leaderboard.map((row, i) => (
+                  <div key={row.id || i} style={{
+                    display: 'flex', alignItems: 'center', gap: 10,
+                    padding: '8px 0', borderBottom: i < leaderboard.length - 1 ? '1px solid var(--ss-border-soft)' : 'none',
+                    fontSize: 13,
+                  }}>
+                    <span className={`ss-avatar ${AVATAR_COLORS[i % AVATAR_COLORS.length]}`} style={{ width: 22, height: 22, fontSize: 11 }}>{i + 1}</span>
+                    <span style={{ flex: 1, fontWeight: row.isMe ? 600 : 400 }}>
+                      {row.isMe ? 'You' : row.name}
+                    </span>
+                    <span className="ss-mono" style={{ color: row.delta >= 0 ? 'var(--ss-green)' : 'var(--ss-red)', fontWeight: 600 }}>
+                      {row.delta >= 0 ? '+' : '−'} $ {Math.abs(row.delta).toLocaleString()}
+                    </span>
+                  </div>
+                ))
+              }
             </div>
 
             <div className="ss-card">
@@ -120,23 +152,33 @@ function HistoryPage() {
               </tr>
             </thead>
             <tbody>
-              {data.hands.map((h) => (
-                <tr key={h.id}>
-                  <td style={td}><span className="ss-mono">#{h.id}</span></td>
-                  <td style={{ ...td, color: 'var(--ss-text-dim)' }}>{h.time}</td>
-                  <td style={td}>{h.table}</td>
-                  <td style={{ ...td, fontFamily: 'var(--ss-mono)' }}>{h.cards}</td>
-                  <td style={td}>
-                    <span className={`ss-pill ${resultPill(h.result)}`}>{h.result}</span>
-                  </td>
-                  <td style={{ ...td, color: h.delta >= 0 ? 'var(--ss-green)' : 'var(--ss-red)', fontWeight: 600 }} className="ss-mono">
-                    {h.delta >= 0 ? '+' : '−'} {Math.abs(h.delta)}
-                  </td>
-                  <td style={td}>
-                    <span className="ss-pill" style={{ color: 'var(--ss-text-muted)', fontSize: 11 }}>verify ✓</span>
-                  </td>
-                </tr>
-              ))}
+              {hands.length === 0
+                ? (
+                  <tr>
+                    <td colSpan={7} style={{ ...td, color: 'var(--ss-text-dim)', textAlign: 'center' }}>
+                      {loading ? 'Loading…' : 'No hands yet.'}
+                    </td>
+                  </tr>
+                )
+                : hands.map((h) => (
+                  <tr key={h.id} style={{ cursor: 'pointer' }}
+                    onClick={() => routerHistory.push(`/verify?hand=${h.id}`)}>
+                    <td style={td}><span className="ss-mono">#{typeof h.id === 'string' ? h.id.slice(0, 8) : h.id}</span></td>
+                    <td style={{ ...td, color: 'var(--ss-text-dim)' }}>{h.time}</td>
+                    <td style={td}>{h.table}</td>
+                    <td style={{ ...td, fontFamily: 'var(--ss-mono)' }}>{h.cards || '—'}</td>
+                    <td style={td}>
+                      <span className={`ss-pill ${resultPill(h.result)}`}>{h.result}</span>
+                    </td>
+                    <td style={{ ...td, color: h.delta >= 0 ? 'var(--ss-green)' : 'var(--ss-red)', fontWeight: 600 }} className="ss-mono">
+                      {h.delta >= 0 ? '+' : '−'} {Math.abs(h.delta)}
+                    </td>
+                    <td style={td}>
+                      <span className="ss-pill" style={{ color: 'var(--ss-text-muted)', fontSize: 11 }}>verify ✓</span>
+                    </td>
+                  </tr>
+                ))
+              }
             </tbody>
           </table>
         </div>
@@ -151,8 +193,10 @@ const td = {
 };
 
 function resultPill(result) {
-  if (result === 'Blackjack' || result === 'Win' || result.startsWith('Win')) return 'ss-pill-green';
-  if (result === 'Bust' || result === 'Lose') return 'ss-pill-red';
+  if (!result) return '';
+  const r = result.toUpperCase();
+  if (r === 'WIN' || r === 'BLACKJACK' || r.startsWith('WIN')) return 'ss-pill-green';
+  if (r === 'BUST' || r === 'LOSE') return 'ss-pill-red';
   return '';
 }
 
@@ -161,7 +205,7 @@ function BankrollChart({ points }) {
   const min = Math.min(...points);
   const max = Math.max(...points);
   const range = max - min || 1;
-  const stepX = (W - padding * 2) / (points.length - 1);
+  const stepX = (W - padding * 2) / Math.max(points.length - 1, 1);
   const toY = (v) => padding + (H - padding * 2) * (1 - (v - min) / range);
   const pathD = points.map((v, i) => `${i === 0 ? 'M' : 'L'} ${padding + i * stepX} ${toY(v)}`).join(' ');
   const areaD = pathD + ` L ${padding + (points.length - 1) * stepX} ${H - padding} L ${padding} ${H - padding} Z`;
@@ -174,7 +218,6 @@ function BankrollChart({ points }) {
           <stop offset="100%" stopColor="var(--ss-gold)" stopOpacity="0" />
         </linearGradient>
       </defs>
-      {/* gridlines */}
       {[0, 0.33, 0.66, 1].map((t, i) => (
         <line key={i} x1={padding} x2={W - padding} y1={padding + (H - padding * 2) * t} y2={padding + (H - padding * 2) * t}
           stroke="var(--ss-border-soft)" strokeWidth="1" />
@@ -184,50 +227,6 @@ function BankrollChart({ points }) {
       <circle cx={padding + (points.length - 1) * stepX} cy={toY(points[points.length - 1])} r="4" fill="var(--ss-gold)" />
     </svg>
   );
-}
-
-function generateMockHistory() {
-  let v = 3000;
-  const curve = [];
-  for (let i = 0; i < 30; i++) {
-    v += Math.round((Math.sin(i / 3) * 80) + (Math.random() - 0.4) * 140);
-    curve.push(v);
-  }
-  const hands = [];
-  const tables = ['High Tide', 'Whale Watch', 'Beginners\' Beach', 'Sara\'s table'];
-  const results = ['Win', 'Bust', 'Blackjack', 'Push', 'Win × 2', 'Lose'];
-  for (let i = 0; i < 14; i++) {
-    const r = results[Math.floor(Math.random() * results.length)];
-    const delta = r === 'Blackjack' ? 300 : r === 'Win' ? 100 : r === 'Win × 2' ? 400 : r === 'Push' ? 0 : r === 'Bust' ? -200 : -100;
-    hands.push({
-      id: 142 - i,
-      time: `${14 - Math.floor(i / 4)}:${String((33 - i * 2) % 60).padStart(2, '0')}`,
-      table: tables[i % tables.length],
-      cards: ['Q♦ 5♣ → 8♣', 'A♥ K♣', 'J♠ J♦ split → 21, 18', '9♣ 9♣ → 18', 'K♥ 7♣ → 17', '4♣ 7♣ → 11 dbl → 21'][i % 6],
-      result: r,
-      delta,
-    });
-  }
-  const leaderboard = [
-    { name: 'Marcus', delta: 4210, color: 'purple' },
-    { name: 'You', delta: 1820, color: 'yellow' },
-    { name: 'Sara', delta: 820, color: 'blue' },
-    { name: 'Leo', delta: 312, color: 'green' },
-    { name: 'Avery', delta: -94, color: 'pink' },
-    { name: 'June', delta: -640, color: 'red' },
-  ];
-  return { curve, hands, leaderboard };
-}
-
-function deriveStats(data) {
-  return {
-    handsPlayed: 1428,
-    handsDelta: 312,
-    netPL: 1820,
-    winRate: 46.4,
-    bestSession: { amount: 640, table: 'High Tide · May 4' },
-    worstSession: { amount: 180, table: 'Whale Watch · May 9' },
-  };
 }
 
 export default HistoryPage;

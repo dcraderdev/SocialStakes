@@ -1,47 +1,50 @@
-
-import { 
- GET_USER_STATS, GET_USER_TABLES
-} from '../actions/actionTypes'
-
+import {
+  GET_USER_STATS,
+  GET_USER_TABLES,
+  GET_HISTORY_STATS,
+  GET_HAND_HISTORY,
+  GET_FRIENDS_LEADERBOARD,
+  GET_HAND_VERIFY,
+  SET_HISTORY_LOADING,
+} from '../actions/actionTypes';
 
 const initialState = {
   history: {},
   tables: {},
-  sessionStats: {}
+  sessionStats: {},
+  historyStats: null,
+  handHistory: [],
+  friendsLeaderboard: [],
+  handVerify: null,
+  historyLoading: false,
 };
 
 const statsReducer = (state = initialState, action) => {
-  const newState = { ...state };
   switch (action.type) {
+    case GET_USER_STATS:
+      return { ...state, history: action.payload };
 
+    case GET_USER_TABLES:
+      return { ...state, sessionStats: action.payload.sessionStats };
 
-    case GET_USER_STATS: {
-      console.log(action.payload);
+    case GET_HISTORY_STATS:
+      return { ...state, historyStats: action.payload };
 
-      let newStats = action.payload
-      return { ...newState, history:newStats};
-    }
+    case GET_HAND_HISTORY:
+      return { ...state, handHistory: action.payload };
 
+    case GET_FRIENDS_LEADERBOARD:
+      return { ...state, friendsLeaderboard: action.payload };
 
+    case GET_HAND_VERIFY:
+      return { ...state, handVerify: action.payload };
 
-    case GET_USER_TABLES: {
-      console.log(action.payload);
-
-      let newSessionStats = action.payload.sessionStats
-      return { ...newState, sessionStats:newSessionStats };
-    }
-
-
-
-    
-
-
+    case SET_HISTORY_LOADING:
+      return { ...state, historyLoading: action.payload };
 
     default:
-      return newState;
-
-
-    }
+      return state;
+  }
 };
 
 export default statsReducer;

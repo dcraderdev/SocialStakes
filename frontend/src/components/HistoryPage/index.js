@@ -105,8 +105,8 @@ function HistoryPage() {
           </div>
         </div>
 
-        <div className="ss-card" style={{ marginTop: 22, padding: '8px 0', overflow: 'hidden' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
+        <div className="ss-card" style={{ marginTop: 22, padding: '8px 0', overflowX: 'auto' }}>
+          <table style={{ width: '100%', minWidth: 520, borderCollapse: 'collapse', fontSize: 13 }}>
             <thead>
               <tr>
                 {['Hand', 'Time', 'Table', 'Cards', 'Result', 'Δ', ''].map(h => (

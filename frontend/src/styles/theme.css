@@ -351,6 +351,7 @@ body {
   border-radius: var(--ss-r-lg);
   padding: 16px 18px;
   background: var(--ss-bg-elev);
+  box-sizing: border-box;
 }
 
 /* ---------- table view (gameplay) ---------- */
@@ -761,6 +762,8 @@ button.bet-option,
   border: 1px solid var(--ss-border);
   border-radius: var(--ss-r-lg);
   padding: 18px 20px;
+  box-sizing: border-box;
+  min-width: 0;
 }
 .ss-stat-card { padding: 18px 20px; }
 .ss-stat-label {
@@ -940,6 +943,12 @@ input, textarea, select { font-family: var(--ss-font); }
   }
   .gamefloor-container {
     padding: 0 12px !important;
+    overflow: hidden !important;
+  }
+  .winnerchatbox-wrapper,
+  .showgames-wrapper {
+    max-width: 100% !important;
+    overflow: hidden !important;
   }
   /* Stack buttons before they'd overflow (2×280 + 24gap = 584px) */
   .private-game-buttons {

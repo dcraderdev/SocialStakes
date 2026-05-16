@@ -1,129 +1,113 @@
+/* ── Balance / Cashier modal ──────────────────────────── */
+/* Main container — shell overridden by theme.css */
 .balancemodal-wrapper {
+  background: var(--ss-bg-elev, #12141a) !important;
+  border: 1px solid var(--ss-border, #262a33) !important;
+  border-radius: var(--card-radius, 16px) !important;
+  box-shadow: var(--ss-shadow-lg) !important;
+  padding: var(--sp-5, 20px) var(--sp-6, 24px) !important;
+  width: 400px !important;
+  max-width: 92vw;
+  height: auto !important;
   z-index: 1000;
-  position: absolute;
-  border: 1px solid rgb(0, 0, 0);
-  background-color: #2d2e2c;
-  padding: 20px;
-  border-radius: 5px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  width: 450px;
-  height: 190px;
 }
 
-
-
-.balancemodal-container{
+.balancemodal-container {
   flex-direction: column;
-  justify-content: space-between;
+  gap: var(--sp-4, 16px);
   height: 100%;
-  
 }
 
-.balancemodal-header{
+.balancemodal-header {
   width: 100%;
-  font-size: 25px;
-  color: rgb(200, 57, 13);
+  font-size: var(--fs-lg, 18px);
+  color: var(--ss-text, #f6f3ec);
+  font-weight: 700;
 }
-
-.balancemodal-subheader{
+.balancemodal-subheader {
   width: 100%;
-  font-size: 22px;
-  color: rgb(200, 57, 13);
+  font-size: var(--fs-sm, 13px);
+  color: var(--ss-text-muted, #7c8290);
 }
 
-.white{
-  color: white;
+/* Amount label + value */
+.balancemodal-memo-container {
+  font-size: var(--fs-xl, 22px);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
 }
+.balancemodal-memo { color: var(--ss-text, #f6f3ec); }
 
-.balancemodal-memo-container{
-  font-size: 20px;
-  width: 150px;
-  font-size: 20px;
+/* Funding input */
+.balancemodal-funding-label {
+  color: var(--ss-text-dim, #b6bac3);
+  font-size: var(--fs-sm, 13px);
+  display: block;
+  margin-bottom: var(--sp-2, 8px);
 }
+.balancemodal-funding-input {
+  width: 100%;
+  height: var(--input-height, 42px);
+  background: var(--ss-bg-soft, #1d2029) !important;
+  border: 1px solid var(--ss-border, #262a33) !important;
+  border-radius: var(--ss-r-md, 10px) !important;
+  color: var(--ss-text, #f6f3ec);
+  font-size: var(--fs-lg, 18px);
+  text-align: center;
+  outline: none;
+  transition: border-color var(--t-base, 250ms), box-shadow var(--t-base, 250ms);
+}
+.balancemodal-funding-input:focus {
+  border-color: var(--ss-gold-line) !important;
+  box-shadow: var(--focus-ring) !important;
+}
+.balancemodal-funding-input::-webkit-inner-spin-button,
+.balancemodal-funding-input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+.balancemodal-funding-input[type=number] { -moz-appearance: textfield; }
 
-.balancemodal-memo{
-  color: rgb(255, 255, 255);
-}
-.green{
-  color: rgb(25, 141, 60);
-}
-.red{
-  color: rgb(200, 57, 13);
-}
-
-.balancemodal-user-buttons{
-  width: 80%;
-  height: 50px;
-  position: relative;
-  top: 10px;
+/* Buttons */
+.balancemodal-user-buttons {
+  width: 100%;
+  display: flex;
+  gap: var(--sp-3, 12px);
+  margin-top: var(--sp-2, 8px);
 }
 
 .balancemodal-ok,
-.balancemodal-addbalance,
-.balancemodal-cancel{
-  border-radius: 5px;
+.balancemodal-addbalance {
+  flex: 1;
+  height: var(--input-height, 42px);
+  background: var(--ss-gold, #e5b34c) !important;
+  color: var(--ss-bg, #0a0b0e) !important;
+  border: none !important;
+  border-radius: var(--ss-r-md, 10px) !important;
+  font-weight: 700;
+  font-size: var(--fs-sm, 13px);
   cursor: pointer;
-  border: solid 1px rgb(255, 255, 255);
-  height: 100%;
-  color: white;
-  width: 40%;
+  transition: background var(--t-base, 250ms);
+}
+.balancemodal-ok:hover,
+.balancemodal-addbalance:hover { background: var(--ss-gold-soft, #cf9e3a) !important; }
+
+.balancemodal-cancel {
+  flex: 1;
+  height: var(--input-height, 42px);
+  background: var(--ss-bg-elev-2, #181b22) !important;
+  color: var(--ss-text-dim, #b6bac3) !important;
+  border: 1px solid var(--ss-border, #262a33) !important;
+  border-radius: var(--ss-r-md, 10px) !important;
+  font-weight: 600;
+  font-size: var(--fs-sm, 13px);
+  cursor: pointer;
+  transition: all var(--t-base, 250ms);
+}
+.balancemodal-cancel:hover {
+  background: var(--ss-red-faint) !important;
+  color: var(--ss-red, #ef5d5d) !important;
+  border-color: rgba(239,93,93,0.35) !important;
 }
 
-
-
-
-
-.balancemodal-cancel{
-  width: 40%;
-}
-
-.balancemodal-ok{
-  width: 40%;
-  height: 40px;
-}
-
-
-.balancemodal-addbalance:hover{
-  color: rgb(1, 83, 21);
-  border: solid green 1px;
-}
-
-.balancemodal-cancel:hover{
-  color: rgb(200, 57, 13);
-
-  border: solid rgb(200, 57, 13) 1px;
-}
-
-
-
-
-.balancemodal-funding-input{
-  outline: none;
-  border: none;
-  box-shadow: none;
-  background-color: transparent;
-  color: white;
-  height: 100%;
-  position: relative;
-  text-align: center;
-  border-bottom: #000000 solid 1px;
-  font-size: min(25px, 3vw);
-  width: 250px;
-}
-
-
-.balancemodal-funding-label{
-
-  color: white;
-  font-size: min(25px, 3vw);
-}
-
-.balancemodal-funding-input::-webkit-inner-spin-button,
-.balancemodal-funding-input::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-.balancemodal-funding-input[type=number] {
-  -moz-appearance: textfield;
-}
+/* Utility color aliases */
+.white { color: var(--ss-text, #f6f3ec); }
+.green { color: var(--ss-green, #4ade80); }
+.red   { color: var(--ss-red, #ef5d5d); }

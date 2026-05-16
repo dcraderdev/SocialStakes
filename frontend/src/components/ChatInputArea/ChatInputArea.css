@@ -1,44 +1,67 @@
-
-.chatinput-controls-container,
-.chatinput-container{
+/* ── Chat input area ──────────────────────────────────── */
+.chatinput-container,
+.chatinputarea-container {
   position: relative;
   width: 100%;
   height: 100%;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2, 8px);
 }
-.chatinput-controls-container{
-  justify-content: space-around;
-  z-index: 10000000000000;
+
+.chatinput-controls-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2, 8px);
 }
 
 .chatinput-controls {
   width: 100%;
   height: 100%;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2, 8px);
 }
 
-
-.chatinput-input{
-  position: relative;
-  border-radius: 8px;
-  width: 70%;
-  font-size: 15px;
-  height: 95%;
+/* Input field — enforces form system */
+.chatinput-input {
+  flex: 1;
+  height: var(--input-height, 42px) !important;
+  border-radius: var(--ss-r-md, 10px) !important;
+  border: 1px solid var(--ss-border, #262a33) !important;
+  background: var(--ss-bg-soft, #1d2029) !important;
+  color: var(--ss-text, #f6f3ec) !important;
+  font-size: var(--fs-sm, 13px);
+  font-family: var(--ss-font);
+  padding: 0 var(--sp-3, 12px) !important;
+  transition: border-color var(--t-base, 250ms), box-shadow var(--t-base, 250ms);
   outline: none;
-  border: none;
-  z-index: 1000000;
-
-
 }
+.chatinput-input:focus {
+  border-color: var(--ss-gold-line, rgba(229,179,76,0.32)) !important;
+  box-shadow: var(--focus-ring, 0 0 0 2px rgba(229,179,76,0.12)) !important;
+}
+.chatinput-input::placeholder { color: var(--ss-text-muted, #7c8290); }
 
-.chatinput-button{
-  border-radius: 8px;
-  width: 25%;
-  max-width: 200px;
-  position: relative;
+/* Send button */
+.chatinput-button {
+  height: var(--input-height, 42px) !important;
+  min-width: 72px;
+  border-radius: var(--ss-r-md, 10px) !important;
+  background: var(--ss-gold, #e5b34c) !important;
+  color: var(--ss-bg, #0a0b0e) !important;
+  font-weight: 700 !important;
+  font-size: var(--fs-xs, 11px);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border: none !important;
   cursor: pointer;
-  height: 100%;
+  box-shadow: none !important;
   outline: none;
-  border: none;
-  box-shadow: none;
+  transition: background var(--t-base, 250ms), transform var(--t-fast, 150ms);
 }
-
-
+.chatinput-button:hover { background: var(--ss-gold-soft, #cf9e3a) !important; }
+.chatinput-button:active { transform: scale(0.95); }

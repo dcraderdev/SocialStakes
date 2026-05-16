@@ -332,9 +332,22 @@ function GameFloor() {
                       delay={index}
                     />
                 ))}
-                {!openTablesByGameType.length &&
-                  <div className='tables-coming-soon-container flex center'>Tables coming soon!</div>
-                }
+                {!openTablesByGameType.length && (
+                  <div className="tables-coming-soon-container flex center">
+                    <div className="ss-empty">
+                      <div className="ss-empty-icon">🃏</div>
+                      <p className="ss-empty-title">No open tables yet</p>
+                      <p className="ss-empty-body">
+                        No one has started a table for this game type. Be the first — start a private game or wait for another player.
+                      </p>
+                      <div className="ss-empty-action">
+                        <button className="ss-btn ss-btn-primary" onClick={startPrivateGame}>
+                          Start a table
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
 

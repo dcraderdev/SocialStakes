@@ -1,229 +1,122 @@
+/* ── Friends sidebar nav ──────────────────────────────── */
 .friendsnavbar-wrapper {
-
   width: 100%;
   height: 100%;
-  position: absolute;
-  left: 0px;
+  position: relative;
   display: flex;
-  border-right: rgba(0, 0, 0, 0.466) solid .5px;
-  border-right: rgba(0, 0, 0, 0.466) solid 1px;
-  top: -50px;
 }
 
-
-.friendsnavbar-container{
+.friendsnavbar-container {
   width: 100%;
-  height: fit-content;
+  height: 100%;
   display: flex;
   flex-direction: column;
+  background: var(--ss-bg-elev, #12141a);
 }
 
-
-
-.friendsnavbar-searchbar-container{
-  height: 59px;
-  font-size: 18px;
-  color: #fdfcfc;
+/* Search row */
+.friendsnavbar-searchbar-container {
+  height: 56px;
+  min-height: 56px;
+  font-size: var(--fs-sm, 13px);
+  color: var(--ss-text, #f6f3ec);
+  display: flex;
   align-items: center;
-  border-bottom: #000000 solid 1px;
-  transition: 0s all ease;
-
-
+  padding: 0 var(--sp-3, 12px);
+  border-bottom: 1px solid var(--ss-border, #262a33);
 }
 
-
-.friendsnavbar-searchbar-container.raised{
-  position: relative;
-  height: 52px;
-  transition: .1s all;
-
-}
-
-
-
-
-.friendsnavbar-option{
-  border-top: #404040b0 solid 1px;
-  border-bottom: #000000 solid 2px;
-
-  height: 50px;
-  font-size: 18px;
-  color: #fdfcfc;
-  overflow: hidden;
-  transition: 1s all ease;
-}
-
-
-
-
-
-
-
-.friendsnavbar-nav:hover,
-.friendsnavbar-nav-header:hover{
-  background-color: rgba(228, 228, 228, 0.2508);
-}
-
-
-.friendsnavbar-nav-header{
+/* Section header (Friends / Conversations / Invites) */
+.friendsnavbar-nav-header {
   position: sticky;
-  top: 0px;
+  top: 0;
   cursor: pointer;
-  height: 50px;
-  font-size: 18px;
-  color: #fdfcfc;
-  border-bottom: solid rgba(0, 0, 0, 0.287) 1px;
-  z-index: 100;
-}
-
-.friendsnavbar-nav{
-  height: 50px;
-  font-size: 18px;
-  color: #fdfcfc;
-  border-top: #404040b0 solid 1px;
-  border-bottom: #000000 solid 2px;
-  border-right: black 1px solid;
-
-  cursor: pointer;
-}
-
-
-.friendsnavbar-startconvo-button{
-  position: absolute;
-  border: rgba(0, 0, 0, 0.376) solid 1px;
-  border-radius: 50%;
-  right: 5px;
-  width: 25px;
-  height: 25px;
-  background-color: #373736;
-}
-
-.friendsnavbar-startconvo-button:hover{
-  background-color: #2d2e2c;
-}
-.friendsnavbar-startconvo-button:hover > i{
-  transform: scale(1.2);
-}
-
-.friendsnavbar-startconvo-button:active > i{
-  transform: scale(1);
-}
-
-.friendsnavbar-startconvo-button i{
-
-  width: fit-content;
-  height: fit-content;
-  font-size: 13px;
-}
-
-
-
-
-
-.invites-extended{
-  height: 150px;
-  box-shadow: #40404064  0px 1px 2px, #404040b0  0px 1px 2px;
-
-  border-bottom: #000000 solid 2px;
-
-}
-
-.friends-extended{
-  height: calc(100vh - 220px);
-
-}
-
-.friends-extra-extended{
-  height: calc(100vh - 260px);
-
-}
-
-
-
-.friendsnavbar-content{
-  width: 100%;
-  height: calc(100vh - 270px);
-  
-  overflow-y: scroll; 
-  overflow-x: hidden; 
-}
-
-.friendsnavbar-content-extended{
-  width: 100%;
-  height: calc(100vh - 315px);
-  
-  overflow-y: scroll; 
-  overflow-x: hidden; 
-}
-
-
-.friendsnavbar-content-missing{
-  width: 80%;
-  height: 80%;
-  position: relative;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  font-size: max(4vh, 17px);
-}
-
-
-
-
-
-
-/* Styling the scrollbar */
-/* .friendsnavbar-content::-webkit-scrollbar{
-  width: 5px; 
-}
-
-.friendsnavbar-content::-webkit-scrollbar-track {
-  background:transparent; 
-}
-
-.friendsnavbar-content::-webkit-scrollbar-thumb {
-  background: #131312; 
-}
-
-.friendsnavbar-content::-webkit-scrollbar-thumb:hover {
-  background: darkgrey; 
-} */
-
-
-
-.active-nav{
-  background-color: rgba(228, 228, 228, 0.213);
-}
-
-
-
-
-.friendsnavbar-text-active{
-  color: goldenrod;
-}
-
-
-.friendsnavbar-invite-friend-btn {
-  gap: 8px;
-  padding: 10px 14px;
-  margin: 8px 10px 12px;
-  border-radius: 8px;
-  background: rgba(99, 102, 241, 0.15);
-  border: 1px solid rgba(99, 102, 241, 0.3);
-  color: #a5b4fc;
-  font-size: 13px;
+  height: 44px;
+  font-size: var(--fs-xs, 11px);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
   font-weight: 600;
+  color: var(--ss-text-muted, #7c8290);
+  border-bottom: 1px solid var(--ss-border-soft, #1c1f27);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  padding: 0 var(--sp-4, 16px);
+  background: var(--ss-bg-elev, #12141a);
+  transition: background var(--t-base, 250ms);
+}
+.friendsnavbar-nav-header:hover { background: var(--ss-bg-soft, #1d2029); }
+
+/* Nav item row */
+.friendsnavbar-nav {
+  height: 50px;
+  font-size: var(--fs-sm, 13px);
+  color: var(--ss-text, #f6f3ec);
+  border-bottom: 1px solid var(--ss-border-soft, #1c1f27);
   cursor: pointer;
-  transition: background 0.15s, border-color 0.15s;
-  letter-spacing: 0.01em;
+  display: flex;
+  align-items: center;
+  padding: 0 var(--sp-3, 12px);
+  transition: background var(--t-base, 250ms);
+}
+.friendsnavbar-nav:hover { background: var(--ss-bg-soft, #1d2029); }
+.active-nav { background: rgba(229,179,76,0.06); }
+.friendsnavbar-text-active { color: var(--ss-gold, #e5b34c); font-weight: 600; }
+
+/* Section option wrapper */
+.friendsnavbar-option {
+  height: auto;
+  overflow: hidden;
+  transition: height 0.25s ease;
+  border-bottom: 1px solid var(--ss-border-soft, #1c1f27);
 }
 
-.friendsnavbar-invite-friend-btn:hover {
-  background: rgba(99, 102, 241, 0.25);
-  border-color: rgba(99, 102, 241, 0.5);
-  color: #c7d2fe;
+/* Start conversation button */
+.friendsnavbar-startconvo-button {
+  border: 1px solid var(--ss-border, #262a33);
+  border-radius: 50%;
+  right: var(--sp-3, 12px);
+  width: 26px;
+  height: 26px;
+  background: var(--ss-bg-elev-2, #181b22);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background var(--t-base, 250ms), transform var(--t-fast, 150ms);
+  position: absolute;
+}
+.friendsnavbar-startconvo-button:hover { background: var(--ss-gold-faint, rgba(229,179,76,0.12)); border-color: var(--ss-gold-line); }
+.friendsnavbar-startconvo-button:hover i { color: var(--ss-gold, #e5b34c); transform: scale(1.1); }
+.friendsnavbar-startconvo-button:active { transform: scale(0.9); }
+.friendsnavbar-startconvo-button i { font-size: 11px; color: var(--ss-text-dim, #b6bac3); }
+
+/* Scrollable content area */
+.friendsnavbar-content,
+.friendsnavbar-content-extended {
+  width: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  flex: 1;
 }
 
-.friendsnavbar-invite-friend-btn i {
-  font-size: 12px;
+/* Empty friends state */
+.friendsnavbar-content-missing {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--sp-6, 24px);
+  font-size: var(--fs-sm, 13px);
+  color: var(--ss-text-muted, #7c8290);
+  line-height: 1.5;
+  height: 100%;
 }
+
+/* Expand states */
+.invites-extended {
+  height: 150px;
+  border-bottom: 1px solid var(--ss-border-soft);
+}
+.friends-extended       { height: calc(100vh - 220px); }
+.friends-extra-extended { height: calc(100vh - 260px); }

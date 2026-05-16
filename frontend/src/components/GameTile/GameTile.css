@@ -1,93 +1,37 @@
-.game-tile-link {
-  text-decoration: none;
-  color: inherit;
-
-
-}
+/* ── Game tile (overridden heavily by theme.css) ──────── */
+.game-tile-link { text-decoration: none; color: inherit; }
 
 .gametile-container {
-  border: black solid 1px;
   position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border-radius: 4px;
-  cursor: pointer;
   height: 100%;
   width: 100%;
-  max-height: 350px;
-
-
-  background-image: url('../../images/game-tile-background2.jpeg');
-  background-size: cover; 
-  background-position: center; 
-  background-repeat: no-repeat; 
-
-
+  cursor: pointer;
+  /* Background, border, radius, hover — all set in theme.css */
 }
 
-
-
-.gametile-container:hover {
-  box-shadow: rgba(218, 165, 32, 0.187) 0px 1px 3px, rgba(218, 165, 32, 0.272) 0px 1px 3px;
-}
-
-
-.gametile-name{
-  color: white;
-  position: absolute;
-  font-size: 25px;
+.gametile-name {
+  position: relative;
   line-height: 1.3;
+  text-align: center;
 }
 
+.gametile-coming-soon {
+  position: absolute;
+  top: var(--sp-3, 12px);
+}
 
+/* Entrance animation */
+.animate { animation: tileGlow 0.3s ease 1; }
+
+@keyframes tileGlow {
+  0%   { box-shadow: 0 0 0 1px rgba(229,179,76,0.1); }
+  100% { box-shadow: var(--ss-shadow-card-hover, 0 12px 32px rgba(0,0,0,.55)); }
+}
 
 @media screen and (max-width: 500px) {
-  .gametile-name{
-    font-size: 18px;
-    line-height: 1;
-  }
-
-}
-
-.gametile-container img {
-  height: 100%;
-  width: 100%;
-  object-fit: contain;
-  object-fit: cover;
-}
-
-
-.gametile-coming-soon{
-  position: absolute;
-  font-size: 13px ;
-  color: red;
-  top: 0px;
-}
-
-
-
-
-
-.animate {
-  animation: .3s shadowGlow 1 ;
-}
-
-
-
-@keyframes shadowGlow {
-
-  0% {
-
-  box-shadow: rgba(218, 165, 32, 0.187) 0px 1px 3px, rgba(218, 165, 32, 0.272) 0px 1px 3px;
-
-  }
-
-  100% {
-
-  box-shadow: rgba(218, 165, 32, 0.187) 0px 1px 13px, rgba(218, 165, 32, 0.272) 0px 1px 13px;
-
-  }
-
+  .gametile-name { font-size: 16px !important; }
 }

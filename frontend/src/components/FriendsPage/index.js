@@ -178,8 +178,13 @@ const FriendsPage = () => {
           </div>
         )}
 
-
-
+        {!showFriendInvites && !showFriends && !showConversation && (
+          <div className="friendspage-empty-state">
+            <div className="fpes-icon">💬</div>
+            <p className="fpes-title">No conversation open</p>
+            <p className="fpes-body">Select a friend or conversation from the sidebar to get started.</p>
+          </div>
+        )}
 
       </div>
     </div>

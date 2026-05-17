@@ -137,7 +137,10 @@ function HiLo() {
           <div className="ss-card">
             <div className="ss-stat-label" style={{ marginBottom: 12 }}>Recent hands</div>
             {history.length === 0 ? (
-              <div style={{ color: 'var(--ss-text-muted)', fontSize: 13 }}>No hands yet.</div>
+              <div className="ss-empty-inline">
+                <div className="ss-empty-inline-icon">🃏</div>
+                <span>No hands yet — guess higher or lower!</span>
+              </div>
             ) : (
               history.map((h, i) => (
                 <div key={i} style={{

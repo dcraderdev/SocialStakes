@@ -15,8 +15,9 @@ import { WindowProvider } from './context/WindowContext';
 const store = configureStore();
 
 
+restoreCSRF();
+
 if (process.env.NODE_ENV !== 'production') {
-  restoreCSRF();
   window.csrfFetch = csrfFetch;
   window.store = store;
 }

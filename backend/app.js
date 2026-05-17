@@ -37,10 +37,11 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 // Security Middleware
-if (!isProduction) {
-  // enable cors only in development
-  app.use(cors());
-}
+const corsOrigin = process.env.REACT_APP_BACKEND_PROD_URL || 'http://localhost:3000';
+app.use(cors({
+  origin: isProduction ? corsOrigin : true,
+  credentials: true,
+}));
 
 // helmet helps set a variety of headers to better secure your app
 app.use(

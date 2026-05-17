@@ -1,0 +1,25 @@
+# fly.toml app configuration file generated for socialstakes-api on 2026-05-16T20:43:05-07:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'socialstakes-api'
+primary_region = 'sjc'
+
+[build]
+
+[http_service]
+  internal_port = 8000
+  force_https = true
+  auto_stop_machines = 'stop'
+  min_machines_running = 1
+  processes = ['app']
+
+  [http_service.concurrency]
+    type = 'connections'
+    hard_limit = 25
+    soft_limit = 20
+
+[[vm]]
+  size = 'shared-cpu-1x'
+  memory = '256mb'

@@ -501,7 +501,7 @@ module.exports = function (io) {
       }
     });
 
-    function handleAcceptFriendRequest(recipientObj, senderObj, request) {
+    async function handleAcceptFriendRequest(recipientObj, senderObj, request) {
       let recipientId = senderObj.friend.id;
       let senderConnections = connections[userId];
       let recipientConnections = connections[recipientId];

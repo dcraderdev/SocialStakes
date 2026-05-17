@@ -30,10 +30,7 @@ const AboutMeModal = () => {
       case 'linkedin':
         window.open('https://www.linkedin.com/in/donovan-crader-898413242/', '_blank');
         break;
-      case 'github':
-        window.open('https://github.com/dcraderdev/SocialStakes/wiki', '_blank');
-        break;
-      case 'portfolio':
+case 'portfolio':
         window.open('https://donovancrader.dev/', '_blank');
         break;
       default:
@@ -69,22 +66,7 @@ const AboutMeModal = () => {
       </div>
 
       <div className="aboutmemodal-content flex center">
-        <div className="content-container flex  center">
-          <div className="content-icon" >
-            <div className="aboutmemodal-icon flex" onClick={() => navTo('github')}>
-              <i className="fa-brands fa-github"></i>
-            </div>
-          </div>
-
-
-
-
-          <div className="content-message flex center">
-            <div className="content-link" onClick={() => navTo('github')}>Interested in the code magic behind this site?</div>
-          </div>
-        </div>
-
-        <div className="content-container flex center">
+<div className="content-container flex center">
           <div className="content-icon">
             <div className="aboutmemodal-icon flex center"  onClick={() => navTo('portfolio')}>
               <img

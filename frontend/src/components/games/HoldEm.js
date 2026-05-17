@@ -1,26 +1,26 @@
 import React, { useState, useRef, useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import { Hand } from 'pokersolver';
 import Navigation from '../Navigation';
+import ProvablyFairPanel, { useProvablyFairSession } from '../ProvablyFairPanel';
+import { deriveDeck, consumeNonce } from '../../utils/provablyFair';
+import { recordHand } from '../../utils/historyStore';
+
+// Map a 0..51 deck index to the 'rs' string format pokersolver expects.
+// Order: rank-major (rank 0..12 × suit 0..3). Suit order matches our
+// provablyFair derivation (0=♠,1=♥,2=♦,3=♣).
+const PF_SUITS = ['s', 'h', 'd', 'c'];
+function deckIdxToCard(idx) {
+  const rank = RANKS[idx % 13];
+  const suit = PF_SUITS[Math.floor(idx / 13)];
+  return rank + suit;
+}
 
 // ── deck primitives ──────────────────────────────────────────────
-const SUITS  = ['h', 'd', 'c', 's'];
 const RANKS  = ['2','3','4','5','6','7','8','9','T','J','Q','K','A'];
 const SUIT_SYM  = { h:'♥', d:'♦', c:'♣', s:'♠' };
 const RANK_DISP = { T:'10' };
 
-function makeDeck() {
-  const d = [];
-  for (const r of RANKS) for (const s of SUITS) d.push(r + s);
-  return d;
-}
-function shuffle(d) {
-  const a = [...d];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
 function rankIdx(c) { return RANKS.indexOf(c[0]); }
 
 // ── hand-strength helpers ─────────────────────────────────────────
@@ -109,6 +109,7 @@ function nextPhase(p) {
 
 // ── component ────────────────────────────────────────────────────
 export default function HoldEm() {
+  const { session, revealed, refresh, rotate } = useProvablyFairSession();
   const [bankroll,  setBankroll]  = useState(1000);
   const [ante,      setAnte]      = useState(25);
   const [streetBet, setStreetBet] = useState(25);
@@ -125,6 +126,8 @@ export default function HoldEm() {
   const [history,   setHistory]   = useState([]);
 
   const investedRef = useRef(0);
+  const handCtxRef  = useRef(null); // { nonce, deck } for the active hand
+  const [lastHandId, setLastHandId] = useState(null);
 
   // live hand hint for player after flop
   const playerHandHint = useMemo(() => {
@@ -136,9 +139,13 @@ export default function HoldEm() {
   }, [community, playerHole]);
 
   // ── game logic ─────────────────────────────────────────────────
-  const deal = () => {
-    if (ante <= 0 || ante > bankroll) return;
-    const d = shuffle(makeDeck());
+  const deal = async () => {
+    if (ante <= 0 || ante > bankroll || !session) return;
+    const advanced = consumeNonce();
+    const deckIdx = await deriveDeck(session.serverSeed, session.clientSeed, advanced.nonce);
+    refresh(advanced);
+    const d = deckIdx.map(deckIdxToCard);
+    handCtxRef.current = { nonce: advanced.nonce, deck: d };
     investedRef.current = ante;
     setBankroll(b => b - ante);
     setPot(ante * 2);
@@ -173,6 +180,35 @@ export default function HoldEm() {
     }
     setResult({ winner, delta, playerHand: phName, botHand: bhName });
     setHistory(h => [{ winner, delta, playerHand: phName, botHand: bhName }, ...h].slice(0, 10));
+
+    const ctx = handCtxRef.current;
+    if (ctx && session) {
+      const summary = winner === 'player' ? `Won · ${phName || 'bot folded'}`
+        : winner === 'bot' ? `Lost · ${bhName || 'folded'}`
+        : `Tie · ${phName}`;
+      const rec = recordHand({
+        game: 'holdem',
+        stake: invested,
+        delta,
+        result: winner === 'player' ? 'WIN' : winner === 'bot' ? 'LOSE' : 'PUSH',
+        summary,
+        detail: {
+          playerHole, botHole,
+          community: community.length ? community : undefined,
+          deck: ctx.deck, // full ordered deck for verification
+          winner,
+          playerHand: phName, botHand: bhName,
+        },
+        pf: {
+          commitment: session.commitment,
+          serverSeed: session.serverSeed,
+          clientSeed: session.clientSeed,
+          nonce: ctx.nonce,
+        },
+      });
+      setLastHandId(rec.id);
+    }
+
     setMessage(msg);
     setPhase('end');
   };
@@ -266,7 +302,7 @@ export default function HoldEm() {
     <>
       <Navigation />
       <div className="ss-page">
-        <div className="ss-pill ss-pill-gold" style={{ marginBottom: 10 }}>Demo grade · Math.random()</div>
+        <div className="ss-pill ss-pill-green" style={{ marginBottom: 10 }}>Provably fair · SHA-256 commit-reveal</div>
         <h1 className="ss-h1">Texas Hold'em</h1>
         <p className="ss-sub">Heads-up vs the bot. Both ante in — best 5-of-7 at showdown wins.</p>
 
@@ -461,6 +497,16 @@ export default function HoldEm() {
 
           {/* ── sidebar ── */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <ProvablyFairPanel session={session} revealed={revealed} onRotate={rotate} />
+
+            {lastHandId && (
+              <div className="ss-card" style={{ padding: 12, fontSize: 12, textAlign: 'center' }}>
+                <Link to={`/verify/${lastHandId}`} style={{ color: 'var(--ss-gold)' }}>
+                  verify last hand ✓
+                </Link>
+              </div>
+            )}
+
             {/* history */}
             <div className="ss-card">
               <div className="ss-stat-label" style={{ marginBottom: 10 }}>Recent hands</div>

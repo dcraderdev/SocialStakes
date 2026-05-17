@@ -1,14 +1,20 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import Navigation from '../Navigation';
+import ProvablyFairPanel, { useProvablyFairSession } from '../ProvablyFairPanel';
+import { deriveCard, consumeNonce } from '../../utils/provablyFair';
+import { recordHand } from '../../utils/historyStore';
 
 const SUITS = ['♠', '♥', '♦', '♣'];
 const RANK_LABELS = { 1: 'A', 11: 'J', 12: 'Q', 13: 'K' };
 const rankLabel = (r) => RANK_LABELS[r] || String(r);
 
-function drawCard() {
-  const rank = 1 + Math.floor(Math.random() * 13);
-  const suit = SUITS[Math.floor(Math.random() * 4)];
-  return { rank, suit };
+function randomCard() {
+  return { rank: 1 + Math.floor(Math.random() * 13), suit: Math.floor(Math.random() * 4) };
+}
+
+function cardLabel(c) {
+  return `${rankLabel(c.rank)}${SUITS[c.suit]}`;
 }
 
 function CardArt({ card, big }) {
@@ -21,7 +27,8 @@ function CardArt({ card, big }) {
       }} />
     );
   }
-  const isRed = card.suit === '♥' || card.suit === '♦';
+  const suitSym = SUITS[card.suit];
+  const isRed = suitSym === '♥' || suitSym === '♦';
   return (
     <div style={{
       width: big ? 110 : 70, height: big ? 160 : 100,
@@ -31,35 +38,57 @@ function CardArt({ card, big }) {
       color: isRed ? '#d63a3a' : '#111',
       fontWeight: 800,
     }}>
-      <div style={{ fontSize: big ? 18 : 13 }}>{rankLabel(card.rank)}{card.suit}</div>
-      <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', fontSize: big ? 42 : 28 }}>{card.suit}</div>
-      <div style={{ position: 'absolute', bottom: 10, right: 10, fontSize: big ? 18 : 13, transform: 'rotate(180deg)' }}>{rankLabel(card.rank)}{card.suit}</div>
+      <div style={{ fontSize: big ? 18 : 13 }}>{rankLabel(card.rank)}{suitSym}</div>
+      <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', fontSize: big ? 42 : 28 }}>{suitSym}</div>
+      <div style={{ position: 'absolute', bottom: 10, right: 10, fontSize: big ? 18 : 13, transform: 'rotate(180deg)' }}>{rankLabel(card.rank)}{suitSym}</div>
     </div>
   );
 }
 
 function HiLo() {
+  const { session, revealed, refresh, rotate } = useProvablyFairSession();
   const [bankroll, setBankroll] = useState(1000);
   const [bet, setBet] = useState(25);
-  const [current, setCurrent] = useState(drawCard());
+  const [current, setCurrent] = useState(randomCard());
   const [next, setNext] = useState(null);
   const [streak, setStreak] = useState(0);
   const [history, setHistory] = useState([]);
+  const [lastHandId, setLastHandId] = useState(null);
 
-  const guess = (direction) => {
-    if (bet > bankroll || bet <= 0) return;
-    const n = drawCard();
+  const guess = async (direction) => {
+    if (!session || bet > bankroll || bet <= 0 || next) return;
+
+    const advanced = consumeNonce();
+    const n = await deriveCard(session.serverSeed, session.clientSeed, advanced.nonce);
+    refresh(advanced);
     setNext(n);
+
     let won;
-    if (n.rank === current.rank) won = false;          // tie loses
+    if (n.rank === current.rank) won = false;
     else if (direction === 'higher') won = n.rank > current.rank;
     else won = n.rank < current.rank;
 
     const delta = won ? bet : -bet;
     const newStreak = won ? streak + 1 : 0;
-    setBankroll(b => b + delta);
+    setBankroll((b) => b + delta);
     setStreak(newStreak);
-    setHistory(h => [{ from: current, to: n, direction, delta }, ...h].slice(0, 10));
+
+    const record = recordHand({
+      game: 'hilo',
+      stake: bet,
+      delta,
+      result: won ? 'WIN' : 'LOSE',
+      summary: `${cardLabel(current)} ${direction === 'higher' ? '↑' : '↓'} ${cardLabel(n)}`,
+      detail: { from: current, to: n, direction },
+      pf: {
+        commitment: session.commitment,
+        serverSeed: session.serverSeed,
+        clientSeed: session.clientSeed,
+        nonce: advanced.nonce,
+      },
+    });
+    setLastHandId(record.id);
+    setHistory((h) => [{ ...record, from: current, to: n, direction }, ...h].slice(0, 10));
 
     setTimeout(() => {
       setCurrent(n);
@@ -71,7 +100,7 @@ function HiLo() {
     <>
       <Navigation />
       <div className="ss-page">
-        <div className="ss-pill ss-pill-gold" style={{ marginBottom: 12 }}>Demo grade · Math.random()</div>
+        <div className="ss-pill ss-pill-green" style={{ marginBottom: 12 }}>Provably fair · SHA-256 commit-reveal</div>
         <h1 className="ss-h1">Hi-Lo</h1>
         <p className="ss-sub">Will the next card be higher or lower? Ties lose. Even-money payout.</p>
 
@@ -132,28 +161,38 @@ function HiLo() {
                 ↓ Lower
               </button>
             </div>
+
+            {lastHandId && (
+              <div style={{ textAlign: 'center', marginTop: 14, fontSize: 12 }}>
+                <Link to={`/verify/${lastHandId}`} style={{ color: 'var(--ss-gold)' }}>verify last hand ✓</Link>
+              </div>
+            )}
           </div>
 
-          <div className="ss-card">
-            <div className="ss-stat-label" style={{ marginBottom: 12 }}>Recent hands</div>
-            {history.length === 0 ? (
-              <div style={{ color: 'var(--ss-text-muted)', fontSize: 13 }}>No hands yet.</div>
-            ) : (
-              history.map((h, i) => (
-                <div key={i} style={{
-                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                  padding: '8px 0', borderBottom: '1px solid var(--ss-border-soft)',
-                  fontSize: 13,
-                }}>
-                  <span className="ss-mono" style={{ color: 'var(--ss-text-muted)' }}>
-                    {rankLabel(h.from.rank)}{h.from.suit} {h.direction === 'higher' ? '↑' : '↓'} {rankLabel(h.to.rank)}{h.to.suit}
-                  </span>
-                  <span style={{ color: h.delta > 0 ? 'var(--ss-green)' : 'var(--ss-red)', fontWeight: 600 }} className="ss-mono">
-                    {h.delta > 0 ? '+' : ''}${h.delta}
-                  </span>
-                </div>
-              ))
-            )}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+            <ProvablyFairPanel session={session} revealed={revealed} onRotate={rotate} />
+
+            <div className="ss-card">
+              <div className="ss-stat-label" style={{ marginBottom: 12 }}>Recent hands</div>
+              {history.length === 0 ? (
+                <div style={{ color: 'var(--ss-text-muted)', fontSize: 13 }}>No hands yet.</div>
+              ) : (
+                history.map((h) => (
+                  <div key={h.id} style={{
+                    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                    padding: '8px 0', borderBottom: '1px solid var(--ss-border-soft)',
+                    fontSize: 13,
+                  }}>
+                    <span className="ss-mono" style={{ color: 'var(--ss-text-muted)' }}>
+                      {cardLabel(h.from)} {h.direction === 'higher' ? '↑' : '↓'} {cardLabel(h.to)}
+                    </span>
+                    <span style={{ color: h.delta > 0 ? 'var(--ss-green)' : 'var(--ss-red)', fontWeight: 600 }} className="ss-mono">
+                      {h.delta > 0 ? '+' : ''}${h.delta}
+                    </span>
+                  </div>
+                ))
+              )}
+            </div>
           </div>
         </div>
       </div>

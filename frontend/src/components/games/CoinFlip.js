@@ -1,31 +1,53 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import Navigation from '../Navigation';
+import ProvablyFairPanel, { useProvablyFairSession } from '../ProvablyFairPanel';
+import { deriveCoinFlip, consumeNonce } from '../../utils/provablyFair';
+import { recordHand } from '../../utils/historyStore';
 
 /**
- * Single-player coin flip. Demo grade — uses Math.random(), not the
- * provably-fair Bitcoin-hash RNG that the blackjack server uses.
- * Tracked locally in component state; balance does not persist.
+ * Single-player coin flip. Deterministic outcome derived from a
+ * SHA-256 commit-reveal seed chain; each completed flip is logged to
+ * /history with full seeds so the user can re-derive it on /verify.
  */
 function CoinFlip() {
+  const { session, revealed, refresh, rotate } = useProvablyFairSession();
   const [bankroll, setBankroll] = useState(1000);
   const [bet, setBet] = useState(25);
-  const [picked, setPicked] = useState(null);
   const [result, setResult] = useState(null);
   const [history, setHistory] = useState([]);
   const [flipping, setFlipping] = useState(false);
 
-  const flip = (call) => {
-    if (flipping || bet <= 0 || bet > bankroll) return;
-    setPicked(call);
+  const flip = async (call) => {
+    if (flipping || bet <= 0 || bet > bankroll || !session) return;
     setResult(null);
     setFlipping(true);
+
+    const next = consumeNonce();
+    const outcome = await deriveCoinFlip(session.serverSeed, session.clientSeed, next.nonce);
+    refresh(next);
+
     setTimeout(() => {
-      const outcome = Math.random() < 0.5 ? 'heads' : 'tails';
       const won = outcome === call;
       const delta = won ? bet : -bet;
-      setBankroll(b => b + delta);
-      setResult({ outcome, won, delta });
-      setHistory(h => [{ call, outcome, delta }, ...h].slice(0, 12));
+      setBankroll((b) => b + delta);
+      const summary = `${call} → ${outcome}`;
+      const record = recordHand({
+        game: 'coinflip',
+        stake: bet,
+        delta,
+        result: won ? 'WIN' : 'LOSE',
+        summary,
+        detail: { call, outcome },
+        pf: {
+          commitment: session.commitment,
+          serverSeed: session.serverSeed,
+          clientSeed: session.clientSeed,
+          nonce: next.nonce,
+        },
+      });
+      setResult({ outcome, won, delta, handId: record.id });
+      setHistory((h) => [{ ...record, call, outcome }, ...h].slice(0, 12));
       setFlipping(false);
     }, 800);
   };
@@ -34,7 +56,7 @@ function CoinFlip() {
     <>
       <Navigation />
       <div className="ss-page">
-        <div className="ss-pill ss-pill-gold" style={{ marginBottom: 12 }}>Demo grade · Math.random()</div>
+        <div className="ss-pill ss-pill-green" style={{ marginBottom: 12 }}>Provably fair · SHA-256 commit-reveal</div>
         <h1 className="ss-h1">Coin Flip</h1>
         <p className="ss-sub">Call heads or tails. 50/50 odds, no house edge in this demo.</p>
 
@@ -106,28 +128,36 @@ function CoinFlip() {
                 fontWeight: 600,
               }}>
                 {result.outcome.toUpperCase()} — {result.won ? `Won $${result.delta}` : `Lost $${-result.delta}`}
+                {' · '}
+                <Link to={`/verify/${result.handId}`} style={{ color: 'var(--ss-gold)', fontSize: 12 }}>verify ✓</Link>
               </div>
             )}
           </div>
 
-          <div className="ss-card">
-            <div className="ss-stat-label" style={{ marginBottom: 12 }}>Recent flips</div>
-            {history.length === 0 ? (
-              <div style={{ color: 'var(--ss-text-muted)', fontSize: 13 }}>No flips yet.</div>
-            ) : (
-              history.map((h, i) => (
-                <div key={i} style={{
-                  display: 'flex', justifyContent: 'space-between',
-                  padding: '8px 0', borderBottom: '1px solid var(--ss-border-soft)',
-                  fontSize: 13,
-                }}>
-                  <span style={{ color: 'var(--ss-text-muted)' }}>{h.call} → <span style={{ color: 'var(--ss-text)' }}>{h.outcome}</span></span>
-                  <span style={{ color: h.delta > 0 ? 'var(--ss-green)' : 'var(--ss-red)', fontWeight: 600 }} className="ss-mono">
-                    {h.delta > 0 ? '+' : ''}${h.delta}
-                  </span>
-                </div>
-              ))
-            )}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+            <ProvablyFairPanel session={session} revealed={revealed} onRotate={rotate} />
+
+            <div className="ss-card">
+              <div className="ss-stat-label" style={{ marginBottom: 12 }}>Recent flips</div>
+              {history.length === 0 ? (
+                <div style={{ color: 'var(--ss-text-muted)', fontSize: 13 }}>No flips yet.</div>
+              ) : (
+                history.map((h, i) => (
+                  <div key={h.id} style={{
+                    display: 'flex', justifyContent: 'space-between',
+                    padding: '8px 0', borderBottom: '1px solid var(--ss-border-soft)',
+                    fontSize: 13,
+                  }}>
+                    <span style={{ color: 'var(--ss-text-muted)' }}>
+                      {h.call} → <span style={{ color: 'var(--ss-text)' }}>{h.outcome}</span>
+                    </span>
+                    <span style={{ color: h.delta > 0 ? 'var(--ss-green)' : 'var(--ss-red)', fontWeight: 600 }} className="ss-mono">
+                      {h.delta > 0 ? '+' : ''}${h.delta}
+                    </span>
+                  </div>
+                ))
+              )}
+            </div>
           </div>
         </div>
       </div>

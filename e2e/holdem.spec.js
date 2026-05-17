@@ -65,6 +65,85 @@ test.describe('Texas Hold\'em', () => {
     await expect(page.locator('text=/Error|TypeError|undefined is not/i')).toHaveCount(0);
   });
 
+  test('bankroll math: ante deducted, returned on win/loss/tie', async ({ page }) => {
+    await page.goto(`${BASE}/play/holdem`);
+    await expect(page.getByRole('button', { name: /deal hand/i })).toBeVisible({ timeout: 10000 });
+
+    await expect(page.getByText('$1,000').first()).toBeVisible();
+
+    await page.getByRole('button', { name: /deal hand/i }).click();
+    await page.waitForTimeout(400);
+
+    // Ante 25 deducts -> bankroll $975, pot $50
+    await expect(page.getByText('$975').first()).toBeVisible({ timeout: 3000 });
+    await expect(page.getByText('$50').first()).toBeVisible({ timeout: 3000 });
+
+    // Check all the way down
+    await page.getByRole('button', { name: /see flop/i }).click();
+    await page.waitForTimeout(500);
+    await page.getByRole('button', { name: /^check$/i }).click();
+    await page.waitForTimeout(500);
+    await page.getByRole('button', { name: /^check$/i }).click();
+    await page.waitForTimeout(500);
+    await page.getByRole('button', { name: /^check$/i }).click();
+    await page.waitForTimeout(800);
+
+    await expect(page.getByRole('button', { name: /new hand/i })).toBeVisible({ timeout: 5000 });
+
+    // Final bankroll must be one of: $975 (loss), $1,000 (tie), $1,025 (win)
+    const bankrollText = await page.locator('text=/^\\$(975|1,000|1,025)$/').first().textContent();
+    expect(['$975', '$1,000', '$1,025']).toContain(bankrollText);
+  });
+
+  test('rapid double-clicks do not corrupt state', async ({ page }) => {
+    await page.goto(`${BASE}/play/holdem`);
+    await expect(page.getByRole('button', { name: /deal hand/i })).toBeVisible({ timeout: 10000 });
+
+    await page.getByRole('button', { name: /deal hand/i }).click();
+    await page.waitForTimeout(400);
+
+    const seeFlop = page.getByRole('button', { name: /see flop/i });
+    await seeFlop.click();
+    // Second click should be ignored (button disabled during 350ms bot delay)
+    await seeFlop.click({ force: true }).catch(() => {});
+    await page.waitForTimeout(600);
+
+    // Should be at flop, not skipped past
+    await expect(page.getByText('Community')).toBeVisible({ timeout: 3000 });
+    await expect(page.getByRole('button', { name: /^check$|^fold$/i }).first()).toBeVisible({ timeout: 3000 });
+  });
+
+  test('fold ends hand and shows new hand button', async ({ page }) => {
+    await page.goto(`${BASE}/play/holdem`);
+    await expect(page.getByRole('button', { name: /deal hand/i })).toBeVisible({ timeout: 10000 });
+
+    await page.getByRole('button', { name: /deal hand/i }).click();
+    await page.waitForTimeout(400);
+
+    await page.getByRole('button', { name: /^fold$/i }).click();
+    await page.waitForTimeout(600);
+
+    await expect(page.getByText(/folded/i).first()).toBeVisible({ timeout: 3000 });
+    await expect(page.getByRole('button', { name: /new hand/i })).toBeVisible({ timeout: 3000 });
+  });
+
+  test('new hand resets pot to $0 and clears cards', async ({ page }) => {
+    await page.goto(`${BASE}/play/holdem`);
+    await expect(page.getByRole('button', { name: /deal hand/i })).toBeVisible({ timeout: 10000 });
+
+    await page.getByRole('button', { name: /deal hand/i }).click();
+    await page.waitForTimeout(400);
+    await page.getByRole('button', { name: /^fold$/i }).click();
+    await page.waitForTimeout(600);
+
+    await page.getByRole('button', { name: /new hand/i }).click();
+    await page.waitForTimeout(300);
+
+    await expect(page.getByRole('button', { name: /deal hand/i })).toBeVisible({ timeout: 3000 });
+    // Pot is $0 after reset
+    await expect(page.getByText('$0').first()).toBeVisible({ timeout: 3000 });
+  });
+
   test('game tile on lobby routes to holdem', async ({ page }) => {
     await page.goto(BASE);
 

@@ -124,6 +124,7 @@ export default function HoldEm() {
   const [botMsg,    setBotMsg]    = useState('');
   const [revealBot, setRevealBot] = useState(false);
   const [history,   setHistory]   = useState([]);
+  const [busy,      setBusy]      = useState(false);
 
   const investedRef = useRef(0);
 
@@ -150,6 +151,7 @@ export default function HoldEm() {
     setRevealBot(false);
     setResult(null);
     setBotMsg('');
+    setBusy(false);
     setPhase('preflop');
     setMessage('Pre-flop — see the flop free, or raise.');
   };
@@ -175,6 +177,7 @@ export default function HoldEm() {
     setResult({ winner, delta, playerHand: phName, botHand: bhName });
     setHistory(h => [{ winner, delta, playerHand: phName, botHand: bhName }, ...h].slice(0, 10));
     setMessage(msg);
+    setBusy(false);
     setPhase('end');
   };
 
@@ -197,26 +200,35 @@ export default function HoldEm() {
       setPhase('flop');
       setMessage('Flop — check or raise.');
       setBotMsg('');
+      setBusy(false);
     } else if (next === 'turn') {
       const newComm = [...(comm ?? community), deck[3]];
       setCommunity(newComm);
       setPhase('turn');
       setMessage('Turn — check or raise.');
       setBotMsg('');
+      setBusy(false);
     } else if (next === 'river') {
       const newComm = [...(comm ?? community), deck[4]];
       setCommunity(newComm);
       setPhase('river');
       setMessage('River — last chance to raise.');
       setBotMsg('');
+      setBusy(false);
     } else if (next === 'showdown') {
       doShowdown(usePot, comm ?? community);
     }
   };
 
-  const playerFold = () => endHand('bot', pot, null, null);
+  const playerFold = () => {
+    if (busy) return;
+    setBusy(true);
+    endHand('bot', pot, null, null);
+  };
 
   const playerCheck = () => {
+    if (busy || !canAct) return;
+    setBusy(true);
     const next = nextPhase(phase);
     setBotMsg('Bot checks.');
     if (next === 'showdown') {
@@ -227,7 +239,9 @@ export default function HoldEm() {
   };
 
   const playerBet = () => {
+    if (busy || !canAct) return;
     if (streetBet <= 0 || streetBet > bankroll) return;
+    setBusy(true);
     const betAmt  = Math.min(streetBet, bankroll);
     investedRef.current += betAmt;
     setBankroll(b => b - betAmt);
@@ -421,38 +435,62 @@ export default function HoldEm() {
 
               {canAct && (
                 <>
-                  <button onClick={playerFold} style={{
+                  <button onClick={playerFold} disabled={busy} style={{
                     minWidth: 80, height: 44, fontSize: 14,
                     letterSpacing: '0.06em', textTransform: 'uppercase',
                     borderRadius: 999, border: '1px solid rgba(239,93,93,0.4)',
                     background: 'rgba(239,93,93,0.07)', color: 'var(--ss-red)',
-                    cursor: 'pointer', fontFamily: 'var(--ss-font)', fontWeight: 600,
+                    cursor: busy ? 'not-allowed' : 'pointer', opacity: busy ? 0.5 : 1,
+                    fontFamily: 'var(--ss-font)', fontWeight: 600,
                   }}>
                     Fold
                   </button>
-                  <button className="ss-btn" onClick={playerCheck}
-                    style={{ minWidth: 110, height: 44, fontSize: 14, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+                  <button className="ss-btn" onClick={playerCheck} disabled={busy}
+                    style={{ minWidth: 110, height: 44, fontSize: 14, letterSpacing: '0.06em', textTransform: 'uppercase', opacity: busy ? 0.5 : 1 }}>
                     {phase === 'preflop' ? 'See Flop' : 'Check'}
                   </button>
                   <button className="ss-btn ss-btn-primary" onClick={playerBet}
-                    disabled={streetBet > bankroll || streetBet <= 0}
-                    style={{ minWidth: 130, height: 44, fontSize: 14, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+                    disabled={busy || streetBet > bankroll || streetBet <= 0}
+                    style={{ minWidth: 130, height: 44, fontSize: 14, letterSpacing: '0.06em', textTransform: 'uppercase', opacity: busy ? 0.5 : 1 }}>
                     Raise ${streetBet}
                   </button>
                 </>
               )}
 
-              {phase === 'end' && bankroll > 0 && (
+              {phase === 'end' && bankroll >= ante && (
                 <button className="ss-btn ss-btn-primary"
-                  onClick={() => { setPhase('idle'); setMessage('Set your ante and deal a hand.'); }}
+                  onClick={() => {
+                    setPhase('idle');
+                    setMessage('Set your ante and deal a hand.');
+                    setPlayerHole([]);
+                    setBotHole([]);
+                    setCommunity([]);
+                    setPot(0);
+                    setResult(null);
+                    setBotMsg('');
+                    setRevealBot(false);
+                    investedRef.current = 0;
+                  }}
                   style={{ minWidth: 140, height: 44, fontSize: 14, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
                   New Hand
                 </button>
               )}
 
-              {phase === 'end' && bankroll <= 0 && (
+              {phase === 'end' && bankroll < ante && (
                 <button className="ss-btn"
-                  onClick={() => { setBankroll(1000); setPhase('idle'); setMessage('Reloaded $1,000. Good luck!'); }}
+                  onClick={() => {
+                    setBankroll(1000);
+                    setPhase('idle');
+                    setMessage('Reloaded $1,000. Good luck!');
+                    setPlayerHole([]);
+                    setBotHole([]);
+                    setCommunity([]);
+                    setPot(0);
+                    setResult(null);
+                    setBotMsg('');
+                    setRevealBot(false);
+                    investedRef.current = 0;
+                  }}
                   style={{ minWidth: 160, height: 44, fontSize: 13, textTransform: 'uppercase' }}>
                   Reload $1,000
                 </button>

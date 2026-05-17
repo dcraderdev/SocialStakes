@@ -1,67 +1,121 @@
-/* ── Chat input area ──────────────────────────────────── */
-.chatinput-container,
-.chatinputarea-container {
+.chatinput-wrapper {
   position: relative;
   width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  gap: var(--sp-2, 8px);
+  padding: 8px 10px 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  background: #131316;
+  box-sizing: border-box;
+  flex-shrink: 0;
 }
 
-.chatinput-controls-container {
-  position: relative;
-  width: 100%;
-  height: 100%;
+/* ── Main input row ─────────────────────────────────────────── */
+.chatinput-form {
   display: flex;
   align-items: center;
-  gap: var(--sp-2, 8px);
+  gap: 6px;
+  background: #1e1e27;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  padding: 5px 8px 5px 12px;
+  transition: border-color 0.15s;
 }
 
-.chatinput-controls {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  gap: var(--sp-2, 8px);
+.chatinput-form:focus-within {
+  border-color: rgba(218, 165, 32, 0.4);
 }
 
-/* Input field — enforces form system */
 .chatinput-input {
   flex: 1;
-  height: var(--input-height, 42px) !important;
-  border-radius: var(--ss-r-md, 10px) !important;
-  border: 1px solid var(--ss-border, #262a33) !important;
-  background: var(--ss-bg-soft, #1d2029) !important;
-  color: var(--ss-text, #f6f3ec) !important;
-  font-size: var(--fs-sm, 13px);
-  font-family: var(--ss-font);
-  padding: 0 var(--sp-3, 12px) !important;
-  transition: border-color var(--t-base, 250ms), box-shadow var(--t-base, 250ms);
+  background: transparent;
+  border: none;
   outline: none;
+  color: #e8e8e8;
+  font-size: 14px;
+  font-family: Inter, system-ui, -apple-system, sans-serif;
+  min-height: 28px;
+  line-height: 1.4;
+  caret-color: goldenrod;
 }
-.chatinput-input:focus {
-  border-color: var(--ss-gold-line, rgba(229,179,76,0.32)) !important;
-  box-shadow: var(--focus-ring, 0 0 0 2px rgba(229,179,76,0.12)) !important;
-}
-.chatinput-input::placeholder { color: var(--ss-text-muted, #7c8290); }
 
-/* Send button */
-.chatinput-button {
-  height: var(--input-height, 42px) !important;
-  min-width: 72px;
-  border-radius: var(--ss-r-md, 10px) !important;
-  background: var(--ss-gold, #e5b34c) !important;
-  color: var(--ss-bg, #0a0b0e) !important;
-  font-weight: 700 !important;
-  font-size: var(--fs-xs, 11px);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  border: none !important;
-  cursor: pointer;
-  box-shadow: none !important;
-  outline: none;
-  transition: background var(--t-base, 250ms), transform var(--t-fast, 150ms);
+.chatinput-input::placeholder {
+  color: #555;
 }
-.chatinput-button:hover { background: var(--ss-gold-soft, #cf9e3a) !important; }
-.chatinput-button:active { transform: scale(0.95); }
+
+/* ── Icon buttons ───────────────────────────────────────────── */
+.chatinput-icon-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.12s, color 0.12s, opacity 0.12s;
+}
+
+.chatinput-icon-btn.emoji {
+  background: transparent;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.chatinput-icon-btn.emoji:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.chatinput-icon-btn.send {
+  background: goldenrod;
+  color: #111;
+  font-size: 13px;
+}
+
+.chatinput-icon-btn.send:hover:not(:disabled) {
+  background: #d4a000;
+}
+
+.chatinput-icon-btn.send:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* ── Emoji picker ───────────────────────────────────────────── */
+.chatinput-emoji-picker {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 10px;
+  width: 260px;
+  background: #1a1a1f;
+  border: 1px solid rgba(218, 165, 32, 0.3);
+  border-radius: 12px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.6);
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 2px;
+  padding: 8px;
+  z-index: 100;
+}
+
+.emoji-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  padding: 4px;
+  border-radius: 6px;
+  line-height: 1;
+  transition: background 0.1s;
+}
+
+.emoji-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+@media (max-width: 480px) {
+  .chatinput-emoji-picker {
+    left: 0;
+    right: 0;
+    width: auto;
+  }
+}

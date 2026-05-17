@@ -1,119 +1,151 @@
-* {
-  user-select: none;
-}
-
-
-.signup-form-page-container {
-  z-index: 1;
+.su-card {
   position: absolute;
-  border: 1px solid rgb(0, 0, 0);
-  background-color: rgb(53, 49, 49);
-  padding: 20px;
-  color: white;
-  text-shadow: -1px 0 black, 0 3px black, 3px 0 black, 0 -1px black;
-
-
-
-  font-size:20px;
-  border-radius: 5px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  width: 450px;
-  justify-content: center;
-
-  max-width: 100vw;
-
+  z-index: 100;
+  background: #1a1a1f;
+  border: 1px solid rgba(218, 165, 32, 0.45);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(218, 165, 32, 0.08);
+  padding: 32px 28px 24px;
+  width: 400px;
+  max-width: calc(100vw - 32px);
+  color: #e8e8e8;
+  font-family: Inter, system-ui, -apple-system, sans-serif;
+  box-sizing: border-box;
 }
 
-.signupHeader{
-  position: relative;
-  left: 65%;
-  transform: scale(1.5);
+.su-heading {
+  font-size: 20px;
+  font-weight: 700;
+  color: #f5f5f5;
+  margin: 0 0 24px;
+  text-align: center;
+  letter-spacing: -0.01em;
+  text-shadow: none;
 }
 
-
-
-.signupDiv label {
-  font-size:25px;
-
-  position: relative;
-  margin-bottom: 100px;
+.su-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
-.signupDiv input {
-  width: 95%;
-  padding: 7px;
-  margin-top: 5px;
-  margin-bottom: 10px;
+.su-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
 
-.signup-login-link{
-  position: relative;
-  left: 0px;
+.su-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #888;
+  text-shadow: none;
+}
+
+.su-input {
+  background: #0f0f14;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  color: #e8e8e8;
+  font-size: 14px;
+  font-family: inherit;
+  padding: 12px 14px;
+  min-height: 44px;
+  width: 100%;
+  box-sizing: border-box;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.su-input::placeholder {
+  color: #555;
+}
+
+.su-input:focus {
+  border-color: goldenrod;
+  box-shadow: 0 0 0 3px rgba(218, 165, 32, 0.2);
+}
+
+.su-input--error {
+  border-color: #ff6b6b;
+}
+
+.su-input--error:focus {
+  border-color: #ff6b6b;
+  box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.2);
+}
+
+.su-error {
+  font-size: 12px;
+  color: #ff6b6b;
+  margin-top: 2px;
+  text-shadow: none;
+}
+
+.su-btn {
+  margin-top: 4px;
+  background: goldenrod;
+  color: #111;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: inherit;
+  letter-spacing: 0.02em;
+  padding: 12px;
+  min-height: 44px;
+  width: 100%;
   cursor: pointer;
-  position: relative;
-  top: 10px;
-}
-.signup-login-link:hover{
-text-decoration: underline;
+  transition: background 0.15s, opacity 0.15s;
 }
 
-.usernameField-invalid,
-.emailField-invalid{
-  color: red;
+.su-btn:hover:not(:disabled) {
+  background: #d4a000;
 }
 
-.signupDiv-button {
-  display: relative;
-  width: 98%;
-  padding: 10px;
-  font-size:20px;
+.su-btn:active:not(:disabled) {
+  background: #b88a00;
+}
 
+.su-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.su-btn--loading {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+.su-footer {
+  margin: 20px 0 0;
+  text-align: center;
+  font-size: 13px;
+  color: #777;
+  text-shadow: none;
+}
+
+.su-link {
+  background: none;
+  border: none;
+  color: goldenrod;
+  font-size: inherit;
+  font-family: inherit;
   cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
-
-.signupDiv-button{
-  border: rgba(0, 0, 0, 0.452) solid 1px;
-  padding: 5px;
-  padding-left: 15px;
-  padding-right: 15px;
-  cursor: pointer;
-  border-radius: 5px;
-  border-top: #404040b0 solid 1px;
-  border-bottom: #000000 solid 2px;
-
-
-
-
-
-
+.su-link:hover {
+  color: #d4a000;
 }
 
-.signupDiv-button:hover{
-  background-color: rgba(228, 228, 228);
+@media (max-width: 480px) {
+  .su-card {
+    padding: 24px 20px 20px;
+    border-radius: 8px;
+  }
 }
-
-.signupDiv-button:active{
-  border-bottom: #000000 solid 2px;
-  box-shadow: 0 -1px 1px rgba(0, 0, 0, .2);
-
-
-}
-
-
-.signupDiv-button.disabled{
-  bottom: 2%;
-  border: rgba(91, 89, 89, 0.452) solid 1px;
-  color: rgba(128, 128, 128, 0.275);
-  padding: 5px;
-  padding-left: 15px;
-  padding-right: 15px;
-  cursor: pointer;
-  border-radius: 5px;
-}
-
-.signupDiv-button.disabled:hover{
-  border: rgba(239, 14, 14, 0.251) solid 1px;
-}
-
-

@@ -1,162 +1,131 @@
 import React, { useEffect, useRef, useState, useContext } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Link, Redirect, useHistory } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import './LoginModal.css';
 import { ModalContext } from '../../context/ModalContext';
 import * as sessionActions from '../../redux/middleware/users';
 
 function LoginModal() {
-
-  const { modal, openModal, closeModal, updateObj, setUpdateObj} = useContext(ModalContext);
-  const sessionUser = useSelector((state) => state.users.user);
-  // const sessionUser = null
+  const { openModal, closeModal, setUpdateObj } = useContext(ModalContext);
   const dispatch = useDispatch();
-  const history = useHistory();
   const formRef = useRef(null);
   const [credential, setCredential] = useState('');
   const [password, setPassword] = useState('');
-  const [validationErrors, setValidationErrors] = useState({});
-  const [signInErrors, setSignInErrors] = useState({});
+  const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [touched, setTouched] = useState({});
 
-
-  const [disabledButton, setDisabledButton] = useState(false);
-  const [buttonClass, setButtonClass] = useState('signinDiv-button button button2 ');
-  const [buttonText, setButtonText] = useState('Log In');
-
-
-  const handleForgotPassword = () => {
-    closeModal();
-    history.push('/forgotPassword');
+  const validate = (fields = { credential, password }) => {
+    const errs = {};
+    if (!fields.credential) errs.credential = 'Username or email is required';
+    if (!fields.password) errs.password = 'Password is required';
+    return errs;
   };
 
-  const handleSignUp = () => {
-    closeModal();
-    openModal('signup');
-  };
-
-  useEffect(() => {
-    const errors = {};
-    const loginErrors = {};
-
-    if (!credential.length) errors['credential'] = 'Please enter a username';
-    if (!password.length) errors['password'] = 'Please enter a password';
-
-    if (credential.length < 4) {
-      errors['credential'] = 'Please enter a username';
-      loginErrors['credential'] = 'Username must be at least 4 characters';
-    }
-    if (password.length < 6) {
-      errors['password'] = 'Please enter a password';
-      loginErrors['password'] = 'Password must be at least 6 characters';
-    }
-
-    setValidationErrors(errors);
-    setSignInErrors(loginErrors);
-  }, [credential, password]);
-
-  
-  useEffect(() => {
-    if (Object.keys(signInErrors).length > 0) {
-      setButtonClass('signinDiv-button disabled disabled2');
-    } else {
-      setButtonClass('signinDiv-button button button2');
-    }
-  }, [signInErrors]);
-
-
+  const fieldErrs = validate();
+  const canSubmit = Object.keys(fieldErrs).length === 0 && !loading;
+  const touch = (field) => setTouched(t => ({ ...t, [field]: true }));
+  const fieldError = (field) => touched[field] && (errors[field] || fieldErrs[field]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    setTouched({ credential: true, password: true });
+    const errs = validate();
+    if (Object.keys(errs).length) { setErrors(errs); return; }
+    setErrors({});
+    setLoading(true);
     try {
-      const { data, response } = await dispatch(
-        sessionActions.login({ credential, password })
-      );
-
-      if (response.ok) {
-        setUpdateObj(null)
-        closeModal()
-      };
-    } catch (error) {
-      setDisabledButton(true);
-      setButtonClass('signinDiv-button disabled disabled2');
-      setButtonText('The provided credentials were invalid');
-      setTimeout(() => {
-        setDisabledButton(false);
-        setButtonClass('signinDiv-button button button2');
-        setButtonText('Log In');
-      }, 3000);
+      const { response } = await dispatch(sessionActions.login({ credential, password }));
+      if (response.ok) { setUpdateObj(null); closeModal(); }
+    } catch (_) {
+      setErrors({ password: 'Invalid credentials. Please try again.' });
+      setTouched({ credential: true, password: true });
+    } finally {
+      setLoading(false);
     }
   };
 
-
   const demoUser = async (e) => {
     e.preventDefault();
-    const { response } = await dispatch(
-      sessionActions.login({ credential:'bigtree', password:'password' })
-    );
-    if (response.ok) {
-      setUpdateObj(null)
-      closeModal()
-    };
+    setLoading(true);
+    try {
+      const { response } = await dispatch(
+        sessionActions.login({ credential: 'bigtree', password: 'password' })
+      );
+      if (response.ok) { setUpdateObj(null); closeModal(); }
+    } catch (_) {}
+    finally { setLoading(false); }
   };
-  
+
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (formRef.current && !formRef.current.contains(event.target)) {
-        closeModal();
-      }
+      if (formRef.current && !formRef.current.contains(event.target)) closeModal();
     };
     document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-
-
-
   return (
-    <div className="signin-form-page-container" ref={formRef}>
-
-      <form onSubmit={handleSubmit} className="signinDiv">
-        <label className="user">
-        <div className='flex center'>Username</div>
+    <div className="li-card" ref={formRef}>
+      <h2 className="li-heading">Welcome back</h2>
+      <form onSubmit={handleSubmit} noValidate className="li-form">
+        <div className="li-field">
+          <label className="li-label" htmlFor="li-credential">Username or Email</label>
           <input
-            className="userField"
+            id="li-credential"
+            className={`li-input${fieldError('credential') ? ' li-input--error' : ''}`}
             type="text"
             value={credential}
-            onChange={(e) => setCredential(e.target.value)}
-            required
-            placeholder={validationErrors['credential'] || ''}
+            autoComplete="username"
+            placeholder="username or email"
+            onChange={(e) => { setCredential(e.target.value); if (touched.credential) setErrors(v => ({ ...v, credential: '' })); }}
+            onBlur={() => touch('credential')}
           />
-        </label>
-        <label className="pass">
+          {fieldError('credential') && <span className="li-error" role="alert">{fieldError('credential')}</span>}
+        </div>
 
-            <div className='flex center'>Password</div>
+        <div className="li-field">
+          <label className="li-label" htmlFor="li-password">Password</label>
           <input
-            className="passwordField"
+            id="li-password"
+            className={`li-input${fieldError('password') ? ' li-input--error' : ''}`}
             type="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            placeholder={validationErrors['password'] || ''}
+            autoComplete="current-password"
+            placeholder="your password"
+            onChange={(e) => { setPassword(e.target.value); if (touched.password) setErrors(v => ({ ...v, password: '' })); }}
+            onBlur={() => touch('password')}
           />
-        </label>
+          {fieldError('password') && <span className="li-error" role="alert">{fieldError('password')}</span>}
+        </div>
+
         <button
           type="submit"
-          className={buttonClass}
-          disabled={Object.keys(signInErrors).length > 0 || disabledButton}
+          className={`li-btn${loading ? ' li-btn--loading' : ''}`}
+          disabled={!canSubmit}
         >
-          {buttonText}
+          {loading ? 'Logging in…' : 'Log In'}
+        </button>
+
+        <button
+          type="button"
+          className="li-demo-btn"
+          onClick={demoUser}
+          disabled={loading}
+        >
+          Try Demo Account
         </button>
       </form>
-      <div className="altLinks">
 
-        <div className="login-signup-link link" onClick={handleSignUp}>
-          Sign Up
-        </div>
-      </div>
+      <p className="li-footer">
+        Don't have an account?{' '}
+        <button
+          className="li-link"
+          type="button"
+          onClick={() => { closeModal(); openModal('signup'); }}
+        >
+          Sign up free
+        </button>
+      </p>
     </div>
   );
 }

@@ -159,10 +159,42 @@
 .nav-user-button.demo{
   border-left: none;
   background-color: #272727;
-
 }
 
+.nav-user-button.save-progress {
+  background: goldenrod;
+  color: #111;
+  font-weight: 700;
+  border-radius: 6px;
+  border-left: none;
+  padding: 0 14px;
+  width: auto;
+  white-space: nowrap;
+  margin: 0 6px;
+  font-size: 13px;
+}
 
+.nav-user-button.save-progress:hover {
+  background: #d4a000;
+  color: #111;
+}
+
+.nav-user-button.save-progress-mobile {
+  background: goldenrod;
+  color: #111;
+  font-weight: 700;
+  border-radius: 6px;
+  border-left: none;
+  padding: 0 10px;
+  width: auto;
+  font-size: 12px;
+  margin-right: 4px;
+}
+
+.nav-user-button.save-progress-mobile:hover {
+  background: #d4a000;
+  color: #111;
+}
 
 .logo-container{
   color: rgb(245, 245, 245);

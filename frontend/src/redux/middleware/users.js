@@ -49,6 +49,8 @@ export const logout = () => async (dispatch) => {
   });
   dispatch(removeUser());
   dispatch(showGamesAction());
+  // Auto-spin up a fresh guest session so the UI is never user-less
+  await dispatch(initSession());
   return response;
 };
 
@@ -59,6 +61,17 @@ export const restoreUser = () => async (dispatch) => {
 
   if (data.user) {
     dispatch(setUser(data.user));
+  }
+  return response;
+};
+
+// Auto-creates a guest session if no valid auth cookie exists.
+// Guarantees every visitor has a user identity with $1000 chips.
+export const initSession = () => async (dispatch) => {
+  const response = await csrfFetch('/api/init');
+  const data = await response.json();
+  if (data && data.id) {
+    dispatch(setUser(data));
   }
   return response;
 };

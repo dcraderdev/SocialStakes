@@ -17,7 +17,9 @@ const router = express.Router();
 router.post('/', validateSignup, async (req, res, next) => {
 
   let errors = {}
-  const { email, password, username, firstName, lastName } = req.body;
+  const { email, password, username } = req.body;
+  const firstName = req.body.firstName || username;
+  const lastName = req.body.lastName || username;
   const verifyEmail = await User.findOne({where:{email:email}})
   const verifyUsername = await User.findOne({where:{username:username}})
 

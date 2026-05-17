@@ -67,24 +67,18 @@ function App() {
     img.src = gameTileBackground;
     img2.src = bluePokerChip;
     dispatch(sessionActions.loadThemes())
-    dispatch(sessionActions.restoreUser())
+    dispatch(sessionActions.initSession())
       .then(() => {
         setFillBar(true)
         setTimeout(() => {
           setIsLoaded(true);
         }, 2500);
-        // setIsLoaded(false);
-
-
       })
       .catch(() => {
         setFillBar(true)
-
         setTimeout(() => {
           setIsLoaded(true);
-          setUpdateObj('noUser');
         }, 2500);
-        
       });
   }, [dispatch]);
 

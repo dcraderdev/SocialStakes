@@ -1,4 +1,5 @@
 import Navigation from './components/Navigation';
+import LandingPage from './components/LandingPage';
 import LoginModal from './components/LoginModal';
 import SignupModal from './components/SignupModal';
 import GameFloor from './components/GameFloor';
@@ -207,7 +208,8 @@ function App() {
         <Switch>
 
           <Route path="/" exact>
-            {isLoaded && <GameFloor/>}
+            {isLoaded && !user && <LandingPage />}
+            {isLoaded && user && <GameFloor/>}
           </Route>
 
           <Route path="/friends" exact>

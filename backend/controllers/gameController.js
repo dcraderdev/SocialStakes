@@ -75,6 +75,8 @@ const gameController = {
     }
 
     for(let table of allTables){
+      if (!table.gameSessions || !table.gameSessions.length) continue;
+      if (!table.Conversation) continue;
       let tableId = table.id
       if (!rooms[tableId]) {
         rooms[tableId] = roomInit();

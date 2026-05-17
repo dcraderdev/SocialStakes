@@ -3,6 +3,12 @@ const express = require('express');
 const router = express.Router();
 const apiRouter = require('./api');
 
+// CSRF token endpoint — must be before apiRouter to guarantee match
+router.get('/api/csrf/restore', (req, res) => {
+  res.cookie('XSRF-TOKEN', req.csrfToken());
+  res.status(201).json({});
+});
+
 router.use('/api', apiRouter);
 
 // Static routes
@@ -29,12 +35,5 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-
-
-// CSRF token endpoint — needed in both dev (CRA proxy) and production (Vercel proxy)
-router.get('/api/csrf/restore', (req, res) => {
-  res.cookie('XSRF-TOKEN', req.csrfToken());
-  res.status(201).json({});
-});
 
 module.exports = router;

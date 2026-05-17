@@ -503,8 +503,9 @@ module.exports = function (io) {
 
     async function handleAcceptFriendRequest(recipientObj, senderObj, request) {
       let recipientId = senderObj.friend.id;
-      let senderConnections = connections[userId];
-      let recipientConnections = connections[recipientId];
+      let recipientUsername = senderObj.friend.username;
+      let senderConnections = connections[userId] || {};
+      let recipientConnections = connections[recipientId] || {};
       const { friendship, newConversation } = request;
 
       let convoObj = {

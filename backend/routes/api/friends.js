@@ -3,6 +3,7 @@ const router = express.Router();
 const { requireAuth } = require('../../utils/auth');
 const { User, Friendship, UserTable, Table, Game } = require('../../db/models');
 const { friendController } = require('../../controllers/friendController');
+const { historyController } = require('../../controllers/historyController');
 const { connections } = require('../../global');
 const { Op } = require('sequelize');
 
@@ -100,6 +101,43 @@ router.post('/add', requireAuth, async (req, res, next) => {
     friendship: result.friendship,
     recipient: { id: recipient.id, username: recipient.username },
   });
+});
+
+// GET /api/friends/activity?limit=50&cursor=ISO - Activity feed of friends
+router.get('/activity', requireAuth, async (req, res, next) => {
+  try {
+    const { user } = req;
+    const { limit, cursor } = req.query;
+    const data = await historyController.getFriendActivity(user.id, { limit, cursor });
+    return res.json(data);
+  } catch (e) {
+    next(e);
+  }
+});
+
+// GET /api/friends/leaderboard?period=week|month|all
+router.get('/leaderboard', requireAuth, async (req, res, next) => {
+  try {
+    const { user } = req;
+    const period = ['week', 'month', 'all'].includes(req.query.period)
+      ? req.query.period
+      : 'week';
+    const data = await historyController.getFriendsLeaderboard(user.id, period);
+    return res.json(data);
+  } catch (e) {
+    next(e);
+  }
+});
+
+// GET /api/friends/suggestions - Suggested users to add
+router.get('/suggestions', requireAuth, async (req, res, next) => {
+  try {
+    const { user } = req;
+    const suggestions = await historyController.getFriendSuggestions(user.id);
+    return res.json({ suggestions });
+  } catch (e) {
+    next(e);
+  }
 });
 
 // DELETE /api/friends/:id - Remove a friendship by friendship ID

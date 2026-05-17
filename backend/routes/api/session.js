@@ -140,7 +140,7 @@ router.get('/friends', requireAuth, async (req, res, next) => {
 // Get user's conversations
 router.get('/conversations', requireAuth, async (req, res, next) => {
   const { user } = req;
-  const conversations = await chatController.getConversations(user.id)
+  const conversations = await chatController.getUserConversations(user.id)
 
   if(!conversations){
     const err = new Error("No conversation data found") 

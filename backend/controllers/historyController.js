@@ -246,8 +246,11 @@ const historyController = {
     });
   },
 
-  async getFriendsLeaderboard(userId) {
-    const since = daysAgo(7);
+  async getFriendsLeaderboard(userId, period = 'week') {
+    let sinceFilter;
+    if (period === 'week') sinceFilter = { [Op.gte]: daysAgo(7) };
+    else if (period === 'month') sinceFilter = { [Op.gte]: daysAgo(30) };
+    // 'all' = no since filter
 
     const friendships = await Friendship.findAll({
       where: {
@@ -267,24 +270,125 @@ const historyController = {
     for (const uid of allIds) {
       const uts = await UserTable.findAll({ where: { userId: uid }, attributes: ['id'] });
       const utIds = uts.map((ut) => ut.id);
-      let netPL = 0;
+      let hands = [];
       if (utIds.length) {
-        const hands = await Hand.findAll({
-          where: {
-            userTableId: { [Op.in]: utIds },
-            createdAt: { [Op.gte]: since },
-            result: RESULT_FILTER,
-          },
-          attributes: ['profitLoss'],
-        });
-        netPL = hands.reduce((s, h) => s + (h.profitLoss || 0), 0);
+        const where = {
+          userTableId: { [Op.in]: utIds },
+          result: RESULT_FILTER,
+        };
+        if (sinceFilter) where.createdAt = sinceFilter;
+        hands = await Hand.findAll({ where, attributes: ['result', 'profitLoss'] });
       }
+
+      const handsPlayed = hands.length;
+      const netPL = hands.reduce((s, h) => s + (h.profitLoss || 0), 0);
+      const wins = hands.filter((h) => {
+        const r = (h.result || '').toUpperCase();
+        return r === 'WIN' || r === 'BLACKJACK' || r.startsWith('WIN');
+      }).length;
+      const winRate = handsPlayed
+        ? Math.round((wins / handsPlayed) * 100)
+        : 0;
+      const biggestWin = hands.length
+        ? Math.max(0, ...hands.map((h) => h.profitLoss || 0))
+        : 0;
+
       const user = await User.findByPk(uid, { attributes: ['id', 'username'] });
-      if (user) rows.push({ id: uid, name: user.username, delta: netPL, isMe: uid === userId });
+      if (user) {
+        rows.push({
+          userId: uid,
+          username: user.username,
+          handsPlayed,
+          netPL,
+          winRate,
+          biggestWin,
+          isCurrentUser: uid === userId,
+        });
+      }
     }
 
-    rows.sort((a, b) => b.delta - a.delta);
-    return rows.slice(0, 10);
+    rows.sort((a, b) => b.netPL - a.netPL);
+    const ranked = rows.slice(0, 10).map((r, i) => ({ ...r, rank: i + 1 }));
+    return { leaderboard: ranked, friendCount: friendIds.length };
+  },
+
+  async getFriendActivity(userId, { limit = 50, cursor = null } = {}) {
+    const friendships = await Friendship.findAll({
+      where: {
+        [Op.or]: [{ user1Id: userId }, { user2Id: userId }],
+        status: 'accepted',
+      },
+      attributes: ['user1Id', 'user2Id'],
+    });
+    const friendIds = friendships.map((f) =>
+      f.user1Id === userId ? f.user2Id : f.user1Id
+    ).filter(Boolean);
+
+    if (!friendIds.length) {
+      return { events: [], nextCursor: null };
+    }
+
+    const { Event } = require('../db/models');
+    const where = { userId: { [Op.in]: friendIds } };
+    if (cursor) {
+      where.createdAt = { [Op.lt]: new Date(cursor) };
+    }
+    const events = await Event.findAll({
+      where,
+      order: [['createdAt', 'DESC']],
+      limit: Math.min(parseInt(limit, 10) || 50, 200),
+      include: [{ model: User, as: 'user', attributes: ['id', 'username'] }],
+    });
+
+    const nextCursor =
+      events.length > 0
+        ? events[events.length - 1].createdAt.toISOString()
+        : null;
+
+    return {
+      events: events.map((e) => ({
+        id: e.id,
+        type: e.type,
+        payload: e.payload,
+        createdAt: e.createdAt,
+        user: e.user
+          ? { id: e.user.id, username: e.user.username }
+          : null,
+      })),
+      nextCursor,
+    };
+  },
+
+  async getFriendSuggestions(userId, limit = 6) {
+    const friendships = await Friendship.findAll({
+      where: { [Op.or]: [{ user1Id: userId }, { user2Id: userId }] },
+      attributes: ['user1Id', 'user2Id', 'status'],
+    });
+    const excludeIds = new Set([userId]);
+    for (const f of friendships) {
+      excludeIds.add(f.user1Id === userId ? f.user2Id : f.user1Id);
+    }
+    const suggestions = await User.findAll({
+      where: {
+        id: { [Op.notIn]: Array.from(excludeIds) },
+        email: { [Op.notLike]: '%@demo.internal' },
+      },
+      attributes: ['id', 'username', 'rank'],
+      order: [['createdAt', 'DESC']],
+      limit,
+    });
+    if (suggestions.length >= limit) return suggestions;
+
+    // Fallback: include guest users so the panel is not empty in demo mode
+    const guestFill = await User.findAll({
+      where: {
+        id: { [Op.notIn]: [...Array.from(excludeIds), ...suggestions.map((s) => s.id)] },
+      },
+      attributes: ['id', 'username', 'rank'],
+      order: [['createdAt', 'DESC']],
+      limit: limit - suggestions.length,
+    });
+    return [...suggestions, ...guestFill];
   },
 
   async verifyHand(handId, userId) {

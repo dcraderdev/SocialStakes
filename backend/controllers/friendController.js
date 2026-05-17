@@ -1,4 +1,4 @@
-const { User, Friendship, Conversation } = require('../db/models');
+const { User, Friendship, Conversation, UserConversation } = require('../db/models');
 const { Op } = require("sequelize");
 
 
@@ -123,7 +123,7 @@ const friendController = {
     let userIds = [userId, recipientId]
 
     // If not, create a new one and add both users
-    chatName = getChatName(usernames)
+    const chatName = getChatName(usernames)
     const conversation = await Conversation.create({chatName, isDirectMessage: true, hasDefaultChatName:true});
     if(conversation){
 
@@ -131,12 +131,12 @@ const friendController = {
         try {
           await UserConversation.create({
             userId: id,
-            conversationId: newConversation.id
+            conversationId: conversation.id
           });
         } catch (err) {
           console.error('Error adding user to conversation:', err);
         }
-      } 
+      }
 
 
       let members = {}

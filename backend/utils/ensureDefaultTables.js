@@ -27,23 +27,8 @@ const DEFAULT_GAMES = [
     maxNumPlayers: 6,
     smallBlind: 0,
     bigBlind: 0,
-    minBet: 1,
-    maxBet: 500,
-    actionTimer: 15,
-  },
-  {
-    id: 'blackjack_4_deck_low_stakes_multi',
-    gameType: 'multi_blackjack',
-    variant: 'American 21',
-    shortName: 'Blackjack',
-    decksUsed: 4,
-    active: true,
-    minNumPlayers: 1,
-    maxNumPlayers: 6,
-    smallBlind: 0,
-    bigBlind: 0,
-    minBet: 1,
-    maxBet: 200,
+    minBet: 5,
+    maxBet: 25,
     actionTimer: 15,
   },
   {
@@ -58,22 +43,7 @@ const DEFAULT_GAMES = [
     smallBlind: 0,
     bigBlind: 0,
     minBet: 25,
-    maxBet: 12500,
-    actionTimer: 15,
-  },
-  {
-    id: 'blackjack_4_deck_mid_stakes_multi',
-    gameType: 'multi_blackjack',
-    variant: 'American 21',
-    shortName: 'Blackjack',
-    decksUsed: 4,
-    active: true,
-    minNumPlayers: 1,
-    maxNumPlayers: 6,
-    smallBlind: 0,
-    bigBlind: 0,
-    minBet: 1,
-    maxBet: 5000,
+    maxBet: 100,
     actionTimer: 15,
   },
   {
@@ -88,7 +58,22 @@ const DEFAULT_GAMES = [
     smallBlind: 0,
     bigBlind: 0,
     minBet: 100,
-    maxBet: 50000,
+    maxBet: 500,
+    actionTimer: 15,
+  },
+  {
+    id: 'blackjack_6_deck_low_stakes_single',
+    gameType: 'single_blackjack',
+    variant: 'American 21',
+    shortName: 'Blackjack',
+    decksUsed: 6,
+    active: true,
+    minNumPlayers: 1,
+    maxNumPlayers: 1,
+    smallBlind: 0,
+    bigBlind: 0,
+    minBet: 5,
+    maxBet: 200,
     actionTimer: 15,
   },
 ];
@@ -96,37 +81,29 @@ const DEFAULT_GAMES = [
 const DEFAULT_TABLES = [
   {
     gameId: 'blackjack_6_deck_low_stakes_multi',
-    tableName: 'Pacific - American 21',
+    tableName: 'Pacific - Low Stakes',
     shufflePoint: 180,
-  },
-  {
-    gameId: 'blackjack_4_deck_low_stakes_multi',
-    tableName: 'Sierra - American 21',
-    shufflePoint: 136,
   },
   {
     gameId: 'blackjack_6_deck_mid_stakes_multi',
-    tableName: 'Cascades - American 21',
+    tableName: 'Cascades - Mid Stakes',
     shufflePoint: 180,
   },
   {
-    gameId: 'blackjack_4_deck_mid_stakes_multi',
-    tableName: 'Redwood - American 21',
-    shufflePoint: 136,
+    gameId: 'blackjack_6_deck_high_stakes_multi',
+    tableName: 'Golden Gate - High Stakes',
+    shufflePoint: 180,
   },
   {
-    gameId: 'blackjack_6_deck_high_stakes_multi',
-    tableName: 'Golden Gate - American 21',
+    gameId: 'blackjack_6_deck_low_stakes_single',
+    tableName: 'Solo - American 21',
     shufflePoint: 180,
   },
 ];
 
 async function ensureGames() {
   for (const game of DEFAULT_GAMES) {
-    await Game.findOrCreate({
-      where: { id: game.id },
-      defaults: game,
-    });
+    await Game.upsert(game);
   }
 }
 
@@ -196,30 +173,26 @@ async function ensureDefaultTables() {
     await ensureGames();
     await ensureSystemUser();
 
-    const existingTable = await Table.findOne({
-      where: { active: true },
-      include: [
-        {
-          model: Game,
-          where: { gameType: 'multi_blackjack' },
-          attributes: ['id'],
-          required: true,
-        },
-      ],
-      attributes: ['id'],
-    });
-
-    if (existingTable) return;
-
-    console.log('[boot] No active multi_blackjack tables found — seeding defaults…');
+    let created = 0;
 
     for (const tableData of DEFAULT_TABLES) {
+      const existing = await Table.findOne({
+        where: { tableName: tableData.tableName, active: true },
+        attributes: ['id'],
+      });
+
+      if (existing) continue;
+
+      console.log(`[boot] Creating default table: ${tableData.tableName}`);
       await createTableWithDependencies(tableData);
+      created++;
     }
 
-    console.log(`[boot] Created ${DEFAULT_TABLES.length} default tables.`);
+    if (created > 0) {
+      console.log(`[boot] Created ${created} default table(s).`);
+    }
   } catch (err) {
-    console.error('[boot] ensureDefaultTables error:', err.message);
+    console.error('[boot] ensureDefaultTables error:', err);
   }
 }
 

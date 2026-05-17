@@ -14,10 +14,9 @@ module.exports = {
     dialect: 'postgres',
     seederStorage: 'sequelize',
     dialectOptions: {
-      ssl: {
-        require: true,
-        rejectUnauthorized: false
-      }
+      ssl: process.env.DATABASE_URL && process.env.DATABASE_URL.includes('sslmode=disable')
+        ? false
+        : { require: true, rejectUnauthorized: false }
     },
     define: {
       schema: process.env.SCHEMA

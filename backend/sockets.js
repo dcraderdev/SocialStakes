@@ -6,6 +6,10 @@ const { botController } = require('./controllers/botController');
 const { connectionController } = require('./controllers/connectionController');
 const { blackjackController } = require('./controllers/blackjackController');
 const { timerController } = require('./controllers/timerController');
+const ensureDefaultTables = require('./utils/ensureDefaultTables');
+const { ensureBotsExist } = require('./utils/ensureBotsExist');
+
+const BELLAGIO_TABLE_ID = 'be11a610-7777-7777-7777-7be11a610777';
 
 const {
   drawCards,
@@ -28,6 +32,7 @@ let emitUpdatedTable = require('./utils/emitUpdatedTable');
 let fetchUpdatedTable = require('./utils/fetchUpdatedTable');
 let emitCustomMessage = require('./utils/emitCustomMessage');
 let setDealCardsTimeStamp = require('./utils/setDealCardsTimeStamp');
+const { eventController } = require('./controllers/eventController');
 
 
 
@@ -54,6 +59,9 @@ module.exports = function (io) {
   initializeRooms();
   initializeBot();
   initializeCounter();
+
+  ensureBotsExist();
+  ensureDefaultTables();
 
   // _*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_
   // _*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_
@@ -189,6 +197,7 @@ module.exports = function (io) {
       if (!rooms[tableId]) {
         await fetchUpdatedTable(tableId);
       }
+      if (!rooms[tableId]) return;
 
       // Add the player to the room
       rooms[tableId].seats[seat] = takeSeatObj;
@@ -200,6 +209,13 @@ module.exports = function (io) {
 
       // io.in(room).emit('new_message', messageObj);
       io.in(room).emit('new_player', takeSeatObj);
+
+      if (user?.id) {
+        await eventController.createEvent(user.id, 'table_joined', {
+          tableId,
+          gameType: rooms[tableId]?.gameType || 'Blackjack',
+        });
+      }
 
       // console.log('--------------');
       // console.log(`${username} taking seat${seat} in ${room}`);
@@ -285,11 +301,9 @@ module.exports = function (io) {
 
       // If the room doesnt exist create a new room
       if (!rooms[tableId]) {
-        let updatedTable = await gameController.getTableById(tableId);
-        rooms[tableId] = roomInit();
-        rooms[tableId].gameSessionId = updatedTable.gameSessions[0].id;
-        rooms[tableId].decksUsed = updatedTable.Game.decksUsed;
+        await fetchUpdatedTable(tableId);
       }
+      if (!rooms[tableId]) return;
 
       // If handInProgress, dont add the bet
       if (rooms[tableId].handInProgress) {
@@ -302,11 +316,23 @@ module.exports = function (io) {
         rooms[tableId].seats[seat].tableBalance -= bet;
       }
 
+      io.in(room).emit('new_bet', betObj);
+
+      // Spawn bots before starting countdown so they get to bet in time
+      if (tableId !== BELLAGIO_TABLE_ID) {
+        const seats = Object.values(rooms[tableId].seats);
+        const humanSeats = seats.filter((s) => !botController.isBotUser(s.userId));
+        const botSeats = seats.filter((s) => botController.isBotUser(s.userId));
+
+        if (humanSeats.length === 1 && botSeats.length === 0) {
+          await botController.spawnRoamingBotsForTable(io, tableId, 2);
+        }
+      }
+
+      // Start countdown after bots have placed their bets (bots may have already started it)
       if (!rooms[tableId].dealCardsTimeStamp) {
         setDealCardsTimeStamp(io, tableId);
       }
-
-      io.in(room).emit('new_bet', betObj);
     });
 
 
@@ -475,7 +501,7 @@ module.exports = function (io) {
       }
     });
 
-    function handleAcceptFriendRequest(recipientObj, senderObj, request) {
+    async function handleAcceptFriendRequest(recipientObj, senderObj, request) {
       let recipientId = senderObj.friend.id;
       let senderConnections = connections[userId];
       let recipientConnections = connections[recipientId];
@@ -493,6 +519,15 @@ module.exports = function (io) {
 
       io.in(recipientId).emit('accept_friend_request', recipientObj);
       socket.emit('accept_friend_request', senderObj);
+
+      await eventController.createEvent(userId, 'friend_added', {
+        friendId: recipientId,
+        friendUsername: recipientUsername,
+      });
+      await eventController.createEvent(recipientId, 'friend_added', {
+        friendId: userId,
+        friendUsername: username,
+      });
 
       Object.values(senderConnections).forEach((connection) => {
         connection.socket.join(newConversation.id);
@@ -822,6 +857,22 @@ module.exports = function (io) {
 
         emitCustomMessage({ conversationId: conversation.id, content });
       }
+    });
+
+    // Table invite: sender emits { friendId, tableId, tableName }
+    // Recipient receives a notification with a deep link
+    socket.on('send_table_invite', ({ friendId, tableId, tableName }) => {
+      if (!friendId || !tableId) return;
+
+      const tableUrl = `${process.env.APP_BASE_URL || 'http://localhost:3000'}/table/${tableId}`;
+
+      io.in(friendId).emit('receive_table_invite', {
+        senderId: userId,
+        senderUsername: username,
+        tableId,
+        tableName: tableName || 'a table',
+        tableUrl,
+      });
     });
 
   });

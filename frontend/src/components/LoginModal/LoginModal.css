@@ -132,3 +132,15 @@ text-decoration: underline;
 
 
 
+
+.signin-form-error {
+  color: #ff6b6b;
+  font-size: 14px;
+  text-shadow: none;
+  text-align: center;
+  margin: 4px 0 8px;
+  padding: 6px;
+  background: rgba(255, 107, 107, 0.08);
+  border-radius: 4px;
+  font-weight: 500;
+}

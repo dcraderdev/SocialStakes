@@ -43,24 +43,28 @@ export async function csrfFetch(url, options = {}) {
   
 
 
-  const res = await window.fetch(url, options);
-
-  // if the response status code is 400 or above, then throw an error with the
-    // error being the response
-
-
-    
-  if (res.status >= 400) {
-    const errorData = await res.json(); 
-    const error = new Error('Request failed');
-    error.status = res.status;
-    error.data = errorData; 
-    // console.log(error.status);
-    // console.log(error.data);
+  let res;
+  try {
+    res = await window.fetch(url, options);
+  } catch (networkErr) {
+    const error = new Error('Network error');
+    error.networkError = true;
+    error.cause = networkErr;
     throw error;
   }
-  // if the response status code is under 400, then return the response to the
-    // next promise chain
+
+  if (res.status >= 400) {
+    let errorData = null;
+    try {
+      errorData = await res.json();
+    } catch (_parseErr) {
+      errorData = { message: res.statusText || 'Request failed' };
+    }
+    const error = new Error(errorData.message || 'Request failed');
+    error.status = res.status;
+    error.data = errorData;
+    throw error;
+  }
   return res;
 }
 

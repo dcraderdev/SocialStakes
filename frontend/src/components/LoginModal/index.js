@@ -9,7 +9,6 @@ function LoginModal() {
 
   const { modal, openModal, closeModal, updateObj, setUpdateObj} = useContext(ModalContext);
   const sessionUser = useSelector((state) => state.users.user);
-  // const sessionUser = null
   const dispatch = useDispatch();
   const history = useHistory();
   const formRef = useRef(null);
@@ -17,6 +16,7 @@ function LoginModal() {
   const [password, setPassword] = useState('');
   const [validationErrors, setValidationErrors] = useState({});
   const [signInErrors, setSignInErrors] = useState({});
+  const [serverError, setServerError] = useState('');
 
 
   const [disabledButton, setDisabledButton] = useState(false);
@@ -41,12 +41,10 @@ function LoginModal() {
     if (!credential.length) errors['credential'] = 'Please enter a username';
     if (!password.length) errors['password'] = 'Please enter a password';
 
-    if (credential.length < 4) {
-      errors['credential'] = 'Please enter a username';
+    if (credential.length && credential.length < 4) {
       loginErrors['credential'] = 'Username must be at least 4 characters';
     }
-    if (password.length < 6) {
-      errors['password'] = 'Please enter a password';
+    if (password.length && password.length < 6) {
       loginErrors['password'] = 'Password must be at least 6 characters';
     }
 
@@ -54,7 +52,7 @@ function LoginModal() {
     setSignInErrors(loginErrors);
   }, [credential, password]);
 
-  
+
   useEffect(() => {
     if (Object.keys(signInErrors).length > 0) {
       setButtonClass('signinDiv-button disabled disabled2');
@@ -67,40 +65,41 @@ function LoginModal() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setServerError('');
+    setDisabledButton(true);
+    setButtonText('Signing in…');
 
     try {
-      const { data, response } = await dispatch(
+      const { response } = await dispatch(
         sessionActions.login({ credential, password })
       );
 
-      if (response.ok) {
-        setUpdateObj(null)
-        closeModal()
-      };
+      if (response && response.ok) {
+        setUpdateObj(null);
+        closeModal();
+        return;
+      }
     } catch (error) {
-      setDisabledButton(true);
-      setButtonClass('signinDiv-button disabled disabled2');
-      setButtonText('The provided credentials were invalid');
-      setTimeout(() => {
-        setDisabledButton(false);
-        setButtonClass('signinDiv-button button button2');
-        setButtonText('Log In');
-      }, 3000);
+      setDisabledButton(false);
+      setButtonText('Log In');
+
+      if (error && error.status === 401) {
+        setServerError('Incorrect username or password.');
+        return;
+      }
+      if (error && error.status === 400) {
+        setServerError('Please check your username and password.');
+        return;
+      }
+      if (error && typeof error.status === 'number') {
+        setServerError('Something went wrong. Please try again.');
+        return;
+      }
+      setServerError("Can't reach the server. Check your connection and try again.");
     }
   };
 
 
-  const demoUser = async (e) => {
-    e.preventDefault();
-    const { response } = await dispatch(
-      sessionActions.login({ credential:'bigtree', password:'password' })
-    );
-    if (response.ok) {
-      setUpdateObj(null)
-      closeModal()
-    };
-  };
-  
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (formRef.current && !formRef.current.contains(event.target)) {
@@ -114,8 +113,6 @@ function LoginModal() {
   }, []);
 
 
-
-
   return (
     <div className="signin-form-page-container" ref={formRef}>
 
@@ -126,23 +123,31 @@ function LoginModal() {
             className="userField"
             type="text"
             value={credential}
-            onChange={(e) => setCredential(e.target.value)}
+            onChange={(e) => {
+              setCredential(e.target.value);
+              if (serverError) setServerError('');
+            }}
             required
             placeholder={validationErrors['credential'] || ''}
           />
         </label>
         <label className="pass">
-
             <div className='flex center'>Password</div>
           <input
             className="passwordField"
             type="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => {
+              setPassword(e.target.value);
+              if (serverError) setServerError('');
+            }}
             required
             placeholder={validationErrors['password'] || ''}
           />
         </label>
+        {serverError && (
+          <div className="signin-form-error">{serverError}</div>
+        )}
         <button
           type="submit"
           className={buttonClass}

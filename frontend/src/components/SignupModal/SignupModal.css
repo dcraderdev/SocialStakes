@@ -117,3 +117,31 @@ text-decoration: underline;
 }
 
 
+
+.signup-field-error {
+  color: #ff6b6b;
+  font-size: 13px;
+  text-shadow: none;
+  margin-top: -4px;
+  margin-bottom: 4px;
+  padding-left: 2px;
+  font-weight: 500;
+}
+
+.signup-form-error {
+  color: #ff6b6b;
+  font-size: 14px;
+  text-shadow: none;
+  text-align: center;
+  margin: 8px 0;
+  padding: 6px;
+  background: rgba(255, 107, 107, 0.08);
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.emailField-invalid,
+.usernameField-invalid {
+  border: 1px solid #ff6b6b !important;
+  outline-color: #ff6b6b;
+}

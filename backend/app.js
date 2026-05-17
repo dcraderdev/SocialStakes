@@ -94,10 +94,11 @@ app.use((_req, _res, next) => {
 
 // all other errors
 app.use((err, _req, res, _next) => {
-  res.status(err.status || 500);
+  const status = err.status || err.statusCode || 500;
+  res.status(status);
   return res.json({
     message: err.message,
-    statusCode: err.statusCode || 400,
+    statusCode: status,
     errors: err.errors,
     stack: isProduction ? null : err.stack,
   });

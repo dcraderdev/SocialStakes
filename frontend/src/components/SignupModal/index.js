@@ -23,17 +23,13 @@ function SignupModal() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [validationErrors, setValidationErrors] = useState({});
   const [signupErrors, setSignupErrors] = useState({});
-  const [errors, setErrors] = useState({});
-  const [errorStatus, setErrorStatus] = useState(false);
+  const [serverErrors, setServerErrors] = useState({});
+  const [formError, setFormError] = useState('');
 
 
   const [disabledButton, setDisabledButton] = useState(false);
   const [buttonClass, setButtonClass] = useState('signupDiv-button button button2');
   const [buttonText, setButtonText] = useState('Sign Up');
-  const [emailText, setEmailText] = useState('Please enter an email');
-  const [emailClass, setEmailClass] = useState('emailField');
-  const [usernameText, setUsernameText] = useState('Please enter an username');
-  const [usernameClass, setUsernameClass] = useState('usernameField');
 
   const handleSignin = () => {
     closeModal();
@@ -47,21 +43,21 @@ function SignupModal() {
     if (!email.length) errors['email'] = 'Please enter an email';
     if (!username.length) errors['username'] = 'Please enter a username';
     if (!firstName.length) errors['firstName'] = 'Please enter a first name';
-    if (!lastName.length) errors['lastName'] = 'Please enter a lasts name';
+    if (!lastName.length) errors['lastName'] = 'Please enter a last name';
     if (!password.length) errors['password'] = 'Please enter a password';
     if (!confirmPassword.length) errors['confirmPassword'] = 'Please confirm password';
 
-    if (username.length < 4) {
-      errors['username'] = 'Please enter a username';
+    if (username.length && username.length < 4) {
       signupErrors['username'] = 'Username must be at least 4 characters';
     }
-    if (password.length < 6) {
-      errors['password'] = 'Please enter a password';
+    if (password.length && password.length < 6) {
       signupErrors['password'] = 'Password must be at least 6 characters';
     }
-
-    if(confirmPassword !== password){
-      signupErrors['password'] = 'Password must be at least 6 characters';
+    if (confirmPassword.length && confirmPassword !== password) {
+      signupErrors['confirmPassword'] = "Passwords don't match";
+    }
+    if (email.length && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      signupErrors['email'] = 'Please enter a valid email';
     }
 
     setValidationErrors(errors);
@@ -69,58 +65,58 @@ function SignupModal() {
   }, [email, username, firstName, lastName, password, confirmPassword]);
 
   useEffect(() => {
-    if (Object.keys(signupErrors).length > 0 || errorStatus) {
+    if (Object.keys(signupErrors).length > 0) {
       setButtonClass('signupDiv-button disabled disabled2');
     } else {
       setButtonClass('signupDiv-button button button2');
     }
-  }, [signupErrors, errorStatus]);
+  }, [signupErrors]);
 
+
+  const clearServerErrorFor = (field) => {
+    if (serverErrors[field]) {
+      const next = { ...serverErrors };
+      delete next[field];
+      setServerErrors(next);
+    }
+    if (formError) setFormError('');
+  };
 
   const handleSubmit = async (e) => {
-    setErrors({})
-    setErrorStatus(false)
     e.preventDefault();
+    setServerErrors({});
+    setFormError('');
+    setDisabledButton(true);
 
     try {
-      const { data, response } = await dispatch(
-       sessionActions.signup({ username, firstName, lastName, email, password })
+      const { response } = await dispatch(
+        sessionActions.signup({ username, firstName, lastName, email, password })
       );
 
-      if (response.ok) closeModal();
-    } catch (error) {
-      setDisabledButton(true);
-      setButtonClass('signinDiv-button disabled disabled2');
-      setErrorStatus(true);
-
-
-      if (error.status === 500) {
-        if (error.data.errors && error.data.errors.email) {
-          setEmail('The provided email is invalid');
-          setEmailClass('emailField-invalid');
-        }
-      }
-
-      if (error.status === 403) {
-        if (error.data.errors && error.data.errors.email) {
-          setUsername('Username must be unique');
-          setUsernameClass('usernameField-invalid');
-        }
-        if (error.data.errors && error.data.errors.username) {
-          setEmail('Email must be unique');
-          setEmailClass('emailField-invalid');
-        }
-      }
-
-      setTimeout(() => {
-        setErrorStatus(false)
+      if (response && response.ok) {
         setDisabledButton(false);
-        setButtonClass('signupDiv-button button button2');
-        setEmail(emailText)
-        setEmailClass('emailField');
-        setUsername(usernameText)
-        setUsernameClass('usernameField');
-      }, 3000);
+        closeModal();
+        return;
+      }
+    } catch (error) {
+      setDisabledButton(false);
+
+      if (error && error.status === 403 && error.data && error.data.errors) {
+        setServerErrors(error.data.errors);
+        return;
+      }
+
+      if (error && error.status === 400 && error.data && error.data.errors) {
+        setServerErrors(error.data.errors);
+        return;
+      }
+
+      if (error && typeof error.status === 'number') {
+        setFormError("Something went wrong. Please try again.");
+        return;
+      }
+
+      setFormError("Can't reach the server. Check your connection and try again.");
     }
   };
 
@@ -136,6 +132,8 @@ function SignupModal() {
     };
   }, []);
 
+  const emailInputClass = serverErrors.email ? 'emailField-invalid' : 'emailField';
+  const usernameInputClass = serverErrors.username ? 'usernameField-invalid' : 'usernameField';
 
   return (
       <div className="signup-form-page-container" ref={formRef}>
@@ -153,7 +151,6 @@ function SignupModal() {
             />
           </label>
           <label>
-            
             <div className='flex center'>Last Name</div>
             <input
               className="lastnameField"
@@ -166,42 +163,42 @@ function SignupModal() {
           </label>
 
           <label className="emailLabel">
-            
             <div className='flex center'>Email</div>
             <input
-              className={emailClass}
-              type="text"
+              className={emailInputClass}
+              type="email"
               value={email}
               onChange={(e) => {
-                setEmail(e.target.value)
-                setEmailText(e.target.value)
+                setEmail(e.target.value);
+                clearServerErrorFor('email');
               }}
               required
               placeholder={validationErrors['email'] || ''}
             />
+            {(serverErrors.email || signupErrors.email) && (
+              <div className="signup-field-error">{serverErrors.email || signupErrors.email}</div>
+            )}
           </label>
 
-
-
           <label>
-            
             <div className='flex center'>Username</div>
             <input
-              className={usernameClass}
+              className={usernameInputClass}
               type="text"
               value={username}
               onChange={(e) => {
-                setUsername(e.target.value)
-                setUsernameText(e.target.value)
+                setUsername(e.target.value);
+                clearServerErrorFor('username');
               }}
               required
               placeholder={validationErrors['username'] || ''}
             />
+            {(serverErrors.username || signupErrors.username) && (
+              <div className="signup-field-error">{serverErrors.username || signupErrors.username}</div>
+            )}
           </label>
 
-          
           <label>
-            
             <div className='flex center'>Password</div>
             <input
               className="passwordField"
@@ -210,8 +207,10 @@ function SignupModal() {
               onChange={(e) => setPassword(e.target.value)}
               required
               placeholder={validationErrors['password'] || ''}
-
             />
+            {signupErrors.password && (
+              <div className="signup-field-error">{signupErrors.password}</div>
+            )}
           </label>
           <label>
             <div className='flex center'>Confirm Password</div>
@@ -223,9 +222,15 @@ function SignupModal() {
               required
               placeholder={validationErrors['confirmPassword'] || ''}
             />
+            {signupErrors.confirmPassword && (
+              <div className="signup-field-error">{signupErrors.confirmPassword}</div>
+            )}
           </label>
-          <button 
-          type="submit" 
+          {formError && (
+            <div className="signup-form-error">{formError}</div>
+          )}
+          <button
+          type="submit"
           className={buttonClass}
           disabled={Object.keys(signupErrors).length > 0 || disabledButton}>
             {buttonText}
@@ -241,5 +246,3 @@ function SignupModal() {
 }
 
 export default SignupModal;
-
-

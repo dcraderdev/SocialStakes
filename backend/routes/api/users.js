@@ -16,42 +16,33 @@ const router = express.Router();
 // is being sent with each request that requires protection
 router.post('/', validateSignup, async (req, res, next) => {
 
-  let errors = {}
+  const errors = {};
   const { email, password, username, firstName, lastName } = req.body;
-  const verifyEmail = await User.findOne({where:{email:email}})
-  const verifyUsername = await User.findOne({where:{username:username}})
+  const verifyEmail = await User.findOne({ where: { email } });
+  const verifyUsername = await User.findOne({ where: { username } });
 
-  if (verifyEmail) errors.username = "User with that username already exists"
-  if (verifyUsername) errors.email = "User with that email already exists"
-                      
-      
-  if(errors.username || errors.email){
-    // const err = new Error("User already exists");
-    const err = {}
+  if (verifyEmail) errors.email = "Email already in use";
+  if (verifyUsername) errors.username = "Username already taken";
+
+  if (errors.email || errors.username) {
+    const err = new Error("User already exists");
     err.status = 403;
-    err.statusCode = 403
-    err.errors = errors
-
-    return next(err)
+    err.statusCode = 403;
+    err.errors = errors;
+    return next(err);
   }
-  let user
-  if(!errors.username && !errors.email){
-    user = await User.signup({email,username,password,firstName,lastName,});
-    const token = await setTokenCookie(res, user);
-  
-    return res.status(200).json({
-      id: user.id,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      email: user.email,
-      username: user.username,
-      balance: user.balance,
-      token: token,
-    });
-  }
-  return res.status(200).json({what:'whaaaat'});
- 
 
+  const user = await User.signup({ email, username, password, firstName, lastName });
+  await setTokenCookie(res, user);
+
+  return res.status(200).json({
+    id: user.id,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    email: user.email,
+    username: user.username,
+    balance: user.balance,
+  });
 });
 
 

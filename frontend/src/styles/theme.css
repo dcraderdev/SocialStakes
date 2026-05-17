@@ -741,7 +741,7 @@ button.bet-option,
   border-radius: var(--ss-r-lg);
   padding: 18px 20px;
 }
-.ss-stat-card { padding: 18px 20px; }
+
 .ss-stat-label {
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -767,15 +767,6 @@ button.bet-option,
 
 .ss-mono { font-family: var(--ss-mono); }
 
-.ss-grid-stats {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 14px;
-  margin-bottom: 24px;
-}
-@media (max-width: 900px) {
-  .ss-grid-stats { grid-template-columns: repeat(2, 1fr); }
-}
 
 .ss-side-grid {
   display: grid;

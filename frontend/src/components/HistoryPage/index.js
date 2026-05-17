@@ -23,36 +23,6 @@ function HistoryPage() {
         <h1 className="ss-h1">Your last 30 days</h1>
         <p className="ss-sub">All hands cryptographically logged. Click any row to replay or verify.</p>
 
-        <div className="ss-grid-stats">
-          <div className="ss-card ss-stat-card">
-            <div className="ss-stat-label">Hands played</div>
-            <div className="ss-stat-value">{stats.handsPlayed.toLocaleString()}</div>
-            <div className="ss-stat-sub">+{stats.handsDelta} from prior month</div>
-          </div>
-          <div className="ss-card ss-stat-card">
-            <div className="ss-stat-label">Net P&amp;L</div>
-            <div className="ss-stat-value" style={{ color: stats.netPL >= 0 ? 'var(--ss-green)' : 'var(--ss-red)' }}>
-              {stats.netPL >= 0 ? '+ ' : '- '}$ {Math.abs(stats.netPL).toLocaleString()}
-            </div>
-            <div className="ss-stat-sub">All-time + $4,820</div>
-          </div>
-          <div className="ss-card ss-stat-card">
-            <div className="ss-stat-label">Win rate</div>
-            <div className="ss-stat-value">{stats.winRate.toFixed(1)}%</div>
-            <div className="ss-stat-sub">House edge 0.5%</div>
-          </div>
-          <div className="ss-card ss-stat-card">
-            <div className="ss-stat-label">Best session</div>
-            <div className="ss-stat-value" style={{ color: 'var(--ss-green)' }}>+ $ {stats.bestSession.amount}</div>
-            <div className="ss-stat-sub">{stats.bestSession.table}</div>
-          </div>
-          <div className="ss-card ss-stat-card">
-            <div className="ss-stat-label">Worst session</div>
-            <div className="ss-stat-value" style={{ color: 'var(--ss-red)' }}>− $ {stats.worstSession.amount}</div>
-            <div className="ss-stat-sub">{stats.worstSession.table}</div>
-          </div>
-        </div>
-
         <div className="ss-side-grid">
           <div className="ss-card" style={{ padding: 20 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>

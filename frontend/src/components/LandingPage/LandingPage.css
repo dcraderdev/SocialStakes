@@ -267,39 +267,6 @@
   margin-bottom: 48px;
 }
 
-.lp-hero-stats {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 32px;
-  flex-wrap: wrap;
-}
-
-.lp-stat {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-}
-
-.lp-stat-n {
-  font-size: 28px;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-}
-
-.lp-stat-l {
-  font-size: 12px;
-  color: #7c8290;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
-.lp-stat-divider {
-  width: 1px;
-  height: 36px;
-  background: rgba(229, 179, 76, 0.2);
-}
 
 /* Floating chips deco */
 .lp-hero-chips {

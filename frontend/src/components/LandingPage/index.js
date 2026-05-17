@@ -283,13 +283,6 @@ export default function LandingPage() {
             <img src={goldChip} alt="" className="lp-chip-float lp-cf-2" aria-hidden />
             <img src={goldChip} alt="" className="lp-chip-float lp-cf-3" aria-hidden />
           </div>
-          <div className="lp-hero-stats">
-            <div className="lp-stat"><span className="lp-stat-n lp-gold">$0</span><span className="lp-stat-l">real money</span></div>
-            <div className="lp-stat-divider" />
-            <div className="lp-stat"><span className="lp-stat-n lp-gold">8</span><span className="lp-stat-l">games</span></div>
-            <div className="lp-stat-divider" />
-            <div className="lp-stat"><span className="lp-stat-n lp-gold">100%</span><span className="lp-stat-l">verifiable</span></div>
-          </div>
         </div>
         <div className="lp-hero-cards-deco">
           <div className="lp-deco-card lp-deco-c1"><span className="lp-suit-gold">A</span><span className="lp-deco-suit">♠</span></div>

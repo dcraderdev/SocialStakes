@@ -32,6 +32,7 @@ import CoinFlip from './components/games/CoinFlip';
 import HiLo from './components/games/HiLo';
 import AceyDuecey from './components/games/AceyDuecey';
 import HoldEm from './components/games/HoldEm';
+import Blackjack from './components/games/Blackjack';
 import RemoveFriendModal from './components/RemoveFriendModal';
 import ProfileButtonModal from './components/ProfileButtonModal';
 import StartConversationModal from './components/StartConversationModal';
@@ -248,6 +249,10 @@ function App() {
 
           <Route path="/play/holdem" exact>
             {isLoaded && <HoldEm />}
+          </Route>
+
+          <Route path="/play/blackjack" exact>
+            {isLoaded && <Blackjack />}
           </Route>
 
           <Route>

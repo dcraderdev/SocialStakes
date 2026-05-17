@@ -18,6 +18,7 @@ const GameTile = ({game, cbFunc, delay, animateTiles}) => {
     hi_lo: '/play/hilo',
     acey_duecey: '/play/acey',
     poker: '/play/holdem',
+    single_blackjack: '/play/blackjack',
   };
 
   const handleClick = () => {

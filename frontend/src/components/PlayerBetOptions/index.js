@@ -199,8 +199,10 @@ import { WindowContext } from '../../context/WindowContext';
   }
   
   const checkForSeat=(tableId)=>{
+    const tableUsers = currentTables[tableId]?.tableUsers;
+    if (!tableUsers) return false;
     let seat
-    let hasSeat = Object.entries(currentTables[tableId].tableUsers).some(([seatId, seatData], index) => {
+    let hasSeat = Object.entries(tableUsers).some(([seatId, seatData]) => {
       if(seatData.userId === user.id){
         seat = seatId
         return true
@@ -366,10 +368,6 @@ const rebet = (multiplier) => {
     socket.emit('player_action', actionObj)
   };
 
-
-
-console.log(isHandInProgress);
-console.log(isActionSeat);
 
 
   return (

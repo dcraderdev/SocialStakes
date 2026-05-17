@@ -45,6 +45,8 @@ import {
   getUserFriendsAction
 } from '../redux/actions/friendActions';
 
+import { addTableInviteAction } from '../redux/actions/inviteActions';
+
 
 
 
@@ -173,8 +175,7 @@ const SocketProvider = ({ children }) => {
 
 
       socket.on('new_bet', (betObj) => {
-        console.log(betObj);
-        dispatch(addBetAction(betObj)); 
+        dispatch(addBetAction(betObj));
       });  
 
       socket.on('remove_last_bet', (betObj) => {
@@ -278,6 +279,10 @@ const SocketProvider = ({ children }) => {
     });
 
     // // 
+    socket.on('receive_table_invite', (inviteObj) => {
+      dispatch(addTableInviteAction(inviteObj));
+    });
+
     socket.on('user_joined_conversation', (convoObj) => {
       dispatch(addUserToConversationAction(convoObj));
     });
@@ -324,6 +329,7 @@ const SocketProvider = ({ children }) => {
         socket.off('change_chatname');
         socket.off('user_left_conversation');
         socket.off('user_joined_conversation');
+        socket.off('receive_table_invite');
 
         
       };

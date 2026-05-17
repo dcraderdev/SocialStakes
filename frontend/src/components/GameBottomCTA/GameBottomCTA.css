@@ -1,0 +1,84 @@
+.game-bottom-cta {
+  width: 100%;
+  max-width: 900px;
+  margin: var(--sp-8, 40px) auto var(--sp-6, 24px);
+  padding: var(--sp-5, 20px) var(--sp-6, 24px);
+  background: var(--ss-bg-elev, #12141a);
+  border: 1px solid var(--ss-border, #262a33);
+  border-radius: var(--card-radius, 16px);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-5, 20px);
+  flex-wrap: wrap;
+}
+
+.game-bottom-back {
+  background: none;
+  border: 1px solid var(--ss-border, #262a33);
+  border-radius: var(--ss-r-md, 10px);
+  color: var(--ss-text-dim, #b6bac3);
+  font-size: var(--fs-sm, 13px);
+  font-weight: 600;
+  padding: 8px 16px;
+  cursor: pointer;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2, 8px);
+  transition: border-color var(--t-base, 250ms), color var(--t-base, 250ms);
+  flex-shrink: 0;
+}
+.game-bottom-back:hover {
+  border-color: var(--ss-text-muted, #7c8290);
+  color: var(--ss-text, #f6f3ec);
+}
+
+.game-bottom-others {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3, 12px);
+  flex-wrap: wrap;
+  flex: 1;
+}
+
+.game-bottom-label {
+  font-size: var(--fs-xs, 11px);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ss-text-muted, #7c8290);
+  white-space: nowrap;
+}
+
+.game-bottom-list {
+  display: flex;
+  gap: var(--sp-2, 8px);
+  flex-wrap: wrap;
+}
+
+.game-bottom-pill {
+  background: var(--ss-bg-soft, #1d2029);
+  border: 1px solid var(--ss-border, #262a33);
+  border-radius: var(--ss-r-pill, 999px);
+  color: var(--ss-text-dim, #b6bac3);
+  font-size: var(--fs-xs, 11px);
+  font-weight: 600;
+  padding: 6px 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: border-color var(--t-base, 250ms), color var(--t-base, 250ms), background var(--t-base, 250ms);
+}
+.game-bottom-pill:hover {
+  border-color: var(--ss-gold-line, rgba(229,179,76,0.35));
+  color: var(--ss-gold, #e5b34c);
+  background: rgba(229,179,76,0.06);
+}
+
+@media (max-width: 600px) {
+  .game-bottom-cta {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .game-bottom-others { flex-direction: column; align-items: flex-start; }
+}

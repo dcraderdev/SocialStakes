@@ -36,6 +36,7 @@ const {
 let emitCustomMessage = require('../utils/emitCustomMessage');
 let emitUpdatedTable = require('../utils/emitUpdatedTable');
 let emitMainPageWinnerMessage = require('../utils/emitMainPageWinnerMessage');
+const { eventController } = require('./eventController');
 
 let { countdownInterval } = require('../global');
 
@@ -332,7 +333,7 @@ const blackjackController = {
 
       io.in(room).emit('offer_insurance', tableId);
 
-      await new Promise((resolve) => setTimeout(resolve, 5000)); // Wait for 10 seconds
+      await new Promise((resolve) => setTimeout(resolve, 3000)); // Insurance decision window
       // socket.emit('remove_insurance_offer', tableId);
 
       io.in(room).emit('remove_insurance_offer', tableId);
@@ -468,8 +469,8 @@ const blackjackController = {
 
         emitUpdatedTable(io, tableId)
  
-        // If some, handle player turn
-        if (tableId === 'be11a610-7777-7777-7777-7be11a610777') {      
+        // If current player is a bot, have it act automatically
+        if (botController.isBotUser(player.userId)) {
           await botController.handleBotAction(io, tableId)
 
           if (rooms[tableId] && rooms[tableId].timerId) {
@@ -477,9 +478,7 @@ const blackjackController = {
             rooms[tableId].actionEndTimeStamp = 0;
           }
 
-          // return this.gameLoop(io, tableId);
           return
-
         }
 
         // // If timer already exists, return without creating another one
@@ -1000,6 +999,19 @@ async calculateAndSavePlayerHand(
     // Save the results
     await gameController.savePlayerHand(handObj);
 
+    // Emit activity event for wins and blackjacks
+    if ((result === 'WIN' || result === 'BLACKJACK') && player.userId) {
+      await eventController.createEvent(
+        player.userId,
+        result === 'BLACKJACK' ? 'hand_blackjack' : 'hand_won',
+        {
+          tableId,
+          gameType: rooms[tableId]?.gameType || 'Blackjack',
+          amount: profitLoss,
+        }
+      );
+    }
+
     // display the winners to the room
     if (totalProfitLoss > 0) {
       let messageObj = {
@@ -1123,7 +1135,7 @@ async endRound(io, tableId) {
     // Update and clear player data
     this.updateAndClearPlayerData(player, totalWinnings);
 
-    await new Promise((resolve) => setTimeout(resolve, 3000));
+    await new Promise((resolve) => setTimeout(resolve, 1500));
 
     // Display any winnings going to tableBalance
     emitUpdatedTable(io, tableId)

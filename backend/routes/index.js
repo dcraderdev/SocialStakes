@@ -11,6 +11,8 @@ router.get('/api/csrf/restore', (req, res) => {
 
 router.use('/api', apiRouter);
 
+router.get('/api/health', (req, res) => res.json({ status: 'ok' }));
+
 // Static routes
 // Serve React build files in production
 if (process.env.NODE_ENV === 'production') {

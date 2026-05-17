@@ -2,6 +2,7 @@
 
 export const SET_USER = 'session/SET_USER';
 export const REMOVE_USER = 'session/REMOVE_USER';
+export const REFILL_BALANCE = 'users/REFILL_BALANCE';
 export const GET_USERS = 'users/GET_USERS';
 export const SET_THEMES = 'users/SET_THEMES';
 export const CHANGE_TABLE_THEME = 'users/CHANGE_TABLE_THEME';
@@ -80,6 +81,7 @@ export const ADD_OUTGOING_FRIEND_REQUEST = 'friends/ADD_OUTGOING_FRIEND_REQUEST'
 export const ACCEPT_FRIEND_REQUEST = 'friends/ACCEPT_FRIEND_REQUEST';
 export const DENY_FRIEND_REQUEST = 'friends/DENY_FRIEND_REQUEST';
 export const GET_USER_FRIENDS = 'friends/GET_USER_FRIENDS';
+export const GET_USER_FRIENDS_WITH_STATUS = 'friends/GET_USER_FRIENDS_WITH_STATUS';
 export const REMOVE_FRIEND = 'friends/REMOVE_FRIEND';
 
 
@@ -101,6 +103,27 @@ export const SHOW_FRIENDS = 'friends/SHOW_FRIENDS';
 export const SHOW_CONVERSATION_BY_ID = 'friends/SHOW_CONVERSATION_BY_ID';
 
 
-//stats 
+//stats
 export const GET_USER_STATS = 'stats/GET_USER_STATS';
 export const GET_USER_TABLES = 'stats/GET_USER_TABLES';
+
+// history / verify
+export const GET_HISTORY_STATS = 'stats/GET_HISTORY_STATS';
+export const GET_HAND_HISTORY = 'stats/GET_HAND_HISTORY';
+export const GET_FRIENDS_LEADERBOARD = 'stats/GET_FRIENDS_LEADERBOARD';
+export const GET_HAND_VERIFY = 'stats/GET_HAND_VERIFY';
+export const SET_HISTORY_LOADING = 'stats/SET_HISTORY_LOADING';
+
+// friend search + suggestions
+export const SET_USER_SEARCH_RESULTS = 'friends/SET_USER_SEARCH_RESULTS';
+export const CLEAR_USER_SEARCH_RESULTS = 'friends/CLEAR_USER_SEARCH_RESULTS';
+export const SET_FRIEND_SUGGESTIONS = 'friends/SET_FRIEND_SUGGESTIONS';
+export const OPTIMISTIC_SUGGEST_ADD = 'friends/OPTIMISTIC_SUGGEST_ADD';
+
+// activity
+export const GET_FRIEND_ACTIVITY = 'activity/GET_FRIEND_ACTIVITY';
+export const SET_ACTIVITY_FILTER = 'activity/SET_ACTIVITY_FILTER';
+// invites
+export const ADD_TABLE_INVITE = 'invites/ADD_TABLE_INVITE';
+export const DISMISS_TABLE_INVITE = 'invites/DISMISS_TABLE_INVITE';
+export const SET_INVITE_CODE_INFO = 'invites/SET_INVITE_CODE_INFO';

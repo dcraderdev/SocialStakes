@@ -1,0 +1,181 @@
+.fsb-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 560px;
+  margin: 0 auto;
+}
+
+.fsb-form {
+  width: 100%;
+}
+
+.fsb-input-row {
+  display: flex;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  padding: 0 12px;
+  height: 40px;
+  gap: 10px;
+  transition: border-color 0.2s;
+}
+
+.fsb-input-row:focus-within {
+  border-color: rgba(218, 165, 32, 0.6);
+  background-color: rgba(255, 255, 255, 0.09);
+}
+
+.fsb-icon {
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.fsb-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: white;
+  font-size: 14px;
+  height: 100%;
+}
+
+.fsb-input::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.fsb-clear-btn {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.45);
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  font-size: 11px;
+  transition: color 0.15s;
+}
+
+.fsb-clear-btn:hover {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Dropdown */
+.fsb-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  background-color: #1a1b1e;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  z-index: 500;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55);
+}
+
+.fsb-section-label {
+  padding: 8px 14px 4px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.fsb-recent-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 14px;
+  transition: background 0.15s;
+}
+
+.fsb-recent-item:hover {
+  background-color: rgba(255, 255, 255, 0.07);
+  color: white;
+}
+
+.fsb-recent-icon {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.3);
+  flex-shrink: 0;
+}
+
+.fsb-no-results {
+  padding: 14px;
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 14px;
+  text-align: center;
+}
+
+.fsb-result-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  transition: background 0.15s;
+}
+
+.fsb-result-item:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.fsb-result-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: rgba(240, 255, 255, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+.fsb-result-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.fsb-result-username {
+  color: white;
+  font-size: 15px;
+  font-weight: 300;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fsb-result-rank {
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 11px;
+  margin-top: 1px;
+}
+
+.fsb-add-btn {
+  padding: 5px 14px;
+  border-radius: 6px;
+  border: 1px solid rgba(218, 165, 32, 0.6);
+  background: transparent;
+  color: goldenrod;
+  font-size: 13px;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.15s, color 0.15s;
+}
+
+.fsb-add-btn:hover:not(:disabled) {
+  background: rgba(218, 165, 32, 0.15);
+}
+
+.fsb-add-btn.pending,
+.fsb-add-btn:disabled {
+  border-color: rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.4);
+  cursor: default;
+}

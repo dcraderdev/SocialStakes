@@ -1,13 +1,18 @@
 import {
-  ADD_INCOMING_FRIEND_REQUEST, 
-  ADD_OUTGOING_FRIEND_REQUEST, 
-  ACCEPT_FRIEND_REQUEST, 
+  ADD_INCOMING_FRIEND_REQUEST,
+  ADD_OUTGOING_FRIEND_REQUEST,
+  ACCEPT_FRIEND_REQUEST,
   DENY_FRIEND_REQUEST,
   GET_USER_FRIENDS,
+  GET_USER_FRIENDS_WITH_STATUS,
   SHOW_FRIEND_INVITES,
   SHOW_TABLE_INVITES,
   SHOW_FRIENDS,
-  REMOVE_FRIEND
+  REMOVE_FRIEND,
+  SET_USER_SEARCH_RESULTS,
+  CLEAR_USER_SEARCH_RESULTS,
+  SET_FRIEND_SUGGESTIONS,
+  OPTIMISTIC_SUGGEST_ADD,
 } from '../actions/actionTypes'
 
 
@@ -46,9 +51,15 @@ export const denyFriendRequest = (friendRequestObj) => {
 };
 
 export const getUserFriendsAction = (data) => {
-
   return {
     type: GET_USER_FRIENDS,
+    payload: data,
+  };
+};
+
+export const getUserFriendsWithStatusAction = (data) => {
+  return {
+    type: GET_USER_FRIENDS_WITH_STATUS,
     payload: data,
   };
 };
@@ -82,6 +93,24 @@ export const showFriendsAction = (friend) => {
   return {
     type: SHOW_FRIENDS,
     payload: friend,
-
   };
 };
+
+export const setUserSearchResultsAction = (users) => ({
+  type: SET_USER_SEARCH_RESULTS,
+  payload: users,
+});
+
+export const clearUserSearchResultsAction = () => ({
+  type: CLEAR_USER_SEARCH_RESULTS,
+});
+
+export const setFriendSuggestionsAction = (suggestions) => ({
+  type: SET_FRIEND_SUGGESTIONS,
+  payload: suggestions,
+});
+
+export const optimisticSuggestAddAction = (userId) => ({
+  type: OPTIMISTIC_SUGGEST_ADD,
+  payload: userId,
+});

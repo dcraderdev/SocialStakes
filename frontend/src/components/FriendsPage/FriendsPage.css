@@ -1,32 +1,27 @@
-.friendspage-wrapper{
-  height: calc(100vh - 50px);
+/* ── Page shell ──────────────────────────────────────────────────────────── */
 
+.friendspage-wrapper {
+  height: calc(100vh - 50px);
   width: 100vw;
   position: absolute;
-  left: 0px;
+  left: 0;
   top: 50px;
   overflow: hidden;
   font-family: sans-serif;
-
 }
 
-
-
-
-.friendspage-friendsnavbar-wrapper{
+.friendspage-friendsnavbar-wrapper {
   width: 200px;
   height: 100%;
-  left: 0px;
-  top: 0px;
+  left: 0;
+  top: 0;
   position: fixed;
   display: flex;
-  border-right: rgba(0, 0, 0, 0.466) solid .5px;
+  border-right: rgba(0, 0, 0, 0.466) solid 0.5px;
 }
 
-
 .friendspage-friendsnavbar-wrapper.shrunk {
-  
-  transition: .5s top;
+  transition: 0.5s top;
   top: 101px;
 }
 
@@ -34,128 +29,90 @@
   top: 150px;
 }
 
-
-
-
-
-
-.friendspage-content-wrapper{
+.friendspage-content-wrapper {
   position: absolute;
-  top: 0px;
-
-  right: 0px;
+  top: 0;
+  right: 0;
   width: calc(100vw - 203px);
   flex-direction: column;
-
-
-
 }
 
-
-.friendspage-content-wrapper.expanded{
+.friendspage-content-wrapper.expanded {
   top: 42px;
   height: calc(100% - 44px);
 }
 
-.friendspage-content-wrapper.shrunk{
-  transition: .5s top;
-  top: 0px;
-  height: calc(100% - 0px);
+.friendspage-content-wrapper.shrunk {
+  transition: 0.5s top;
+  top: 0;
+  height: 100%;
 }
 
+/* ── Page header ─────────────────────────────────────────────────────────── */
 
-
-
-
-.friendspage-content{
+.friendspage-content {
   width: 100%;
   border-top: #404040b0 solid 1px;
-  
-
 }
 
 .friendspage-invite-header,
-.friendspage-header{
+.friendspage-header {
   width: 100%;
   height: 60px;
-  border-bottom: #000000 solid 1px;
+  border-bottom: #000 solid 1px;
   z-index: 1;
   font-size: 30px;
-  color: white; 
-
+  color: white;
 }
 
-
-
-.friendspage-invite-header{
+.friendspage-invite-header {
   border-top: #404040b0 solid 1px;
-  border-bottom: #000000 solid 1px;
+  border-bottom: #000 solid 1px;
   position: relative;
   left: 1px;
 }
 
-
-.friendspage-invite-header.top{
-  border-top: none;
+.friendspage-invite-header.top {
   border-top: #404040b0 solid 1px;
-  border-bottom: #000000 solid 1px;
+  border-bottom: #000 solid 1px;
 }
 
-
-
-.friendspage-invite-text{
+.friendspage-invite-text {
   height: 100%;
   text-align: center;
   margin-left: 10px;
-  
   font-size: min(25px, 4vw);
-
 }
 
-
-.friendspage-requests-container{
+.friendspage-requests-container {
   height: fit-content;
-  /* border: white solid 1px; */
   transition: ease all 1s;
 }
 
-
-
-
-.friendtile-wrapper{
+.friendtile-wrapper {
   width: 100%;
   height: 60px;
   border-bottom: solid 1px rgba(255, 255, 255, 0.1);
-
   color: white;
-  
 }
 
-.friendtile-wrapper:first-child{
+.friendtile-wrapper:first-child {
   border-top: none;
 }
 
+/* ── Friend detail view ──────────────────────────────────────────────────── */
 
-
-/* // currentFriendView */
-
-.friendspage-friendview-container{
+.friendspage-friendview-container {
   width: 100%;
   height: 100%;
   flex-direction: column;
 }
 
-
-
-
-
-
-.friendspage-chatbox-extended{
+.friendspage-chatbox-extended {
   height: calc(100vh - 255px);
-
 }
 
-.friendspage-chatbox-condensed{
+.friendspage-chatbox-condensed {
   height: calc(100vh - 215px);
 }
 
@@ -164,20 +121,15 @@
   top: 10px;
 }
 
-
-.friendspage-chatbox-extended.conversations{
+.friendspage-chatbox-extended.conversations {
   height: calc(100vh - 215px);
-
 }
 
-.friendspage-chatbox-condensed.conversations{
+.friendspage-chatbox-condensed.conversations {
   height: calc(100vh - 175px);
 }
 
-
-
-.chatbox-chatinput-wrapper{
-
+.chatbox-chatinput-wrapper {
   height: 40px;
   min-height: 40px;
   width: 100%;
@@ -189,73 +141,538 @@
   display: flex;
   justify-content: center;
   align-items: center;
-
-
 }
 
-.chatbox-chatinput-container{
-
+.chatbox-chatinput-container {
   height: 40px;
   min-height: 40px;
   width: 90%;
-
   position: relative;
-
-
-
-
 }
 
-
-
-
-
-
-
-
-.friendspage-friendview-nav{
+.friendspage-friendview-nav {
   height: 40px;
   justify-content: space-around;
 }
 
-.friendview-nav{
+.friendview-nav {
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
   color: white;
-
-  
 }
 
-.friendview-nav:hover{
+.friendview-nav:hover {
   color: goldenrod;
-  box-shadow: 0 10px 10px -10px rgba(0,0,0,0.5);
+  box-shadow: 0 10px 10px -10px rgba(0, 0, 0, 0.5);
 }
 
-.nav-text{
+.nav-text {
   position: relative;
   top: 10px;
   font-size: 16px;
 }
 
-.nav-text-active{
+.nav-text-active {
   color: goldenrod;
   border-bottom: solid 1px rgba(218, 165, 32, 0.675);
-  box-shadow: 0 10px 10px -10px rgba(0,0,0,0.5);
+  box-shadow: 0 10px 10px -10px rgba(0, 0, 0, 0.5);
 }
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   FRIENDS LIST VIEW (fl-*)
+   ═══════════════════════════════════════════════════════════════════════════ */
 
+.fl-root {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: calc(100% - 60px); /* subtract header */
+  overflow: hidden;
+}
 
+/* ── Top bar ─────────────────────────────────────────────────────────────── */
+
+.fl-topbar {
+  width: 100%;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  flex-wrap: wrap;
+  box-sizing: border-box;
+  min-height: 58px;
+}
+
+.fl-search-wrap {
+  flex: 1 1 180px;
+  min-width: 0;
+}
+
+.fl-search {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  padding: 7px 12px;
+  color: #e5e5e5;
+  font-size: 14px;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.15s;
+}
+
+.fl-search:focus {
+  border-color: goldenrod;
+}
+
+.fl-search::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.fl-topbar-actions {
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+/* sort buttons */
+
+.fl-sort-group {
+  gap: 4px;
+}
+
+.fl-sort-btn {
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 5px;
+  color: #bbb;
+  font-size: 12px;
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  white-space: nowrap;
+}
+
+.fl-sort-btn:hover {
+  background: rgba(218, 165, 32, 0.15);
+  border-color: goldenrod;
+  color: goldenrod;
+}
+
+.fl-sort-btn.active {
+  background: rgba(218, 165, 32, 0.22);
+  border-color: goldenrod;
+  color: goldenrod;
+}
+
+/* add-friend panel */
+
+.fl-add-wrap {
+  position: relative;
+}
+
+.fl-add-btn {
+  background: rgba(218, 165, 32, 0.18);
+  border: 1px solid goldenrod;
+  border-radius: 6px;
+  color: goldenrod;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 14px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+
+.fl-add-btn:hover {
+  background: rgba(218, 165, 32, 0.32);
+}
+
+.fl-add-panel {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  width: 260px;
+  background: #1e1e2e;
+  border: 1px solid rgba(218, 165, 32, 0.4);
+  border-radius: 8px;
+  padding: 14px;
+  z-index: 100;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+}
+
+.fl-add-title {
+  color: #ccc;
+  font-size: 13px;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.fl-add-form {
+  gap: 6px;
+  align-items: stretch;
+}
+
+.fl-add-input {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 5px;
+  color: #e5e5e5;
+  font-size: 13px;
+  padding: 6px 10px;
+  outline: none;
+  transition: border-color 0.15s;
+  min-width: 0;
+}
+
+.fl-add-input:focus {
+  border-color: goldenrod;
+}
+
+.fl-add-input::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.fl-add-submit {
+  background: goldenrod;
+  border: none;
+  border-radius: 5px;
+  color: #111;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 6px 12px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: opacity 0.15s;
+}
+
+.fl-add-submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.fl-add-submit:hover:not(:disabled) {
+  opacity: 0.85;
+}
+
+.fl-add-msg {
+  margin-top: 8px;
+  font-size: 12px;
+  border-radius: 4px;
+  padding: 5px 8px;
+}
+
+.fl-add-msg.success {
+  background: rgba(72, 199, 116, 0.18);
+  color: #48c774;
+  border: 1px solid rgba(72, 199, 116, 0.4);
+}
+
+.fl-add-msg.error {
+  background: rgba(255, 80, 80, 0.15);
+  color: #ff6b6b;
+  border: 1px solid rgba(255, 80, 80, 0.3);
+}
+
+/* ── Column header strip ─────────────────────────────────────────────────── */
+
+.fl-col-headers {
+  display: grid;
+  grid-template-columns: 28px 44px 1fr 90px 130px 220px;
+  align-items: center;
+  padding: 6px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  font-size: 11px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.35);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* ── Scrollable list ─────────────────────────────────────────────────────── */
+
+.fl-list {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.fl-empty {
+  height: 80px;
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 14px;
+  font-style: italic;
+}
+
+/* ── Friend row ──────────────────────────────────────────────────────────── */
+
+.fl-row {
+  display: grid;
+  grid-template-columns: 28px 44px 1fr 90px 130px 220px;
+  align-items: center;
+  padding: 0 16px;
+  height: 56px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  transition: background 0.12s;
+}
+
+.fl-row:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+/* status dot */
+.fl-status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.fl-status-dot.online {
+  background: #48c774;
+  box-shadow: 0 0 4px rgba(72, 199, 116, 0.6);
+}
+
+.fl-status-dot.offline {
+  background: #555;
+}
+
+/* avatar */
+.fl-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(218, 165, 32, 0.18);
+  border: 1px solid rgba(218, 165, 32, 0.35);
+  color: goldenrod;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+}
+
+/* name */
+.fl-col-name {
+  gap: 6px;
+  min-width: 0;
+}
+
+.fl-username {
+  color: #e5e5e5;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fl-rank {
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 11px;
+  flex-shrink: 0;
+}
+
+/* status text */
+.fl-status-text {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.fl-status-text.online {
+  color: #48c774;
+}
+
+.fl-status-text.offline {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+/* activity */
+.fl-activity {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.55);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fl-activity-none {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.2);
+}
+
+/* action buttons */
+.fl-col-actions {
+  gap: 6px;
+  justify-content: flex-end;
+}
+
+.fl-action-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: background 0.12s, border-color 0.12s, color 0.12s;
+  white-space: nowrap;
+}
+
+.fl-action-btn.message {
+  background: rgba(72, 117, 199, 0.18);
+  border-color: rgba(72, 117, 199, 0.4);
+  color: #7baef8;
+}
+
+.fl-action-btn.message:hover {
+  background: rgba(72, 117, 199, 0.32);
+}
+
+.fl-action-btn.invite {
+  background: rgba(218, 165, 32, 0.15);
+  border-color: rgba(218, 165, 32, 0.4);
+  color: goldenrod;
+}
+
+.fl-action-btn.invite:hover {
+  background: rgba(218, 165, 32, 0.28);
+}
+
+.fl-action-btn.remove {
+  background: rgba(255, 80, 80, 0.12);
+  border-color: rgba(255, 80, 80, 0.3);
+  color: rgba(255, 100, 100, 0.7);
+}
+
+.fl-action-btn.remove.hovered,
+.fl-action-btn.remove:hover {
+  background: rgba(255, 80, 80, 0.25);
+  border-color: rgba(255, 80, 80, 0.6);
+  color: #ff6b6b;
+}
+
+/* ── Pending requests banner ─────────────────────────────────────────────── */
+
+.fl-requests-banner {
+  gap: 10px;
+  padding: 8px 16px;
+  background: rgba(218, 165, 32, 0.1);
+  border-top: 1px solid rgba(218, 165, 32, 0.25);
+  color: goldenrod;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+.fl-requests-link {
+  background: none;
+  border: 1px solid goldenrod;
+  border-radius: 4px;
+  color: goldenrod;
+  font-size: 12px;
+  padding: 3px 10px;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+
+.fl-requests-link:hover {
+  background: rgba(218, 165, 32, 0.2);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   RESPONSIVE — 375 px (mobile)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@media screen and (max-width: 599px) {
+  /* Collapse the left nav on mobile */
+  .friendspage-friendsnavbar-wrapper {
+    display: none;
+  }
+
+  .friendspage-content-wrapper {
+    width: 100vw;
+  }
+
+  /* Column layout: hide less important cols */
+  .fl-col-headers,
+  .fl-row {
+    grid-template-columns: 24px 36px 1fr auto;
+  }
+
+  /* Hide status-text, activity and show them via title attr only */
+  .fl-col-headers > .fl-col-status-text,
+  .fl-col-headers > .fl-col-activity,
+  .fl-row > .fl-col-status-text,
+  .fl-row > .fl-col-activity {
+    display: none;
+  }
+
+  /* Stack action buttons */
+  .fl-col-actions {
+    flex-direction: column;
+    gap: 4px;
+    justify-content: center;
+    align-items: flex-end;
+  }
+
+  .fl-action-label {
+    display: none;
+  }
+
+  .fl-action-btn {
+    padding: 5px 7px;
+  }
+
+  /* top bar */
+  .fl-topbar {
+    padding: 8px 12px;
+    gap: 8px;
+  }
+
+  .fl-add-panel {
+    right: auto;
+    left: 0;
+    width: calc(100vw - 24px);
+  }
+
+  /* hide nav sidebar */
+  .friendspage-friendsnavbar-wrapper.shrunk,
+  .friendspage-friendsnavbar-wrapper.expanded {
+    display: none;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   RESPONSIVE — ≥ 800 px (wide)
+   ═══════════════════════════════════════════════════════════════════════════ */
 
 @media screen and (min-width: 800px) {
-  .friendspage-friendsnavbar-wrapper{
+  .friendspage-friendsnavbar-wrapper {
     width: 300px;
   }
-  .friendspage-content-wrapper{
+
+  .friendspage-content-wrapper {
     width: calc(100vw - 307px);
   }
-  .nav-text{
+
+  .nav-text {
     font-size: 20px;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   RESPONSIVE — 1440 px (large desktop) — already handled, just expand cols
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@media screen and (min-width: 1440px) {
+  .fl-col-headers,
+  .fl-row {
+    grid-template-columns: 32px 48px 1fr 110px 180px 260px;
   }
 }

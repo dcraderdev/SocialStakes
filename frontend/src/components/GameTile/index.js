@@ -18,6 +18,8 @@ const GameTile = ({game, cbFunc, delay, animateTiles}) => {
     hi_lo: '/play/hilo',
     acey_duecey: '/play/acey',
     poker: '/play/holdem',
+    slots: '/play/slots',
+    roulette: '/play/roulette',
   };
 
   const handleClick = () => {
@@ -94,10 +96,28 @@ const GameTile = ({game, cbFunc, delay, animateTiles}) => {
         </div>
       )
     }
+    if(gameType === 'slots'){
+      return (
+        <div className='flex center'>
+          <div>
+            <div className='flex center'>Slots</div>
+          </div>
+        </div>
+      )
+    }
+    if(gameType === 'roulette'){
+      return (
+        <div className='flex center'>
+          <div>
+            <div className='flex center'>Roulette</div>
+          </div>
+        </div>
+      )
+    }
   };
 
   useEffect(()=>{
-    let nonActiveGames = ['single_blackjack', 'poker', 'acey_duecey', 'coin_flip', 'hi_lo']
+    let nonActiveGames = ['single_blackjack', 'poker', 'acey_duecey', 'coin_flip', 'hi_lo', 'slots', 'roulette']
     // let nonActiveGames = []
     if(game){
       if(nonActiveGames.includes(game.gameType)){

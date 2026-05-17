@@ -1,0 +1,147 @@
+/* ── WinnersTicker ───────────────────────────────────────────────── */
+
+.wticker-bar {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  width: 95%;
+  max-width: 1280px;
+  background: var(--ss-bg-elev);
+  border: 1px solid var(--ss-border);
+  border-radius: var(--ss-r-md);
+  padding: 0;
+  margin-bottom: 18px;
+  overflow: hidden;
+  position: relative;
+  left: 10px;
+  height: 40px;
+}
+
+/* Gold "Big winners" label tab on the left */
+.wticker-label {
+  display: inline-flex;
+  align-items: center;
+  height: 100%;
+  padding: 0 14px;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--ss-bg);
+  background: var(--ss-gold);
+  white-space: nowrap;
+  flex-shrink: 0;
+  user-select: none;
+}
+
+/* Scrolling clip area */
+.wticker-clip {
+  overflow: hidden;
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  /* Soft fade on right edge only — left is handled by the label */
+  mask-image: linear-gradient(
+    to right,
+    black 0%,
+    black 88%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    black 0%,
+    black 88%,
+    transparent 100%
+  );
+}
+
+.wticker-track {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  animation: wticker-scroll 34s linear infinite;
+}
+
+/* Pause on hover or keyboard focus within the bar */
+.wticker-bar:hover .wticker-track,
+.wticker-bar:focus-within .wticker-track {
+  animation-play-state: paused;
+}
+
+@keyframes wticker-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* ── Reduced-motion: static overflow list instead ───────── */
+@media (prefers-reduced-motion: reduce) {
+  .wticker-track {
+    animation: none !important;
+  }
+  .wticker-clip {
+    mask-image: none;
+    -webkit-mask-image: none;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .wticker-clip::-webkit-scrollbar { display: none; }
+}
+
+/* ── Item ────────────────────────────────────────────────── */
+
+.wticker-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  color: var(--ss-text-dim);
+  padding: 0 4px;
+  user-select: none;
+}
+
+.wticker-icon {
+  font-size: 14px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.wticker-sep {
+  margin: 0 20px;
+  color: var(--ss-border);
+  font-size: 16px;
+  line-height: 1;
+  opacity: 0.8;
+}
+
+/* ── Screen-reader-only list ─────────────────────────────── */
+.wticker-sr-list {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+  list-style: none;
+}
+
+/* ── Mobile ──────────────────────────────────────────────── */
+@media (max-width: 700px) {
+  .wticker-bar {
+    width: 98%;
+    left: 0;
+    height: 36px;
+    margin-bottom: 14px;
+  }
+  .wticker-label {
+    padding: 0 10px;
+    font-size: 9px;
+  }
+  .wticker-item {
+    font-size: 12px;
+  }
+}

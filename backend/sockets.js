@@ -675,22 +675,37 @@ module.exports = function (io) {
     });
 
     socket.on('remove_friend', async (friendObj) => {
-      // console.log('-----remove_friend------');
-      // console.log('----------------------');
-      // console.log(friendObj);
-
       let friendshipId = friendObj.id;
       let friendId = friendObj.friendId;
       let conversationId = friendObj.conversationId;
-
-      // console.log('friendshipId | ', friendshipId);
-      // console.log('friendId | ', friendId);
 
       await friendController.removeFriend(userId, friendObj);
 
       socket.emit('friend_removed', friendObj);
       friendObj.friendId = userId;
       io.in(friendId).emit('friend_removed', friendObj);
+    });
+
+    socket.on('invite_to_table', (inviteObj) => {
+      const { recipientId, tableId } = inviteObj;
+      if (!recipientId || !tableId) return;
+      const invitePayload = {
+        tableId,
+        senderId: userId,
+        senderUsername: username,
+      };
+      io.in(recipientId).emit('table_invite_received', invitePayload);
+    });
+
+    // Typing indicators — broadcast to everyone else in the conversation
+    socket.on('typing_start', ({ conversationId }) => {
+      if (!conversationId) return;
+      socket.to(conversationId).emit('user_typing', { userId, username });
+    });
+
+    socket.on('typing_stop', ({ conversationId }) => {
+      if (!conversationId) return;
+      socket.to(conversationId).emit('user_stopped_typing', { userId });
     });
 
     // Broadcast message to specific room

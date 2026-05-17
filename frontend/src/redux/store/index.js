@@ -5,6 +5,8 @@ import gamesReducer from '../reducers/gamesReducer';
 import chatReducer from '../reducers/chatReducer';
 import friendsReducer from '../reducers/friendsReducer';
 import statsReducer from '../reducers/statsReducer';
+import activityReducer from '../reducers/activityReducer';
+import inviteReducer from '../reducers/inviteReducer';
 
 const rootReducer = combineReducers({
   users: userReducer,
@@ -12,6 +14,8 @@ const rootReducer = combineReducers({
   chats: chatReducer,
   friends: friendsReducer,
   stats: statsReducer,
+  activity: activityReducer,
+  invites: inviteReducer,
 });
 
 // const logger = require('redux-logger').default;

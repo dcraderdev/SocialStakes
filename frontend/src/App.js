@@ -1,5 +1,4 @@
 import Navigation from './components/Navigation';
-import LandingPage from './components/LandingPage';
 import LoginModal from './components/LoginModal';
 import SignupModal from './components/SignupModal';
 import GameFloor from './components/GameFloor';
@@ -24,6 +23,8 @@ import SettingsModal from './components/SettingsModal';
 import CloseTableModal from './components/CloseTableModal';
 import TableClosedModal from './components/TableClosedModal';
 import FriendsPage from './components/FriendsPage';
+import FriendsActivityPage from './components/FriendsActivityPage';
+import FriendsLeaderboard from './components/FriendsLeaderboard';
 import UnknownRoutePage from './components/UnknownRoutePage';
 import StatPage from './components/StatPage';
 import HistoryPage from './components/HistoryPage';
@@ -32,6 +33,8 @@ import CoinFlip from './components/games/CoinFlip';
 import HiLo from './components/games/HiLo';
 import AceyDuecey from './components/games/AceyDuecey';
 import HoldEm from './components/games/HoldEm';
+import Slots from './components/games/Slots';
+import Roulette from './components/games/Roulette';
 import RemoveFriendModal from './components/RemoveFriendModal';
 import ProfileButtonModal from './components/ProfileButtonModal';
 import StartConversationModal from './components/StartConversationModal';
@@ -41,6 +44,9 @@ import ThemesModal from './components/ThemesModal';
 import AboutMeModal from './components/AboutMeModal';
 import LoadingBar from './components/LoadingBar';
 import Logo from './components/Logo';
+import InviteFriendModal from './components/InviteFriendModal';
+import InviteRedemptionPage from './components/InviteRedemptionPage';
+import MobileBottomNav from './components/MobileBottomNav';
 
 
 import gameTileBackground from './images/game-tile-background2.jpeg'
@@ -69,24 +75,18 @@ function App() {
     img.src = gameTileBackground;
     img2.src = bluePokerChip;
     dispatch(sessionActions.loadThemes())
-    dispatch(sessionActions.restoreUser())
+    dispatch(sessionActions.initSession())
       .then(() => {
         setFillBar(true)
         setTimeout(() => {
           setIsLoaded(true);
         }, 2500);
-        // setIsLoaded(false);
-
-
       })
       .catch(() => {
         setFillBar(true)
-
         setTimeout(() => {
           setIsLoaded(true);
-          setUpdateObj('noUser');
         }, 2500);
-        
       });
   }, [dispatch]);
 
@@ -199,18 +199,36 @@ function App() {
         </div>
       )}
 
+{modal  === 'inviteFriend' && (
+        <div className='modal-container'>
+          {modal === 'inviteFriend' && <InviteFriendModal />}
+        </div>
+      )}
+
 
         <div className={`profile-modal ${modal === 'profileModal' ? ' visible' : ' hidden'}`} >
           <ProfileButtonModal />
         </div>
+
+        {isLoaded && user && <MobileBottomNav />}
 
 
       <div>
         <Switch>
 
           <Route path="/" exact>
-            {isLoaded && !user && <LandingPage />}
-            {isLoaded && user && <GameFloor/>}
+            {isLoaded && <GameFloor/>}
+          </Route>
+
+          <Route path="/friends/activity" exact>
+            {isLoaded && !user && <GameFloor/>}
+            {isLoaded && <Navigation />}
+            {isLoaded && <FriendsActivityPage />}
+          </Route>
+
+          <Route path="/friends/leaderboard" exact>
+            {isLoaded && !user && <GameFloor/>}
+            {isLoaded && <FriendsLeaderboard />}
           </Route>
 
           <Route path="/friends" exact>
@@ -228,6 +246,10 @@ function App() {
 
           <Route path="/history" exact>
             {isLoaded && <HistoryPage />}
+          </Route>
+
+          <Route path="/verify/:handId">
+            {isLoaded && <VerifyHandPage />}
           </Route>
 
           <Route path="/verify" exact>
@@ -248,6 +270,18 @@ function App() {
 
           <Route path="/play/holdem" exact>
             {isLoaded && <HoldEm />}
+          </Route>
+
+          <Route path="/play/slots" exact>
+            {isLoaded && <Slots />}
+          </Route>
+
+          <Route path="/play/roulette" exact>
+            {isLoaded && <Roulette />}
+          </Route>
+
+          <Route path="/invite/:code" exact>
+            {isLoaded && <InviteRedemptionPage />}
           </Route>
 
           <Route>

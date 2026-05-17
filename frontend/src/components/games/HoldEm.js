@@ -1,6 +1,7 @@
 import React, { useState, useRef, useMemo } from 'react';
 import { Hand } from 'pokersolver';
 import Navigation from '../Navigation';
+import GameBottomCTA from '../GameBottomCTA';
 
 // ── deck primitives ──────────────────────────────────────────────
 const SUITS  = ['h', 'd', 'c', 's'];
@@ -520,6 +521,7 @@ export default function HoldEm() {
           </div>
         </div>
       </div>
+      <GameBottomCTA currentPath="/play/holdem" />
     </>
   );
 }

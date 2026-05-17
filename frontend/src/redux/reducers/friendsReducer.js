@@ -1,10 +1,11 @@
 import {
-  ADD_INCOMING_FRIEND_REQUEST, 
-  ADD_OUTGOING_FRIEND_REQUEST, 
-  ACCEPT_FRIEND_REQUEST, 
+  ADD_INCOMING_FRIEND_REQUEST,
+  ADD_OUTGOING_FRIEND_REQUEST,
+  ACCEPT_FRIEND_REQUEST,
   DENY_FRIEND_REQUEST,
   GET_USER_FRIENDS,
-  SHOW_TABLE_INVITES, SHOW_FRIEND_INVITES, SHOW_FRIENDS, REMOVE_FRIEND, 
+  GET_USER_FRIENDS_WITH_STATUS,
+  SHOW_TABLE_INVITES, SHOW_FRIEND_INVITES, SHOW_FRIENDS, REMOVE_FRIEND,
   SHOW_CONVERSATION_BY_ID, REMOVE_CONVERSATION
 } from '../actions/actionTypes'
 
@@ -111,13 +112,23 @@ const userReducer = (state = initialState, action) => {
 
 
     case GET_USER_FRIENDS: {
-      return{ 
+      return {
         ...newState,
-        incomingRequests: action.payload.incomingRequests, 
-        outgoingRequests: action.payload.outgoingRequests, 
-        rejectedRequests: action.payload.rejectedRequests, 
-        friends: action.payload.friends
-      }
+        incomingRequests: action.payload.incomingRequests,
+        outgoingRequests: action.payload.outgoingRequests,
+        rejectedRequests: action.payload.rejectedRequests,
+        friends: action.payload.friends,
+      };
+    }
+
+    case GET_USER_FRIENDS_WITH_STATUS: {
+      return {
+        ...newState,
+        incomingRequests: action.payload.incomingRequests,
+        outgoingRequests: action.payload.outgoingRequests,
+        rejectedRequests: action.payload.rejectedRequests,
+        friends: action.payload.friends,
+      };
     }
 
 

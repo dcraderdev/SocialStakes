@@ -13,28 +13,19 @@ const Game = () => {
 
   const {windowWidth, windowHeight} = useContext(WindowContext)
 
-  console.log(windowWidth);
-  console.log(windowHeight);
   let isMobileView = windowHeight < 500
-
-
-
 
   return (
     <div className='game-wrapper'>
-      
+
       <div className='game-activegamebar-container'>
         <ActiveGameBar/>
       </div>
- 
+
       <Table />
 
       {!isMobileView && (
-        <PlayerBetOptions /> 
-      )}
-
-      {!isMobileView && (
-        <PlayerBetOptions /> 
+        <PlayerBetOptions />
       )}
 
     </div>

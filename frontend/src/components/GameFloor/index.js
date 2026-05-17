@@ -21,6 +21,10 @@ import CreatingGameView from '../CreatingGameView';
 import TableTile from '../TableTile';
 import TableSortBar from '../TableSortBar';
 import PayoutChatbox from '../PayoutChatbox';
+import WinnersTicker from '../Lobby/WinnersTicker';
+import FriendsOnline from '../Lobby/FriendsOnline';
+import ProvablyFairCard from '../Lobby/ProvablyFairCard';
+import WelcomeBanner from '../WelcomeBanner';
 
 function GameFloor() {
   const { socket } = useContext(SocketContext);
@@ -49,6 +53,9 @@ function GameFloor() {
   // handle loading active games on component load
   useEffect(() => {
     dispatch(gameActions.getAllGames());
+    // Auto-show multi-player blackjack tables so the lobby is immediately useful
+    setCurrTables('multi_blackjack');
+    dispatch(gameActions.getTablesByType('multi_blackjack'));
   }, []);
 
   // handle checking active games
@@ -156,6 +163,20 @@ function GameFloor() {
         </div>
       );
     }
+    if (gameType === 'slots') {
+      return (
+        <div className="gameicon-container flex center">
+            <div className="gameicon-text flex center">Slots</div>
+        </div>
+      );
+    }
+    if (gameType === 'roulette') {
+      return (
+        <div className="gameicon-container flex center">
+            <div className="gameicon-text flex center">Roulette</div>
+        </div>
+      );
+    }
   };
 
 
@@ -217,17 +238,58 @@ function GameFloor() {
 
 <div className='showgames-wrapper flex center'>
 
+              {/* Welcome banner — new user only */}
+              <WelcomeBanner />
 
-              <div className="games-grid">
-                {allGames &&
-                  Object.values(allGames).map((game, index) => (
-                    <GameTile key={index} game={game} cbFunc={checkTables} delay={index} style={{animationDelay: `${index * 3}s`}} />
-                  ))}
-              </div>
+              {/* Visitor hero — logged-out users */}
+              {!user && (
+                <div className="visitor-hero">
+                  <div className="visitor-hero-headline">
+                    8 Games. <span>$1,000 in demo chips.</span> Zero risk.
+                  </div>
+                  <p className="visitor-hero-sub">
+                    No real money. No credit card. Just pick a game and play.
+                  </p>
+                  <div className="visitor-hero-actions">
+                    <button
+                      className="visitor-hero-cta-primary"
+                      onClick={() => openModal('signup')}
+                    >
+                      Sign Up Free — Get $1,000 Chips
+                    </button>
+                    <button
+                      className="visitor-hero-cta-secondary"
+                      onClick={() => openModal('login')}
+                    >
+                      Sign In
+                    </button>
+                  </div>
+                </div>
+              )}
 
+              {/* Full-width winners ticker above the grid */}
+              <WinnersTicker />
 
-              <div className="winnerchatbox-wrapper">
-                  <PayoutChatbox />
+              {/* Two-column layout: game tiles center + right rail */}
+              <div className="lobby-body">
+                <div className="lobby-center">
+                  <div className="games-grid">
+                    {allGames &&
+                      Object.values(allGames).map((game, index) => (
+                        <GameTile key={index} game={game} cbFunc={checkTables} delay={index} style={{animationDelay: `${index * 3}s`}} />
+                      ))}
+                  </div>
+
+                  <div className="winnerchatbox-wrapper">
+                      <PayoutChatbox />
+                  </div>
+                </div>
+
+                {/* Right rail — friends online + provably fair */}
+                <aside className="lobby-rail">
+                  <FriendsOnline />
+                  <ProvablyFairCard />
+                </aside>
               </div>
 
 </div>
@@ -300,9 +362,22 @@ function GameFloor() {
                       delay={index}
                     />
                 ))}
-                {!openTablesByGameType.length &&
-                  <div className='tables-coming-soon-container flex center'>Tables coming soon!</div>
-                }
+                {!openTablesByGameType.length && (
+                  <div className="tables-coming-soon-container flex center">
+                    <div className="ss-empty">
+                      <div className="ss-empty-icon">🃏</div>
+                      <p className="ss-empty-title">No open tables yet</p>
+                      <p className="ss-empty-body">
+                        No one has started a table for this game type. Be the first — start a private game or wait for another player.
+                      </p>
+                      <div className="ss-empty-action">
+                        <button className="ss-btn ss-btn-primary" onClick={startPrivateGame}>
+                          Start a table
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
 

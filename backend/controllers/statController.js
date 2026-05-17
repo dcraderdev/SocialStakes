@@ -16,6 +16,8 @@ const {
   UserPot,
 } = require('../db/models');
 
+const { Op } = require('sequelize');
+
 const {
   generateDeck,
   shuffle,
@@ -180,6 +182,95 @@ const statController = {
     }
 
     return userStats;
+  },
+
+  async getFriendsLeaderboard(userId, period) {
+    const friendships = await Friendship.findAll({
+      where: {
+        status: 'accepted',
+        [Op.or]: [{ user1Id: userId }, { user2Id: userId }],
+      },
+      attributes: ['user1Id', 'user2Id'],
+    });
+
+    const friendIds = friendships.map((f) =>
+      f.user1Id === userId ? f.user2Id : f.user1Id
+    );
+
+    const allUserIds = [userId, ...friendIds];
+
+    const dateWhere = {};
+    if (period === 'week') {
+      const cutoff = new Date();
+      cutoff.setDate(cutoff.getDate() - 7);
+      dateWhere.updatedAt = { [Op.gte]: cutoff };
+    } else if (period === 'month') {
+      const cutoff = new Date();
+      cutoff.setDate(cutoff.getDate() - 30);
+      dateWhere.updatedAt = { [Op.gte]: cutoff };
+    }
+
+    const users = await User.findAll({
+      where: { id: { [Op.in]: allUserIds } },
+      attributes: ['id', 'username'],
+    });
+
+    const userTableData = await UserTable.findAll({
+      where: { userId: { [Op.in]: allUserIds } },
+      attributes: ['userId'],
+      include: [
+        {
+          model: Hand,
+          attributes: ['profitLoss', 'updatedAt'],
+          where: Object.keys(dateWhere).length > 0 ? dateWhere : undefined,
+          required: false,
+        },
+      ],
+    });
+
+    const statsMap = {};
+    for (const u of users) {
+      statsMap[u.id] = {
+        userId: u.id,
+        username: u.username,
+        isCurrentUser: u.id === userId,
+        handsPlayed: 0,
+        wins: 0,
+        netPL: 0,
+        biggestWin: 0,
+      };
+    }
+
+    for (const ut of userTableData) {
+      const s = statsMap[ut.userId];
+      if (!s) continue;
+      for (const hand of ut.Hands) {
+        s.handsPlayed++;
+        s.netPL += hand.profitLoss;
+        if (hand.profitLoss > 0) {
+          s.wins++;
+          if (hand.profitLoss > s.biggestWin) s.biggestWin = hand.profitLoss;
+        }
+      }
+    }
+
+    const leaderboard = Object.values(statsMap)
+      .sort((a, b) => b.netPL - a.netPL)
+      .map((entry, i) => ({
+        rank: i + 1,
+        userId: entry.userId,
+        username: entry.username,
+        isCurrentUser: entry.isCurrentUser,
+        handsPlayed: entry.handsPlayed,
+        winRate:
+          entry.handsPlayed > 0
+            ? parseFloat(((entry.wins / entry.handsPlayed) * 100).toFixed(1))
+            : 0,
+        netPL: entry.netPL,
+        biggestWin: entry.biggestWin,
+      }));
+
+    return { leaderboard, period, friendCount: friendIds.length };
   },
 
   async getUserTables(userId) {

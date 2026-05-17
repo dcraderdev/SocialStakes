@@ -35,10 +35,85 @@ const setDealCardsTimeStamp = require('../utils/setDealCardsTimeStamp');
 let emitCustomMessage = require('../utils/emitCustomMessage');
 const emitUpdatedTable = require('../utils/emitUpdatedTable');
 
+const BELLAGIO_TABLE_ID = 'be11a610-7777-7777-7777-7be11a610777';
 
+const BELLAGIO_BOT_IDS = new Set([
+  'e10d8de4-f4c8-4d28-9324-56aa9c924a83',
+  'e10d8de4-f4c8-4d28-9324-56aa9c924a84',
+  'e10d8de4-f4c8-4d28-9324-56aa9c924a85',
+  'e10d8de4-f4c8-4d28-9324-56aa9c924a86',
+  'e10d8de4-f4c8-4d28-9324-56aa9c924a87',
+  'e10d8de4-f4c8-4d28-9324-56aa9c924a88',
+]);
+
+const ROAMING_BOTS = [
+  { id: 'e10d8de4-f4c8-4d28-9324-56aa9c924b01', username: 'Diana D.' },
+  { id: 'e10d8de4-f4c8-4d28-9324-56aa9c924b02', username: 'Tommy H.' },
+];
+
+const ROAMING_BOT_IDS = new Set(ROAMING_BOTS.map((b) => b.id));
 
 const botController = {
   buyInAmount: 5000,
+
+  isBotUser(userId) {
+    return BELLAGIO_BOT_IDS.has(userId) || ROAMING_BOT_IDS.has(userId);
+  },
+
+  async spawnRoamingBotsForTable(io, tableId, numBots = 2) {
+    if (tableId === BELLAGIO_TABLE_ID) return;
+    if (!rooms[tableId]) return;
+
+    const usedSeats = new Set(Object.keys(rooms[tableId].seats).map(Number));
+    let spawned = 0;
+
+    for (let i = 0; i < ROAMING_BOTS.length && spawned < numBots; i++) {
+      const bot = ROAMING_BOTS[i];
+
+      // find an open seat
+      let targetSeat = null;
+      for (let s = 1; s <= 6; s++) {
+        if (!usedSeats.has(s)) {
+          targetSeat = s;
+          break;
+        }
+      }
+      if (!targetSeat) break;
+
+      // remove from any existing table first
+      await gameController.removeUserFromTables(bot.id);
+
+      const amount = 500;
+      const takeSeat = await gameController.takeSeat(tableId, targetSeat, bot, amount);
+      if (!takeSeat) continue;
+
+      const seatObj = {
+        id: takeSeat.id,
+        seat: takeSeat.seat,
+        tableBalance: amount,
+        tableId,
+        userId: bot.id,
+        username: bot.username,
+        pendingBet: 0,
+        currentBet: 0,
+        disconnectTimer: 0,
+        forfeit: false,
+        hands: {},
+        cards: [],
+        insurance: { accepted: false, bet: 0 },
+      };
+
+      rooms[tableId].seats[targetSeat] = seatObj;
+      usedSeats.add(targetSeat);
+      io.in(tableId).emit('new_player', seatObj);
+      spawned++;
+    }
+
+    // have the bots immediately place bets so the countdown fires
+    if (spawned > 0) {
+      await this.startBotRound(io, tableId);
+    }
+  },
 
   async handleBotInit() {
     let bots = [
@@ -129,19 +204,16 @@ const botController = {
 
   async startBotRound(io, tableId) {
     const seats = rooms[tableId].seats;
-
-    // iterate over bots
-    Object.values(seats).map(async (seat, index) => {
-      await this.handleBotBetDecision(io, tableId, seat);
-    });
+    await Promise.all(
+      Object.values(seats).map((seat) => this.handleBotBetDecision(io, tableId, seat))
+    );
   },
 
 
 
   async handleBotBetDecision(io, tableId, seat) {
-    // check chip stack
-    // check card count
-    // make bet
+    // Only act for known bot users
+    if (!this.isBotUser(seat.userId)) return;
 
     const room = rooms[tableId];
     let minBet = rooms[tableId].Game.minBet;
@@ -330,7 +402,7 @@ const botController = {
     // add delay
     //if action is 'stay' we want to move along quickly
     // let waitTime = Math.floor(Math.random() * 10000)
-    let waitTime = action === 'stay' ? 1000 : Math.floor(Math.random() * 10000)
+    let waitTime = action === 'stay' ? 800 : Math.floor(Math.random() * 2500) + 500
     await new Promise((resolve) => setTimeout(resolve, waitTime));
 
 

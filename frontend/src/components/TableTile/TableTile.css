@@ -1,201 +1,36 @@
-.tabletile-wrapper {
-  position: relative;
+/* ── Table tile — most styles in theme.css (tabletile-*) ─ */
+
+/* The tabletile-wrapper, tabletile-content, status-icon,
+   playercount-ring, betsize-container etc. are all styled
+   via theme.css to use design tokens.
+   This file only holds what theme.css cannot reach. */
+
+.tabletile-container {
+  width: 100%;
+  height: 100%;
   display: flex;
-  flex-direction: column;
-  cursor: pointer;
-  width: 100vw;
-  height: 100px;
-  box-shadow: rgba(0, 0, 0, 0.5) 0px 3px 6px, rgba(0, 0, 0, 0.5) 0px 3px 6px;
-  background-color: #1d1e1c;
-  border-bottom: rgba(255, 217, 0, 0.466) solid .5px;
-  border-top: rgba(255, 217, 0, 0.466) solid .5px;
-  opacity: 0;
+  align-items: center;
 }
 
-
-.tabletile-wrapper:last-child {
-  margin-bottom: 10px;
-}
-
-
-.tabletile-content {
-  justify-content: space-between;
-  position: relative;
-
-}
-
-.status-playercount-container {
-  position: relative;
-  left: 10px;
-}
-
-.playercount-container {
-  width: 100px;
-}
-
-
-.playercount-ring {
-  border: #7a7b7c solid 3px;
-  width: 90px;
-  height: 50px;
-  border-radius: 40px;
-  font-size: 22px;
-  color: #7a7b7c;
-
-}
-
-.status-container {
-  width: 50px;
-
-}
-
-.status-icon {
-  position: relative;
-  width: 20px;
-  height: 20px;
-  border: rgb(26, 59, 167) solid 1px;
-  border-radius: 50%;
-}
-
-.open {
-  border: rgb(8, 67, 20) solid 1px;
-  background-color: green;
-}
-.full {
-  border: rgb(124, 36, 9) solid 1px;
-  background-color: rgb(200, 57, 13);
-}
-
-.private {
-  border: rgb(74, 17, 124) solid 1px;
-  background-color: rgb(115, 31, 188);
-}
-
-.game-deck-container {   
-  font-size: 25px;
-  width: 120px;
-  margin-left: 10px;
-  color: #fdfcfc;
-  flex-direction: column;
-  justify-content: space-around;
-}
-
-
-.tablename-text{
-  width: 270px;
+/* Table name truncation */
+.tablename-text {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  margin-top: 15px;
+  max-width: 300px;
 }
-
 @media screen and (min-width: 700px) {
-  .tablename-text{
-    width: 350px;
-  }
-
+  .tablename-text { max-width: 400px; }
 }
 
-.game-text{
-  font-size: 21px;
-  margin-top: 5px;
-}
+/* Status dot overrides — theme.css handles open/full/private colours */
+.open    { border: none !important; }
+.full    { border: none !important; }
+.private { border: none !important; }
 
-
-.deck-text {
-  font-size: 15px;
-
-}
-
-
-.betsize-container {
-  position: relative;
-  position: absolute;
-  justify-content: space-between;
-  right: 20px;
-  /* top: 35px; */
-  bottom: -10px;
-  font-size: 25px;
-  /* color: rgb(200, 57, 13); */
-
-  background: radial-gradient(
-    circle,
-    rgba(217, 46, 46, 1) 4%,
-    rgba(217, 46, 46, 1) 8%,
-    rgba(187, 46, 47, 1) 48%,
-    rgba(217, 46, 46, 1) 82%,
-    rgba(202, 46, 47, 1) 91%
-  );
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.betsize-maxbet{
-  margin-left: 5px;
-}
-
-
+/* Last tile spacing */
+.tabletile-wrapper:last-child { margin-bottom: var(--sp-2, 8px); }
 
 @media screen and (max-width: 500px) {
-
-  .tabletile-wrapper {
-    width: 100vw;
-  }
-
-  .betsize-container {
-    right: 25px;
-    bottom: -10px;
-    font-size: 22px;
-
-  }
-
-
-
-  .status-playercount-container {
-    position: relative;
-    left: 5px;
-    width: calc(100% - 5px);
-  }
-
-  .status-container {
-    width: 25px;
-    min-width: 25px;
-
-  }
-
-
-  .playercount-ring {
-    border: #7a7b7c solid 3px;
-    width: 70px;
-    min-width: 70px;
-    height: 40px;
-    border-radius: 40px;
-    font-size: 20px;
-    color: #7a7b7c;
-  }
-
-
-
-  .game-deck-container {   
-    font-size: 20px;
-    width: calc(100% - 150px);
-    left: -10px;
-
-  }
-
-
-  .tablename-text{
-
-    width: 270px;
-    position: relative;
-
-
-
-    width: 100%;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    margin-top: 15px;
-  }
-
+  .tablename-text { max-width: 160px; }
 }

@@ -109,27 +109,26 @@ function Navigation(){
         </div>
 
         
-      <nav className="nav-bar">
+      <nav className="nav-bar" aria-label="Primary">
         <div className='nav-buttons'>
           <div className='logo-container flex center'>
             <div className='logo-image-container flex center'>
-              <img src={socialstakesCards2} alt="cards" onClick={handleLogoClick}></img>
+              <img src={socialstakesCards2} alt="Social Stakes home" onClick={handleLogoClick}></img>
             </div>
-              <div className='logo-name' onClick={handleLogoClick}>Social <span className='ss-accent'>Stakes</span></div>
+              <div className='logo-name' role='link' tabIndex={0} aria-label='Social Stakes — Home' onClick={handleLogoClick} onKeyDown={(e)=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();handleLogoClick();}}}>Social <span className='ss-accent'>Stakes</span></div>
           </div>
 
 
           {user && !isMobileScreen && (
           <div className='nav-user-buttons-container'>
 
-            {isWideScreen && <div className='nav-user-button' onClick={handleGameClick}>Lobby</div>}
-            {isWideScreen && <div className='nav-user-button' onClick={handleFriendsClick}>Friends</div>}
-            {isWideScreen && <div className='nav-user-button' onClick={()=>history.push('/history')}>History</div>}
-            {isWideScreen && <div className='nav-user-button' onClick={()=>history.push('/verify')}>Verify hand</div>}
-            <div className='nav-user-button balance'>{balance}</div>
-            <div ref={profileBtnRef} className='nav-user-button profile' onClick={handleProfileButtonClick}>
-              <div className='profile-icon-container flex center'>
-                {/* <i className="fa-regular fa-user"></i> */}
+            {isWideScreen && <div className='nav-user-button' role='link' tabIndex={0} aria-label='Lobby' onClick={handleGameClick} onKeyDown={(e)=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();handleGameClick();}}}>Lobby</div>}
+            {isWideScreen && <div className='nav-user-button' role='link' tabIndex={0} aria-label='Friends' onClick={handleFriendsClick} onKeyDown={(e)=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();handleFriendsClick();}}}>Friends</div>}
+            {isWideScreen && <div className='nav-user-button' role='link' tabIndex={0} aria-label='Game history' onClick={()=>history.push('/history')} onKeyDown={(e)=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();history.push('/history');}}}>History</div>}
+            {isWideScreen && <div className='nav-user-button' role='link' tabIndex={0} aria-label='Verify hand' onClick={()=>history.push('/verify')} onKeyDown={(e)=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();history.push('/verify');}}}>Verify hand</div>}
+            <div className='nav-user-button balance' aria-label={`Balance: ${balance} chips`}>{balance}</div>
+            <div ref={profileBtnRef} className='nav-user-button profile' role='button' tabIndex={0} aria-label='Open profile menu' aria-expanded={modal === 'profileModal'} onClick={handleProfileButtonClick} onKeyDown={(e)=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();handleProfileButtonClick();}}}>
+              <div className='profile-icon-container flex center' aria-hidden='true'>
                 {modal !== 'profileModal' && <i className="fa-solid fa-bars"></i>}
                 {modal === 'profileModal' && <i className="fa-solid fa-x"></i>}
               </div>
@@ -142,9 +141,8 @@ function Navigation(){
 {user && isMobileScreen && (
           <div className='nav-user-buttons-container'>
 
-            <div ref={profileBtnRef} className='nav-user-button profile' onClick={handleProfileButtonClick}>
-              <div className='profile-icon-container flex center'>
-                {/* <i className="fa-regular fa-user"></i> */}
+            <div ref={profileBtnRef} className='nav-user-button profile' role='button' tabIndex={0} aria-label='Open profile menu' aria-expanded={modal === 'profileModal'} onClick={handleProfileButtonClick} onKeyDown={(e)=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();handleProfileButtonClick();}}}>
+              <div className='profile-icon-container flex center' aria-hidden='true'>
                 {modal !== 'profileModal' && <i className="fa-solid fa-bars"></i>}
                 {modal === 'profileModal' && <i className="fa-solid fa-x"></i>}
               </div>
@@ -160,20 +158,20 @@ function Navigation(){
 
             <div className='demousers-container'>
 
-            <div className='nav-user-button flex center' onClick={()=>setShowDemoUsers(!showDemoUsers)}> Demo</div>
+            <div className='nav-user-button flex center' role='button' tabIndex={0} aria-haspopup='true' aria-expanded={showDemoUsers} aria-label='Toggle demo users' onClick={()=>setShowDemoUsers(!showDemoUsers)} onKeyDown={(e)=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();setShowDemoUsers(!showDemoUsers);}}}> Demo</div>
 
-              {showDemoUsers && <div className='nav-user-button demo' onClick={demoUserOne}>Demo 1</div>}
-              {showDemoUsers && <div className='nav-user-button demo' onClick={demoUserTwo}>Demo 2</div>}
-              {showDemoUsers && <div className='nav-user-button demo' onClick={demoUserThree}>Demo 3</div>}
+              {showDemoUsers && <div className='nav-user-button demo' role='button' tabIndex={0} aria-label='Log in as demo user 1' onClick={demoUserOne} onKeyDown={(e)=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();demoUserOne();}}}>Demo 1</div>}
+              {showDemoUsers && <div className='nav-user-button demo' role='button' tabIndex={0} aria-label='Log in as demo user 2' onClick={demoUserTwo} onKeyDown={(e)=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();demoUserTwo();}}}>Demo 2</div>}
+              {showDemoUsers && <div className='nav-user-button demo' role='button' tabIndex={0} aria-label='Log in as demo user 3' onClick={demoUserThree} onKeyDown={(e)=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();demoUserThree();}}}>Demo 3</div>}
 
             </div>
 
 
 
-            {isWideScreen && <div className='nav-user-button' onClick={()=>openModal('login')}>Login</div>}
-            {isWideScreen && <div className='nav-user-button' onClick={()=>openModal('signup')}>Sign up</div>}
-            <div ref={profileBtnRef} className='nav-user-button profile' onClick={handleProfileButtonClick}>
-              <div className='profile-icon-container flex center'><i className="fa-regular fa-user"></i></div>
+            {isWideScreen && <div className='nav-user-button' role='button' tabIndex={0} aria-label='Log in' onClick={()=>openModal('login')} onKeyDown={(e)=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openModal('login');}}}>Login</div>}
+            {isWideScreen && <div className='nav-user-button' role='button' tabIndex={0} aria-label='Sign up' onClick={()=>openModal('signup')} onKeyDown={(e)=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openModal('signup');}}}>Sign up</div>}
+            <div ref={profileBtnRef} className='nav-user-button profile' role='button' tabIndex={0} aria-label='Open profile menu' aria-expanded={modal === 'profileModal'} onClick={handleProfileButtonClick} onKeyDown={(e)=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();handleProfileButtonClick();}}}>
+              <div className='profile-icon-container flex center' aria-hidden='true'><i className="fa-regular fa-user"></i></div>
             </div>
 
           </div>

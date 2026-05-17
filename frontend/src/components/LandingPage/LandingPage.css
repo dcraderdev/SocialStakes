@@ -278,9 +278,9 @@
 
 .lp-chip-float {
   position: absolute;
-  opacity: 0.12;
+  opacity: 0.18;
   animation: lp-float linear infinite;
-  filter: sepia(1) saturate(2) hue-rotate(15deg) brightness(1.2);
+  filter: invert(74%) sepia(38%) saturate(610%) hue-rotate(2deg) brightness(95%) contrast(88%);
 }
 
 .lp-cf-1 { width: 80px; top: 20%; left: 8%; animation-duration: 18s; animation-delay: 0s; }

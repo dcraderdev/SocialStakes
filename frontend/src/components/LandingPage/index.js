@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useRef } from 'react';
 import { ModalContext } from '../../context/ModalContext';
 import socialstakesCards from '../../images/socialstakes-logo-cards2.svg';
-import goldChip from '../../images/gold-poker-chip.svg';
+import goldChip from '../../images/poker-chip.svg';
 import './LandingPage.css';
 
 const GAMES = [
@@ -278,10 +278,10 @@ export default function LandingPage() {
               How fairness works
             </button>
           </div>
-          <div className="lp-hero-chips">
-            <img src={goldChip} alt="" className="lp-chip-float lp-cf-1" aria-hidden />
-            <img src={goldChip} alt="" className="lp-chip-float lp-cf-2" aria-hidden />
-            <img src={goldChip} alt="" className="lp-chip-float lp-cf-3" aria-hidden />
+          <div className="lp-hero-chips" aria-hidden="true">
+            <img src={goldChip} alt="" className="lp-chip-float lp-cf-1" loading="lazy" decoding="async" />
+            <img src={goldChip} alt="" className="lp-chip-float lp-cf-2" loading="lazy" decoding="async" />
+            <img src={goldChip} alt="" className="lp-chip-float lp-cf-3" loading="lazy" decoding="async" />
           </div>
         </div>
         <div className="lp-hero-cards-deco">

@@ -837,3 +837,264 @@ input, textarea, select { font-family: var(--ss-font); }
 .gamebar-tab-container,
 .gametabs-expanded,
 .gametabs-shrunk { display: none !important; height: 0 !important; visibility: hidden !important; }
+
+/* ============================================================
+   Quality sweep — accessibility, focus, mobile, modal styling
+   ============================================================ */
+
+/* ---------- focus visibility (keyboard nav) ---------- */
+:focus { outline: none; }
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+[role="button"]:focus-visible,
+[role="link"]:focus-visible,
+[tabindex]:focus-visible,
+.nav-user-button:focus-visible,
+.gametile-container:focus-visible,
+.private-game-button:focus-visible,
+.ss-btn:focus-visible,
+.lp-btn-hero-primary:focus-visible,
+.lp-btn-hero-ghost:focus-visible,
+.lp-btn-gold:focus-visible,
+.lp-btn-ghost:focus-visible {
+  outline: 2px solid var(--ss-gold) !important;
+  outline-offset: 2px !important;
+  border-radius: var(--ss-r-sm);
+}
+/* never strip focus from <input> — overrides the legacy user-select none */
+input, textarea, select { user-select: text; }
+
+/* ---------- skip-to-content link for screen readers ---------- */
+.ss-skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 9999999;
+}
+.ss-skip-link:focus,
+.ss-skip-link:focus-visible {
+  left: 12px;
+  top: 12px;
+  padding: 8px 14px;
+  background: var(--ss-gold);
+  color: var(--ss-bg);
+  border-radius: var(--ss-r-pill);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+/* ---------- touch target sizing on coarse pointers ---------- */
+@media (pointer: coarse) {
+  .nav-user-button,
+  .private-game-button,
+  .ss-btn,
+  .lp-btn-gold,
+  .lp-btn-ghost,
+  .lp-btn-hero-primary,
+  .lp-btn-hero-ghost { min-height: 44px !important; }
+  .nav-user-button { padding-left: 12px; padding-right: 12px; }
+  .profile-icon-container { min-width: 44px; min-height: 44px; width: 44px !important; height: 44px !important; }
+}
+
+/* ---------- mobile responsive (≤768px) ---------- */
+@media (max-width: 768px) {
+  .nav-buttons {
+    padding: 0 12px !important;
+  }
+  .nav-user-button {
+    width: auto !important;
+    padding: 0 10px !important;
+    border-left: none !important;
+    font-size: 14px;
+  }
+  .nav-user-button.balance {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+  /* Lobby grid: 2-column on tablet, 1-column on phone */
+  .games-grid,
+  .lp-games-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+    padding: 0 12px;
+  }
+  .gametile-container { min-height: 140px; }
+  .gametile-name { font-size: 18px !important; }
+  .logo-name { font-size: 18px !important; }
+  /* Modals: don't let them overflow horizontally on phones */
+  .modal-container > * {
+    max-width: calc(100vw - 24px) !important;
+  }
+  body { overflow-x: hidden; }
+}
+
+@media (max-width: 480px) {
+  .games-grid,
+  .lp-games-grid {
+    grid-template-columns: 1fr !important;
+  }
+  /* Reduce the hero floating cards/chips clutter on tiny screens */
+  .lp-hero-cards-deco,
+  .lp-hero-chips { display: none !important; }
+  .lp-hero-headline { font-size: 38px !important; line-height: 1.05 !important; }
+}
+
+/* ---------- legacy LoginModal + SignupModal restyle ---------- */
+.signin-form-page-container,
+.signup-form-page-container {
+  background-color: var(--ss-bg-elev) !important;
+  background: linear-gradient(180deg, var(--ss-bg-elev) 0%, var(--ss-bg-elev-2) 100%) !important;
+  border: 1px solid var(--ss-border) !important;
+  border-radius: var(--ss-r-lg) !important;
+  box-shadow: var(--ss-shadow-md) !important;
+  padding: 28px 28px 24px !important;
+  width: min(460px, calc(100vw - 32px)) !important;
+  color: var(--ss-text) !important;
+  font-family: var(--ss-font) !important;
+  text-shadow: none !important;
+  font-size: 14px !important;
+  position: relative !important;
+  left: auto !important;
+  right: auto !important;
+  top: auto !important;
+  transform: none !important;
+  margin: 0 auto !important;
+}
+.signin-form-page-container *,
+.signup-form-page-container * {
+  text-shadow: none !important;
+}
+.signinHeader,
+.signupHeader {
+  position: static !important;
+  left: 0 !important;
+  transform: none !important;
+  font-size: 22px !important;
+  font-weight: 700 !important;
+  color: var(--ss-text) !important;
+  margin: 0 0 16px 0 !important;
+  text-align: center !important;
+}
+.signinDiv,
+.signupDiv {
+  display: flex !important;
+  flex-direction: column !important;
+  margin-bottom: 12px !important;
+}
+.signinDiv label,
+.signupDiv label {
+  position: static !important;
+  left: 0 !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  color: var(--ss-text-dim) !important;
+  margin: 0 0 6px 2px !important;
+  display: block !important;
+  letter-spacing: 0.01em !important;
+}
+.signinDiv input,
+.signupDiv input {
+  width: 100% !important;
+  padding: 10px 12px !important;
+  margin: 0 !important;
+  background: var(--ss-bg-soft) !important;
+  border: 1px solid var(--ss-border) !important;
+  border-radius: var(--ss-r-md) !important;
+  color: var(--ss-text) !important;
+  font-size: 14px !important;
+  font-family: var(--ss-font) !important;
+  box-sizing: border-box !important;
+}
+.signinDiv input::placeholder,
+.signupDiv input::placeholder {
+  color: var(--ss-text-muted) !important;
+}
+.signinDiv input:focus,
+.signupDiv input:focus,
+.signinDiv input:focus-visible,
+.signupDiv input:focus-visible {
+  outline: none !important;
+  border-color: var(--ss-gold-line) !important;
+  box-shadow: 0 0 0 3px var(--ss-gold-faint) !important;
+}
+.signinDiv-button,
+.signupDiv-button {
+  width: 100% !important;
+  padding: 12px !important;
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  background: var(--ss-gold) !important;
+  color: var(--ss-bg) !important;
+  border: 1px solid var(--ss-gold) !important;
+  border-radius: var(--ss-r-pill) !important;
+  margin-top: 8px !important;
+  cursor: pointer !important;
+  text-shadow: none !important;
+  font-family: var(--ss-font) !important;
+}
+.signinDiv-button:hover,
+.signupDiv-button:hover {
+  background: var(--ss-gold-soft) !important;
+  border-color: var(--ss-gold-soft) !important;
+}
+.signinDiv-button:disabled,
+.signupDiv-button:disabled {
+  background: var(--ss-bg-soft) !important;
+  border-color: var(--ss-border) !important;
+  color: var(--ss-text-muted) !important;
+  cursor: not-allowed !important;
+}
+.signin-signup-link,
+.signup-login-link {
+  display: block !important;
+  text-align: center !important;
+  margin-top: 14px !important;
+  color: var(--ss-text-dim) !important;
+  font-size: 13px !important;
+  cursor: pointer !important;
+  position: static !important;
+  left: 0 !important;
+  top: 0 !important;
+}
+.signin-signup-link:hover,
+.signup-login-link:hover { color: var(--ss-gold) !important; }
+.usernameField-invalid,
+.emailField-invalid { color: var(--ss-red) !important; font-size: 12px !important; }
+
+/* ---------- hover + transition on game tiles (and keyboard equivalent) ---------- */
+.gametile-container { cursor: pointer; }
+.gametile-container[tabindex]:focus-visible {
+  border-color: var(--ss-gold-line) !important;
+  box-shadow: 0 0 0 1px var(--ss-gold-line), 0 18px 40px rgba(0,0,0,0.55) !important;
+  transform: translateY(-2px);
+}
+
+/* ---------- respect reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---------- empty / loading state polish ---------- */
+.no-table-message {
+  color: var(--ss-text-muted) !important;
+  font-style: italic;
+  text-align: center;
+  padding: 24px !important;
+}
+
+/* ---------- live regions for socket-driven updates (no visual change) ---------- */
+.ss-sr-only {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0,0,0,0); border: 0;
+  white-space: nowrap;
+}

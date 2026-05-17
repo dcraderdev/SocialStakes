@@ -44,7 +44,6 @@ import Logo from './components/Logo';
 
 
 import gameTileBackground from './images/game-tile-background2.jpeg'
-import bluePokerChip from './images/blue-poker-chip.svg'
 
 
 function App() {
@@ -65,9 +64,7 @@ function App() {
   useEffect(() => {
     setIsLoaded(false);
     const img = new Image();
-    const img2 = new Image();
     img.src = gameTileBackground;
-    img2.src = bluePokerChip;
     dispatch(sessionActions.loadThemes())
     dispatch(sessionActions.restoreUser())
       .then(() => {

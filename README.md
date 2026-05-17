@@ -4,10 +4,10 @@
 
 ## Live Site
 
-Explore and enjoy Social Stake directly from our [live site](http://socialstakes.onrender.com). 
+Explore and enjoy Social Stake directly from our [live site](https://socialstakes-frontend.vercel.app). 
 
 ## Table of Contents
- - [Live Site](http://socialstakes.onrender.com)
+ - [Live Site](https://socialstakes-frontend.vercel.app)
  - [Wiki](https://github.com/dcraderdev/SocialStakes/wiki)
  - [Projects](https://github.com/dcraderdev/SocialStakes/projects)
  - [Insights](https://github.com/dcraderdev/SocialStakes/pulse)

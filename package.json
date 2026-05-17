@@ -27,5 +27,8 @@
     "aws-sdk": "^2.1401.0",
     "multer": "^1.4.5-lts.1",
     "socket.io-client": "^4.6.1"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.60.0"
   }
 }

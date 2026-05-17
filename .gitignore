@@ -6,3 +6,5 @@ build
 cmd.cmd
 
 
+test-results/
+playwright-report/

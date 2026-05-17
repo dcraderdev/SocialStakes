@@ -2,22 +2,26 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Route, Router, Switch, NavLink, useHistory } from 'react-router-dom';
 import './GameTile.css';
-import gameTileBackground from '../../images/game-tile-background2.jpeg'
-import Searching from '../../images/Searching.svg'
 
+const STUB_ROUTES = {
+  coin_flip: '/play/coinflip',
+  hi_lo: '/play/hilo',
+  acey_duecey: '/play/acey',
+};
+
+const PREVIEW_IMAGES = {
+  coin_flip: '/game-previews/coinflip.jpg',
+  hi_lo: '/game-previews/hilo.jpg',
+  acey_duecey: '/game-previews/acey.jpg',
+  multi_blackjack: '/game-previews/multi_blackjack.jpg',
+  single_blackjack: '/game-previews/single_blackjack.jpg',
+  poker: '/game-previews/poker.jpg',
+};
 
 const GameTile = ({game, cbFunc, delay, animateTiles}) => {
   const history = useHistory();
 
   const [isActive, setIsActive] = useState(true)
-
-  // Stub games (single-player demo) — route to their dedicated pages
-  // instead of running the (non-existent) server table flow.
-  const STUB_ROUTES = {
-    coin_flip: '/play/coinflip',
-    hi_lo: '/play/hilo',
-    acey_duecey: '/play/acey',
-  };
 
   const handleClick = () => {
     if (STUB_ROUTES[game.gameType]) {
@@ -109,28 +113,21 @@ const GameTile = ({game, cbFunc, delay, animateTiles}) => {
 
 
 
+  const previewImg = PREVIEW_IMAGES[game.gameType];
   const tileStyle = {
     animationDelay: `${delay * 0.1}s`,
-  }
-
+    ...(previewImg ? { '--gametile-preview': `url(${previewImg})` } : {}),
+  };
 
   return (
     <div>
       <div className={`gametile-container rounded ${animateTiles ? 'animate' : ''}`} style={tileStyle} onClick={handleClick}>
-
-
         <div className='gametile-name'>{getIcon(game.gameType)}</div>
         {STUB_ROUTES[game.gameType] ? (
           <div className='gametile-coming-soon' style={{color:'var(--ss-green)',background:'rgba(74,222,128,0.10)',borderColor:'rgba(74,222,128,0.35)'}}>Solo demo</div>
         ) : (!isActive && (
-          <div className='gametile-coming-soon' >Game coming soon</div>
+          <div className='gametile-coming-soon'>Game coming soon</div>
         ))}
-
-
-        {/* <img src={gameTileBackground} alt='game tile' ></img> */}
-
-
-
       </div>
     </div>
   ); 

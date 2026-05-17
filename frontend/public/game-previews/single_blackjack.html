@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 800px; height: 450px; overflow: hidden;
+    background: #0d1108;
+    font-family: -apple-system, system-ui, sans-serif;
+  }
+  .table {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 50%, #2e7a55 0%, #1e5c3c 55%, #0e2e1e 100%);
+  }
+  .table::before {
+    content: ''; position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='4' height='4' viewBox='0 0 4 4' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='1' height='1' fill='rgba(0,0,0,0.06)'/%3E%3C/svg%3E") repeat;
+  }
+  .rail {
+    position: absolute; inset: 0;
+    border: 18px solid transparent;
+    border-image: linear-gradient(180deg, #8a6520, #e5b34c 40%, #8a6520) 1;
+    pointer-events: none;
+  }
+  .rail-inner {
+    position: absolute; inset: 18px;
+    border: 2px solid rgba(229,179,76,0.35);
+    pointer-events: none;
+  }
+  .card {
+    background: #f8f6f0; border-radius: 8px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+    display: inline-flex; flex-direction: column; justify-content: space-between;
+    padding: 7px;
+  }
+  .card.red { color: #c0392b; }
+  .card.black { color: #111; }
+  .card-back {
+    width: 78px; height: 110px; border-radius: 8px;
+    background: linear-gradient(135deg, #1e3a7a, #0d2050);
+    border: 1.5px solid rgba(255,255,255,0.1);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.6); position: relative; overflow: hidden;
+  }
+  .card-back::before {
+    content: ''; position: absolute; inset: 5px;
+    border: 1px solid rgba(229,179,76,0.3); border-radius: 4px;
+  }
+  .rank { font-weight: 900; line-height: 1; font-size: 17px; }
+  .suit-big { font-size: 42px; text-align: center; flex: 1; display: flex; align-items: center; justify-content: center; }
+  .rank-bot { font-weight: 900; text-align: right; transform: rotate(180deg); font-size: 17px; line-height: 1; }
+
+  .dealer-area {
+    position: absolute; top: 38px; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+  }
+  .dealer-label { color: rgba(255,255,255,0.45); font-size: 10px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; }
+  .dealer-hand { display: flex; gap: 7px; }
+
+  /* Large player area — solo table feels spacious */
+  .player-area {
+    position: absolute; bottom: 52px; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 14px;
+  }
+  .player-hand { display: flex; gap: 7px; }
+  .score-badge {
+    background: rgba(0,0,0,0.55); border: 1px solid rgba(255,255,255,0.14);
+    border-radius: 999px; padding: 3px 14px;
+    color: rgba(255,255,255,0.8); font-size: 13px; font-weight: 700;
+  }
+
+  /* Action buttons */
+  .actions {
+    position: absolute; bottom: 22px; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 10px;
+  }
+  .btn {
+    padding: 7px 22px; border-radius: 999px; font-size: 12px; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase; border: 1px solid;
+  }
+  .btn-hit { background: rgba(74,222,128,0.18); border-color: rgba(74,222,128,0.5); color: #4ade80; }
+  .btn-stand { background: rgba(239,93,93,0.18); border-color: rgba(239,93,93,0.5); color: #ef5d5d; }
+  .btn-double { background: rgba(229,179,76,0.18); border-color: rgba(229,179,76,0.5); color: #e5b34c; }
+
+  /* Pot */
+  .bet-display {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    display: flex; flex-direction: column; align-items: center; gap: 3px;
+  }
+  .chip-stack { display: flex; flex-direction: column; align-items: center; }
+  .chip { width: 40px; height: 10px; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.5); margin-bottom: -3px; }
+  .cg { background: radial-gradient(ellipse, #e5b34c, #9a7010); border: 1px solid #c99020; }
+  .cr { background: radial-gradient(ellipse, #e05555, #8b2020); border: 1px solid #c04040; }
+  .bet-label { margin-top: 8px; color: rgba(255,255,255,0.45); font-size: 11px; font-weight: 600; letter-spacing: 0.08em; }
+
+  /* Solo badge */
+  .solo-badge {
+    position: absolute; top: 22px; right: 28px;
+    background: rgba(74,222,128,0.12); border: 1px solid rgba(74,222,128,0.35);
+    border-radius: 999px; padding: 3px 12px;
+    color: #4ade80; font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
+  }
+</style>
+</head>
+<body>
+<div class="table"></div>
+<div class="rail"></div>
+<div class="rail-inner"></div>
+
+<div class="dealer-area">
+  <div class="dealer-label">Dealer · 13</div>
+  <div class="dealer-hand">
+    <div class="card red" style="width:78px;height:110px">
+      <div class="rank">6♦</div>
+      <div class="suit-big">♦</div>
+      <div class="rank-bot">6♦</div>
+    </div>
+    <div class="card-back"></div>
+  </div>
+</div>
+
+<div class="bet-display">
+  <div class="chip-stack">
+    <div class="chip cg"></div><div class="chip cg"></div>
+    <div class="chip cr"></div><div class="chip cr"></div>
+    <div class="chip cg"></div>
+  </div>
+  <div class="bet-label">Bet $200</div>
+</div>
+
+<div class="player-area">
+  <div class="score-badge">You · 18</div>
+  <div class="player-hand">
+    <div class="card black" style="width:84px;height:120px">
+      <div class="rank" style="font-size:18px">J♠</div>
+      <div class="suit-big" style="font-size:48px">♠</div>
+      <div class="rank-bot" style="font-size:18px">J♠</div>
+    </div>
+    <div class="card red" style="width:84px;height:120px">
+      <div class="rank" style="font-size:18px">8♥</div>
+      <div class="suit-big" style="font-size:48px">♥</div>
+      <div class="rank-bot" style="font-size:18px">8♥</div>
+    </div>
+  </div>
+</div>
+
+<div class="actions">
+  <div class="btn btn-hit">Hit</div>
+  <div class="btn btn-stand">Stand</div>
+  <div class="btn btn-double">Double</div>
+</div>
+
+<div class="solo-badge">Solo play</div>
+</body>
+</html>

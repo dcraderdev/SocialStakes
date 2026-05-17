@@ -171,10 +171,12 @@ body {
   max-width: 1280px !important;
 }
 
-/* Each game-type tile: cleaner background, amber border on hover */
+/* Each game-type tile */
 .gametile-container {
-  background-image: none !important;
-  background: linear-gradient(135deg, #11171a 0%, #0c1518 50%, #0e2520 100%) !important;
+  background-image: var(--gametile-preview, none) !important;
+  background-color: #11171a !important;
+  background-size: cover !important;
+  background-position: center !important;
   border: 1px solid var(--ss-border) !important;
   border-radius: var(--ss-r-lg) !important;
   position: relative;
@@ -185,8 +187,9 @@ body {
   content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 50% 35%, rgba(229,179,76,0.05), transparent 60%);
+  background: linear-gradient(to bottom, transparent 40%, rgba(0,0,0,0.82) 100%);
   pointer-events: none;
+  z-index: 0;
 }
 .gametile-container:hover {
   border-color: var(--ss-gold-line) !important;
@@ -195,23 +198,26 @@ body {
 }
 .gametile-container img { display: none !important; }
 .gametile-name {
-  color: var(--ss-text) !important;
-  font-size: 22px !important;
-  font-weight: 700 !important;
+  color: #fff !important;
+  font-size: 18px !important;
+  font-weight: 800 !important;
   letter-spacing: -0.01em;
   position: relative !important;
-  text-align: center;
+  z-index: 1 !important;
+  text-align: left;
+  padding: 12px 14px 14px !important;
+  text-shadow: 0 1px 8px rgba(0,0,0,0.8);
 }
 .gametile-coming-soon {
-  color: var(--ss-gold) !important;
   font-size: 11px !important;
   text-transform: uppercase;
   letter-spacing: 0.12em;
   top: 12px !important;
-  background: var(--ss-gold-faint);
+  right: 12px !important;
   padding: 3px 10px;
   border-radius: var(--ss-r-pill);
-  border: 1px solid var(--ss-gold-line);
+  position: absolute !important;
+  z-index: 2 !important;
 }
 
 /* table-tile (the row each open table renders as) — restyle to match showcase card */

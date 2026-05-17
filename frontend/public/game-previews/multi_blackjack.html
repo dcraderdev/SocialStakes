@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 800px; height: 450px; overflow: hidden;
+    background: #0d1108;
+    font-family: -apple-system, system-ui, sans-serif;
+  }
+  /* Full felt table */
+  .table {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse at 50% 50%, #2e7a55 0%, #1e5c3c 55%, #0e2e1e 100%);
+  }
+  .table::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='4' height='4' viewBox='0 0 4 4' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='1' height='1' fill='rgba(0,0,0,0.06)'/%3E%3C/svg%3E") repeat;
+  }
+  /* Gold rail */
+  .rail {
+    position: absolute; inset: 0;
+    border: 18px solid transparent;
+    border-image: linear-gradient(180deg, #8a6520, #e5b34c 40%, #8a6520) 1;
+    pointer-events: none;
+  }
+  .rail-inner {
+    position: absolute; inset: 18px;
+    border: 2px solid rgba(229,179,76,0.35);
+    border-radius: 0;
+    pointer-events: none;
+  }
+
+  /* ── Cards ── */
+  .card {
+    background: #f8f6f0;
+    border-radius: 8px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.6), 0 2px 4px rgba(0,0,0,0.4);
+    display: inline-flex; flex-direction: column; justify-content: space-between;
+    padding: 7px;
+  }
+  .card.red { color: #c0392b; }
+  .card.black { color: #111; }
+  .card-sm { width: 68px; height: 98px; font-size: 14px; }
+  .card-lg { width: 82px; height: 118px; font-size: 16px; }
+  .rank { font-weight: 900; line-height: 1; }
+  .suit-big { font-size: 36px; text-align: center; flex: 1; display: flex; align-items: center; justify-content: center; }
+  .suit-big-lg { font-size: 44px; text-align: center; flex: 1; display: flex; align-items: center; justify-content: center; }
+  .rank-bot { font-weight: 900; text-align: right; transform: rotate(180deg); line-height: 1; }
+
+  /* Face-down */
+  .card-back {
+    width: 68px; height: 98px; border-radius: 8px;
+    background: linear-gradient(135deg, #1e3a7a, #0d2050);
+    border: 1.5px solid rgba(255,255,255,0.1);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+    position: relative; overflow: hidden;
+  }
+  .card-back::before {
+    content: ''; position: absolute; inset: 5px;
+    border: 1px solid rgba(229,179,76,0.3); border-radius: 4px;
+  }
+
+  /* Dealer area */
+  .dealer-area {
+    position: absolute; top: 40px; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+  }
+  .dealer-label {
+    color: rgba(255,255,255,0.45); font-size: 10px; font-weight: 700;
+    letter-spacing: 0.18em; text-transform: uppercase;
+  }
+  .dealer-hand { display: flex; gap: 6px; }
+
+  /* Player seats */
+  .players {
+    position: absolute; bottom: 50px; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 36px; align-items: flex-end;
+  }
+  .player {
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+  }
+  .player-hand { display: flex; gap: -6px; }
+  .player-hand .card + .card { margin-left: -10px; }
+  .avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 800; color: rgba(0,0,0,0.6);
+  }
+  .av-g  { background: #74d5a0; }
+  .av-pk { background: #f4a8c6; }
+  .av-y  { background: #f6c553; }
+  .av-pu { background: #b58cf2; }
+
+  /* BJ badge */
+  .bj-badge {
+    position: absolute; top: -20px; left: 50%; transform: translateX(-50%);
+    background: linear-gradient(135deg, #e5b34c, #cf9e3a);
+    color: #1a1000; font-size: 10px; font-weight: 900;
+    letter-spacing: 0.1em; padding: 2px 10px; border-radius: 999px;
+    white-space: nowrap; box-shadow: 0 2px 8px rgba(229,179,76,0.5);
+  }
+
+  /* Chip stacks in center */
+  .pot {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    display: flex; flex-direction: column; align-items: center; gap: 2px;
+  }
+  .chip-row { display: flex; gap: 4px; }
+  .chip {
+    width: 36px; height: 9px; border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  }
+  .cg { background: radial-gradient(ellipse, #e5b34c, #9a7010); border: 1px solid #c99020; }
+  .cr { background: radial-gradient(ellipse, #e05555, #8b2020); border: 1px solid #c04040; }
+  .cb { background: radial-gradient(ellipse, #4a90d9, #1a4a8b); border: 1px solid #3070b9; }
+
+  .pot-label {
+    margin-top: 6px; color: rgba(255,255,255,0.5); font-size: 11px; font-weight: 600;
+    letter-spacing: 0.08em;
+  }
+
+  /* Score badge */
+  .score {
+    position: absolute; top: -28px; left: 50%; transform: translateX(-50%);
+    background: rgba(0,0,0,0.55); border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 999px; padding: 2px 10px;
+    color: rgba(255,255,255,0.7); font-size: 11px; font-weight: 700;
+    white-space: nowrap;
+  }
+</style>
+</head>
+<body>
+<div class="table"></div>
+<div class="rail"></div>
+<div class="rail-inner"></div>
+
+<!-- Dealer -->
+<div class="dealer-area">
+  <div class="dealer-label">Dealer</div>
+  <div class="dealer-hand">
+    <div class="card card-sm black">
+      <div class="rank">7♠</div>
+      <div class="suit-big">♠</div>
+      <div class="rank-bot">7♠</div>
+    </div>
+    <div class="card-back"></div>
+  </div>
+</div>
+
+<!-- Pot -->
+<div class="pot">
+  <div class="chip-row">
+    <div class="chip cg"></div><div class="chip cg"></div><div class="chip cg"></div>
+  </div>
+  <div class="chip-row">
+    <div class="chip cr"></div><div class="chip cr"></div>
+  </div>
+  <div class="chip-row">
+    <div class="chip cb"></div>
+  </div>
+  <div class="pot-label">Pot $640</div>
+</div>
+
+<!-- Players -->
+<div class="players">
+  <!-- Player 1 — blackjack! -->
+  <div class="player" style="position:relative">
+    <div class="bj-badge">BLACKJACK!</div>
+    <div class="score" style="top:-50px">21</div>
+    <div class="player-hand">
+      <div class="card card-lg black">
+        <div class="rank" style="font-size:16px">A♠</div>
+        <div class="suit-big-lg">♠</div>
+        <div class="rank-bot" style="font-size:16px">A♠</div>
+      </div>
+      <div class="card card-lg red" style="margin-left:-14px">
+        <div class="rank" style="font-size:16px">K♥</div>
+        <div class="suit-big-lg">♥</div>
+        <div class="rank-bot" style="font-size:16px">K♥</div>
+      </div>
+    </div>
+    <div class="avatar av-g">SP</div>
+  </div>
+  <!-- Player 2 -->
+  <div class="player" style="position:relative">
+    <div class="score">17</div>
+    <div class="player-hand">
+      <div class="card card-sm red">
+        <div class="rank">9♥</div>
+        <div class="suit-big">♥</div>
+        <div class="rank-bot">9♥</div>
+      </div>
+      <div class="card card-sm black" style="margin-left:-8px">
+        <div class="rank">8♠</div>
+        <div class="suit-big">♠</div>
+        <div class="rank-bot">8♠</div>
+      </div>
+    </div>
+    <div class="avatar av-pk">PI</div>
+  </div>
+  <!-- Player 3 -->
+  <div class="player" style="position:relative">
+    <div class="score">13</div>
+    <div class="player-hand">
+      <div class="card card-sm red">
+        <div class="rank">7♦</div>
+        <div class="suit-big">♦</div>
+        <div class="rank-bot">7♦</div>
+      </div>
+      <div class="card card-sm black" style="margin-left:-8px">
+        <div class="rank">6♣</div>
+        <div class="suit-big">♣</div>
+        <div class="rank-bot">6♣</div>
+      </div>
+    </div>
+    <div class="avatar av-y">OA</div>
+  </div>
+</div>
+</body>
+</html>

@@ -84,11 +84,23 @@ export const loadThemes = () => async (dispatch) => {
 
     dispatch(setThemes(data));
     return response;
-    
+
   }catch(error){
     console.log(error);
   }
 
+};
+
+// Demo refill — gives the current user another $1000 in chips.
+export const refillBalance = () => async (dispatch, getState) => {
+  const response = await csrfFetch('/api/users/refill', { method: 'POST' });
+  if (!response.ok) return response;
+  const data = await response.json();
+  const currentUser = getState().users.user;
+  if (currentUser) {
+    dispatch(setUser({ ...currentUser, balance: data.balance }));
+  }
+  return response;
 };
 
 

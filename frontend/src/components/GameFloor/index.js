@@ -24,6 +24,7 @@ import PayoutChatbox from '../PayoutChatbox';
 import WinnersTicker from '../Lobby/WinnersTicker';
 import FriendsOnline from '../Lobby/FriendsOnline';
 import ProvablyFairCard from '../Lobby/ProvablyFairCard';
+import WelcomeBanner from '../WelcomeBanner';
 
 function GameFloor() {
   const { socket } = useContext(SocketContext);
@@ -236,6 +237,35 @@ function GameFloor() {
             {isLoaded && showGames && (
 
 <div className='showgames-wrapper flex center'>
+
+              {/* Welcome banner — new user only */}
+              <WelcomeBanner />
+
+              {/* Visitor hero — logged-out users */}
+              {!user && (
+                <div className="visitor-hero">
+                  <div className="visitor-hero-headline">
+                    8 Games. <span>$1,000 in demo chips.</span> Zero risk.
+                  </div>
+                  <p className="visitor-hero-sub">
+                    No real money. No credit card. Just pick a game and play.
+                  </p>
+                  <div className="visitor-hero-actions">
+                    <button
+                      className="visitor-hero-cta-primary"
+                      onClick={() => openModal('signup')}
+                    >
+                      Sign Up Free — Get $1,000 Chips
+                    </button>
+                    <button
+                      className="visitor-hero-cta-secondary"
+                      onClick={() => openModal('login')}
+                    >
+                      Sign In
+                    </button>
+                  </div>
+                </div>
+              )}
 
               {/* Full-width winners ticker above the grid */}
               <WinnersTicker />

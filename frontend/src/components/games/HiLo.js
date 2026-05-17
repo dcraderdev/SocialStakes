@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Navigation from '../Navigation';
+import GameBottomCTA from '../GameBottomCTA';
 
 const SUITS = ['♠', '♥', '♦', '♣'];
 const RANK_LABELS = { 1: 'A', 11: 'J', 12: 'Q', 13: 'K' };
@@ -416,6 +417,7 @@ function HiLo() {
           </div>
         </div>
       </div>
+      <GameBottomCTA currentPath="/play/hilo" />
     </>
   );
 }

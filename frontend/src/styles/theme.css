@@ -1457,13 +1457,104 @@ tbody tr:hover { background: rgba(255,255,255,0.02); }
 .loading { animation: ss-shimmer 1.4s ease infinite; background-size: 600px 100%; }
 
 /* ============================================================
+   SECTION 21A — LOBBY LAYOUT
+   ============================================================ */
+.lobby-body {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-6, 24px);
+  width: 100%;
+  max-width: 1280px;
+  margin-top: var(--sp-6, 24px);
+}
+
+.lobby-center {
+  flex: 1;
+  min-width: 0;
+}
+
+.lobby-rail {
+  width: 280px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4, 16px);
+  position: sticky;
+  top: calc(56px + var(--sp-4, 16px));
+}
+
+/* ── Visitor hero (logged-out lobby) ───────────────── */
+.visitor-hero {
+  width: 100%;
+  max-width: 1280px;
+  padding: var(--sp-8, 40px) var(--sp-6, 24px) var(--sp-7, 32px);
+  text-align: center;
+}
+.visitor-hero-headline {
+  font-size: clamp(24px, 4vw, 40px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--ss-text, #f6f3ec);
+  line-height: 1.15;
+  margin: 0 0 var(--sp-3, 12px);
+}
+.visitor-hero-headline span {
+  color: var(--ss-gold, #e5b34c);
+}
+.visitor-hero-sub {
+  font-size: var(--fs-md, 15px);
+  color: var(--ss-text-muted, #7c8290);
+  margin: 0 0 var(--sp-5, 20px);
+}
+.visitor-hero-actions {
+  display: flex;
+  justify-content: center;
+  gap: var(--sp-3, 12px);
+  flex-wrap: wrap;
+}
+.visitor-hero-cta-primary {
+  background: var(--ss-gold, #e5b34c);
+  color: var(--ss-bg, #0a0b0e);
+  border: none;
+  border-radius: var(--ss-r-md, 10px);
+  font-size: var(--fs-sm, 13px);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 11px 28px;
+  cursor: pointer;
+  transition: background var(--t-base, 250ms);
+}
+.visitor-hero-cta-primary:hover {
+  background: var(--ss-gold-soft, #cf9e3a);
+}
+.visitor-hero-cta-secondary {
+  background: none;
+  color: var(--ss-text-dim, #b6bac3);
+  border: 1px solid var(--ss-border, #262a33);
+  border-radius: var(--ss-r-md, 10px);
+  font-size: var(--fs-sm, 13px);
+  font-weight: 600;
+  padding: 11px 28px;
+  cursor: pointer;
+  transition: border-color var(--t-base, 250ms), color var(--t-base, 250ms);
+}
+.visitor-hero-cta-secondary:hover {
+  border-color: var(--ss-text-muted, #7c8290);
+  color: var(--ss-text, #f6f3ec);
+}
+
+/* ============================================================
    SECTION 21 — RESPONSIVE
    ============================================================ */
 @media (max-width: 768px) {
-  .ss-page { padding: 72px var(--sp-4) var(--sp-8); }
-  .ss-toast-portal { bottom: var(--sp-4); right: var(--sp-4); left: var(--sp-4); }
+  .ss-page { padding: 72px var(--sp-4) calc(var(--sp-8) + 60px); }
+  .ss-toast-portal { bottom: calc(var(--sp-4) + 60px); right: var(--sp-4); left: var(--sp-4); }
   .ss-toast { max-width: 100%; }
   .ss-grid-stats { grid-template-columns: repeat(2, 1fr); }
+  .lobby-rail { display: none; }
+  .lobby-body { margin-top: var(--sp-4, 16px); }
+  .available-tables-grid { padding-bottom: 80px !important; }
+  .showgames-wrapper { padding-bottom: 80px !important; }
 }
 @media (max-width: 480px) {
   .ss-grid-stats { grid-template-columns: 1fr; }

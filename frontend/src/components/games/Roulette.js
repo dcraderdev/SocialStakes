@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Navigation from '../Navigation';
+import GameBottomCTA from '../GameBottomCTA';
 
 // ── American wheel ────────────────────────────────────────────────
 function spinWheel() { return Math.floor(Math.random() * 38); }
@@ -438,6 +439,7 @@ function Roulette() {
           </div>
         </div>
       </div>
+      <GameBottomCTA currentPath="/play/roulette" />
     </>
   );
 }

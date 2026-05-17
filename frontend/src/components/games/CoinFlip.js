@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Navigation from '../Navigation';
+import GameBottomCTA from '../GameBottomCTA';
 
 const STYLES = `
 @keyframes cf-spin {
@@ -353,6 +354,7 @@ function CoinFlip() {
           </div>
         </div>
       </div>
+      <GameBottomCTA currentPath="/play/coinflip" />
     </>
   );
 }

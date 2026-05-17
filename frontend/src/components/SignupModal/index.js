@@ -1,252 +1,148 @@
 import React, { useEffect, useRef, useState, useContext } from 'react';
 import * as sessionActions from '../../redux/middleware/users';
-import { redeemInviteCode } from '../../redux/middleware/invites';
-
 import { useDispatch, useSelector } from 'react-redux';
-import { Redirect, useHistory } from 'react-router-dom';
 import { ModalContext } from '../../context/ModalContext';
-
 import "./SignupModal.css";
 
-
 function SignupModal() {
-
-  const { modal, openModal, closeModal, updateObj, setUpdateObj } = useContext(ModalContext);
-  const user = useSelector((state) => state.users.user);
+  const { openModal, closeModal } = useContext(ModalContext);
   const dispatch = useDispatch();
-  const history = useHistory()
-  const formRef = useRef()
-  const [email, setEmail] = useState("");
-  const [username, setUsername] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [validationErrors, setValidationErrors] = useState({});
-  const [signupErrors, setSignupErrors] = useState({});
-  const [errors, setErrors] = useState({});
-  const [errorStatus, setErrorStatus] = useState(false);
+  const formRef = useRef();
 
+  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [fieldErrors, setFieldErrors] = useState({});
+  const [serverError, setServerError] = useState('');
+  const [submitting, setSubmitting] = useState(false);
 
-  const [disabledButton, setDisabledButton] = useState(false);
-  const [buttonClass, setButtonClass] = useState('signupDiv-button button button2');
-  const [buttonText, setButtonText] = useState('Sign Up');
-  const [emailText, setEmailText] = useState('Please enter an email');
-  const [emailClass, setEmailClass] = useState('emailField');
-  const [usernameText, setUsernameText] = useState('Please enter an username');
-  const [usernameClass, setUsernameClass] = useState('usernameField');
+  const handleSignin = () => { closeModal(); openModal('login'); };
 
-  const handleSignin = () => {
-    closeModal();
-    openModal('login');
+  const validate = () => {
+    const e = {};
+    if (!username.length) e.username = 'Username required';
+    else if (username.length < 4) e.username = 'At least 4 characters';
+    if (!email.length) e.email = 'Email required';
+    if (!password.length) e.password = 'Password required';
+    else if (password.length < 6) e.password = 'At least 6 characters';
+    return e;
   };
 
-  useEffect(() => {
-    const errors = {};
-    const signupErrors = {};
-
-    if (!email.length) errors['email'] = 'Please enter an email';
-    if (!username.length) errors['username'] = 'Please enter a username';
-    if (!firstName.length) errors['firstName'] = 'Please enter a first name';
-    if (!lastName.length) errors['lastName'] = 'Please enter a lasts name';
-    if (!password.length) errors['password'] = 'Please enter a password';
-    if (!confirmPassword.length) errors['confirmPassword'] = 'Please confirm password';
-
-    if (username.length < 4) {
-      errors['username'] = 'Please enter a username';
-      signupErrors['username'] = 'Username must be at least 4 characters';
-    }
-    if (password.length < 6) {
-      errors['password'] = 'Please enter a password';
-      signupErrors['password'] = 'Password must be at least 6 characters';
-    }
-
-    if(confirmPassword !== password){
-      signupErrors['password'] = 'Password must be at least 6 characters';
-    }
-
-    setValidationErrors(errors);
-    setSignupErrors(signupErrors);
-  }, [email, username, firstName, lastName, password, confirmPassword]);
-
-  useEffect(() => {
-    if (Object.keys(signupErrors).length > 0 || errorStatus) {
-      setButtonClass('signupDiv-button disabled disabled2');
-    } else {
-      setButtonClass('signupDiv-button button button2');
-    }
-  }, [signupErrors, errorStatus]);
-
+  const errors = validate();
+  const isValid = Object.keys(errors).length === 0;
 
   const handleSubmit = async (e) => {
-    setErrors({})
-    setErrorStatus(false)
     e.preventDefault();
-
+    if (!isValid || submitting) return;
+    setSubmitting(true);
+    setServerError('');
     try {
       const pendingInviteCode = localStorage.getItem('pendingInviteCode');
-      const { data, response } = await dispatch(
-       sessionActions.signup({ username, firstName, lastName, email, password, inviteCode: pendingInviteCode || undefined })
+      const { response } = await dispatch(
+        sessionActions.signup({
+          username,
+          firstName: username,
+          lastName: 'User',
+          email,
+          password,
+          inviteCode: pendingInviteCode || undefined,
+        })
       );
-
       if (response.ok) {
-        if (pendingInviteCode) {
-          localStorage.removeItem('pendingInviteCode');
-        }
+        if (pendingInviteCode) localStorage.removeItem('pendingInviteCode');
+        sessionStorage.setItem('ss_new_user', '1');
         closeModal();
       }
-    } catch (error) {
-      setDisabledButton(true);
-      setButtonClass('signinDiv-button disabled disabled2');
-      setErrorStatus(true);
-
-
-      if (error.status === 500) {
-        if (error.data.errors && error.data.errors.email) {
-          setEmail('The provided email is invalid');
-          setEmailClass('emailField-invalid');
-        }
-      }
-
-      if (error.status === 403) {
-        if (error.data.errors && error.data.errors.email) {
-          setUsername('Username must be unique');
-          setUsernameClass('usernameField-invalid');
-        }
-        if (error.data.errors && error.data.errors.username) {
-          setEmail('Email must be unique');
-          setEmailClass('emailField-invalid');
-        }
-      }
-
-      setTimeout(() => {
-        setErrorStatus(false)
-        setDisabledButton(false);
-        setButtonClass('signupDiv-button button button2');
-        setEmail(emailText)
-        setEmailClass('emailField');
-        setUsername(usernameText)
-        setUsernameClass('usernameField');
-      }, 3000);
+    } catch (err) {
+      const msg = err?.data?.errors
+        ? Object.values(err.data.errors)[0]
+        : 'Something went wrong — try a different email or username.';
+      setServerError(msg);
+    } finally {
+      setSubmitting(false);
     }
   };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (formRef.current && !formRef.current.contains(event.target)) {
-        closeModal();
-      }
+      if (formRef.current && !formRef.current.contains(event.target)) closeModal();
     };
     document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  const [touched, setTouched] = useState({});
+  const touch = (field) => setTouched(t => ({ ...t, [field]: true }));
 
   return (
-      <div className="signup-form-page-container" ref={formRef}>
-        <form onSubmit={handleSubmit} className="signupDiv">
+    <div className="signup-form-page-container" ref={formRef}>
+      <div className="signup-title">Create account</div>
+      <div className="signup-subtitle">Free demo chips, no credit card needed.</div>
+
+      <form onSubmit={handleSubmit} className="signupDiv">
+        <label>
+          <div className="signup-field-label">Username</div>
+          <input
+            type="text"
+            value={username}
+            onChange={e => setUsername(e.target.value)}
+            onBlur={() => touch('username')}
+            placeholder="At least 4 characters"
+            autoComplete="username"
+            autoFocus
+          />
+          {touched.username && errors.username && (
+            <div className="signup-field-error">{errors.username}</div>
+          )}
+        </label>
 
         <label>
-            <div className='flex center'>First Name</div>
-            <input
-              className="firstnameField"
-              type="text"
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-              required
-              placeholder={validationErrors['firstName'] || ''}
-            />
-          </label>
-          <label>
-            
-            <div className='flex center'>Last Name</div>
-            <input
-              className="lastnameField"
-              type="text"
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
-              required
-              placeholder={validationErrors['lastName'] || ''}
-            />
-          </label>
+          <div className="signup-field-label">Email</div>
+          <input
+            type="email"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+            onBlur={() => touch('email')}
+            placeholder="you@example.com"
+            autoComplete="email"
+          />
+          {touched.email && errors.email && (
+            <div className="signup-field-error">{errors.email}</div>
+          )}
+        </label>
 
-          <label className="emailLabel">
-            
-            <div className='flex center'>Email</div>
-            <input
-              className={emailClass}
-              type="text"
-              value={email}
-              onChange={(e) => {
-                setEmail(e.target.value)
-                setEmailText(e.target.value)
-              }}
-              required
-              placeholder={validationErrors['email'] || ''}
-            />
-          </label>
+        <label>
+          <div className="signup-field-label">Password</div>
+          <input
+            type="password"
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+            onBlur={() => touch('password')}
+            placeholder="At least 6 characters"
+            autoComplete="new-password"
+          />
+          {touched.password && errors.password && (
+            <div className="signup-field-error">{errors.password}</div>
+          )}
+        </label>
 
+        {serverError && <div className="signup-server-error">{serverError}</div>}
 
+        <button
+          type="submit"
+          className={`signupDiv-button${!isValid || submitting ? ' disabled' : ''}`}
+          disabled={!isValid || submitting}
+        >
+          {submitting ? 'Creating account…' : 'Create account — get $1,000 free chips'}
+        </button>
+      </form>
 
-          <label>
-            
-            <div className='flex center'>Username</div>
-            <input
-              className={usernameClass}
-              type="text"
-              value={username}
-              onChange={(e) => {
-                setUsername(e.target.value)
-                setUsernameText(e.target.value)
-              }}
-              required
-              placeholder={validationErrors['username'] || ''}
-            />
-          </label>
-
-          
-          <label>
-            
-            <div className='flex center'>Password</div>
-            <input
-              className="passwordField"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              placeholder={validationErrors['password'] || ''}
-
-            />
-          </label>
-          <label>
-            <div className='flex center'>Confirm Password</div>
-            <input
-              className="confirmPasswordField"
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              required
-              placeholder={validationErrors['confirmPassword'] || ''}
-            />
-          </label>
-          <button 
-          type="submit" 
-          className={buttonClass}
-          disabled={Object.keys(signupErrors).length > 0 || disabledButton}>
-            {buttonText}
-          </button>
-        </form>
-        <div className="altLinks">
-          <div className="signup-login-link link" onClick={handleSignin}>
-            Log In
-          </div>
+      <div className="altLinks">
+        <span style={{ color: 'var(--ss-text-muted)', fontSize: 13 }}>Already have an account?</span>
+        <div className="signup-login-link" onClick={handleSignin}>Sign in</div>
       </div>
-      </div>
+    </div>
   );
 }
 
 export default SignupModal;
-
-

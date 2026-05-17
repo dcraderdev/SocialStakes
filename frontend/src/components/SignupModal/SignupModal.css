@@ -1,4 +1,45 @@
 /* ── Signup modal — overridden heavily by theme.css ───── */
+
+.signup-title {
+  font-size: var(--fs-xl, 20px);
+  font-weight: 700;
+  color: var(--ss-text, #f6f3ec);
+  margin-bottom: var(--sp-1, 4px);
+  letter-spacing: -0.01em;
+}
+
+.signup-subtitle {
+  font-size: var(--fs-sm, 13px);
+  color: var(--ss-text-muted, #7c8290);
+  margin-bottom: var(--sp-4, 16px);
+}
+
+.signup-field-label {
+  font-size: var(--fs-xs, 11px);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ss-text-muted, #7c8290);
+  margin-bottom: var(--sp-1, 4px);
+}
+
+.signup-field-error {
+  color: var(--ss-red, #ef5d5d);
+  font-size: var(--fs-xs, 11px);
+  margin-top: -8px;
+  margin-bottom: var(--sp-2, 8px);
+}
+
+.signup-server-error {
+  background: rgba(239,93,93,0.08);
+  border: 1px solid rgba(239,93,93,0.25);
+  border-radius: var(--ss-r-sm, 6px);
+  color: var(--ss-red, #ef5d5d);
+  font-size: var(--fs-sm, 13px);
+  padding: var(--sp-2, 8px) var(--sp-3, 12px);
+  margin-bottom: var(--sp-3, 12px);
+}
+
 .signup-form-page-container {
   background: var(--ss-bg-elev, #12141a) !important;
   border: 1px solid var(--ss-border, #262a33) !important;

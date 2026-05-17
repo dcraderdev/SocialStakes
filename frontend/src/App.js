@@ -46,6 +46,7 @@ import LoadingBar from './components/LoadingBar';
 import Logo from './components/Logo';
 import InviteFriendModal from './components/InviteFriendModal';
 import InviteRedemptionPage from './components/InviteRedemptionPage';
+import MobileBottomNav from './components/MobileBottomNav';
 
 
 import gameTileBackground from './images/game-tile-background2.jpeg'
@@ -214,6 +215,8 @@ function App() {
         <div className={`profile-modal ${modal === 'profileModal' ? ' visible' : ' hidden'}`} >
           <ProfileButtonModal />
         </div>
+
+        {isLoaded && user && <MobileBottomNav />}
 
 
       <div>

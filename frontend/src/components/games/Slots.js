@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Navigation from '../Navigation';
+import GameBottomCTA from '../GameBottomCTA';
 
 // ── symbols ──────────────────────────────────────────────────────
 const SYMBOLS = [
@@ -384,6 +385,7 @@ function Slots() {
           </div>
         </div>
       </div>
+      <GameBottomCTA currentPath="/play/slots" />
     </>
   );
 }

@@ -72,6 +72,16 @@ module.exports = function (io) {
     const userId = socket.handshake.query.userId;
     const username = socket.handshake.query.username;
 
+    // Verify that this socket's user actually owns the seat being acted on.
+    // Prevents one player from forging a socket event with another player's
+    // seat number (e.g. forcing an opponent to hit/stand or draining their
+    // pending bet).
+    const ownsSeat = (tableId, seat) => {
+      const seatObj = rooms?.[tableId]?.seats?.[seat];
+      if (!seatObj || seatObj.userId == null || userId == null) return false;
+      return String(seatObj.userId) === String(userId);
+    };
+
 
     if (username === 'anon') {
       await connectionController.startConnection(socket, io);
@@ -224,6 +234,7 @@ module.exports = function (io) {
 
     socket.on('leave_seat', async (seatObj) => {
       const { tableId, seat } = seatObj;
+      if (!ownsSeat(tableId, seat)) return;
       let table = rooms[tableId];
 
       if (table && table.seats[seat]) {
@@ -243,6 +254,7 @@ module.exports = function (io) {
       // console.log(`leave_table`);
       // console.log('--------------');
       const { tableId, seat } = seatObj;
+      if (!ownsSeat(tableId, seat)) return;
       let table = rooms[tableId];
 
       if (table && table.seats[seat]) {
@@ -262,6 +274,7 @@ module.exports = function (io) {
 
     socket.on('remove_last_bet', async (betObj) => {
       const { tableId, seat, lastBet } = betObj;
+      if (!ownsSeat(tableId, seat)) return;
       let room = tableId;
 
       // Update pendingBet in the rooms object
@@ -279,8 +292,9 @@ module.exports = function (io) {
 
     socket.on('remove_all_bet', async (betObj) => {
       const { tableId, seat, lastBet } = betObj;
+      if (!ownsSeat(tableId, seat)) return;
       let room = tableId;
- 
+
       // Update pendingBet in the rooms object
       if (rooms[tableId] && rooms[tableId].seats[seat]) {
         let pendingBet = rooms[tableId].seats[seat].pendingBet;
@@ -304,6 +318,8 @@ module.exports = function (io) {
         await fetchUpdatedTable(tableId);
       }
       if (!rooms[tableId]) return;
+
+      if (!ownsSeat(tableId, seat)) return;
 
       // If handInProgress, dont add the bet
       if (rooms[tableId].handInProgress) {
@@ -337,7 +353,8 @@ module.exports = function (io) {
 
 
     socket.on('add_funds', async (seatObj) => {
-      const { tableId, seat, userId, amount } = seatObj;
+      const { tableId, seat, userId: targetUserId, amount } = seatObj;
+      if (!ownsSeat(tableId, seat)) return;
       let room = tableId;
       let userTableId;
 
@@ -369,6 +386,7 @@ module.exports = function (io) {
 
     socket.on('accept_insurance', async (betObj) => {
       const { bet, insuranceCost, tableId, seat } = betObj;
+      if (!ownsSeat(tableId, seat)) return;
 
       let room = tableId;
       let currentHandId = Object.keys(rooms[tableId].seats[seat].hands)[0];
@@ -403,6 +421,9 @@ module.exports = function (io) {
       const { tableId, action, seat, handId } = actionObj;
 
       if (!rooms[tableId]) return;
+      if (!ownsSeat(tableId, seat)) return;
+      // Only the seat whose turn it actually is may act.
+      if (rooms[tableId].actionSeat !== seat) return;
 
       // Reset the timer whenever a player takes an action
       if (rooms[tableId] && rooms[tableId].timerId) {
@@ -410,9 +431,10 @@ module.exports = function (io) {
         rooms[tableId].actionEndTimeStamp = 0;
       }
 
-      
+
       let player = rooms[tableId].seats[seat];
-      let currentHand = player.hands[handId];
+      let currentHand = player?.hands?.[handId];
+      if (!currentHand || !currentHand.summary) return;
 
 
       let playerBestValue = await bestValue(currentHand.summary.values);

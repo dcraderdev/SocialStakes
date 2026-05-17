@@ -1,377 +1,189 @@
-import React, { useState, useRef, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import './MessageTile.css';
-
 import { SocketContext } from '../../context/SocketContext';
-import { WindowContext } from '../../context/WindowContext';
 import GameBarCard from '../GameBarCard';
 
-const MessageTile = ({ message }) => {
-  const dispatch = useDispatch();
-  const [selectedMessage, setSelectedMessage] = useState(null);
-  const [date, setDate] = useState('');
-  const [shortDate, setShortDate] = useState('');
+const AVATAR_COLORS = [
+  '#c0392b','#8e44ad','#2980b9','#27ae60','#e67e22','#16a085','#d35400','#2471a3',
+];
 
-  const [newMessage, setNewMessage] = useState('');
-  const [messages, setMessages] = useState([]);
+function avatarColor(username = '') {
+  let hash = 0;
+  for (let i = 0; i < username.length; i++) hash = username.charCodeAt(i) + ((hash << 5) - hash);
+  return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length];
+}
+
+function formatTime(ts) {
+  if (!ts) return '';
+  const d = new Date(ts);
+  return d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+}
+
+// Returns "Today", "Yesterday", or "May 12"
+function formatDateLabel(ts) {
+  if (!ts) return '';
+  const d = new Date(ts);
+  const now = new Date();
+  const diffDays = Math.floor((now - d) / 86400000);
+  if (diffDays === 0) return 'Today';
+  if (diffDays === 1) return 'Yesterday';
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
+const MessageTile = ({ message, isFirst, isLast, showDateSeparator }) => {
   const user = useSelector((state) => state.users.user);
   const friends = useSelector((state) => state.friends);
-  const activeTable = useSelector((state) => state.games.activeTable);
-  const currentTables = useSelector((state) => state.games.currentTables);
-
   const conversations = useSelector((state) => state.chats.conversations);
-  const currentConversation = useSelector(
-    (state) => state.chats.currentConversation
-  );
-  const showMessages = useSelector((state) => state.games.showMessages);
-
+  const currentConversation = useSelector((state) => state.chats.currentConversation);
   const { socket } = useContext(SocketContext);
-  const { windowWidth } = useContext(WindowContext);
-  const bottomRef = useRef(null);
 
+  const [hovered, setHovered] = useState(false);
   const [isEditingMessage, setIsEditingMessage] = useState(false);
   const [isDeletingMessage, setIsDeletingMessage] = useState(false);
-  const [editedMessageId, setEditedMessageId] = useState(null);
-  const [editedMessageContent, setEditedMessageContent] = useState('');
-  const [invitedFriends, setInvitedFriends] = useState({});
-  const [showInviteFriendButton, setShowFriendInviteButton] = useState(false);
+  const [editedContent, setEditedContent] = useState('');
 
-  const [cards, setCards] = useState(false);
+  const isOwn = user && message.userId === user.id;
+  const isRoom = message.userId === 'e10d8de4-f4c7-0000-0000-000000000000' || message.username === 'Room';
 
+  const showAvatar = !isOwn && !isRoom && isLast;
+  const showSender = !isOwn && !isRoom && isFirst;
 
-  useEffect(() => {
-    const shouldShowFriendInviteButton = () => {
-      // Check if the user exists
-      if (!user) return false;
+  const canEdit = isOwn && !isRoom && hovered && !isDeletingMessage;
+  const canDelete = isOwn && !isRoom && hovered && !isEditingMessage;
 
-      // Check if there is no selected message
-      if (!selectedMessage) return false;
-
-      // Check if the selected message is from roomAdmin
-      if (selectedMessage.userId === 'e10d8de4-f4c7-0000-0000-000000000000')
-        return false;
-
-      // Check if the selected message is from roomAdmin
-      if (selectedMessage.username === 'Room') return false;
-
-      // Check if the selected message is from the current user
-      if (selectedMessage.userId === user.id) return false;
-
-      // Check if the selected message is from the default user
-      if (selectedMessage.userId === 1) return false;
-
-      // Check if the selected message's user is already a friend or has a pending request
-      const currentFriends = friends.friends;
-      const outgoingRequests = friends.outgoingRequests;
-      const rejectedRequests = friends.rejectedRequests;
-      const selectedMessageUserId = selectedMessage.userId;
-
-      if (
-        currentFriends[selectedMessageUserId] ||
-        outgoingRequests[selectedMessageUserId] ||
-        rejectedRequests[selectedMessageUserId]
-      ) {
-        return false;
-      }
-
-      // If none of the conditions above are met, show the invite button
-      return true;
-    };
-
-    setShowFriendInviteButton(shouldShowFriendInviteButton());
-  }, [selectedMessage, user, friends]);
-
-
-
-  // cards handler
-  useEffect(() => {
-    if (!message) return;
-
-    if(message.cards){
-      setCards(message.cards)
-    }
-
-  }, [message]);
-
-
-  // date handler
-  useEffect(() => {
-    if (!message) return;
-    function convertToReadableFormat(timestamp) {
-      const date = new Date(timestamp);
-
-      const options = {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: true,
-      };
-      const readableFormat = date.toLocaleString('en-US', options);
-
-      return readableFormat;
-    }
-
-    let readableDate = convertToReadableFormat(message.createdAt);
-
-    function convertToReadableFormatShort(timestamp) {
-      const date = new Date(timestamp);
-
-      const options = {
-        month: 'short',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: true,
-      };
-      const readableFormat = date.toLocaleString('en-US', options);
-
-      return readableFormat;
-    }
-
-    let readableDateShort = convertToReadableFormatShort(message.createdAt);
-
-    setDate(readableDate);
-    setShortDate(readableDateShort);
-  }, [message]);
+  const showAddFriend = (() => {
+    if (!user || isOwn || isRoom || !hovered) return false;
+    const f = friends.friends || {};
+    const out = friends.outgoingRequests || {};
+    const rej = friends.rejectedRequests || {};
+    return !f[message.userId] && !out[message.userId] && !rej[message.userId];
+  })();
 
   const sendFriendRequest = () => {
-    if (!user) return;
-
-    const recipientId = selectedMessage.userId;
-    const recipientUsername = selectedMessage.username;
-
-    let friendRequestObj = {
-      recipientId,
-      recipientUsername,
-    };
-
-    //  cant request self, friends does not exist, recipientUsername is already in the pending list, recipientUsername is already in the accepted list.
-    if (
-      user.username === recipientUsername ||
-      !friends ||
-      (friends.outgoingRequests &&
-        friends.outgoingRequests[recipientUsername]) ||
-      (friends.friends && friends.friends[recipientUsername])
-    )
-      return;
-    socket.emit('send_friend_request', friendRequestObj);
+    if (!user || !socket) return;
+    socket.emit('send_friend_request', { recipientId: message.userId, recipientUsername: message.username });
   };
 
-  const confirmDeleteMessagePrompt = () => {
-    if (!user) return;
-    if (user.id !== selectedMessage.userId) return;
-    setIsDeletingMessage(true);
-    setEditedMessageId(selectedMessage.id);
-    setEditedMessageContent(' Delete message?');
-  };
-
-  const deleteMessage = () => {
-    if (!user) return;
-    if (user.id !== selectedMessage.userId) return;
-
-    let editMessageObj = {
-      conversationId: currentConversation,
-      userId: user.id,
-      messageId: editedMessageId,
-      newContent: editedMessageContent,
-    };
-    socket.emit('delete_message', editMessageObj);
-
-    setIsDeletingMessage(false);
-    setEditedMessageId(null);
-    setEditedMessageContent('');
-  };
-
-  const cancelDeleteMessage = () => {
-    if (!user) return;
-    if (user.id !== selectedMessage.userId) return;
-    setIsDeletingMessage(false);
-    setEditedMessageId(null);
-    setEditedMessageContent('');
-  };
-
-  const editMessage = () => {
-    if (!user) return;
-    if (user.id !== selectedMessage.userId) return;
-    setIsEditingMessage(true);
-    setEditedMessageId(selectedMessage.id);
-    setEditedMessageContent(selectedMessage.content);
-  };
-
-  const saveMessage = (e) => {
+  const startEdit = () => { setIsEditingMessage(true); setEditedContent(message.content); };
+  const cancelEdit = () => { setIsEditingMessage(false); setEditedContent(''); };
+  const saveEdit = (e) => {
     e.preventDefault();
-    if (!user) return;
-    if (user.id !== selectedMessage.userId) return;
-
-    let editMessageObj = {
-      conversationId: currentConversation,
-      userId: user.id,
-      messageId: editedMessageId,
-      newContent: editedMessageContent,
-    };
-
-    socket.emit('edit_message', editMessageObj);
-    setIsEditingMessage(false);
-    setEditedMessageId(null);
-    setEditedMessageContent('');
+    if (!user || !socket) return;
+    socket.emit('edit_message', { conversationId: currentConversation, userId: user.id, messageId: message.id, newContent: editedContent });
+    cancelEdit();
   };
 
-  const cancelEdit = () => {
-    if (!user) return;
-    if (user.id !== selectedMessage.userId) return;
-
-    setIsEditingMessage(false);
-    setEditedMessageId(null);
-    setEditedMessageContent('');
+  const startDelete = () => setIsDeletingMessage(true);
+  const cancelDelete = () => setIsDeletingMessage(false);
+  const confirmDelete = () => {
+    if (!user || !socket) return;
+    socket.emit('delete_message', { conversationId: currentConversation, userId: user.id, messageId: message.id, newContent: ' Delete message?' });
+    setIsDeletingMessage(false);
   };
+
+  const initial = (message.username || '?')[0].toUpperCase();
+  const color = avatarColor(message.username);
+
+  // Room/system messages
+  if (isRoom) {
+    return (
+      <div className="msg-system">
+        <span>{message.content}</span>
+      </div>
+    );
+  }
 
   return (
-    <div className="chatmessage-wrapper flex">
-      <div className="chatmessage-image-wrapper flex">
-        <div className="chatmessage-image-container flex center">
-          <div className={`friendtile-profile-image-container flex center`}>
-            <div className={`friendtile-profile-image flex center`}>{`:)`}</div>
-          </div>
+    <>
+      {showDateSeparator && (
+        <div className="msg-date-separator">
+          <span>{formatDateLabel(message.createdAt)}</span>
         </div>
-      </div>
+      )}
 
       <div
-        className="chatmessage-container flex"
-        onClick={() => setSelectedMessage(message)}
-        onMouseOver={() => setSelectedMessage(message)}
-        onMouseLeave={() => setSelectedMessage(null)}
+        className={`msg-row${isOwn ? ' own' : ' theirs'}${isFirst ? ' first' : ''}${isLast ? ' last' : ''}`}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => { setHovered(false); }}
       >
-        <div className="chatmessage-username-date-container flex">
-          <div className="chatmessage-username"> {message?.username} </div>
-          {selectedMessage !== message && (
-            <div className="chatmessage-date flex">
-              {' '}
-              {windowWidth > 600 ? date : shortDate}{' '}
+        {/* Avatar column — always reserve space for alignment */}
+        <div className="msg-avatar-col">
+          {showAvatar ? (
+            <div className="msg-avatar" style={{ background: color }} title={message.username}>
+              {initial}
             </div>
+          ) : (
+            <div className="msg-avatar-spacer" />
           )}
-
-          {selectedMessage === message && showInviteFriendButton && (
-            <div className="flex center chat-message-buttons-container">
-              <div className="chat-message-option" onClick={sendFriendRequest}>
-                <i className="fa-solid fa-user-plus"></i>
-              </div>
-            </div>
-          )}
-
-          {user &&
-            selectedMessage === message &&
-            user.id === selectedMessage.userId &&
-            !isDeletingMessage &&
-            !isEditingMessage && (
-              <div className="flex center chat-message-buttons-container">
-                <div className="chat-message-option" onClick={editMessage}>
-                  <i className="fa-regular fa-pen-to-square"></i>
-                </div>
-
-                <div
-                  className="chat-message-option"
-                  onClick={confirmDeleteMessagePrompt}
-                >
-                  <i className="delete-x fa-solid fa-x"></i>
-                </div>
-              </div>
-            )}
-
-          {user &&
-            selectedMessage === message &&
-            user.id === selectedMessage.userId &&
-            isEditingMessage && (
-              <div className="flex center chat-message-buttons-container">
-                <div
-                  className="chat-message-option"
-                  onClick={(e) => saveMessage(e)}
-                >
-                  <i className="fa-solid fa-check"></i>
-                </div>
-
-                <div className="chat-message-option" onClick={cancelEdit}>
-                  <i className="fa-solid fa-x"></i>
-                </div>
-              </div>
-            )}
-
-          {user &&
-            selectedMessage === message &&
-            user.id === selectedMessage.userId &&
-            isDeletingMessage && (
-              <div className="flex center chat-message-buttons-container">
-                <div className="chat-message-option" onClick={deleteMessage}>
-                  <i className="fa-solid fa-check"></i>
-                </div>
-
-                <div
-                  className="chat-message-option"
-                  onClick={cancelDeleteMessage}
-                >
-                  <i className="fa-solid fa-x"></i>
-                </div>
-              </div>
-            )}
         </div>
 
-        {message.id === editedMessageId && isEditingMessage && (
-          <form onSubmit={(e) => saveMessage(e)}>
-            <input
-              className="editmessage-input"
-              type="text"
-              value={editedMessageContent}
-              onInput={(e) => setEditedMessageContent(e.target.value)}
-              placeholder={editedMessageContent}
-            />
+        <div className="msg-body">
+          {showSender && (
+            <div className="msg-sender">{message.username}</div>
+          )}
 
-            <button type="submit" style={{ display: 'none' }}></button>
-          </form>
-        )}
-
-{/* MESSAGE CONTENT WITHOUT CARDS */}
-{message.id !== editedMessageId && !cards && (
-          <div className="chat-message-content flex">
-            {message?.content}
-            <div className='chat-faux-card-container flex center'>
+          {/* Bubble */}
+          {isEditingMessage ? (
+            <form onSubmit={saveEdit} className="msg-edit-form">
+              <input
+                className="msg-edit-input"
+                value={editedContent}
+                onChange={(e) => setEditedContent(e.target.value)}
+                autoFocus
+              />
+              <div className="msg-edit-actions">
+                <button type="submit" className="msg-action-btn confirm"><i className="fa-solid fa-check" /></button>
+                <button type="button" className="msg-action-btn cancel" onClick={cancelEdit}><i className="fa-solid fa-x" /></button>
               </div>
-          </div>
-        )}
+            </form>
+          ) : isDeletingMessage ? (
+            <div className="msg-delete-confirm">
+              <span>Delete this message?</span>
+              <button className="msg-action-btn danger" onClick={confirmDelete}><i className="fa-solid fa-check" /> Delete</button>
+              <button className="msg-action-btn cancel" onClick={cancelDelete}>Cancel</button>
+            </div>
+          ) : (
+            <div className={`msg-bubble${isOwn ? ' own' : ' theirs'}`}>
+              <div className="msg-content">
+                {message.content}
+                {message.cards && message.cards.length > 0 && (
+                  <div className="msg-cards">
+                    {message.cards.map((card, i) => card !== undefined && (
+                      <div key={i} className="gamebar-card"><GameBarCard card={card} /></div>
+                    ))}
+                  </div>
+                )}
+              </div>
 
-
-
-
-{/* MESSAGE CONTENT WITH CARDS */}
-{message.id !== editedMessageId && cards && (
-          <div className="chat-message-content flex">
-            {message?.content}
-
-              <div className='chat-card-container flex center'>
-                {cards.map((card,i)=>{
-                return card !== undefined && 
-                <div key={i} className='gamebar-card'>
-                  < GameBarCard card={card}/>
+              {/* Hover actions */}
+              {hovered && (
+                <div className={`msg-actions${isOwn ? ' own' : ' theirs'}`}>
+                  {showAddFriend && (
+                    <button className="msg-action-icon" onClick={sendFriendRequest} title="Add friend">
+                      <i className="fa-solid fa-user-plus" />
+                    </button>
+                  )}
+                  {canEdit && (
+                    <button className="msg-action-icon" onClick={startEdit} title="Edit">
+                      <i className="fa-regular fa-pen-to-square" />
+                    </button>
+                  )}
+                  {canDelete && (
+                    <button className="msg-action-icon danger" onClick={startDelete} title="Delete">
+                      <i className="fa-solid fa-trash-can" />
+                    </button>
+                  )}
                 </div>
-                })}
-              </div>
-          </div>
-        )}
+              )}
+            </div>
+          )}
 
-
-
-
-
-
-
-
-
-
-        {message.id === editedMessageId && isDeletingMessage && (
-          <div className="chat-message-content">{editedMessageContent}</div>
-        )}
+          <div className="msg-time">{formatTime(message.createdAt)}</div>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
+
 export default MessageTile;

@@ -662,6 +662,17 @@ module.exports = function (io) {
       io.in(recipientId).emit('table_invite_received', invitePayload);
     });
 
+    // Typing indicators — broadcast to everyone else in the conversation
+    socket.on('typing_start', ({ conversationId }) => {
+      if (!conversationId) return;
+      socket.to(conversationId).emit('user_typing', { userId, username });
+    });
+
+    socket.on('typing_stop', ({ conversationId }) => {
+      if (!conversationId) return;
+      socket.to(conversationId).emit('user_stopped_typing', { userId });
+    });
+
     // Broadcast message to specific room
     socket.on('message', async (messageObj) => {
       const { conversationId, content } = messageObj;

@@ -1,77 +1,278 @@
-/* ── Navigation bar (most styling done in theme.css) ─── */
 .nav-bar {
   position: fixed;
   display: flex;
-  height: 56px;
+  height: 50px;
   width: 100%;
-  left: 0;
-  top: 0;
+  left: 0px;
+  top: 0px;
   z-index: 1000000;
-  /* Background, border, backdrop-filter: set in theme.css */
+  border-bottom: 1px solid black;
+  background-color: #1d1e1c;
+  background-color: #272727;
+  /* font-family: sans-serif; */
+
 }
 
-.nav-active-games { display: none !important; }
-.gametabs-shrunk  { display: none !important; }
-.gametabs-expanded{ display: none !important; }
 
-.nav-buttons {
-  margin: 0 auto;
+
+
+
+
+
+.nav-active-games {
+  position: fixed;
   display: flex;
   width: 100%;
-  max-width: 1280px;
-  padding: 0 24px;
-  align-items: center;
+  left: 0px;
+  top: 50px;
+  z-index: 10;
+  border-bottom: .5px solid rgba(0, 0, 0, 0.315);
+  justify-content: center;
+
+}
+
+
+
+
+
+
+.gametabs-shrunk {
+  height: 0px;
+  transition: all .5s ease;
+}
+
+.gametabs-expanded{
+  height: 44px;
+}
+
+
+
+
+
+.nav-buttons{
+  margin: 0 auto;
+
+  display: flex;
+  width: 100%;
+  max-width: 1200px;
   justify-content: space-between;
 }
 
-.nav-user-buttons-container {
+.nav-user-buttons-container{
   width: fit-content;
   height: 100%;
   position: relative;
   display: flex;
   flex-direction: row;
-  align-items: center;
-  gap: 4px;
+}
+.nav-user-button:last-child{
+  margin-right: 20px;
 }
 
-/* Individual nav buttons — base; hover/colors in theme.css */
-.nav-user-button {
+
+.nav-user-button{
   cursor: pointer;
-  border-left: none !important;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--ss-font, sans-serif);
-}
-
-/* Demo users dropdown */
-.demousers-container {
+  border-left: rgb(142, 147, 160) solid 1px;
+  width: 80px;
+  height: 70%;
+  top: 15%;
   position: relative;
-}
-.nav-user-button.demo {
-  border-left: none !important;
-  background: var(--ss-bg-elev, #12141a);
-  width: 100%;
-  border-radius: 0;
-}
-
-/* Logo */
-.logo-container {
   display: flex;
   flex-direction: row;
+  justify-content: center;
   align-items: center;
-  height: 100%;
-  gap: 8px;
-  cursor: pointer;
-}
-.logo-image-container { display: none !important; }
-.logo-name {
-  cursor: pointer;
-  /* font-size, weight, color overridden by theme.css */
+  text-align: center;
+  color: azure;
+  font-weight: 300;
+
+  font-family: sans-serif;
+
+
+
 }
 
-/* Responsive */
-@media screen and (max-width: 500px) {
-  .nav-buttons { padding: 0 12px; }
-  .logo-name { font-size: 18px !important; }
+
+
+
+
+
+
+
+
+
+.nav-user-button .fa-user:hover,
+.nav-user-button:hover{
+  color: goldenrod;
+  
 }
+
+.nav-user-button:hover > .profile-icon-container{
+  border: goldenrod 1px solid;
+  color: goldenrod;
+
+}
+
+.profile-icon-container:hover > .nav-user-button .fa-user {
+  color: goldenrod;
+
+}
+
+
+.nav-user-button.balance{
+  width: fit-content;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.profile-icon-container{
+  border: white 1px solid;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+}
+
+.nav-user-button.profile{
+  border-right: rgb(142, 147, 160) solid 1px;
+  width: 60px;
+}
+
+.demousers-container {
+  max-height: 50px;
+  overflow: hidden;
+  transition: max-height 1s ease;
+  width: 80px;
+
+
+}
+
+
+
+.demousers-container:hover {
+  max-height: 300px;
+  max-height: 300px;
+  overflow: visible;
+}
+
+
+
+
+.nav-user-button.demo{
+  border-left: none;
+  background-color: #272727;
+}
+
+.nav-user-button.save-progress {
+  background: goldenrod;
+  color: #111;
+  font-weight: 700;
+  border-radius: 6px;
+  border-left: none;
+  padding: 0 14px;
+  width: auto;
+  white-space: nowrap;
+  margin: 0 6px;
+  font-size: 13px;
+}
+
+.nav-user-button.save-progress:hover {
+  background: #d4a000;
+  color: #111;
+}
+
+.nav-user-button.save-progress-mobile {
+  background: goldenrod;
+  color: #111;
+  font-weight: 700;
+  border-radius: 6px;
+  border-left: none;
+  padding: 0 10px;
+  width: auto;
+  font-size: 12px;
+  margin-right: 4px;
+}
+
+.nav-user-button.save-progress-mobile:hover {
+  background: #d4a000;
+  color: #111;
+}
+
+.logo-container{
+  color: rgb(245, 245, 245);
+  display: flex;
+  flex-direction: row;
+  width: fit-content;
+  height: 100%;
+}
+
+.logo-image-container{
+  width: 80px;
+  height: 80px;
+  margin-left: 5px;
+}
+
+.logo-image-container img {
+  cursor: pointer;
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+}
+
+.logo-name{
+  margin-left: -5px;
+
+  cursor: pointer;
+  width: 200px;
+  font-size: 30px;
+  text-shadow: -1px 0 black, 0 3px black, 3px 0 black, 0 -1px black;
+  font-family: Impact;
+
+  /* font-family: sans-serif; */
+
+}
+
+
+@media screen and (min-width: 650px) {
+  .logo-name{
+    font-size: 40px;
+
+    width: 270px;
+  }
+}
+
+
+@media screen and (max-width: 500px) {
+  
+  .logo-container{
+    position: relative;
+    left: -10px;
+  }
+
+  .logo-name{
+    font-size: 22px;
+  }
+
+
+  .mobile{
+    left: -20px;
+  }
+
+  .demousers-container {
+    max-height: 50px;
+    overflow: hidden;
+    transition: max-height 1s ease;
+    width: 60px;
+  
+  
+  }
+
+  .nav-user-button{
+    width: 60px;
+
+  }
+
+}
+
+
+
+
+

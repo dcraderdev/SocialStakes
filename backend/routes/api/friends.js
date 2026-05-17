@@ -1,204 +1,127 @@
-// backend/routes/api/friends.js
 const express = require('express');
-const { requireAuth } = require('../../utils/auth');
-const { Event, User, Friendship, UserTable } = require('../../db/models');
-const { Op, Sequelize } = require('sequelize');
-const { statController } = require('../../controllers/statController');
 const router = express.Router();
+const { requireAuth } = require('../../utils/auth');
+const { User, Friendship, UserTable, Table, Game } = require('../../db/models');
+const { friendController } = require('../../controllers/friendController');
+const { connections } = require('../../global');
+const { Op } = require('sequelize');
 
+function isOnline(userId) {
+  return !!(connections[userId] && Object.keys(connections[userId]).length > 0);
+}
 
-// GET /api/friends/suggestions
-// Returns ranked list of users the current user is not already friends with.
-// Ranking: friends-of-friends (weighted by mutual count) > table co-players > recently joined
-router.get('/suggestions', requireAuth, async (req, res, next) => {
-  const userId = req.user.id;
-
-  try {
-    // All existing relationship IDs (friends + pending)
-    const existingFriendships = await Friendship.findAll({
-      where: {
-        [Op.or]: [{ user1Id: userId }, { user2Id: userId }],
-      },
-      attributes: ['user1Id', 'user2Id', 'status'],
-    });
-
-    const knownIds = new Set([userId]);
-    const acceptedFriendIds = new Set();
-
-    existingFriendships.forEach((f) => {
-      const otherId = f.user1Id === userId ? f.user2Id : f.user1Id;
-      knownIds.add(otherId);
-      if (f.status === 'accepted') acceptedFriendIds.add(otherId);
-    });
-
-    const scoreMap = {}; // userId -> { score, mutualCount, reason }
-
-    // --- Strategy 1: Friends-of-friends ---
-    if (acceptedFriendIds.size > 0) {
-      const fofFriendships = await Friendship.findAll({
-        where: {
-          status: 'accepted',
-          [Op.or]: [
-            { user1Id: { [Op.in]: [...acceptedFriendIds] } },
-            { user2Id: { [Op.in]: [...acceptedFriendIds] } },
-          ],
-        },
-        attributes: ['user1Id', 'user2Id'],
-      });
-
-      fofFriendships.forEach((f) => {
-        const u1 = f.user1Id;
-        const u2 = f.user2Id;
-
-        if (acceptedFriendIds.has(u1) && !knownIds.has(u2)) {
-          if (!scoreMap[u2]) scoreMap[u2] = { score: 0, mutualCount: 0, reason: 'mutual' };
-          scoreMap[u2].mutualCount += 1;
-          scoreMap[u2].score += 10;
-        }
-
-        if (acceptedFriendIds.has(u2) && !knownIds.has(u1)) {
-          if (!scoreMap[u1]) scoreMap[u1] = { score: 0, mutualCount: 0, reason: 'mutual' };
-          scoreMap[u1].mutualCount += 1;
-          scoreMap[u1].score += 10;
-        }
-      });
-    }
-
-    // --- Strategy 2: Co-table players ---
-    try {
-      const userTables = await UserTable.findAll({
-        where: { userId },
-        attributes: ['tableId'],
-      });
-
-      if (userTables.length > 0) {
-        const tableIds = userTables.map((ut) => ut.tableId);
-
-        const coPlayers = await UserTable.findAll({
-          where: {
-            tableId: { [Op.in]: tableIds },
-            userId: { [Op.notIn]: [...knownIds] },
-          },
-          attributes: ['userId'],
-        });
-
-        coPlayers.forEach((cp) => {
-          const uid = cp.userId;
-          if (!scoreMap[uid]) scoreMap[uid] = { score: 0, mutualCount: 0, reason: 'table' };
-          scoreMap[uid].score += 5;
-        });
-      }
-    } catch (_) {
-      // UserTable query is best-effort; skip if it fails
-    }
-
-    // --- Strategy 3: Recently joined ---
-    const recentUsers = await User.findAll({
-      where: { id: { [Op.notIn]: [...knownIds] } },
-      order: [['createdAt', 'DESC']],
-      limit: 20,
-      attributes: ['id', 'username', 'rank'],
-    });
-
-    recentUsers.forEach((u, i) => {
-      if (!scoreMap[u.id]) {
-        scoreMap[u.id] = { score: Math.max(0, 3 - i * 0.1), mutualCount: 0, reason: 'recent' };
-      }
-    });
-
-    const candidateIds = Object.keys(scoreMap);
-    if (!candidateIds.length) {
-      return res.status(200).json({ suggestions: [] });
-    }
-
-    const candidateUsers = await User.findAll({
-      where: { id: { [Op.in]: candidateIds } },
-      attributes: ['id', 'username', 'rank'],
-    });
-
-    const suggestions = candidateUsers
-      .map((u) => ({
-        id: u.id,
-        username: u.username,
-        rank: u.rank || 0,
-        mutualCount: scoreMap[u.id].mutualCount,
-        reason: scoreMap[u.id].reason,
-        score: scoreMap[u.id].score,
-      }))
-      .sort((a, b) => b.score - a.score)
-      .slice(0, 20);
-
-    return res.status(200).json({ suggestions });
-  } catch (err) {
-    return next(err);
-  }
-});
-
-
-// GET /api/friends/activity
-router.get('/activity', requireAuth, async (req, res, next) => {
-  try {
-    const userId = req.user.id;
-    const limit = Math.min(parseInt(req.query.limit) || 50, 100);
-    const cursor = req.query.cursor;
-
-    const friendships = await Friendship.findAll({
-      where: {
-        status: 'accepted',
-        [Op.or]: [{ user1Id: userId }, { user2Id: userId }],
-      },
-      attributes: ['user1Id', 'user2Id'],
-    });
-
-    const friendIds = friendships.map((f) =>
-      f.user1Id === userId ? f.user2Id : f.user1Id
-    );
-
-    if (!friendIds.length) {
-      return res.json({ events: [], nextCursor: null });
-    }
-
-    const where = {
-      userId: { [Op.in]: friendIds },
-      ...(cursor && { createdAt: { [Op.lt]: new Date(cursor) } }),
-    };
-
-    const events = await Event.findAll({
-      where,
-      include: [
-        {
-          model: User,
-          as: 'user',
-          attributes: ['id', 'username', 'rank'],
-        },
-      ],
-      order: [['createdAt', 'DESC']],
-      limit,
-    });
-
-    const nextCursor =
-      events.length === limit
-        ? events[events.length - 1].createdAt.toISOString()
-        : null;
-
-    return res.json({ events, nextCursor });
-  } catch (err) {
-    next(err);
-  }
-});
-
-// GET /api/friends/leaderboard
-router.get('/leaderboard', requireAuth, async (req, res, next) => {
+// GET /api/friends/me - All accepted friends with online + table status
+router.get('/me', requireAuth, async (req, res, next) => {
   const { user } = req;
-  const period = req.query.period || 'week';
+  const friendData = await friendController.getUserFriends(user.id);
+  if (!friendData) return res.json({ friends: {}, incomingRequests: {}, outgoingRequests: {} });
 
-  if (!['week', 'month', 'all'].includes(period)) {
-    return res.status(400).json({ message: 'Invalid period. Use week, month, or all.' });
+  const friendIds = Object.values(friendData.friends).map(f => f.friend.id);
+
+  let tablesByUser = {};
+  if (friendIds.length) {
+    const activeTables = await UserTable.findAll({
+      where: { userId: { [Op.in]: friendIds }, active: true },
+      include: [{ model: Table, attributes: ['id', 'tableName', 'gameId'] }],
+      attributes: ['userId', 'tableId'],
+    });
+    activeTables.forEach(ut => {
+      tablesByUser[ut.userId] = ut.Table
+        ? { id: ut.tableId, tableName: ut.Table.tableName, gameId: ut.Table.gameId }
+        : null;
+    });
   }
 
-  const data = await statController.getFriendsLeaderboard(user.id, period);
-  return res.json(data);
+  const friends = {};
+  for (const [id, friend] of Object.entries(friendData.friends)) {
+    friends[id] = {
+      ...friend,
+      isOnline: isOnline(friend.friend.id),
+      currentTable: tablesByUser[friend.friend.id] || null,
+    };
+  }
+
+  return res.json({
+    friends,
+    incomingRequests: friendData.incomingRequests,
+    outgoingRequests: friendData.outgoingRequests,
+    rejectedRequests: friendData.rejectedRequests,
+  });
 });
 
+// GET /api/friends/me/online - Only online friends
+router.get('/me/online', requireAuth, async (req, res, next) => {
+  const { user } = req;
+  const friendData = await friendController.getUserFriends(user.id);
+  if (!friendData) return res.json({ friends: {} });
+
+  const friends = {};
+  for (const [id, friend] of Object.entries(friendData.friends)) {
+    if (isOnline(friend.friend.id)) {
+      friends[id] = { ...friend, isOnline: true };
+    }
+  }
+
+  return res.json({ friends });
+});
+
+// POST /api/friends/add - Send friend request by username or email
+router.post('/add', requireAuth, async (req, res, next) => {
+  const { user } = req;
+  const { username, email } = req.body;
+
+  if (!username && !email) {
+    return res.status(400).json({ message: 'username or email is required' });
+  }
+
+  const where = username ? { username } : { email };
+  const recipient = await User.scope('currentUser').findOne({ where });
+
+  if (!recipient) {
+    return res.status(404).json({ message: 'User not found' });
+  }
+
+  if (recipient.id === user.id) {
+    return res.status(400).json({ message: 'Cannot send a friend request to yourself' });
+  }
+
+  const result = await friendController.sendFriendRequest({
+    userId: user.id,
+    username: user.username,
+    recipientId: recipient.id,
+    recipientUsername: recipient.username,
+  });
+
+  if (!result) {
+    return res.status(400).json({ message: 'Friend request could not be sent' });
+  }
+
+  return res.status(200).json({
+    friendship: result.friendship,
+    recipient: { id: recipient.id, username: recipient.username },
+  });
+});
+
+// DELETE /api/friends/:id - Remove a friendship by friendship ID
+router.delete('/:id', requireAuth, async (req, res, next) => {
+  const { user } = req;
+  const { id: friendshipId } = req.params;
+
+  const friendship = await Friendship.findByPk(friendshipId);
+  if (!friendship) {
+    return res.status(404).json({ message: 'Friendship not found' });
+  }
+
+  if (friendship.user1Id !== user.id && friendship.user2Id !== user.id) {
+    return res.status(403).json({ message: 'Not authorized' });
+  }
+
+  const friendId =
+    friendship.user1Id === user.id ? friendship.user2Id : friendship.user1Id;
+
+  await friendController.removeFriend(user.id, { friendshipId, friendId });
+
+  return res.json({ message: 'Friend removed', friendshipId, friendId });
+});
 
 module.exports = router;

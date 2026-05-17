@@ -1,6 +1,5 @@
 import { setUser, removeUser, setThemes } from '../actions/userActions'
 import { showGamesAction } from '../actions/gameActions'
-import { REFILL_BALANCE } from '../actions/actionTypes'
 import { csrfFetch } from './csrf';
 
 
@@ -25,12 +24,16 @@ export const login = (user) => async (dispatch) => {
 
 
 export const signup = (user) => async (dispatch) => {
-  const { username, firstName, lastName, email, password, inviteCode } = user;
-  const body = { username, firstName, lastName, email, password };
-  if (inviteCode) body.inviteCode = inviteCode;
+  const { username, firstName, lastName, email, password } = user;
   const response = await csrfFetch("/api/users", {
     method: "POST",
-    body: JSON.stringify(body),
+    body: JSON.stringify({
+      username,
+      firstName,
+      lastName,
+      email,
+      password,
+    }),
   });
 
 
@@ -46,6 +49,8 @@ export const logout = () => async (dispatch) => {
   });
   dispatch(removeUser());
   dispatch(showGamesAction());
+  // Auto-spin up a fresh guest session so the UI is never user-less
+  await dispatch(initSession());
   return response;
 };
 
@@ -60,14 +65,15 @@ export const restoreUser = () => async (dispatch) => {
   return response;
 };
 
-export const refillBalance = () => async (dispatch) => {
-  try {
-    const response = await csrfFetch('/api/users/refill', { method: 'POST' });
-    const data = await response.json();
-    dispatch({ type: REFILL_BALANCE, payload: data.balance });
-  } catch (err) {
-    console.error('refillBalance error:', err);
+// Auto-creates a guest session if no valid auth cookie exists.
+// Guarantees every visitor has a user identity with $1000 chips.
+export const initSession = () => async (dispatch) => {
+  const response = await csrfFetch('/api/init');
+  const data = await response.json();
+  if (data && data.id) {
+    dispatch(setUser(data));
   }
+  return response;
 };
 
 export const loadThemes = () => async (dispatch) => {

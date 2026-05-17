@@ -4,6 +4,7 @@ import {
   ACCEPT_FRIEND_REQUEST,
   DENY_FRIEND_REQUEST,
   GET_USER_FRIENDS,
+  GET_USER_FRIENDS_WITH_STATUS,
   SHOW_FRIEND_INVITES,
   SHOW_TABLE_INVITES,
   SHOW_FRIENDS,
@@ -50,9 +51,15 @@ export const denyFriendRequest = (friendRequestObj) => {
 };
 
 export const getUserFriendsAction = (data) => {
-
   return {
     type: GET_USER_FRIENDS,
+    payload: data,
+  };
+};
+
+export const getUserFriendsWithStatusAction = (data) => {
+  return {
+    type: GET_USER_FRIENDS_WITH_STATUS,
     payload: data,
   };
 };

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState, useContext } from 'react';
 import * as sessionActions from '../../redux/middleware/users';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { ModalContext } from '../../context/ModalContext';
 import "./SignupModal.css";
 
@@ -8,58 +8,54 @@ function SignupModal() {
   const { openModal, closeModal } = useContext(ModalContext);
   const dispatch = useDispatch();
   const formRef = useRef();
-
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [fieldErrors, setFieldErrors] = useState({});
-  const [serverError, setServerError] = useState('');
-  const [submitting, setSubmitting] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [touched, setTouched] = useState({});
 
-  const handleSignin = () => { closeModal(); openModal('login'); };
-
-  const validate = () => {
-    const e = {};
-    if (!username.length) e.username = 'Username required';
-    else if (username.length < 4) e.username = 'At least 4 characters';
-    if (!email.length) e.email = 'Email required';
-    if (!password.length) e.password = 'Password required';
-    else if (password.length < 6) e.password = 'At least 6 characters';
-    return e;
+  const validate = (fields = { email, username, password }) => {
+    const errs = {};
+    if (!fields.email) errs.email = 'Email is required';
+    else if (!/\S+@\S+\.\S+/.test(fields.email)) errs.email = 'Enter a valid email';
+    if (!fields.username) errs.username = 'Username is required';
+    else if (fields.username.length < 4) errs.username = 'At least 4 characters';
+    if (!fields.password) errs.password = 'Password is required';
+    else if (fields.password.length < 6) errs.password = 'At least 6 characters';
+    return errs;
   };
 
-  const errors = validate();
-  const isValid = Object.keys(errors).length === 0;
+  const fieldErrs = validate();
+  const canSubmit = Object.keys(fieldErrs).length === 0 && !loading;
+  const touch = (field) => setTouched(t => ({ ...t, [field]: true }));
+  const fieldError = (field) => touched[field] && (errors[field] || fieldErrs[field]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!isValid || submitting) return;
-    setSubmitting(true);
-    setServerError('');
+    setTouched({ email: true, username: true, password: true });
+    const errs = validate();
+    if (Object.keys(errs).length) { setErrors(errs); return; }
+    setErrors({});
+    setLoading(true);
     try {
-      const pendingInviteCode = localStorage.getItem('pendingInviteCode');
       const { response } = await dispatch(
-        sessionActions.signup({
-          username,
-          firstName: username,
-          lastName: 'User',
-          email,
-          password,
-          inviteCode: pendingInviteCode || undefined,
-        })
+        sessionActions.signup({ email, username, password, firstName: username, lastName: username })
       );
-      if (response.ok) {
-        if (pendingInviteCode) localStorage.removeItem('pendingInviteCode');
-        sessionStorage.setItem('ss_new_user', '1');
-        closeModal();
+      if (response.ok) closeModal();
+    } catch (error) {
+      if (error?.data?.errors) {
+        const serverErrs = {};
+        const e = error.data.errors;
+        if (e.email) serverErrs.email = 'Email already in use';
+        if (e.username) serverErrs.username = 'Username already taken';
+        setErrors(serverErrs);
+        setTouched({ email: true, username: true, password: true });
+      } else {
+        setErrors({ password: 'Something went wrong. Please try again.' });
       }
-    } catch (err) {
-      const msg = err?.data?.errors
-        ? Object.values(err.data.errors)[0]
-        : 'Something went wrong — try a different email or username.';
-      setServerError(msg);
     } finally {
-      setSubmitting(false);
+      setLoading(false);
     }
   };
 
@@ -71,76 +67,74 @@ function SignupModal() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const [touched, setTouched] = useState({});
-  const touch = (field) => setTouched(t => ({ ...t, [field]: true }));
-
   return (
-    <div className="signup-form-page-container" ref={formRef}>
-      <div className="signup-title">Create account</div>
-      <div className="signup-subtitle">Free demo chips, no credit card needed.</div>
-
-      <form onSubmit={handleSubmit} className="signupDiv">
-        <label>
-          <div className="signup-field-label">Username</div>
+    <div className="su-card" ref={formRef}>
+      <h2 className="su-heading">Sign up to play free</h2>
+      <form onSubmit={handleSubmit} noValidate className="su-form">
+        <div className="su-field">
+          <label className="su-label" htmlFor="su-email">Email</label>
           <input
-            type="text"
-            value={username}
-            onChange={e => setUsername(e.target.value)}
-            onBlur={() => touch('username')}
-            placeholder="At least 4 characters"
-            autoComplete="username"
-            autoFocus
-          />
-          {touched.username && errors.username && (
-            <div className="signup-field-error">{errors.username}</div>
-          )}
-        </label>
-
-        <label>
-          <div className="signup-field-label">Email</div>
-          <input
+            id="su-email"
+            className={`su-input${fieldError('email') ? ' su-input--error' : ''}`}
             type="email"
             value={email}
-            onChange={e => setEmail(e.target.value)}
-            onBlur={() => touch('email')}
-            placeholder="you@example.com"
             autoComplete="email"
+            placeholder="you@example.com"
+            onChange={(e) => { setEmail(e.target.value); if (touched.email) setErrors(v => ({ ...v, email: '' })); }}
+            onBlur={() => touch('email')}
           />
-          {touched.email && errors.email && (
-            <div className="signup-field-error">{errors.email}</div>
-          )}
-        </label>
+          {fieldError('email') && <span className="su-error" role="alert">{fieldError('email')}</span>}
+        </div>
 
-        <label>
-          <div className="signup-field-label">Password</div>
+        <div className="su-field">
+          <label className="su-label" htmlFor="su-username">Username</label>
           <input
+            id="su-username"
+            className={`su-input${fieldError('username') ? ' su-input--error' : ''}`}
+            type="text"
+            value={username}
+            autoComplete="username"
+            placeholder="coolplayer99"
+            onChange={(e) => { setUsername(e.target.value); if (touched.username) setErrors(v => ({ ...v, username: '' })); }}
+            onBlur={() => touch('username')}
+          />
+          {fieldError('username') && <span className="su-error" role="alert">{fieldError('username')}</span>}
+        </div>
+
+        <div className="su-field">
+          <label className="su-label" htmlFor="su-password">Password</label>
+          <input
+            id="su-password"
+            className={`su-input${fieldError('password') ? ' su-input--error' : ''}`}
             type="password"
             value={password}
-            onChange={e => setPassword(e.target.value)}
-            onBlur={() => touch('password')}
-            placeholder="At least 6 characters"
             autoComplete="new-password"
+            placeholder="6+ characters"
+            onChange={(e) => { setPassword(e.target.value); if (touched.password) setErrors(v => ({ ...v, password: '' })); }}
+            onBlur={() => touch('password')}
           />
-          {touched.password && errors.password && (
-            <div className="signup-field-error">{errors.password}</div>
-          )}
-        </label>
-
-        {serverError && <div className="signup-server-error">{serverError}</div>}
+          {fieldError('password') && <span className="su-error" role="alert">{fieldError('password')}</span>}
+        </div>
 
         <button
           type="submit"
-          className={`signupDiv-button${!isValid || submitting ? ' disabled' : ''}`}
-          disabled={!isValid || submitting}
+          className={`su-btn${loading ? ' su-btn--loading' : ''}`}
+          disabled={!canSubmit}
         >
-          {submitting ? 'Creating account…' : 'Create account — get $1,000 free chips'}
+          {loading ? 'Creating account…' : 'Create Account'}
         </button>
       </form>
 
-      <div className="altLinks">
-        <span style={{ color: 'var(--ss-text-muted)', fontSize: 13 }}>Already have an account?</span>
-        <div className="signup-login-link" onClick={handleSignin}>Sign in</div>
-      </div>
+      <p className="su-footer">
+        Already have an account?{' '}
+        <button
+          className="su-link"
+          type="button"
+          onClick={() => { closeModal(); openModal('login'); }}
+        >
+          Log in
+        </button>
+      </p>
     </div>
   );
 }

@@ -4,20 +4,18 @@ const sessionRouter = require('./session.js');
 const usersRouter = require('./users.js');
 const gamesRouter = require('./games.js');
 const tablesRouter = require('./tables.js');
-const handsRouter = require('./hands.js');
 const friendsRouter = require('./friends.js');
-const invitesRouter = require('./invites.js');
+const initRouter = require('./init.js');
 const { restoreUser } = require('../../utils/auth.js');
 
 
 router.use(restoreUser);
+router.use('/init', initRouter);
 router.use('/session', sessionRouter);
 router.use('/users', usersRouter);
 router.use('/games', gamesRouter);
 router.use('/tables', tablesRouter);
-router.use('/hands', handsRouter);
 router.use('/friends', friendsRouter);
-router.use('/invites', invitesRouter);
 
 
 

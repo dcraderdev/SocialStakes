@@ -1,69 +1,59 @@
 import React, { useEffect, useRef, useState, useContext } from 'react';
 import { useDispatch } from 'react-redux';
+import './LoginModal.css';
 import { ModalContext } from '../../context/ModalContext';
 import * as sessionActions from '../../redux/middleware/users';
-import './LoginModal.css';
 
 function LoginModal() {
   const { openModal, closeModal, setUpdateObj } = useContext(ModalContext);
   const dispatch = useDispatch();
   const formRef = useRef(null);
-
   const [credential, setCredential] = useState('');
   const [password, setPassword] = useState('');
-  const [serverError, setServerError] = useState('');
-  const [submitting, setSubmitting] = useState(false);
-  const [demoLoading, setDemoLoading] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
   const [touched, setTouched] = useState({});
 
-  const handleSignUp = () => { closeModal(); openModal('signup'); };
-  const touch = (field) => setTouched(t => ({ ...t, [field]: true }));
-
-  const validate = () => {
-    const e = {};
-    if (!credential.length) e.credential = 'Username required';
-    else if (credential.length < 4) e.credential = 'At least 4 characters';
-    if (!password.length) e.password = 'Password required';
-    else if (password.length < 6) e.password = 'At least 6 characters';
-    return e;
+  const validate = (fields = { credential, password }) => {
+    const errs = {};
+    if (!fields.credential) errs.credential = 'Username or email is required';
+    if (!fields.password) errs.password = 'Password is required';
+    return errs;
   };
-  const errors = validate();
-  const isValid = Object.keys(errors).length === 0;
+
+  const fieldErrs = validate();
+  const canSubmit = Object.keys(fieldErrs).length === 0 && !loading;
+  const touch = (field) => setTouched(t => ({ ...t, [field]: true }));
+  const fieldError = (field) => touched[field] && (errors[field] || fieldErrs[field]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!isValid || submitting) return;
-    setSubmitting(true);
-    setServerError('');
+    setTouched({ credential: true, password: true });
+    const errs = validate();
+    if (Object.keys(errs).length) { setErrors(errs); return; }
+    setErrors({});
+    setLoading(true);
     try {
       const { response } = await dispatch(sessionActions.login({ credential, password }));
-      if (response.ok) {
-        setUpdateObj(null);
-        closeModal();
-      }
-    } catch {
-      setServerError('Invalid username or password.');
+      if (response.ok) { setUpdateObj(null); closeModal(); }
+    } catch (_) {
+      setErrors({ password: 'Invalid credentials. Please try again.' });
+      setTouched({ credential: true, password: true });
     } finally {
-      setSubmitting(false);
+      setLoading(false);
     }
   };
 
-  const handleDemo = async (e) => {
+  const demoUser = async (e) => {
     e.preventDefault();
-    setDemoLoading(true);
+    setLoading(true);
     try {
       const { response } = await dispatch(
         sessionActions.login({ credential: 'bigtree', password: 'password' })
       );
-      if (response.ok) {
-        setUpdateObj(null);
-        closeModal();
-      }
-    } catch {
-      setServerError('Demo login failed — try signing up instead.');
-    } finally {
-      setDemoLoading(false);
-    }
+      if (response.ok) { setUpdateObj(null); closeModal(); }
+    } catch (_) {}
+    finally { setLoading(false); }
   };
 
   useEffect(() => {
@@ -75,71 +65,67 @@ function LoginModal() {
   }, []);
 
   return (
-    <div className="signin-form-page-container" ref={formRef}>
-      <div className="signin-title">Sign in</div>
-
-      <button
-        className="signin-demo-btn"
-        onClick={handleDemo}
-        disabled={demoLoading}
-        type="button"
-      >
-        {demoLoading ? 'Loading demo…' : 'Play Demo — No Account Needed'}
-      </button>
-
-      <div className="signin-divider">
-        <span className="signin-divider-line" />
-        <span className="signin-divider-text">or sign in</span>
-        <span className="signin-divider-line" />
-      </div>
-
-      <form onSubmit={handleSubmit} className="signinDiv">
-        <label>
-          <div className="signin-field-label">Username</div>
+    <div className="li-card" ref={formRef}>
+      <h2 className="li-heading">Welcome back</h2>
+      <form onSubmit={handleSubmit} noValidate className="li-form">
+        <div className="li-field">
+          <label className="li-label" htmlFor="li-credential">Username or Email</label>
           <input
+            id="li-credential"
+            className={`li-input${fieldError('credential') ? ' li-input--error' : ''}`}
             type="text"
             value={credential}
-            onChange={e => setCredential(e.target.value)}
-            onBlur={() => touch('credential')}
-            placeholder="Your username"
             autoComplete="username"
-            autoFocus
+            placeholder="username or email"
+            onChange={(e) => { setCredential(e.target.value); if (touched.credential) setErrors(v => ({ ...v, credential: '' })); }}
+            onBlur={() => touch('credential')}
           />
-          {touched.credential && errors.credential && (
-            <div className="signin-field-error">{errors.credential}</div>
-          )}
-        </label>
+          {fieldError('credential') && <span className="li-error" role="alert">{fieldError('credential')}</span>}
+        </div>
 
-        <label>
-          <div className="signin-field-label">Password</div>
+        <div className="li-field">
+          <label className="li-label" htmlFor="li-password">Password</label>
           <input
+            id="li-password"
+            className={`li-input${fieldError('password') ? ' li-input--error' : ''}`}
             type="password"
             value={password}
-            onChange={e => setPassword(e.target.value)}
-            onBlur={() => touch('password')}
-            placeholder="Your password"
             autoComplete="current-password"
+            placeholder="your password"
+            onChange={(e) => { setPassword(e.target.value); if (touched.password) setErrors(v => ({ ...v, password: '' })); }}
+            onBlur={() => touch('password')}
           />
-          {touched.password && errors.password && (
-            <div className="signin-field-error">{errors.password}</div>
-          )}
-        </label>
-
-        {serverError && <div className="signin-server-error">{serverError}</div>}
+          {fieldError('password') && <span className="li-error" role="alert">{fieldError('password')}</span>}
+        </div>
 
         <button
           type="submit"
-          className={`signinDiv-button${!isValid || submitting ? ' disabled' : ''}`}
-          disabled={!isValid || submitting}
+          className={`li-btn${loading ? ' li-btn--loading' : ''}`}
+          disabled={!canSubmit}
         >
-          {submitting ? 'Signing in…' : 'Sign in'}
+          {loading ? 'Logging in…' : 'Log In'}
+        </button>
+
+        <button
+          type="button"
+          className="li-demo-btn"
+          onClick={demoUser}
+          disabled={loading}
+        >
+          Try Demo Account
         </button>
       </form>
 
-      <div className="altLinks">
-        <span style={{ color: 'var(--ss-text-muted)', fontSize: 13 }}>No account?</span>
-        <div className="login-signup-link" onClick={handleSignUp}>Create one free</div>
-      </div>
+      <p className="li-footer">
+        Don't have an account?{' '}
+        <button
+          className="li-link"
+          type="button"
+          onClick={() => { closeModal(); openModal('signup'); }}
+        >
+          Sign up free
+        </button>
+      </p>
     </div>
   );
 }

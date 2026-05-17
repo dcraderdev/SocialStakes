@@ -4,12 +4,9 @@ import {
   ACCEPT_FRIEND_REQUEST,
   DENY_FRIEND_REQUEST,
   GET_USER_FRIENDS,
+  GET_USER_FRIENDS_WITH_STATUS,
   SHOW_TABLE_INVITES, SHOW_FRIEND_INVITES, SHOW_FRIENDS, REMOVE_FRIEND,
-  SHOW_CONVERSATION_BY_ID, REMOVE_CONVERSATION,
-  SET_USER_SEARCH_RESULTS,
-  CLEAR_USER_SEARCH_RESULTS,
-  SET_FRIEND_SUGGESTIONS,
-  OPTIMISTIC_SUGGEST_ADD,
+  SHOW_CONVERSATION_BY_ID, REMOVE_CONVERSATION
 } from '../actions/actionTypes'
 
 
@@ -18,18 +15,17 @@ import {
 
 
 const initialState = {
-    incomingRequests: {},
-    outgoingRequests: {},
-    rejectedRequests: {},
+    incomingRequests: {}, 
+    outgoingRequests: {}, 
+    rejectedRequests: {}, 
     friends: {},
     showFriendInvites: false,
     showTableInvites: false,
     showFriends: false,
     currentFriendView: null,
     showConversation: false,
-    userSearchResults: [],
-    suggestions: [],
-    pendingSuggestions: {},
+
+
 };
 
 const userReducer = (state = initialState, action) => {
@@ -116,13 +112,23 @@ const userReducer = (state = initialState, action) => {
 
 
     case GET_USER_FRIENDS: {
-      return{ 
+      return {
         ...newState,
-        incomingRequests: action.payload.incomingRequests, 
-        outgoingRequests: action.payload.outgoingRequests, 
-        rejectedRequests: action.payload.rejectedRequests, 
-        friends: action.payload.friends
-      }
+        incomingRequests: action.payload.incomingRequests,
+        outgoingRequests: action.payload.outgoingRequests,
+        rejectedRequests: action.payload.rejectedRequests,
+        friends: action.payload.friends,
+      };
+    }
+
+    case GET_USER_FRIENDS_WITH_STATUS: {
+      return {
+        ...newState,
+        incomingRequests: action.payload.incomingRequests,
+        outgoingRequests: action.payload.outgoingRequests,
+        rejectedRequests: action.payload.rejectedRequests,
+        friends: action.payload.friends,
+      };
     }
 
 
@@ -177,26 +183,6 @@ const userReducer = (state = initialState, action) => {
       }
     }
     
-
-    case SET_USER_SEARCH_RESULTS: {
-      return { ...newState, userSearchResults: action.payload };
-    }
-
-    case CLEAR_USER_SEARCH_RESULTS: {
-      return { ...newState, userSearchResults: [] };
-    }
-
-    case SET_FRIEND_SUGGESTIONS: {
-      return { ...newState, suggestions: action.payload };
-    }
-
-    case OPTIMISTIC_SUGGEST_ADD: {
-      const uid = action.payload;
-      return {
-        ...newState,
-        pendingSuggestions: { ...newState.pendingSuggestions, [uid]: true },
-      };
-    }
 
     default:
       return newState;

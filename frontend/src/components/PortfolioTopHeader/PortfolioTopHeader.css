@@ -69,7 +69,12 @@
   opacity: 0.85;
 }
 #dcrader-th .dt-menu a:hover { background: rgba(255, 255, 255, 0.06); opacity: 1; }
+html { --dt-th-h: 34px; }
+html.dt-th-hidden { --dt-th-h: 0px; }
+html.dt-th-mounted { scroll-padding-top: var(--dt-th-h); }
+html.dt-th-mounted [data-dt-shifted] { top: var(--dt-th-h) !important; transition: top 0.18s ease-out; }
 @media (max-width: 520px) {
+  html { --dt-th-h: 32px; }
   #dcrader-th .dt-inner { height: 32px; padding: 0 10px; gap: 8px; }
   #dcrader-th nav { gap: 10px; }
   #dcrader-th nav a:not(.dt-pri) { display: none; }

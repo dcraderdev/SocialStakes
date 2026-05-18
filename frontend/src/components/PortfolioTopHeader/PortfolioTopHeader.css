@@ -1,0 +1,76 @@
+#dcrader-th {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 2147483600;
+  background: rgba(20, 20, 22, 0.92);
+  backdrop-filter: saturate(140%) blur(8px);
+  -webkit-backdrop-filter: saturate(140%) blur(8px);
+  color: #e8e8ea;
+  font: 500 12px/1 system-ui, -apple-system, "Segoe UI", sans-serif;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  transform: translateY(0);
+  transition: transform 0.18s ease-out;
+  will-change: transform;
+}
+#dcrader-th.dt-hidden { transform: translateY(-100%); }
+#dcrader-th .dt-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 14px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+#dcrader-th a { color: #e8e8ea; text-decoration: none; }
+#dcrader-th .dt-home { font-weight: 600; letter-spacing: 0.01em; opacity: 0.95; }
+#dcrader-th .dt-home:hover { opacity: 1; }
+#dcrader-th nav { display: flex; align-items: center; gap: 14px; }
+#dcrader-th nav a { opacity: 0.78; }
+#dcrader-th nav a:hover { opacity: 1; }
+#dcrader-th .dt-dd { position: relative; }
+#dcrader-th .dt-dd button {
+  background: transparent;
+  border: 0;
+  color: #e8e8ea;
+  font: inherit;
+  cursor: pointer;
+  padding: 6px 8px;
+  opacity: 0.85;
+}
+#dcrader-th .dt-dd button:hover,
+#dcrader-th .dt-dd button[aria-expanded="true"] { opacity: 1; }
+#dcrader-th .dt-menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  min-width: 230px;
+  background: #18181b;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 6px 0;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+}
+#dcrader-th .dt-menu .dt-sec {
+  padding: 8px 14px 4px;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: #8a8a90;
+  text-transform: uppercase;
+}
+#dcrader-th .dt-menu a {
+  display: block;
+  padding: 7px 14px;
+  font-size: 12.5px;
+  color: #e8e8ea;
+  opacity: 0.85;
+}
+#dcrader-th .dt-menu a:hover { background: rgba(255, 255, 255, 0.06); opacity: 1; }
+@media (max-width: 520px) {
+  #dcrader-th .dt-inner { height: 32px; padding: 0 10px; gap: 8px; }
+  #dcrader-th nav { gap: 10px; }
+  #dcrader-th nav a:not(.dt-pri) { display: none; }
+}

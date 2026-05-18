@@ -47,6 +47,7 @@ import Logo from './components/Logo';
 import InviteFriendModal from './components/InviteFriendModal';
 import InviteRedemptionPage from './components/InviteRedemptionPage';
 import MobileBottomNav from './components/MobileBottomNav';
+import PortfolioTopHeader from './components/PortfolioTopHeader';
 
 
 import gameTileBackground from './images/game-tile-background2.jpeg'
@@ -98,6 +99,7 @@ function App() {
 
   return (
     <>
+        <PortfolioTopHeader />
 
         <div className={`loading-wrapper flex center ${isLoaded ? 'fade-out' : ''}`}>
           <div className='main-logo-wrapper flex center fade-in-long'>

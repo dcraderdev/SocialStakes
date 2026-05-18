@@ -35,14 +35,16 @@ export default function PortfolioTopHeader() {
     root.classList.add('dt-th-mounted');
     const shiftHostNavs = () => {
       const els = document.body.querySelectorAll('*');
+      const vw = window.innerWidth;
       for (let i = 0; i < els.length; i++) {
         const el = els[i];
         if (el === barRef.current || (barRef.current && barRef.current.contains(el))) continue;
         if (el.hasAttribute('data-dt-shifted')) continue;
         const cs = getComputedStyle(el);
-        if ((cs.position === 'fixed' || cs.position === 'sticky') && parseFloat(cs.top) < 2) {
-          el.setAttribute('data-dt-shifted', '');
-        }
+        if ((cs.position !== 'fixed' && cs.position !== 'sticky') || parseFloat(cs.top) > 2) continue;
+        const r = el.getBoundingClientRect();
+        if (r.width < vw * 0.5) continue;
+        el.setAttribute('data-dt-shifted', '');
       }
     };
     shiftHostNavs();

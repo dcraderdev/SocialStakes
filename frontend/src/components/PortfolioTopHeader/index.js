@@ -31,6 +31,36 @@ export default function PortfolioTopHeader() {
 
   useEffect(() => {
     if (!show) return;
+    const root = document.documentElement;
+    root.classList.add('dt-th-mounted');
+    const shiftHostNavs = () => {
+      const els = document.body.querySelectorAll('*');
+      for (let i = 0; i < els.length; i++) {
+        const el = els[i];
+        if (el === barRef.current || (barRef.current && barRef.current.contains(el))) continue;
+        if (el.hasAttribute('data-dt-shifted')) continue;
+        const cs = getComputedStyle(el);
+        if ((cs.position === 'fixed' || cs.position === 'sticky') && parseFloat(cs.top) < 2) {
+          el.setAttribute('data-dt-shifted', '');
+        }
+      }
+    };
+    shiftHostNavs();
+    window.addEventListener('resize', shiftHostNavs);
+    return () => {
+      window.removeEventListener('resize', shiftHostNavs);
+      root.classList.remove('dt-th-mounted');
+      root.classList.remove('dt-th-hidden');
+    };
+  }, [show]);
+
+  useEffect(() => {
+    if (!show) return;
+    document.documentElement.classList.toggle('dt-th-hidden', hidden);
+  }, [show, hidden]);
+
+  useEffect(() => {
+    if (!show) return;
     let lastY = window.scrollY;
     let ticking = false;
     const onScroll = () => {

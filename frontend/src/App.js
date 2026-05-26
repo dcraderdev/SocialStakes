@@ -47,7 +47,10 @@ import Logo from './components/Logo';
 import InviteFriendModal from './components/InviteFriendModal';
 import InviteRedemptionPage from './components/InviteRedemptionPage';
 import MobileBottomNav from './components/MobileBottomNav';
-import PortfolioTopHeader from './components/PortfolioTopHeader';
+/* Portfolio top header is injected via public/template-topheader.js to keep
+   one canonical implementation across all dcrader.dev projects. Importing
+   the React component renders a second bar with the same id and tags both
+   with data-dt-shifted, pushing the layout down twice. */
 
 
 import gameTileBackground from './images/game-tile-background2.jpeg'
@@ -99,8 +102,6 @@ function App() {
 
   return (
     <>
-        <PortfolioTopHeader />
-
         <div className={`loading-wrapper flex center ${isLoaded ? 'fade-out' : ''}`}>
           <div className='main-logo-wrapper flex center fade-in-long'>
             <Logo />

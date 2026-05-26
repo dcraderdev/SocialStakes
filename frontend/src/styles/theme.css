@@ -1560,3 +1560,418 @@ tbody tr:hover { background: rgba(255,255,255,0.02); }
   .ss-grid-stats { grid-template-columns: 1fr; }
   .signin-form-page-container { padding: var(--sp-4) !important; }
 }
+
+/* ============================================================
+   POLISH LAYER — responsive, contrast, focus, touch targets
+   Appended for final polish pass. Overrides legacy 100vw
+   widths, negative left offsets, undersized hit targets, and
+   bumps low-contrast greys to comfortably meet WCAG AA.
+   ============================================================ */
+
+/* ---------- root reset: kill horizontal overflow everywhere ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+html, body { max-width: 100% !important; overflow-x: hidden !important; }
+body {
+  width: 100% !important;
+  left: 0 !important;
+  position: static !important;
+  font-size: 16px;
+  line-height: 1.4;
+}
+img, video, svg { max-width: 100%; height: auto; }
+
+/* ---------- contrast bumps (WCAG AA) ---------- */
+:root {
+  /* Old: #7c8290 → ~5.0:1 on elevated bg (borderline). New: ~6.4:1 */
+  --ss-text-muted: #9aa0ac;
+  --ss-text-dim: #c8ccd4;
+}
+
+/* ---------- focus rings (keyboard a11y) ---------- */
+:focus { outline: none; }
+:focus-visible {
+  outline: 2px solid var(--ss-gold) !important;
+  outline-offset: 2px !important;
+  border-radius: var(--ss-r-sm);
+}
+button:focus-visible, a:focus-visible, [role="button"]:focus-visible {
+  box-shadow: 0 0 0 3px rgba(229, 179, 76, 0.35) !important;
+}
+
+/* ---------- minimum touch targets (44×44 WCAG 2.5.5) ---------- */
+button, [role="button"], a.nav-user-button, .nav-user-button,
+.private-game-button, .ss-btn, .table-button-container {
+  min-height: 44px;
+  min-width: 44px;
+}
+.nav-user-button { height: auto !important; padding: 0 14px; }
+.profile-icon-container {
+  width: 38px !important;
+  height: 38px !important;
+}
+.table-button-container {
+  width: 44px !important;
+  height: 44px !important;
+}
+.playercount-ring { height: 32px !important; }
+
+/* ---------- KILL legacy 100vw / left:-Npx overflow offenders ---------- */
+.showgames-wrapper,
+.creatinggame-wrapper,
+.tabletile-wrapper,
+.table-wrapper,
+.table-content,
+.seats-container,
+.gamefloor-wrapper,
+.friendspage-wrapper,
+.friendspage-content-wrapper,
+.statpage-wrapper,
+.tablesortbar-wrapper,
+.game-wrapper,
+.logo-wrapper {
+  width: 100% !important;
+  max-width: 100% !important;
+  left: 0 !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+/* ---------- TOP NAV — mobile polish ---------- */
+.nav-bar {
+  height: 56px !important;
+  padding: 0 12px;
+}
+.nav-buttons {
+  padding: 0 8px;
+  gap: 4px;
+}
+.logo-name {
+  font-size: clamp(18px, 4.5vw, 22px) !important;
+  width: auto !important;
+  max-width: 60vw;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.logo-image-container {
+  width: 40px !important;
+  height: 40px !important;
+  margin-left: 0 !important;
+}
+.logo-image-container img { width: 32px !important; height: 32px !important; }
+.nav-user-button.balance {
+  font-size: 13px !important;
+  padding: 6px 10px !important;
+}
+.nav-user-buttons-container { gap: 4px; align-items: center; }
+.nav-user-button:last-child { margin-right: 0 !important; }
+/* Kill the legacy 1px vertical dividers between nav buttons — the gap +
+   pill balance + circular profile already give enough visual separation. */
+.nav-user-button.profile,
+.nav-user-button { border-left: none !important; border-right: none !important; }
+
+/* ---------- LOBBY (GameFloor) ---------- */
+.gamefloor-wrapper { padding: 0 16px; }
+.games-grid {
+  width: 100% !important;
+  padding: 0 !important;
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)) !important;
+  gap: 16px !important;
+  margin: 16px auto 28px;
+}
+.gametile-container {
+  width: 100% !important;
+  min-height: 140px;
+  margin: 0 !important;
+}
+.available-tables-grid {
+  width: calc(100% - 32px) !important;
+  max-width: 1280px;
+  padding: 8px 0 0;
+}
+.tabletile-wrapper {
+  width: 100% !important;
+  flex-direction: column;
+  gap: 10px;
+}
+.tabletile-content {
+  flex-wrap: wrap;
+  gap: 12px 18px;
+  align-items: center;
+}
+.private-game-button { min-height: 44px !important; padding: 0 18px !important; }
+
+/* The PayoutChatbox below the grid */
+.winnerchatbox-wrapper {
+  width: calc(100% - 32px) !important;
+  margin: 28px auto 48px !important;
+}
+
+/* ---------- TABLE (gameplay) ---------- */
+.table-wrapper {
+  width: min(94vw, 1240px) !important;
+  margin: 80px auto 200px !important;
+}
+
+/* ---------- FRIENDS — collapse sidebar on small screens ---------- */
+.friendspage-wrapper {
+  width: 100% !important;
+  position: relative !important;
+  height: auto !important;
+  min-height: calc(100vh - 56px);
+  top: 0 !important;
+  overflow: visible !important;
+}
+.friendspage-friendsnavbar-wrapper {
+  position: sticky !important;
+  top: 56px;
+}
+.friendspage-content-wrapper {
+  width: calc(100% - 203px) !important;
+  position: relative !important;
+}
+
+/* ---------- MODALS — never wider than the viewport ---------- */
+.loginmodal-container, .signupmodal-container,
+.balancemodal-container, .themesmodal-container,
+.settingsmodal-container, .closetablemodal-container,
+.leavemodal-container, .joinprivategamemodal-container,
+.removefriendmodal-container, .startconversationmodal-container,
+.leaveconversationmodal-container, .addfriendsmodal-container,
+.tableclosedmodal-container, .insurancemodal-container,
+.profilebuttonmodal-container, .aboutmemodal-container {
+  width: min(450px, calc(100vw - 24px)) !important;
+  max-width: calc(100vw - 24px) !important;
+  min-width: 0 !important;
+  max-height: calc(100vh - 60px);
+  overflow-y: auto;
+}
+.modal-container { padding: 12px; }
+.modal-container button { min-height: 44px !important; }
+
+/* Cleaner inputs everywhere */
+input, textarea, select {
+  font-size: 16px; /* prevents iOS zoom-on-focus */
+  background: var(--ss-bg-soft);
+  color: var(--ss-text);
+  border: 1px solid var(--ss-border);
+  border-radius: var(--ss-r-md);
+  padding: 10px 12px;
+  outline: none;
+}
+input:focus, textarea:focus, select:focus {
+  border-color: var(--ss-gold-line);
+  box-shadow: 0 0 0 3px rgba(229, 179, 76, 0.18);
+}
+
+/* ============================================================
+   BREAKPOINTS  —  tablet (≤768) → phone (≤640) → small (≤414) → tiny (≤360)
+   ============================================================ */
+
+/* ---------- ≤ 768px (tablet portrait) ---------- */
+@media (max-width: 768px) {
+  /* extra bottom padding leaves room for MobileBottomNav (60px + safe-area) */
+  .ss-page { padding: calc(52px + var(--dt-th-h, 0px) + 18px) 16px calc(80px + env(safe-area-inset-bottom, 0px)); }
+  .available-tables-grid,
+  .showgames-wrapper,
+  .friendspage-content-wrapper { padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)) !important; }
+  .ss-h1 { font-size: 24px; }
+  .nav-buttons { max-width: 100% !important; padding: 0 4px; }
+  .table-wrapper {
+    width: calc(100vw - 16px) !important;
+    height: min(58vh, 520px) !important;
+    min-height: 360px;
+    margin: 72px auto 160px !important;
+  }
+  .seat-wrapper { width: 15% !important; }
+  .seat-namebalance-container .name-space { font-size: 12px; }
+  .table-button-container.menu  { top: 64px !important; right: 10px !important; }
+  .table-button-container.home  { top: 116px !important; right: 10px !important; }
+  .table-button-container.leave { top: 168px !important; right: 10px !important; }
+  .table-button-container.chat     { top: 64px !important; left: 10px !important; }
+  .table-button-container.theme    { top: 116px !important; left: 10px !important; }
+  .table-button-container.money    { top: 168px !important; left: 10px !important; }
+  .table-button-container.settings { top: 220px !important; left: 10px !important; }
+  .card { width: 44px !important; height: 64px !important; }
+  .easy-view.card-suit { font-size: 20px !important; }
+  .tableseat-hand-cards .cardarea-card-container + .cardarea-card-container { margin-left: -24px; }
+}
+
+/* ---------- ≤ 640px (large phone) ---------- */
+@media (max-width: 640px) {
+  .nav-bar { height: 52px !important; }
+  .nav-user-button:not(.balance):not(.profile) { display: none !important; }
+  .nav-user-button.balance { font-size: 13px !important; padding: 5px 10px !important; }
+  .gamefloor-wrapper { padding: 0 12px; top: 56px !important; }
+  .games-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 12px !important;
+  }
+  .gametile-container { min-height: 110px; }
+  .gametile-name { font-size: 18px !important; }
+  .tabletile-wrapper { padding: 14px 14px; }
+  .tablename-text { font-size: 16px !important; }
+  .available-tables-grid { width: calc(100% - 24px) !important; }
+  .winnerchatbox-wrapper { width: calc(100% - 24px) !important; }
+
+  /* Friends — collapse the fixed sidebar into a top bar drawer */
+  .friendspage-friendsnavbar-wrapper {
+    position: relative !important;
+    top: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    border-right: none !important;
+    border-bottom: 1px solid var(--ss-border);
+  }
+  .friendspage-content-wrapper {
+    width: 100% !important;
+    position: relative !important;
+    right: auto !important;
+    top: 0 !important;
+  }
+  .friendspage-content-wrapper.expanded,
+  .friendspage-content-wrapper.shrunk { top: 0 !important; height: auto !important; }
+
+  /* Table — go vertical, hide watermark felt at small sizes */
+  .table-wrapper {
+    width: calc(100vw - 12px) !important;
+    height: min(54vh, 460px) !important;
+    min-height: 320px;
+    margin: 64px auto 140px !important;
+  }
+  .table-description { top: 60px !important; }
+  .table-description .large { font-size: 11px !important; letter-spacing: 0.12em; }
+  .table-button-container {
+    width: 40px !important;
+    height: 40px !important;
+  }
+  .seats-container { padding: 0 4% !important; bottom: 12% !important; }
+  .seat-wrapper { width: 16% !important; }
+  .profileimage-container { width: 36px !important; height: 36px !important; }
+  .card { width: 38px !important; height: 56px !important; }
+  .easy-view.card-rank, .easy-view.card-rank-flip { font-size: 12px !important; }
+  .easy-view.card-suit { font-size: 18px !important; }
+  .dealer-cards { gap: 4px !important; top: 12% !important; }
+
+  /* Action bar pills */
+  .playerbetoptions-container button,
+  .playerbet-options button,
+  .player-options button,
+  button.bet-option,
+  .bet-option-button,
+  .option-button {
+    height: 44px !important;
+    padding: 0 16px !important;
+    font-size: 13px !important;
+  }
+}
+
+/* ---------- ≤ 414px (iPhone Plus/Pro Max) ---------- */
+@media (max-width: 414px) {
+  .nav-bar { padding: 0 8px; }
+  .logo-image-container { width: 36px !important; height: 36px !important; }
+  .logo-image-container img { width: 28px !important; height: 28px !important; }
+  .logo-name { font-size: 18px !important; }
+  .nav-user-button.balance {
+    font-size: 12px !important;
+    padding: 4px 8px !important;
+  }
+  .games-grid { gap: 10px !important; }
+  .gametile-container { min-height: 100px; }
+  .gametile-name { font-size: 16px !important; }
+  .tabletile-wrapper { padding: 12px; min-height: 100px; }
+  .tablename-text { font-size: 15px !important; }
+  .game-text, .deck-text { font-size: 11px !important; }
+  .available-tables-grid { width: calc(100% - 16px) !important; }
+  .winnerchatbox-wrapper { width: calc(100% - 16px) !important; padding: 12px; }
+
+  /* Table — tighter felt, hide watermark on very small */
+  .table-wrapper {
+    width: calc(100vw - 8px) !important;
+    height: min(50vh, 380px) !important;
+    min-height: 280px;
+    margin: 56px auto 120px !important;
+  }
+  .table-content::after { display: none; }
+  .seat-wrapper { width: 17% !important; }
+  .profileimage-container { width: 32px !important; height: 32px !important; }
+  .seat-namebalance-container .name-space { font-size: 11px; }
+  .seat-tablebalance { font-size: 11px; }
+  .table-button-container {
+    width: 38px !important;
+    height: 38px !important;
+  }
+}
+
+/* ---------- ≤ 360px (iPhone SE / smallest moderns) ---------- */
+@media (max-width: 360px) {
+  .nav-bar { padding: 0 6px; }
+  .logo-name { font-size: 16px !important; max-width: 50vw; }
+  .games-grid { grid-template-columns: 1fr !important; }
+  .gametile-container { min-height: 88px; }
+  .table-wrapper {
+    height: min(46vh, 320px) !important;
+    min-height: 240px;
+  }
+  .card { width: 34px !important; height: 50px !important; }
+  .easy-view.card-suit { font-size: 16px !important; }
+  .table-button-container.menu  { top: 60px !important; right: 6px !important; }
+  .table-button-container.home  { top: 108px !important; right: 6px !important; }
+  .table-button-container.leave { top: 156px !important; right: 6px !important; }
+  .table-button-container.chat     { top: 60px !important; left: 6px !important; }
+  .table-button-container.theme    { top: 108px !important; left: 6px !important; }
+  .table-button-container.money    { top: 156px !important; left: 6px !important; }
+  .table-button-container.settings { top: 204px !important; left: 6px !important; }
+}
+
+/* ---------- Reduced-motion safety ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---------- Portfolio topheader: leave room at top of page ---------- */
+html.dt-th-mounted .nav-bar,
+html.dt-th-mounted .lp-nav {
+  top: var(--dt-th-h, 34px) !important;
+  transition: top 0.18s ease-out;
+}
+html.dt-th-mounted.dt-th-hidden .nav-bar,
+html.dt-th-mounted.dt-th-hidden .lp-nav { top: 0 !important; }
+html.dt-th-mounted .table-description { top: calc(70px + var(--dt-th-h, 34px)) !important; }
+@media (max-width: 640px) {
+  html.dt-th-mounted .table-description { top: calc(60px + var(--dt-th-h, 32px)) !important; }
+}
+
+/* ---------- LandingPage nav — mobile fit ---------- */
+.lp-nav-inner {
+  padding: 0 14px !important;
+  gap: 8px;
+}
+.lp-nav-name {
+  font-size: clamp(13px, 3.5vw, 15px) !important;
+  letter-spacing: 0.10em !important;
+  white-space: nowrap;
+}
+.lp-nav-actions { gap: 8px !important; flex-shrink: 0; }
+.lp-btn-ghost, .lp-btn-gold {
+  padding: 8px 14px !important;
+  font-size: 12.5px !important;
+  white-space: nowrap;
+  min-height: 36px;
+}
+@media (max-width: 414px) {
+  .lp-nav-inner { padding: 0 10px !important; }
+  .lp-nav-logo { width: 30px !important; height: 30px !important; }
+  .lp-nav-name { font-size: 12px !important; }
+  .lp-btn-ghost { padding: 7px 11px !important; font-size: 12px !important; }
+  .lp-btn-gold  { padding: 7px 12px !important; font-size: 12px !important; }
+}
+@media (max-width: 360px) {
+  .lp-nav-name { display: none; }
+}
